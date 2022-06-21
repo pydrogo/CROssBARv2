@@ -1,0 +1,5 @@
+biocypher-logs/
+pypath_log/
+.vscode/
+__pycache__/
+.ipynb_checkpoints/
