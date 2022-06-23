@@ -25,7 +25,7 @@ Title: BioCypher graph schema configuration file
 # Protein: # this is the Biolink entity name and will be used as the node label
          #do not modify or else the Biolink translation will fail
   # represented_as: node
-  # preferred_id: concat_ids # this is the Biolink spelling of the identifier used
+  # preferred_id: UniProtKB # this is the Biolink spelling of the identifier used
   #it represents a CURIE URI prefix
   # label_in_input: protein # modify this to allow translation
   # this is the entity name (ie, type) in the input database
@@ -144,56 +144,73 @@ MolecularMixture: # there is no compound in Biolink. could be molecular mixture
   # source: Protein
   # target: Protein
 
-Interacts_With:
+Interacts_With: # PostTranslationalInteraction, interacts_with
+# can be more granular if info is there
   represented_as: edge
   source: Protein
   target: Protein
   label_as_edge: Interacts_With
   
-Is_Associated_With:
+Is_Associated_With: 
+# could be broken up and made available collectively via mixin
+# DiseaseToPhenotypicFeatureAssociation, 
+# GeneToPhenotypicFeatureAssociation,
+# VariantToPhenotypicFeatureAssociation,
+# EntityToPhenotypicFeatureAssociation,
+# occurs_in_disease, has_phenotype, has_manifestation, contributes_to,
+# disease_has_basis_in
   represented_as: edge
   source: [Protein, Disease]
   target: Phenotype
   label_as_edge: Is_Associated_With
   
-Is_Related_To:
+Is_Related_To: 
+# GeneToPhenotypicFeatureAssociation,
+# VariantToPhenotypicFeatureAssociation,
+# EntityToPhenotypicFeatureAssociation,
+# EntityToDiseaseAssociationMixin,
+# GeneToDiseaseAssociation, 
+# DruggableGeneToDiseaseAssociation
+# occurs_in_disease, has_phenotype, has_manifestation, contributes_to,
+# disease_has_basis_in
   represented_as: edge
   source: Protein
   target: Disease
   label_as_edge: Is_Related_To
 
-Targets:
+Targets: # DrugToGeneAssociation, has_target (Disease -> Gene), affects
   represented_as: edge
   source: [Drug, Compound]
   target: Protein
   label_as_edge: Targets
 
-Is_Involved_In:
+Is_Involved_In: 
+# GeneToPathwayAssociation,
+# contributes_to, has_participant, participates_in
   represented_as: edge
   source: Protein
   target: Pathway
   label_as_edge: Is_Involved_In
 
-Indicates:
+Indicates: 
+# DrugToDiseaseAssociation (NOT IN BIOLINK), treated_by
+# (DiseaseOrPhenotypicFeature -> ChemicalOrDrugOrTreatment) 
+
+# biolink has contraindicated_for (Drug -> DiseaseOrPhenotypicFeature)
+# but not indicated_for
   represented_as: edge
   source: Drug
   target: Disease
   label_as_edge: Indicates
 
-Modulates:
+Modulates: 
+# DiseaseToPathwayAssociation (NOT IN BIOLINK),
+# GeneToPathwayAssociation, disease_has_basis_in,
+# has_molecular_consequence, occurs_in_disease
   represented_as: edge
   source: Disease
   target: Pathway
   label_as_edge: Modulates
-
-
-# PostTranscriptionalInteraction:
-  # represented_as: edge
-  # preferred_id: concat_ids
-  # source: microRNA
-  # target: Protein
-  # label_in_input: post_transcriptional
-  # label_as_edge: INTERACTS_POST_TRANSCRIPTIONAL
 
 
 

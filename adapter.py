@@ -132,7 +132,7 @@ class BiocypherAdapter:
                 yield (_source, _target, _type, _props)
 
         src_tar_type_tuples = list(gen_edges(list(network["edges"])))
-        # self.bcy.add_edges(src_tar_type_tuples)
+        self.bcy.add_edges(src_tar_type_tuples)
 
     def write_to_csv_for_admin_import(self, network=None, db_name=None):
         """
