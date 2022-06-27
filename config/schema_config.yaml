@@ -31,31 +31,6 @@ Title: BioCypher graph schema configuration file
   # this is the entity name (ie, type) in the input database
   
 
-# microRNA:
-  # represented_as: node
-  # preferred_id: MIR
-  # label_in_input: mirna
-    
-# MacromolecularComplexMixin:
-  # represented_as: node
-  # preferred_id: CPX
-  # label_in_input: complex
-
-# OrganismTaxon:
-  # represented_as: node
-  # preferred_id: NCBITaxon
-  # label_in_input: taxon
-
-# Publication:
-  # represented_as: node
-  # preferred_id: NLMID
-# ConfidenceLevel:
-  # represented_as: node
-  # preferred_id: None
-
-# Cell:
-  # represented_as: node
-  # preferred_id: CL
   
 Pathway:
   represented_as: node
@@ -72,7 +47,7 @@ Disease:
   preferred_id: [MONDO, EFO, ORPHANET, KEGG.DISEASE]
   label_in_input: [MONDO, EFO, Orphanet, KEGG.DISEASE]
   
-SmallMolecule:  # drug has only RXCUI, NDC, UMLS identifiers
+SmallMolecule:  
   represented_as: node
   preferred_id: DRUGBANK
   label_in_input: Drug
@@ -82,7 +57,7 @@ Phenotype:
   preferred_id: HP
   label_in_input: HPO
   
-MolecularMixture: # there is no compound in Biolink. could be molecular mixture
+MolecularMixture: 
   represented_as: node
   preferred_id: CHEMBL.COMPOUND
   label_in_input: Compound
@@ -146,10 +121,12 @@ MolecularMixture: # there is no compound in Biolink. could be molecular mixture
 
 Interacts_With: # PostTranslationalInteraction, interacts_with
 # can be more granular if info is there
+# GeneToGeneAssociation, PairwiseGeneToGeneInteraction
   represented_as: edge
   source: Protein
   target: Protein
   label_as_edge: Interacts_With
+  label_in_input: Interacts_With
   
 Is_Associated_With: 
 # could be broken up and made available collectively via mixin
@@ -163,6 +140,7 @@ Is_Associated_With:
   source: [Protein, Disease]
   target: Phenotype
   label_as_edge: Is_Associated_With
+  label_in_input: Is_Associated_With
   
 Is_Related_To: 
 # GeneToPhenotypicFeatureAssociation,
@@ -177,13 +155,15 @@ Is_Related_To:
   source: Protein
   target: Disease
   label_as_edge: Is_Related_To
+  label_in_input: Is_Related_To
 
 Targets: # DrugToGeneAssociation, has_target (Disease -> Gene), affects
   represented_as: edge
   source: [Drug, Compound]
   target: Protein
   label_as_edge: Targets
-
+  label_in_input: Targets
+  
 Is_Involved_In: 
 # GeneToPathwayAssociation,
 # contributes_to, has_participant, participates_in
@@ -191,7 +171,8 @@ Is_Involved_In:
   source: Protein
   target: Pathway
   label_as_edge: Is_Involved_In
-
+  label_in_input: Is_Involved_In
+  
 Indicates: 
 # DrugToDiseaseAssociation (NOT IN BIOLINK), treated_by
 # (DiseaseOrPhenotypicFeature -> ChemicalOrDrugOrTreatment) 
@@ -202,7 +183,7 @@ Indicates:
   source: Drug
   target: Disease
   label_as_edge: Indicates
-
+  label_in_input: Indicates
 Modulates: 
 # DiseaseToPathwayAssociation (NOT IN BIOLINK),
 # GeneToPathwayAssociation, disease_has_basis_in,
@@ -211,7 +192,7 @@ Modulates:
   source: Disease
   target: Pathway
   label_as_edge: Modulates
-
+  label_in_input: Modulates
 
 
 ## CROssBAR list of source database attributes
