@@ -8,7 +8,7 @@ version = "0.0.2"
 description = "Project description"
 license = "GPL-3.0-only"
 authors = [
-    "Denes Turei <turei.denes@gmail.com>"
+    "Authors <author_email>"
 ]
 packages = [
     { include = "bccb" }
