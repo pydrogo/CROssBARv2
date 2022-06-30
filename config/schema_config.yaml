@@ -147,6 +147,7 @@ MolecularMixture: # there is no compound in Biolink. could be molecular mixture
 Interacts_With: # PostTranslationalInteraction, interacts_with
 # can be more granular if info is there
   represented_as: edge
+  preferred_id: custom
   source: Protein
   target: Protein
   label_as_edge: Interacts_With
@@ -163,6 +164,7 @@ Is_Associated_With:
   source: [Protein, Disease]
   target: Phenotype
   label_as_edge: Is_Associated_With
+  preferred_id: custom
   
 Is_Related_To: 
 # GeneToPhenotypicFeatureAssociation,
@@ -174,12 +176,14 @@ Is_Related_To:
 # occurs_in_disease, has_phenotype, has_manifestation, contributes_to,
 # disease_has_basis_in
   represented_as: edge
+  preferred_id: custom
   source: Protein
   target: Disease
   label_as_edge: Is_Related_To
 
 Targets: # DrugToGeneAssociation, has_target (Disease -> Gene), affects
   represented_as: edge
+  preferred_id: custom
   source: [Drug, Compound]
   target: Protein
   label_as_edge: Targets
@@ -191,6 +195,7 @@ Is_Involved_In:
   source: Protein
   target: Pathway
   label_as_edge: Is_Involved_In
+  preferred_id: custom
 
 Indicates: 
 # DrugToDiseaseAssociation (NOT IN BIOLINK), treated_by
@@ -199,6 +204,7 @@ Indicates:
 # biolink has contraindicated_for (Drug -> DiseaseOrPhenotypicFeature)
 # but not indicated_for
   represented_as: edge
+  preferred_id: custom
   source: Drug
   target: Disease
   label_as_edge: Indicates
@@ -208,6 +214,7 @@ Modulates:
 # GeneToPathwayAssociation, disease_has_basis_in,
 # has_molecular_consequence, occurs_in_disease
   represented_as: edge
+  preferred_id: custom
   source: Disease
   target: Pathway
   label_as_edge: Modulates

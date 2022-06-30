@@ -37,21 +37,23 @@ class BiocypherAdapter:
     def __init__(
         self,
         driver=None,
-        db_name="neo4j",
+        db_name=None,
         db_uri="bolt://localhost:7687",
-        db_auth=("neo4j", "your_password_here"),
-        config_file="/config/module_config.yaml",
+        db_user="neo4j",
+        db_passwd="your_password_here",
         network=None,
         wipe=False,
+        offline=False,
     ):
 
         self.bcy = biocypher.Driver(
             driver=driver,
             db_name=db_name,
             db_uri=db_uri,
-            db_auth=db_auth,
-            config_file=config_file,
+            db_user=db_user,
+            db_passwd=db_passwd,
             wipe=wipe,
+            offline=offline,
         )
 
         if network:
@@ -67,7 +69,7 @@ class BiocypherAdapter:
         Load CROssBAR example data.
         """
 
-        with open("CROssBAR_Web-service_Example_1.json", "r") as file:
+        with open("data/CROssBAR_Web-service_Example_1.json", "r") as file:
             crossbar_graph = json.load(file)
 
         self.set_network(crossbar_graph)
@@ -153,30 +155,53 @@ class BiocypherAdapter:
             self._log("No network provided.")
             return
 
+
+        
         # write nodes
         def gen_nodes(nodes):
             for n in nodes:
-                id = self._process_id(n.identifier)
-                type = n.entity_type
-                props = {"taxon": n.taxon, "label": n.label}
-                print(props)
-                yield (id, type, props)
+                if len(n["data"]) == 3:
+                    _id = self._process_id(n["data"]["id"])
+                    _type = self._process_type(
+                        n["data"]["id"], n["data"]["Node_Type"]
+                    )
+                    _props = {"display_name": str(n["data"]["display_name"])}
+                    yield (_id, _type, _props)
 
-        id_type_tuples = gen_nodes(network.nodes.values())
+                elif len(n["data"]) == 4:
+                    _id = self._process_id(n["data"]["id"])
+                    _type = self._process_type(
+                        n["data"]["id"], n["data"]["Node_Type"]
+                    )
 
+                    _props = {
+                        "display_name": str(n["data"]["display_name"]),
+                        "enrich_score": str(n["data"]["enrichScore"]),
+                    }
+                    yield (_id, _type, _props)
+
+        id_type_tuples = gen_nodes(list(network["nodes"]))
         self.bcy.write_nodes(id_type_tuples, db_name=db_name)
 
         # write edges
         def gen_edges(edges):
+            types_dict = {
+                "interacts w/": "Interacts_With",
+                "is associated w/": "Is_Associated_With",
+                "is related to": "Is_Related_To",
+                "targets": "Targets",
+                "is involved in": "Is_Involved_In",
+                "indicates": "Indicates",
+                "modulates": "Modulates",
+            }
             for e in edges:
-                src = self._process_id(e.id_a)
-                tar = self._process_id(e.id_b)
-                type = e.type
-                props = {"effect": e.effect, "directed": e.directed}
-                yield (src, tar, type, props)
+                _source = self._process_id(e["data"]["source"])
+                _target = self._process_id(e["data"]["target"])
+                _type = types_dict[str(e["data"]["label"])]
+                _props = {"Edge_Type": e["data"]["Edge_Type"]}
+                yield (_source, _target, _type, _props)
 
-        src_tar_type_tuples = gen_edges(network.generate_df_records())
-
+        src_tar_type_tuples = list(gen_edges(list(network["edges"])))
         self.bcy.write_edges(src_tar_type_tuples, db_name=db_name)
 
         self.bcy.write_import_call()
