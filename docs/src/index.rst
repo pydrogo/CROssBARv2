@@ -11,10 +11,10 @@ and remove the parts below (or edit ``README.rst`` in the project root).
 Reference
 #########
 
-project_name
+bccb
 ============
 
-.. automodule:: project_name
+.. automodule:: bccb
    :members:
 
 ###########################
