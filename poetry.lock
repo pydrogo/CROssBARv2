@@ -531,7 +531,7 @@ format-nongpl = ["fqdn", "idna", "isoduration", "jsonpointer (>1.13)", "rfc3339-
 
 [[package]]
 name = "linkml"
-version = "1.2.15"
+version = "1.2.12"
 description = "Linked Open Data Modeling Language"
 category = "dev"
 optional = false
@@ -548,7 +548,7 @@ jinja2 = "*"
 jsonasobj2 = ">=1.0.3,<2.0.0"
 jsonschema = ">=3.0.1"
 linkml-dataops = "*"
-linkml-runtime = "1.2.16"
+linkml-runtime = ">=1.2.14,<2.0.0"
 myst-parser = "*"
 openpyxl = "*"
 parse = "*"
@@ -585,7 +585,7 @@ linkml-runtime = ">=1.1.6"
 
 [[package]]
 name = "linkml-runtime"
-version = "1.2.16"
+version = "1.2.19"
 description = "Runtime environment for LinkML, the Linked open data modeling language"
 category = "dev"
 optional = false
@@ -1515,13 +1515,10 @@ python-versions = ">=3.7"
 docs = ["sphinx", "jaraco.packaging (>=9)", "rst.linker (>=1.9)"]
 testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-cov", "pytest-enabler (>=1.0.1)", "jaraco.itertools", "func-timeout", "pytest-black (>=0.3.7)", "pytest-mypy (>=0.9.1)"]
 
-[extras]
-bcydev = []
-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "0eeca9740a4216fe398cd3575492e6a8cd0b4156e833e9a0a91b47074dc4735a"
+content-hash = "cea2f272ca34648d856dfe148d58ad313074173fe299c5e2d9fa1187b8fdeae1"
 
 [metadata.files]
 alabaster = [
@@ -1801,16 +1798,16 @@ jsonschema = [
     {file = "jsonschema-4.6.1.tar.gz", hash = "sha256:ec2802e6a37517f09d47d9ba107947589ae1d25ff557b925d83a321fc2aa5d3b"},
 ]
 linkml = [
-    {file = "linkml-1.2.15-py3-none-any.whl", hash = "sha256:3da9470da7271742058c6da497bdf227d5f329868bec76d1317371d0e7570bb0"},
-    {file = "linkml-1.2.15.tar.gz", hash = "sha256:d49125f2ee9aaf8865bade3d3cddd2be5a29c4f247249133582875f61037db8f"},
+    {file = "linkml-1.2.12-py3-none-any.whl", hash = "sha256:de67c9f4e962af96362cce1234739c3c828e54c77633f5b1c74089452d7c8b2d"},
+    {file = "linkml-1.2.12.tar.gz", hash = "sha256:aace378f8f4372ac890484ddeabc3ebb35df4852ae895028b5b729750ea1a38c"},
 ]
 linkml-dataops = [
     {file = "linkml_dataops-0.1.0-py3-none-any.whl", hash = "sha256:193cf7f659e5f07946d2c2761896910d5f7151d91282543b1363801f68307f4c"},
     {file = "linkml_dataops-0.1.0.tar.gz", hash = "sha256:4550eab65e78b70dc3b9c651724a94ac2b1d1edb2fbe576465f1d6951a54ed04"},
 ]
 linkml-runtime = [
-    {file = "linkml-runtime-1.2.16.tar.gz", hash = "sha256:02fef5408920b4d7cb997cb2090ac635652a2cebbb67097db5d7711863e28904"},
-    {file = "linkml_runtime-1.2.16-py3-none-any.whl", hash = "sha256:b719304eb5dc2aa4e3aacff82852955a0e0cba46580f262d9f0cf1a4ed920219"},
+    {file = "linkml-runtime-1.2.19.tar.gz", hash = "sha256:36e94ec7857d6a6518d2105850c7e354235c18da9fd3c95374865c24fba6c428"},
+    {file = "linkml_runtime-1.2.19-py3-none-any.whl", hash = "sha256:6b65c84c9c812b39eb6c7c49258839bd1a2e35ff634a3a529865efd5898c2bb6"},
 ]
 markdown-it-py = [
     {file = "markdown-it-py-2.1.0.tar.gz", hash = "sha256:cf7e59fed14b5ae17c0006eff14a2d9a00ed5f3a846148153899a0224e2c07da"},
