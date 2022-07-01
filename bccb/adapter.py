@@ -165,7 +165,10 @@ class BiocypherAdapter:
                     _type = self._process_type(
                         n["data"]["id"], n["data"]["Node_Type"]
                     )
-                    _props = {"display_name": str(n["data"]["display_name"])}
+                    _props = {
+                        "display_name": str(n["data"]["display_name"]), 
+                        "enrich_score": 0, # TODO is this the right way to do this?
+                    }
                     yield (_id, _type, _props)
 
                 elif len(n["data"]) == 4:
@@ -183,26 +186,26 @@ class BiocypherAdapter:
         id_type_tuples = gen_nodes(list(network["nodes"]))
         self.bcy.write_nodes(id_type_tuples, db_name=db_name)
 
-        # write edges
-        def gen_edges(edges):
-            types_dict = {
-                "interacts w/": "Interacts_With",
-                "is associated w/": "Is_Associated_With",
-                "is related to": "Is_Related_To",
-                "targets": "Targets",
-                "is involved in": "Is_Involved_In",
-                "indicates": "Indicates",
-                "modulates": "Modulates",
-            }
-            for e in edges:
-                _source = self._process_id(e["data"]["source"])
-                _target = self._process_id(e["data"]["target"])
-                _type = types_dict[str(e["data"]["label"])]
-                _props = {"Edge_Type": e["data"]["Edge_Type"]}
-                yield (_source, _target, _type, _props)
+        # # write edges
+        # def gen_edges(edges):
+        #     types_dict = {
+        #         "interacts w/": "Interacts_With",
+        #         "is associated w/": "Is_Associated_With",
+        #         "is related to": "Is_Related_To",
+        #         "targets": "Targets",
+        #         "is involved in": "Is_Involved_In",
+        #         "indicates": "Indicates",
+        #         "modulates": "Modulates",
+        #     }
+        #     for e in edges:
+        #         _source = self._process_id(e["data"]["source"])
+        #         _target = self._process_id(e["data"]["target"])
+        #         _type = types_dict[str(e["data"]["label"])]
+        #         _props = {"Edge_Type": e["data"]["Edge_Type"]}
+        #         yield (_source, _target, _type, _props)
 
-        src_tar_type_tuples = list(gen_edges(list(network["edges"])))
-        self.bcy.write_edges(src_tar_type_tuples, db_name=db_name)
+        # src_tar_type_tuples = list(gen_edges(list(network["edges"])))
+        # self.bcy.write_edges(src_tar_type_tuples, db_name=db_name)
 
         self.bcy.write_import_call()
 

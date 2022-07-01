@@ -15,3 +15,6 @@ dist/*
 *.pye
 *.pyc
 *.kate-swp
+biocypher-out/
+biocypher-log/
+.ipynb-checkpoints/
