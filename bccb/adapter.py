@@ -138,7 +138,7 @@ class BiocypherAdapter:
         src_tar_type_tuples = list(gen_edges(list(network["edges"])))
         self.bcy.add_edges(src_tar_type_tuples)
 
-    def write_to_csv_for_admin_import(self, network=None, db_name=None):
+    def write_to_csv_for_admin_import(self, network=None, db_name="import"):
         """
         Loads a pypath network into the biocypher (Neo4j) backend using
         the fast Admin Import function, which requires text files that
