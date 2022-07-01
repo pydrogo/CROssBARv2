@@ -44,7 +44,7 @@ class BiocypherAdapter:
         network=None,
         wipe=False,
         offline=False,
-        user_schema_config="config/schema_config.yaml",
+        user_schema_config_path="config/schema_config.yaml",
     ):
 
         self.bcy = biocypher.Driver(
@@ -55,7 +55,7 @@ class BiocypherAdapter:
             db_passwd=db_passwd,
             wipe=wipe,
             offline=offline,
-            user_schema_config=user_schema_config,
+            user_schema_config_path=user_schema_config_path,
         )
 
         if network:

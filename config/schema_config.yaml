@@ -195,7 +195,7 @@ GeneToDiseaseAssociation:
   source: Protein
   target: Disease
   label_as_edge: Is_Related_To
-  label_in_input: Disease
+  label_in_input: [Disease, kegg_dis_prot]
 
 # Targets: # DrugToGeneAssociation, has_target (Disease -> Gene), affects
 # possible pull request: DrugToProteinAssociation
@@ -217,7 +217,7 @@ GeneToPathwayAssociation:
   target: Pathway
   label_as_edge: Is_Involved_In
   preferred_id: custom
-  label_in_input: Pathway
+  label_in_input: [Pathway, kegg_path_prot]
 
 treated_by: 
 # DrugToDiseaseAssociation (NOT IN BIOLINK), treated_by
@@ -241,7 +241,15 @@ occurs_in_disease: # not in data?
   source: Disease
   target: Pathway
   label_as_edge: Modulates
-  label_in_input: XX
+  label_in_input: kegg_dis_path
+
+ChemicalToChemicalAssociation:
+  represented_as: edge
+  preferred_id: custom
+  source: SmallMolecule
+  target: SmallMolecule
+  label_as_edge: ChemicalToChemicalAssociation
+  label_in_input: [Prediction, predictionChembl]
 
 
 
