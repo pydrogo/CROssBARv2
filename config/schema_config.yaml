@@ -144,15 +144,17 @@ MolecularMixture: # there is no compound in Biolink. could be molecular mixture
   # source: Protein
   # target: Protein
 
-Interacts_With: # PostTranslationalInteraction, interacts_with
+# Interacts_With: # PostTranslationalInteraction, interacts_with
+PostTranslationalInteraction:
 # can be more granular if info is there
   represented_as: edge
   preferred_id: custom
   source: Protein
   target: Protein
   label_as_edge: Interacts_With
+  label_in_input: PPI
   
-Is_Associated_With: 
+# Is_Associated_With: 
 # could be broken up and made available collectively via mixin
 # DiseaseToPhenotypicFeatureAssociation, 
 # GeneToPhenotypicFeatureAssociation,
@@ -160,13 +162,24 @@ Is_Associated_With:
 # EntityToPhenotypicFeatureAssociation,
 # occurs_in_disease, has_phenotype, has_manifestation, contributes_to,
 # disease_has_basis_in
+GeneToPhenotypicFeatureAssociation:
   represented_as: edge
-  source: [Protein, Disease]
+  preferred_id: custom
+  source: Protein
   target: Phenotype
   label_as_edge: Is_Associated_With
+  label_in_input: hpodis
+
+# possible pull request: ProteinToPhenotypicFeatureAssociation
+DiseaseToPhenotypicFeatureAssociation:
+  represented_as: edge
   preferred_id: custom
+  source: Disease
+  target: Phenotype
+  label_as_edge: Is_Associated_With
+  label_in_input: HPO
   
-Is_Related_To: 
+# Is_Related_To: 
 # GeneToPhenotypicFeatureAssociation,
 # VariantToPhenotypicFeatureAssociation,
 # EntityToPhenotypicFeatureAssociation,
@@ -175,29 +188,38 @@ Is_Related_To:
 # DruggableGeneToDiseaseAssociation
 # occurs_in_disease, has_phenotype, has_manifestation, contributes_to,
 # disease_has_basis_in
+# possible pull request: ProteinToDiseaseAssociation
+GeneToDiseaseAssociation:
   represented_as: edge
   preferred_id: custom
   source: Protein
   target: Disease
   label_as_edge: Is_Related_To
+  label_in_input: Disease
 
-Targets: # DrugToGeneAssociation, has_target (Disease -> Gene), affects
+# Targets: # DrugToGeneAssociation, has_target (Disease -> Gene), affects
+# possible pull request: DrugToProteinAssociation
+DrugToGeneAssociation:
   represented_as: edge
   preferred_id: custom
-  source: [Drug, Compound]
+  source: [SmallMolecule, MolecularMixture]
   target: Protein
   label_as_edge: Targets
+  label_in_input: [drugChembl, Drug, Chembl]
 
-Is_Involved_In: 
+# Is_Involved_In: 
 # GeneToPathwayAssociation,
 # contributes_to, has_participant, participates_in
+# possible pull request: ProteinToPathwayAssociation
+GeneToPathwayAssociation:
   represented_as: edge
   source: Protein
   target: Pathway
   label_as_edge: Is_Involved_In
   preferred_id: custom
+  label_in_input: Pathway
 
-Indicates: 
+treated_by: 
 # DrugToDiseaseAssociation (NOT IN BIOLINK), treated_by
 # (DiseaseOrPhenotypicFeature -> ChemicalOrDrugOrTreatment) 
 
@@ -208,8 +230,9 @@ Indicates:
   source: Drug
   target: Disease
   label_as_edge: Indicates
+  label_in_input: kegg_dis_drug
 
-Modulates: 
+occurs_in_disease: # not in data?
 # DiseaseToPathwayAssociation (NOT IN BIOLINK),
 # GeneToPathwayAssociation, disease_has_basis_in,
 # has_molecular_consequence, occurs_in_disease
@@ -218,6 +241,7 @@ Modulates:
   source: Disease
   target: Pathway
   label_as_edge: Modulates
+  label_in_input: XX
 
 
 
