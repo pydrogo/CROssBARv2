@@ -186,26 +186,26 @@ class BiocypherAdapter:
         id_type_tuples = gen_nodes(list(network["nodes"]))
         self.bcy.write_nodes(id_type_tuples, db_name=db_name)
 
-        # # write edges
-        # def gen_edges(edges):
-        #     types_dict = {
-        #         "interacts w/": "Interacts_With",
-        #         "is associated w/": "Is_Associated_With",
-        #         "is related to": "Is_Related_To",
-        #         "targets": "Targets",
-        #         "is involved in": "Is_Involved_In",
-        #         "indicates": "Indicates",
-        #         "modulates": "Modulates",
-        #     }
-        #     for e in edges:
-        #         _source = self._process_id(e["data"]["source"])
-        #         _target = self._process_id(e["data"]["target"])
-        #         _type = types_dict[str(e["data"]["label"])]
-        #         _props = {"Edge_Type": e["data"]["Edge_Type"]}
-        #         yield (_source, _target, _type, _props)
+        # write edges
+        def gen_edges(edges):
+            types_dict = {
+                "interacts w/": "Interacts_With",
+                "is associated w/": "Is_Associated_With",
+                "is related to": "Is_Related_To",
+                "targets": "Targets",
+                "is involved in": "Is_Involved_In",
+                "indicates": "Indicates",
+                "modulates": "Modulates",
+            }
+            for e in edges:
+                _source = self._process_id(e["data"]["source"])
+                _target = self._process_id(e["data"]["target"])
+                _type = e["data"]["Edge_Type"]
+                _props = {}
+                yield (_source, _target, _type, _props)
 
-        # src_tar_type_tuples = list(gen_edges(list(network["edges"])))
-        # self.bcy.write_edges(src_tar_type_tuples, db_name=db_name)
+        src_tar_type_tuples = list(gen_edges(list(network["edges"])))
+        self.bcy.write_edges(src_tar_type_tuples, db_name=db_name)
 
         self.bcy.write_import_call()
 
