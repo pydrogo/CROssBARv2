@@ -110,7 +110,7 @@ class BiocypherAdapter:
 
                     _props = {
                         "display_name": str(n["data"]["display_name"]),
-                        "enrich_score": str(n["data"]["enrichScore"]),
+                        "enrich_score": float(n["data"]["enrichScore"]),
                     }
                     yield (_id, _type, _props)
 
@@ -169,7 +169,7 @@ class BiocypherAdapter:
                     )
                     _props = {
                         "display_name": str(n["data"]["display_name"]), 
-                        "enrich_score": 0, # TODO is this the right way to do this?
+                        "enrich_score": float(0), # TODO is this the right way to do this?
                     }
                     yield (_id, _type, _props)
 
@@ -181,11 +181,11 @@ class BiocypherAdapter:
 
                     _props = {
                         "display_name": str(n["data"]["display_name"]),
-                        "enrich_score": str(n["data"]["enrichScore"]),
+                        "enrich_score": float(n["data"]["enrichScore"]),
                     }
                     yield (_id, _type, _props)
 
-        id_type_tuples = gen_nodes(list(network["nodes"]))
+        id_type_tuples = list(gen_nodes(list(network["nodes"])))
         self.bcy.write_nodes(id_type_tuples, db_name=db_name)
 
         # write edges

@@ -8,7 +8,7 @@ sys.path.append('') # fix weird poetry behaviour I don't understand
 
 from bccb.adapter import BiocypherAdapter
 
-adapter = BiocypherAdapter(offline=True)
+adapt = BiocypherAdapter(offline=True)
 
-adapter.build_python_object()
-adapter.write_to_csv_for_admin_import()
+adapt.build_python_object()
+adapt.write_to_csv_for_admin_import()
