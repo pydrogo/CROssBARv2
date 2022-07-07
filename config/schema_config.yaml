@@ -1,4 +1,4 @@
-Title: BioCypher graph schema configuration file
+Title: BioCypher graph schema configuration file for CROssBAR v2
 
 # This configuration file establishes the hierarchy and connectivity in a newly
 # set-up BioCypher property graph database. Naming should adhere to Biolink
@@ -30,64 +30,81 @@ Title: BioCypher graph schema configuration file
   # label_in_input: protein # modify this to allow translation
   # this is the entity name (ie, type) in the input database
   
-
-# microRNA:
-  # represented_as: node
-  # preferred_id: MIR
-  # label_in_input: mirna
-    
-# MacromolecularComplexMixin:
-  # represented_as: node
-  # preferred_id: CPX
-  # label_in_input: complex
-
-# OrganismTaxon:
-  # represented_as: node
-  # preferred_id: NCBITaxon
-  # label_in_input: taxon
-
-# Publication:
-  # represented_as: node
-  # preferred_id: NLMID
-# ConfidenceLevel:
-  # represented_as: node
-  # preferred_id: None
-
-# Cell:
-  # represented_as: node
-  # preferred_id: CL
-  
-Pathway:
-  represented_as: node
-  preferred_id: [REACT, KEGG.PATHWAY]
-  label_in_input: [Pathway, kegg_Pathway]
-  
+ 
 Protein:
   represented_as: node
   preferred_id: UniProtKB
   label_in_input: Protein
-  
-Disease:
+
+Gene:
   represented_as: node
-  preferred_id: [MONDO, EFO, ORPHANET, KEGG.DISEASE]
-  label_in_input: [MONDO, EFO, Orphanet, KEGG.DISEASE]
-  
+  preferred_id: HGNC
+  label_in_input: Gene
+
+OrganismTaxon:
+  represented_as: node
+  preferred_id: NCBITaxon
+  label_in_input: Organism
+
 SmallMolecule:  # drug has only RXCUI, NDC, UMLS identifiers
   represented_as: node
   preferred_id: DRUGBANK
   label_in_input: Drug
   
-Phenotype:
-  represented_as: node
-  preferred_id: HP
-  label_in_input: HPO
-  
 MolecularMixture: # there is no compound in Biolink. could be molecular mixture
   represented_as: node
   preferred_id: CHEMBL.COMPOUND
   label_in_input: Compound
-      
+  
+Disease:
+  represented_as: node
+  preferred_id: [MONDO, EFO, ORPHANET, KEGG.DISEASE]
+  label_in_input: [MONDO, EFO, Orphanet, KEGG.DISEASE]
 
+Cell:
+  represented_as: node
+  preferred_id: CL
+  label_in_input: Cell
+
+Tissue:
+  represented_as: node
+  preferred_id: UBERON
+  label_in_input: Tissue
+
+CellLine:
+  represented_as: node
+  preferred_id: CCLE
+  label_in_input: CellLine
+
+SubjectOfInvestigation:
+  represented_as: node
+  preferred_id: custom
+  label_in_input: Patient
+  
+Phenotype:
+  represented_as: node
+  preferred_id: HP
+  label_in_input: HPO
+      
+ProteinDomain:
+  represented_as: node
+  preferred_id: InterPro
+  label_in_input: Domain
+
+Pathway:
+  represented_as: node
+  preferred_id: [REACT, KEGG.PATHWAY]
+  label_in_input: [Pathway, kegg_Pathway]
+
+BiologicalProcess:
+  represented_as: node
+  preferred_id: GO
+  label_in_input: Function
+
+SideEffect:
+  represented_as: node
+  preferred_id: SIDER
+  label_in_input: Side_effect
 
 # ---
 # Associations
@@ -105,54 +122,45 @@ MolecularMixture: # there is no compound in Biolink. could be molecular mixture
 # targeting, etc. Biolink proposes to use interaction identifiers from 
 # ontologies, such as https://www.ebi.ac.uk/ols/ontologies/mi/.
 
-# PairwiseMolecularInteraction:
-  # represented_as: node
-  # preferred_id: EBI
-
-# DiseaseToEntityAssociationMixin:
-  # represented_as: edge
-  # preferred_id: tbd
-  # source: Disease
-  # target: Protein
-# EntityToDiseaseAssociationMixin:
-  # represented_as: edge
-  # preferred_id: tbd
-  # source: Protein
-  # target: Disease
-
-
-# below not in biolink
-# will insert into custom biolink yaml, get hierarchy from there
-# PostTranslationalInteraction:
-  # represented_as: node
-  # preferred_id: concat_ids
-  # source: Protein 
-  # optional other sources/targets?
-  # source and target need to adhere to Biolink naming, otherwise the
-  # meta-graph will not work
-  # target: Protein
-  # label_in_input: post_translational
-  # label_as_edge: INTERACTS_POST_TRANSLATIONAL
-# Phosphorylation:
-  # represented_as: edge
-  # preferred_id: tbd
-  # source: Protein
-  # target: Protein
-# Acetylation:
-  # represented_as: edge
-  # preferred_id: tbd
-  # source: Protein
-  # target: Protein
-
-# Interacts_With: # PostTranslationalInteraction, interacts_with
 PostTranslationalInteraction:
-# can be more granular if info is there
   represented_as: edge
+  label_as_edge: Interacts_With
   preferred_id: custom
   source: Protein
   target: Protein
-  label_as_edge: Interacts_With
   label_in_input: PPI
+
+ProteinDomainToProteinAssociation:
+  represented_as: edge
+  label_as_edge: Has_Domain
+  preferred_id: custom
+  source: Protein
+  target: ProteinDomain
+  label_in_input: has
+
+ProteinToBiologicalProcessAssociation:
+  represented_as: edge
+  label_as_edge: Enables
+  preferred_id: custom
+  source: Protein
+  target: BiologicalProcess
+  label_in_input: enables
+
+ProteinToCellularComponentAssociation:
+  represented_as: edge
+  label_as_edge: Localizes_To
+  preferred_id: custom
+  source: Protein
+  target: CellularComponent
+  label_in_input: localizes_to
+
+ProteinToPathwayAssociation:
+  represented_as: edge
+  label_as_edge: Takes_Part_In
+  preferred_id: custom
+  source: Protein
+  target: Pathway
+  label_in_input: takes_part_in
   
 # Is_Associated_With: 
 # could be broken up and made available collectively via mixin
@@ -252,63 +260,3 @@ ChemicalToChemicalAssociation:
   label_in_input: [Prediction, predictionChembl]
 
 
-
-## CROssBAR list of source database attributes
-# UniProtKB (related MongoDB collections: Proteins):
-# accession(protein,UniProt)
-# ec
-# fullName
-# gene(symbol)
-# go
-# interpro
-# omim
-# orphanet
-# pfam
-# reactome
-# taxId
-
-# IntAct (related MongoDB collections: Intact):
-# accession(protein,UniProt)
-# confidence
-# gene(symbol)
-
-# EFO (related MongoDB collections: EFO disease terms):
-# doid
-# label
-# mesh
-# oboId
-# omimId
-# synonym
-
-# HPO (related MongoDB collections: HPO):
-# genesymbol
-# hpotermname
-# synonym
-
-# ChEMBL (related MongoDB collections: Molecules, Targets, Assays, Activities):
-# assayChemblId
-# assayType
-# assayOrganism
-# moleculeChemblId
-# canonicalSmiles
-# inchiKey
-# pchemblValue
-# targetChemblId
-# accession(protein,UniProt)
-# targetIds
-# DrugBank (related MongoDB collections: Drugs):
-# accession(target protein,UniProt)
-# chemblId
-# identifier
-# name
-# pubchemCid
-
-# PubChem (related MongoDB collections: PubChem Bioassay Sids, PubChem Biossays, PubChem Compounds, PubChem Substances):
-# canonicalSmiles
-# cid
-# inchiKey
-# accession(target protein,UniProt)
-# assayPubchemId
-# ncbiProteinId
-# sids
-# outcome
