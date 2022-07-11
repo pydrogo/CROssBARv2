@@ -1,0 +1,1960 @@
+Type,Source Database,ID,Name
+Gene,UniprotKB,CDC37L1,
+Gene,UniprotKB,CDA,
+Gene,UniprotKB,CHCHD10,
+Gene,UniprotKB,ALG1L2,
+Gene,UniprotKB,ACTR3C,
+Gene,UniprotKB,C1QTNF2,
+Gene,UniprotKB,CRABP2,
+Gene,UniprotKB,DDX6,
+Gene,UniprotKB,BIRC6,
+Gene,UniprotKB,CRTC3,
+Gene,UniprotKB,BTBD9,
+Gene,UniprotKB,CTCFL,
+Gene,UniprotKB,C5orf56,
+Gene,UniprotKB,AGPAT2,
+Gene,UniprotKB,EED,
+Gene,UniprotKB,DNAJB13,
+Gene,UniprotKB,CKMT2,
+Gene,UniprotKB,ARTN,
+Gene,UniprotKB,DEFB125,
+Gene,UniprotKB,CD53,
+Gene,UniprotKB,C1orf105,
+Gene,UniprotKB,ANLN,
+Gene,UniprotKB,CLEC5A,
+Gene,UniprotKB,CMTR2,
+Gene,UniprotKB,C16orf46,
+Gene,UniprotKB,AMY1A,
+Gene,UniprotKB,CELA2A,
+Gene,UniprotKB,AKAP9,
+Gene,UniprotKB,DYNLL1,
+Gene,UniprotKB,DEFB130A,
+Gene,UniprotKB,COQ6,
+Gene,UniprotKB,CEP70,
+Gene,UniprotKB,ANKS6,
+Gene,UniprotKB,C1QTNF7,
+Gene,UniprotKB,DRC3,
+Gene,UniprotKB,CLEC16A,
+Gene,UniprotKB,AMOT,
+Gene,UniprotKB,ANKRD62,
+Gene,UniprotKB,CLEC20A,
+Gene,UniprotKB,CNBD2,
+Gene,UniprotKB,ANGPTL5,
+Gene,UniprotKB,ATP6V1G1,
+Gene,UniprotKB,APOA5,
+Gene,UniprotKB,ASAP2,
+Gene,UniprotKB,C2CD4D,
+Gene,UniprotKB,BRWD3,
+Gene,UniprotKB,DLAT,
+Gene,UniprotKB,CHGA,
+Gene,UniprotKB,AGBL4,
+Gene,UniprotKB,CCL20,
+Gene,UniprotKB,CSRNP3,
+Gene,UniprotKB,BCS1L,
+Gene,UniprotKB,CUL9,
+Gene,UniprotKB,APIP,
+Gene,UniprotKB,DYNLT1,
+Gene,UniprotKB,CD300A,
+Gene,UniprotKB,B3GLCT,
+Gene,UniprotKB,CCDC151,
+Gene,UniprotKB,CCL27,
+Gene,UniprotKB,BMP1,
+Gene,UniprotKB,DEFA5,
+Gene,UniprotKB,CCNE2,
+Gene,UniprotKB,CDH15,
+Gene,UniprotKB,AZIN2,
+Gene,UniprotKB,C9orf57,
+Gene,UniprotKB,DNAJB6,
+Gene,UniprotKB,C8orf49,
+Gene,UniprotKB,ADH4,
+Gene,UniprotKB,CFAP20,
+Gene,UniprotKB,AKT1S1,
+Gene,UniprotKB,COPS7B,
+Gene,UniprotKB,CELF6,
+Gene,UniprotKB,ECSCR,
+Gene,UniprotKB,CDC20,
+Gene,UniprotKB,CLTB,
+Gene,UniprotKB,AQP1,
+Gene,UniprotKB,AK3,
+Gene,UniprotKB,CHIC2,
+Gene,UniprotKB,CLDND2,
+Gene,UniprotKB,DLGAP2,
+Gene,UniprotKB,ADA2,
+Gene,UniprotKB,ACBD4,
+Gene,UniprotKB,APELA,
+Gene,UniprotKB,AJM1,
+Gene,UniprotKB,BORCS5,
+Gene,UniprotKB,C1orf100,
+Gene,UniprotKB,APOL4,
+Gene,UniprotKB,DENND1A,
+Gene,UniprotKB,CYP4Z2P,
+Gene,UniprotKB,C16orf92,
+Gene,UniprotKB,ADCY2,
+Gene,UniprotKB,ATP8B1,
+Gene,UniprotKB,CCDC86,
+Gene,UniprotKB,DRD3,
+Gene,UniprotKB,BBS5,
+Gene,UniprotKB,B3GNT3,
+Gene,UniprotKB,DEFB4A,
+Gene,UniprotKB,CENPJ,
+Gene,UniprotKB,AKAP10,
+Gene,UniprotKB,AMY2B,
+Gene,UniprotKB,CLDN34,
+Gene,UniprotKB,DUX4L9,
+Gene,UniprotKB,CYSTM1,
+Gene,UniprotKB,DYM,
+Gene,UniprotKB,CD226,
+Gene,UniprotKB,ACOT2,
+Gene,UniprotKB,CDX1,
+Gene,UniprotKB,AZGP1,
+Gene,UniprotKB,C4orf46,
+Gene,UniprotKB,ACTN4,
+Gene,UniprotKB,ASAP1,
+Gene,UniprotKB,DLGAP3,
+Gene,UniprotKB,CLDND1,
+Gene,UniprotKB,CAMK1,
+Gene,UniprotKB,ANKDD1B,
+Gene,UniprotKB,C3orf22,
+Gene,UniprotKB,CREBRF,
+Gene,UniprotKB,DENND2C,
+Gene,UniprotKB,CCL26,
+Gene,UniprotKB,DENND2A,
+Gene,UniprotKB,APOC4,
+Gene,UniprotKB,ALDH1A3,
+Gene,UniprotKB,COL27A1,
+Gene,UniprotKB,ADAMTS12,
+Gene,UniprotKB,COQ8B,
+Gene,UniprotKB,DCLRE1B,
+Gene,UniprotKB,DCAF11,
+Gene,UniprotKB,EGF,
+Gene,UniprotKB,DDX47,
+Gene,UniprotKB,BRSK2,
+Gene,UniprotKB,EFCC1,
+Gene,UniprotKB,BASP1,
+Gene,UniprotKB,BRAP,
+Gene,UniprotKB,BET1L,
+Gene,UniprotKB,CXCL5,
+Gene,UniprotKB,ADGRB1,
+Gene,UniprotKB,CSTF2T,
+Gene,UniprotKB,CLEC11A,
+Gene,UniprotKB,C18orf15,
+Gene,UniprotKB,CHST4,
+Gene,UniprotKB,ASGR2,
+Gene,UniprotKB,ARHGAP33,
+Gene,UniprotKB,DBNL,
+Gene,UniprotKB,DISP2,
+Gene,UniprotKB,CDCA3,
+Gene,UniprotKB,BDKRB2,
+Gene,UniprotKB,ATG5,
+Gene,UniprotKB,COPA,
+Gene,UniprotKB,COX5A,
+Gene,UniprotKB,CTXN2,
+Gene,UniprotKB,ALX4,
+Gene,UniprotKB,BTAF1,
+Gene,UniprotKB,BEX5,
+Gene,UniprotKB,CCDC28A,
+Gene,UniprotKB,CHRD,
+Gene,UniprotKB,CALHM3,
+Gene,UniprotKB,DCDC2,
+Gene,UniprotKB,CHCHD3,
+Gene,UniprotKB,DEFB127,
+Gene,UniprotKB,ARL16,
+Gene,UniprotKB,CYP4A22,
+Gene,UniprotKB,ADAMTS15,
+Gene,UniprotKB,DDX12P,
+Gene,UniprotKB,CT45A5,
+Gene,UniprotKB,ACOT8,
+Gene,UniprotKB,ATXN3,
+Gene,UniprotKB,CCDC177,
+Gene,UniprotKB,CPEB1,
+Gene,UniprotKB,DNTT,
+Gene,UniprotKB,ADCY6,
+Gene,UniprotKB,CYC1,
+Gene,UniprotKB,E2F1,
+Gene,UniprotKB,DPM1,
+Gene,UniprotKB,CTDSPL,
+Gene,UniprotKB,DANCR,
+Gene,UniprotKB,CLCN1,
+Gene,UniprotKB,CST8,
+Gene,UniprotKB,COG2,
+Gene,UniprotKB,CRYAA,
+Gene,UniprotKB,ARAP1,
+Gene,UniprotKB,COL4A5,
+Gene,UniprotKB,ACD,
+Gene,UniprotKB,CCDC137,
+Gene,UniprotKB,CGB1,
+Gene,UniprotKB,EEF1AKMT3,
+Gene,UniprotKB,ACOT1,
+Gene,UniprotKB,CLU,
+Gene,UniprotKB,ATXN2,
+Gene,UniprotKB,DTWD2,
+Gene,UniprotKB,AP1S3,
+Gene,UniprotKB,CHCHD4,
+Gene,UniprotKB,C20orf141,
+Gene,UniprotKB,CLN6,
+Gene,UniprotKB,COL11A2,
+Gene,UniprotKB,CASS4,
+Gene,UniprotKB,AKR7A3,
+Gene,UniprotKB,DEPDC1B,
+Gene,UniprotKB,ATP5MD,
+Gene,UniprotKB,CACNG2,
+Gene,UniprotKB,BTBD3,
+Gene,UniprotKB,DPPA4,
+Gene,UniprotKB,DTWD1,
+Gene,UniprotKB,C17orf78,
+Gene,UniprotKB,CYP11B2,
+Gene,UniprotKB,C16orf97,
+Gene,UniprotKB,CKAP4,
+Gene,UniprotKB,CEP135,
+Gene,UniprotKB,ABRACL,
+Gene,UniprotKB,DUSP13,
+Gene,UniprotKB,ABCC1,
+Gene,UniprotKB,ALG1,
+Gene,UniprotKB,BLCAP,
+Gene,UniprotKB,CDH6,
+Gene,UniprotKB,EBPL,
+Gene,UniprotKB,DCTN1,
+Gene,UniprotKB,C17orf102,
+Gene,UniprotKB,AIMP2,
+Gene,UniprotKB,CYP8B1,
+Gene,UniprotKB,CAV2,
+Gene,UniprotKB,DAAM1,
+Gene,UniprotKB,C4orf54,
+Gene,UniprotKB,C1orf53,
+Gene,UniprotKB,CCSER1,
+Gene,UniprotKB,CFDP1,
+Gene,UniprotKB,CDC42EP4,
+Gene,UniprotKB,CHAF1B,
+Gene,UniprotKB,CREB3L4,
+Gene,UniprotKB,EDF1,
+Gene,UniprotKB,DERL2,
+Gene,UniprotKB,DPT,
+Gene,UniprotKB,ALG10,
+Gene,UniprotKB,ACTL6B,
+Gene,UniprotKB,B4GALT3,
+Gene,UniprotKB,CENPT,
+Gene,UniprotKB,AMMECR1,
+Gene,UniprotKB,DNALI1,
+Gene,UniprotKB,CHRNA6,
+Gene,UniprotKB,C1R,
+Gene,UniprotKB,CFAP58,
+Gene,UniprotKB,ABHD12B,
+Gene,UniprotKB,ATAD3B,
+Gene,UniprotKB,ARHGEF19,
+Gene,UniprotKB,DNAH17,
+Gene,UniprotKB,ECD,
+Gene,UniprotKB,AIRE,
+Gene,UniprotKB,EFCAB5,
+Gene,UniprotKB,BTBD7,
+Gene,UniprotKB,ARPC2,
+Gene,UniprotKB,CYB5B,
+Gene,UniprotKB,AKR1D1,
+Gene,UniprotKB,BOK,
+Gene,UniprotKB,CIDEB,
+Gene,UniprotKB,CDON,
+Gene,UniprotKB,EDN2,
+Gene,UniprotKB,C1QTNF12,
+Gene,UniprotKB,CIRBP,
+Gene,UniprotKB,COL12A1,
+Gene,UniprotKB,CCDC71,
+Gene,UniprotKB,COL6A1,
+Gene,UniprotKB,CXCL12,
+Gene,UniprotKB,ABCB7,
+Gene,UniprotKB,CAD,
+Gene,UniprotKB,C11orf86,
+Gene,UniprotKB,CIB3,
+Gene,UniprotKB,B4GALT5,
+Gene,UniprotKB,BABAM2,
+Gene,UniprotKB,DUXB,
+Gene,UniprotKB,CCDC181,
+Gene,UniprotKB,DDI2,
+Gene,UniprotKB,CHN1,
+Gene,UniprotKB,CUL1,
+Gene,UniprotKB,CYB5R3,
+Gene,UniprotKB,ARHGAP5-AS1,
+Gene,UniprotKB,BAGE3,
+Gene,UniprotKB,CCL3L1,
+Gene,UniprotKB,CPO,
+Gene,UniprotKB,DKC1,
+Gene,UniprotKB,DCAF4,
+Gene,UniprotKB,ADGRG2,
+Gene,UniprotKB,C9orf78,
+Gene,UniprotKB,CBLN2,
+Gene,UniprotKB,ARIH2,
+Gene,UniprotKB,DELE1,
+Gene,UniprotKB,CYP4B1,
+Gene,UniprotKB,CCDC149,
+Gene,UniprotKB,ASF1A,
+Gene,UniprotKB,ATOX1,
+Gene,UniprotKB,BEX1,
+Gene,UniprotKB,ARF5,
+Gene,UniprotKB,EFNA4,
+Gene,UniprotKB,COL2A1,
+Gene,UniprotKB,CPNE6,
+Gene,UniprotKB,AMFR,
+Gene,UniprotKB,CTSS,
+Gene,UniprotKB,AS3MT,
+Gene,UniprotKB,C2orf83,
+Gene,UniprotKB,DTD1,
+Gene,UniprotKB,AK2,
+Gene,UniprotKB,ACSS2,
+Gene,UniprotKB,ARFGAP3,
+Protein,UniprotKB,Q7L3B6,
+Protein,UniprotKB,P32320,
+Protein,UniprotKB,Q8WYQ3,
+Protein,UniprotKB,C9J202,
+Protein,UniprotKB,Q9C0K3,
+Protein,UniprotKB,Q9BXJ5,
+Protein,UniprotKB,P29373,
+Protein,UniprotKB,P26196,
+Protein,UniprotKB,Q9NR09,
+Protein,UniprotKB,Q6UUV7,
+Protein,UniprotKB,Q96Q07,
+Protein,UniprotKB,Q8NI51,
+Protein,UniprotKB,Q8N8D9,
+Protein,UniprotKB,O15120,
+Protein,UniprotKB,O75530,
+Protein,UniprotKB,P59910,
+Protein,UniprotKB,P17540,
+Protein,UniprotKB,Q5T4W7,
+Protein,UniprotKB,Q8N687,
+Protein,UniprotKB,P19397,
+Protein,UniprotKB,O95561,
+Protein,UniprotKB,Q9NQW6,
+Protein,UniprotKB,Q9NY25,
+Protein,UniprotKB,Q8IYT2,
+Protein,UniprotKB,Q6P387,
+Protein,UniprotKB,P04745,
+Protein,UniprotKB,P08217,
+Protein,UniprotKB,Q99996,
+Protein,UniprotKB,P63167,
+Protein,UniprotKB,P0DP74,
+Protein,UniprotKB,Q9Y2Z9,
+Protein,UniprotKB,Q8NHQ1,
+Protein,UniprotKB,Q68DC2,
+Protein,UniprotKB,Q9BXJ2,
+Protein,UniprotKB,Q9H069,
+Protein,UniprotKB,Q2KHT3,
+Protein,UniprotKB,Q4VCS5,
+Protein,UniprotKB,A6NC57,
+Protein,UniprotKB,Q6ZU45,
+Protein,UniprotKB,Q96M20,
+Protein,UniprotKB,Q86XS5,
+Protein,UniprotKB,O75348,
+Protein,UniprotKB,Q6Q788,
+Protein,UniprotKB,O43150,
+Protein,UniprotKB,B7Z1M9,
+Protein,UniprotKB,Q6RI45,
+Protein,UniprotKB,P10515,
+Protein,UniprotKB,P10645,
+Protein,UniprotKB,Q5VU57,
+Protein,UniprotKB,P78556,
+Protein,UniprotKB,Q8WYN3,
+Protein,UniprotKB,Q9Y276,
+Protein,UniprotKB,Q8IWT3,
+Protein,UniprotKB,Q96GX9,
+Protein,UniprotKB,P63172,
+Protein,UniprotKB,Q9UGN4,
+Protein,UniprotKB,Q6Y288,
+Protein,UniprotKB,A5D8V7,
+Protein,UniprotKB,Q9Y4X3,
+Protein,UniprotKB,P13497,
+Protein,UniprotKB,Q01523,
+Protein,UniprotKB,O96020,
+Protein,UniprotKB,P55291,
+Protein,UniprotKB,Q96A70,
+Protein,UniprotKB,Q5W0N0,
+Protein,UniprotKB,O75190,
+Protein,UniprotKB,Q96NF6,
+Protein,UniprotKB,P08319,
+Protein,UniprotKB,Q9Y6A4,
+Protein,UniprotKB,Q96B36,
+Protein,UniprotKB,Q9H9Q2,
+Protein,UniprotKB,Q96J87,
+Protein,UniprotKB,Q19T08,
+Protein,UniprotKB,Q12834,
+Protein,UniprotKB,P09497,
+Protein,UniprotKB,P29972,
+Protein,UniprotKB,Q9UIJ7,
+Protein,UniprotKB,Q9UKJ5,
+Protein,UniprotKB,Q8NHS1,
+Protein,UniprotKB,Q9P1A6,
+Protein,UniprotKB,Q9NZK5,
+Protein,UniprotKB,Q8NC06,
+Protein,UniprotKB,P0DMC3,
+Protein,UniprotKB,C9J069,
+Protein,UniprotKB,Q969J3,
+Protein,UniprotKB,Q5SVJ3,
+Protein,UniprotKB,Q9BPW4,
+Protein,UniprotKB,Q8TEH3,
+Protein,UniprotKB,Q8N1L4,
+Protein,UniprotKB,Q96LL3,
+Protein,UniprotKB,Q08462,
+Protein,UniprotKB,O43520,
+Protein,UniprotKB,Q9H6F5,
+Protein,UniprotKB,P35462,
+Protein,UniprotKB,Q8N3I7,
+Protein,UniprotKB,Q9Y2A9,
+Protein,UniprotKB,O15263,
+Protein,UniprotKB,Q9HC77,
+Protein,UniprotKB,O43572,
+Protein,UniprotKB,P19961,
+Protein,UniprotKB,H7C241,
+Protein,UniprotKB,Q6RFH8,
+Protein,UniprotKB,Q9H1C7,
+Protein,UniprotKB,Q7RTS9,
+Protein,UniprotKB,Q15762,
+Protein,UniprotKB,P49753,
+Protein,UniprotKB,P47902,
+Protein,UniprotKB,P25311,
+Protein,UniprotKB,Q504U0,
+Protein,UniprotKB,O43707,
+Protein,UniprotKB,Q9ULH1,
+Protein,UniprotKB,O95886,
+Protein,UniprotKB,Q9NY35,
+Protein,UniprotKB,Q14012,
+Protein,UniprotKB,A6NHY2,
+Protein,UniprotKB,Q8N5N4,
+Protein,UniprotKB,Q8IUR6,
+Protein,UniprotKB,Q68D51,
+Protein,UniprotKB,Q9Y258,
+Protein,UniprotKB,Q9ULE3,
+Protein,UniprotKB,P55056,
+Protein,UniprotKB,P47895,
+Protein,UniprotKB,Q8IZC6,
+Protein,UniprotKB,P58397,
+Protein,UniprotKB,Q96D53,
+Protein,UniprotKB,Q9H816,
+Protein,UniprotKB,Q8TEB1,
+Protein,UniprotKB,P01133,
+Protein,UniprotKB,Q9H0S4,
+Protein,UniprotKB,Q8IWQ3,
+Protein,UniprotKB,Q9HA90,
+Protein,UniprotKB,P80723,
+Protein,UniprotKB,Q7Z569,
+Protein,UniprotKB,Q9NYM9,
+Protein,UniprotKB,P42830,
+Protein,UniprotKB,O14514,
+Protein,UniprotKB,Q9H0L4,
+Protein,UniprotKB,Q9Y240,
+Protein,UniprotKB,Q96N68,
+Protein,UniprotKB,Q8NCG5,
+Protein,UniprotKB,P07307,
+Protein,UniprotKB,O14559,
+Protein,UniprotKB,Q9UJU6,
+Protein,UniprotKB,A7MBM2,
+Protein,UniprotKB,Q99618,
+Protein,UniprotKB,P30411,
+Protein,UniprotKB,Q9H1Y0,
+Protein,UniprotKB,P53621,
+Protein,UniprotKB,P20674,
+Protein,UniprotKB,P0C2S0,
+Protein,UniprotKB,Q9H161,
+Protein,UniprotKB,O14981,
+Protein,UniprotKB,Q5H9J7,
+Protein,UniprotKB,Q8IWP9,
+Protein,UniprotKB,Q9H2X0,
+Protein,UniprotKB,Q86XJ0,
+Protein,UniprotKB,Q9UHG0,
+Protein,UniprotKB,Q9NX63,
+Protein,UniprotKB,Q9H1M4,
+Protein,UniprotKB,Q0P5N6,
+Protein,UniprotKB,Q5TCH4,
+Protein,UniprotKB,Q8TE58,
+Protein,UniprotKB,Q92771,
+Protein,UniprotKB,P0DMU8,
+Protein,UniprotKB,O14734,
+Protein,UniprotKB,P54252,
+Protein,UniprotKB,Q9NQR7,
+Protein,UniprotKB,Q9BZB8,
+Protein,UniprotKB,P04053,
+Protein,UniprotKB,O43306,
+Protein,UniprotKB,P08574,
+Protein,UniprotKB,Q01094,
+Protein,UniprotKB,O60762,
+Protein,UniprotKB,O15194,
+Protein,UniprotKB,P0C864,
+Protein,UniprotKB,P35523,
+Protein,UniprotKB,O60676,
+Protein,UniprotKB,Q14746,
+Protein,UniprotKB,P02489,
+Protein,UniprotKB,Q96P48,
+Protein,UniprotKB,P29400,
+Protein,UniprotKB,Q96AP0,
+Protein,UniprotKB,Q6PK04,
+Protein,UniprotKB,A6NKQ9,
+Protein,UniprotKB,Q96AZ1,
+Protein,UniprotKB,Q86TX2,
+Protein,UniprotKB,P10909,
+Protein,UniprotKB,Q99700,
+Protein,UniprotKB,Q8NBA8,
+Protein,UniprotKB,Q96PC3,
+Protein,UniprotKB,Q8N4Q1,
+Protein,UniprotKB,Q9NUB4,
+Protein,UniprotKB,Q9NWW5,
+Protein,UniprotKB,P13942,
+Protein,UniprotKB,Q9NQ75,
+Protein,UniprotKB,O95154,
+Protein,UniprotKB,Q8WUY9,
+Protein,UniprotKB,Q96IX5,
+Protein,UniprotKB,Q9Y698,
+Protein,UniprotKB,Q9Y2F9,
+Protein,UniprotKB,Q7L190,
+Protein,UniprotKB,Q8N5C7,
+Protein,UniprotKB,Q8N4C9,
+Protein,UniprotKB,P19099,
+Protein,UniprotKB,H3BN30,
+Protein,UniprotKB,Q07065,
+Protein,UniprotKB,Q66GS9,
+Protein,UniprotKB,Q9P1F3,
+Protein,UniprotKB,Q9UII6,
+Protein,UniprotKB,P33527,
+Protein,UniprotKB,Q9BT22,
+Protein,UniprotKB,P62952,
+Protein,UniprotKB,P55285,
+Protein,UniprotKB,Q9BY08,
+Protein,UniprotKB,Q14203,
+Protein,UniprotKB,A2RUQ5,
+Protein,UniprotKB,Q13155,
+Protein,UniprotKB,Q9UNU6,
+Protein,UniprotKB,P51636,
+Protein,UniprotKB,Q9Y4D1,
+Protein,UniprotKB,D6RIA3,
+Protein,UniprotKB,Q5VUE5,
+Protein,UniprotKB,Q9C0I3,
+Protein,UniprotKB,Q9UEE9,
+Protein,UniprotKB,Q9H3Q1,
+Protein,UniprotKB,Q13112,
+Protein,UniprotKB,Q8TEY5,
+Protein,UniprotKB,O60869,
+Protein,UniprotKB,Q9GZP9,
+Protein,UniprotKB,Q07507,
+Protein,UniprotKB,Q5BKT4,
+Protein,UniprotKB,O94805,
+Protein,UniprotKB,O60512,
+Protein,UniprotKB,Q96BT3,
+Protein,UniprotKB,Q9Y4X0,
+Protein,UniprotKB,O14645,
+Protein,UniprotKB,Q15825,
+Protein,UniprotKB,P00736,
+Protein,UniprotKB,Q5T655,
+Protein,UniprotKB,Q7Z5M8,
+Protein,UniprotKB,Q5T9A4,
+Protein,UniprotKB,Q8IW93,
+Protein,UniprotKB,Q9UFH2,
+Protein,UniprotKB,O95905,
+Protein,UniprotKB,O43918,
+Protein,UniprotKB,A4FU69,
+Protein,UniprotKB,Q9P203,
+Protein,UniprotKB,O15144,
+Protein,UniprotKB,O43169,
+Protein,UniprotKB,P51857,
+Protein,UniprotKB,Q9UMX3,
+Protein,UniprotKB,Q9UHD4,
+Protein,UniprotKB,Q4KMG0,
+Protein,UniprotKB,P20800,
+Protein,UniprotKB,Q5T7M4,
+Protein,UniprotKB,Q14011,
+Protein,UniprotKB,Q99715,
+Protein,UniprotKB,Q8IV32,
+Protein,UniprotKB,P12109,
+Protein,UniprotKB,P48061,
+Protein,UniprotKB,O75027,
+Protein,UniprotKB,P27708,
+Protein,UniprotKB,A6NJI1,
+Protein,UniprotKB,Q96Q77,
+Protein,UniprotKB,O43286,
+Protein,UniprotKB,Q9NXR7,
+Protein,UniprotKB,A0A1W2PPF3,
+Protein,UniprotKB,Q5TID7,
+Protein,UniprotKB,Q5TDH0,
+Protein,UniprotKB,P15882,
+Protein,UniprotKB,Q13616,
+Protein,UniprotKB,P00387,
+Protein,UniprotKB,Q96IT6,
+Protein,UniprotKB,Q86Y29,
+Protein,UniprotKB,P16619,
+Protein,UniprotKB,Q8IVL8,
+Protein,UniprotKB,O60832,
+Protein,UniprotKB,Q8WV16,
+Protein,UniprotKB,Q8IZP9,
+Protein,UniprotKB,Q9NZ63,
+Protein,UniprotKB,Q8IUK8,
+Protein,UniprotKB,O95376,
+Protein,UniprotKB,Q14154,
+Protein,UniprotKB,P13584,
+Protein,UniprotKB,Q6ZUS6,
+Protein,UniprotKB,Q9Y294,
+Protein,UniprotKB,O00244,
+Protein,UniprotKB,Q9HBH7,
+Protein,UniprotKB,P84085,
+Protein,UniprotKB,P52798,
+Protein,UniprotKB,P02458,
+Protein,UniprotKB,O95741,
+Protein,UniprotKB,Q9UKV5,
+Protein,UniprotKB,P25774,
+Protein,UniprotKB,Q9HBK9,
+Protein,UniprotKB,Q53S99,
+Protein,UniprotKB,Q8TEA8,
+Protein,UniprotKB,P54819,
+Protein,UniprotKB,Q9NR19,
+Protein,UniprotKB,Q9NP61,
+Disease,EFO,EFO:0002506,osteoarthritis
+Disease,EFO,MONDO:0007631,"chromosome 16p12.1 deletion syndrome, 520kb"
+Disease,EFO,Orphanet:1505,Short rib-polydactyly syndrome
+Disease,EFO,Orphanet:167,Chédiak-Higashi syndrome
+Disease,EFO,MONDO:0014741,facial dysmorphism-developmental delay-behavioral abnormalities syndrome due to WAC point mutation
+Disease,EFO,Orphanet:1072,Ankyloblepharon filiforme adnatum - cleft palate
+Disease,EFO,EFO:0003105,spina bifida
+Disease,EFO,Orphanet:251383,CK syndrome
+Disease,EFO,Orphanet:3329,Tibial aplasia - ectrodactyly
+Disease,EFO,Orphanet:681,Hypokalemic periodic paralysis
+Disease,EFO,Orphanet:1596,Distal monosomy 15q
+Disease,EFO,Orphanet:99807,PEHO-like syndrome
+Disease,EFO,Orphanet:65743,Autosomal dominant multiple pterygium syndrome
+Disease,EFO,Orphanet:1201,Atresia of small intestine
+Disease,EFO,Orphanet:2020,Congenital fiber-type disproportion myopathy
+Disease,EFO,MONDO:0054782,"leukodystrophy, hypomyelinating, 15"
+Disease,EFO,Orphanet:654,Nephroblastoma
+Disease,EFO,Orphanet:99843,Leukocyte adhesion deficiency type II
+Disease,EFO,MONDO:0009384,"Leydig cell hypoplasia, type 1"
+Disease,EFO,Orphanet:319552,Mendelian susceptibility to mycobacterial diseases due to complete IL12RB1 deficiency
+Disease,EFO,Orphanet:2052,Fraser syndrome
+Disease,EFO,MONDO:0012057,"legionnaire disease, susceptibility to"
+Disease,EFO,MONDO:0009669,Werdnig-Hoffmann disease
+Disease,EFO,Orphanet:163717,Benign familial mesial temporal lobe epilepsy
+Disease,EFO,Orphanet:98773,Spinocerebellar ataxia type 21
+Disease,EFO,MONDO:0009305,granulocytopenia with immunoglobulin abnormality
+Disease,EFO,Orphanet:3219,Fountain syndrome
+Disease,EFO,EFO:1001142,pyruvate carboxylase deficiency disease
+Disease,EFO,Orphanet:254892,Autosomal dominant progressive external ophthalmoplegia
+Disease,EFO,Orphanet:1253,Ascher syndrome
+Disease,EFO,Orphanet:99000,Adult-onset foveomacular vitelliform dystrophy
+Disease,EFO,Orphanet:139518,Distal hereditary motor neuropathy type 1
+Disease,EFO,MONDO:0007806,hypotrichosis 4
+Disease,EFO,MONDO:0000904,complex cortical dysplasia with other brain malformations
+Disease,EFO,Orphanet:2850,Alopecia-intellectual disability syndrome
+Disease,EFO,EFO:0010658,"neurodevelopmental disorder with behavioral abnormalities, absent speech, and hypotonia"
+Disease,EFO,MONDO:0060533,"microcephaly, short stature, and limb abnormalities"
+Disease,EFO,Orphanet:397618,Foveal hypoplasia-optic nerve decussation defect-anterior segment dysgenesis syndrome
+Disease,EFO,Orphanet:97234,Glycogen storage disease due to phosphoglycerate mutase deficiency
+Disease,EFO,Orphanet:1143,Neurogenic arthrogryposis multiplex congenita
+Disease,EFO,EFO:1001496,Autosomal dominant polycystic kidney disease
+Disease,EFO,Orphanet:3261,Autoimmune lymphoproliferative syndrome
+Disease,EFO,Orphanet:101112,Spinocerebellar ataxia type 26
+Disease,EFO,Orphanet:99936,Autosomal dominant Charcot-Marie-Tooth disease type 2B
+Disease,EFO,MONDO:0012586,"coronary artery disease, autosomal dominant 2"
+Disease,EFO,Orphanet:228179,Autosomal dominant Charcot-Marie-Tooth disease type 2M
+Disease,EFO,Orphanet:79408,Severe generalized recessive dystrophic epidermolysis bullosa
+Disease,EFO,Orphanet:163665,"Spondyloepiphyseal dysplasia tarda, Kohn type"
+Disease,EFO,Orphanet:314381,Hereditary sensory and autonomic neuropathy type 6
+Disease,EFO,Orphanet:1839,Hereditary mucoepithelial dysplasia
+Disease,EFO,Orphanet:163961,"X-linked intellectual disability, Kroes type"
+Disease,EFO,Orphanet:139557,X-linked distal spinal muscular atrophy
+Disease,EFO,EFO:0003113,obsolete_polycystic lipomembranous osteodysplasia with sclerosing leukoencephalopathy
+Disease,EFO,Orphanet:2315,Johanson-Blizzard syndrome
+Disease,EFO,MONDO:0012590,XFE progeroid syndrome
+Disease,EFO,Orphanet:572,Immunodeficiency by defective expression of HLA class 2
+Disease,EFO,MONDO:0018559,fetal lower urinary tract obstruction
+Disease,EFO,Orphanet:141258,Tessier number 4 facial cleft
+Disease,EFO,Orphanet:84064,Syndromic diarrhea
+Disease,EFO,Orphanet:443098,hyperostosis cranialis interna
+Disease,EFO,Orphanet:86820,Familial avascular necrosis of femoral head
+Disease,EFO,Orphanet:786,Glucocorticoid resistance
+Disease,EFO,Orphanet:168549,Axial spondylometaphyseal dysplasia
+Disease,EFO,EFO:0005938,congenital left-sided heart lesions
+Disease,EFO,Orphanet:247827,Ectodermal dysplasia - cutaneous syndactyly syndrome
+Disease,EFO,EFO:1001036,Meckel's diverticulum
+Disease,EFO,EFO:1000938,fibromuscular dysplasia
+Disease,EFO,Orphanet:90636,Autosomal recessive non-syndromic sensorineural deafness type DFNB
+Disease,EFO,Orphanet:2141,Diaphragmatic defect - limb deficiency - skull defect
+Disease,EFO,Orphanet:98892,Periventricular nodular heterotopia
+Disease,EFO,Orphanet:79091,Hereditary inclusion body myopathy - joint contractures - ophthalmoplegia
+Disease,EFO,EFO:0004922,GM00719
+Disease,EFO,Orphanet:99,Autosomal dominant cerebellar ataxia
+Disease,EFO,MONDO:0060724,glycosylphosphatidylinositol biosynthesis defect 17
+Disease,EFO,EFO:0005140,autoimmune disease
+Disease,EFO,Orphanet:263508,COG1-CDG
+Disease,EFO,Orphanet:163721,Rolandic epilepsy - speech dyspraxia
+Disease,EFO,EFO:1000318,Langerhans Cell Histiocytosis
+Disease,EFO,Orphanet:1973,Faciocardiorenal syndrome
+Disease,EFO,Orphanet:90794,Classic congenital adrenal hyperplasia due to 21-hydroxylase deficiency
+Disease,EFO,Orphanet:324713,"Hereditary cerebral hemorrhage with amyloidosis, Italian type"
+Disease,EFO,Orphanet:329314,Adult-onset multiple mitochondrial DNA deletion syndrome due to DGUOK deficiency
+Disease,EFO,Orphanet:79346,"Chondrodysplasia punctata, tibial-metacarpal type"
+Disease,EFO,Orphanet:573,Monilethrix
+Disease,EFO,MONDO:0019588,autosomal recessive nonsyndromic deafness
+Disease,EFO,Orphanet:306588,Autosomal dominant Opitz G/BBB syndrome
+Disease,EFO,Orphanet:175,Cartilage-hair hypoplasia
+Disease,EFO,MONDO:0007564,pilomatrixoma
+Disease,EFO,Orphanet:307766,Curly hair-acral keratoderma-caries syndrome
+Disease,EFO,Orphanet:137625,Glycogen storage disease due to muscle and heart glycogen synthase deficiency
+Disease,EFO,Orphanet:34526,Familial primary hypomagnesemia
+Disease,EFO,Orphanet:124,Blackfan-Diamond anemia
+Disease,EFO,Orphanet:79095,Congenital bile acid synthesis defect type 4
+Disease,EFO,Orphanet:2796,Pachydermoperiostosis
+Disease,EFO,Orphanet:1052,Mosaic variegated aneuploidy syndrome
+Disease,EFO,Orphanet:31043,Familial primary hypomagnesemia with hypercalciuria and nephrocalcinosis without severe ocular involvement
+Disease,EFO,Orphanet:2353,Schilbach-Rott syndrome
+Disease,EFO,Orphanet:2662,Keipert syndrome
+Disease,EFO,Orphanet:2268,ICF syndrome
+Disease,EFO,Orphanet:247,Arrhythmogenic right ventricular dysplasia
+Disease,KEGG,H00251,Thyroid dyshormonogenesis
+Disease,KEGG,H02279,Cathepsin D deficiency
+Disease,KEGG,H01182,Biotinidase deficiency
+Disease,KEGG,H00286,Crohn disease
+Disease,KEGG,H01762,Muscle glycogen storage disease
+Disease,KEGG,H01309,"Sarcoidosis, early-onset"
+Disease,KEGG,H00896,Lymphangioleiomyomatosis
+Disease,KEGG,H00899,Lysinuric protein intolerance
+Disease,KEGG,H02284,Leukotriene C4 synthase deficiency
+Disease,KEGG,H00375,SBCAD deficiency
+Disease,KEGG,H00574,Coffin-Lowry syndrome
+Disease,KEGG,H01283,Malonyl-CoA decarboxylase deficiency
+Disease,KEGG,H00181,3-Methylcrotonylglycinuria
+Disease,KEGG,H00700,Centronuclear myopathy
+Disease,KEGG,H00787,Congenital stationary night blindness
+Disease,KEGG,H00281,GM1 gangliosidosis
+Disease,KEGG,H00064,Ataxia telangiectasia
+Disease,KEGG,H00409,Type 2 diabetes mellitus
+Disease,KEGG,H00666,Peutz-Jeghers syndrome
+Disease,KEGG,H02370,FILS syndrome
+Disease,KEGG,H00681,Acne inversa
+Disease,KEGG,H00912,Tumor necrosis factor receptor-associated periodic syndrome
+Disease,KEGG,H01250,Hereditary gingival fibromatosis
+Disease,KEGG,H00517,Spondylocostal dysostosis
+Disease,KEGG,H00420,Familial partial lipodystrophy
+Disease,KEGG,H02044,Cutaneous and mucosal venous malformation
+Disease,KEGG,H00813,Laryngo onycho cutaneous syndrome
+Disease,KEGG,H00804,Multiple cutaneous and uterine leiomyomata
+Disease,KEGG,H02043,Capillary malformation-arteriovenous malformation
+Disease,KEGG,H00467,Fibular hypoplasia and complex brachydactyly
+Disease,KEGG,H02138,Hereditary hypophophatemic rickets with hypercalciuria
+Disease,KEGG,H00701,Congenital fiber type disproportion
+Disease,KEGG,H02179,Rippling muscle disease
+Disease,KEGG,H01740,Macrothrombocytopenia
+Disease,KEGG,H01195,VACTERL/VATER association
+Disease,KEGG,H00932,Tropical calcific pancreatitis
+Disease,KEGG,H02256,Factor VII deficiency
+Disease,KEGG,H01760,Hepatic glycogen storage disease
+Disease,KEGG,H02117,Neu-Laxova syndrome
+Disease,KEGG,H01390,Mitochondrial neurogastrointestinal encephalomyopathy
+Disease,KEGG,H02344,Cowchock syndrome
+Disease,KEGG,H00892,Bronchiectasis with or without elevated sweat chloride
+Disease,KEGG,H00882,Cocoon syndrome
+Disease,KEGG,H00759,Waardenburg syndrome
+Disease,KEGG,H02092,von Willebrand disease
+Disease,KEGG,H00582,Benign familial hematuria
+Disease,KEGG,H00751,Asphyxiating thoracic dystrophy
+Disease,KEGG,H01683,Disorders of antidiuretic hormone (ADH) secretion
+Disease,KEGG,H01973,Fertile eunuch syndrome
+Disease,KEGG,H02106,Genetic obesity
+Disease,KEGG,H02109,Combined malonic and methylmalonic aciduria
+Disease,KEGG,H01368,Cytochrome c oxidase (COX) deficiency
+Disease,KEGG,H02008,Galactose-1P uridylyltransferase deficiency
+Disease,KEGG,H00947,Pilomatricoma
+Disease,KEGG,H00466,Grebe dysplasia
+Disease,KEGG,H01177,Infantile bilateral striatal necrosis
+Disease,KEGG,H00131,Mucopolysaccharidosis type VI
+Disease,KEGG,H01117,Chronic recurrent multifocal osteomyelitis
+Disease,KEGG,H00123,Mucopolysaccharidosis type IV
+Disease,KEGG,H01376,Acrofacial dysostosis
+Disease,KEGG,H00606,Early infantile epileptic encephalopathy
+Disease,KEGG,H02232,CAGSSS syndrome
+Disease,KEGG,H01400,Secondary hyperammonemia
+Disease,KEGG,H00540,"Osteoporosis, lymphedema, anhydrotic ectodermal dysplasia with immunodeficiency (OLEDAID)"
+Disease,KEGG,H00073,Pyruvate carboxylase deficiency
+Disease,KEGG,H02330,Pancreatic lipase deficiency
+Disease,KEGG,H02389,Familial dyskinesia with facial myokymia
+Disease,KEGG,H01253,Isolated follicle-stimulating hormone deficiency
+Disease,KEGG,H02259,Stormorken syndrome
+Disease,KEGG,H01028,Argininosuccinic aciduria
+Disease,KEGG,H00593,Limb-girdle muscular dystrophy
+Disease,KEGG,H00125,Fabry disease
+Disease,KEGG,H01307,Nonsyndromic congenital nail disorder
+Disease,KEGG,H00150,Danon disease
+Disease,KEGG,H02037,Laron syndrome
+Disease,KEGG,H01287,Congenital mirror movements
+Disease,KEGG,H00070,Galactosemia
+Disease,KEGG,H00071,Hereditary fructose intolerance
+Disease,KEGG,H01821,Spondylometaphyseal dysplasia with cone-rod dystrophy
+Disease,KEGG,H02119,Proteus syndrome
+Disease,KEGG,H00775,Hemiplegic migraine
+Disease,KEGG,H00263,Acrocallosal syndrome
+Disease,KEGG,H01671,Neurosis
+Disease,KEGG,H00773,Autosomal dominant mental retardation
+Disease,KEGG,H00265,Hereditary sensory and autonomic neuropathy
+Disease,KEGG,H01227,Inflammatory bowel disease (IBD)
+Disease,KEGG,H00197,Adenylosuccinate lyase deficiency
+Disease,KEGG,H01034,L1 syndrome
+Disease,KEGG,H00507,Dyskeratosis congenita
+Disease,KEGG,H01193,Familial tumoral calcinosis
+Disease,KEGG,H00838,Congenital fibrosis of the extraocular muscles
+Disease,KEGG,H00980,Nevo syndrome
+Disease,KEGG,H00530,Joubert syndrome
+Disease,KEGG,H00839,Porencephaly
+Disease,KEGG,H02068,Hypochondroplasia
+Disease,KEGG,H00455,Spinal muscular atrophy
+Disease,KEGG,H01523,Wiskott-Aldrich syndrome
+Disease,KEGG,H00599,"46,XX gonadal dysgenesis"
+Pathway,Reactome,R-MMU-159231,Transport of Mature mRNA Derived from an Intronless Transcript
+Pathway,Reactome,R-MMU-1483248,Synthesis of PIPs at the ER membrane
+Pathway,Reactome,R-MMU-3000178,ECM proteoglycans
+Pathway,Reactome,R-BTA-8949613,Cristae formation
+Pathway,Reactome,R-BTA-2559585,Oncogene Induced Senescence
+Pathway,Reactome,R-HSA-5689896,Ovarian tumor domain proteases
+Pathway,Reactome,R-MMU-8849470,PTK6 Regulates Cell Cycle
+Pathway,Reactome,R-RNO-201451,Signaling by BMP
+Pathway,Reactome,R-HSA-451927,Interleukin-2 family signaling
+Pathway,Reactome,R-MMU-8941237,Invadopodia formation
+Pathway,Reactome,R-HSA-5579028,Defective CYP17A1 causes Adrenal hyperplasia 5 (AH5)
+Pathway,Reactome,R-MMU-9615017,"FOXO-mediated transcription of oxidative stress, metabolic and neuronal genes"
+Pathway,Reactome,R-HSA-69541,Stabilization of p53
+Pathway,Reactome,R-BTA-5689896,Ovarian tumor domain proteases
+Pathway,Reactome,R-RNO-71032,Propionyl-CoA catabolism
+Pathway,Reactome,R-RNO-418346,Platelet homeostasis
+Pathway,Reactome,R-MMU-418555,G alpha (s) signalling events
+Pathway,Reactome,R-HSA-203615,eNOS activation
+Pathway,Reactome,R-RNO-205017,NFG and proNGF binds to p75NTR
+Pathway,Reactome,R-MMU-141444,Amplification of signal from unattached kinetochores via a MAD2 inhibitory signal
+Pathway,Reactome,R-HSA-5663213,RHO GTPases Activate WASPs and WAVEs
+Pathway,Reactome,R-HSA-140837,Intrinsic Pathway of Fibrin Clot Formation
+Pathway,Reactome,R-MMU-446343,Localization of the PINCH-ILK-PARVIN complex to focal adhesions
+Pathway,Reactome,R-MMU-5621575,CD209 (DC-SIGN) signaling
+Pathway,Reactome,R-HSA-5632987,Defective Mismatch Repair Associated With PMS2
+Pathway,Reactome,R-HSA-110056,MAPK3 (ERK1) activation
+Pathway,Reactome,R-MMU-194313,VEGF ligand-receptor interactions
+Pathway,Reactome,R-BTA-74217,Purine salvage
+Pathway,Reactome,R-RNO-6785631,ERBB2 Regulates Cell Motility
+Pathway,Reactome,R-RNO-209563,Axonal growth stimulation
+Pathway,Reactome,R-MMU-70370,Galactose catabolism
+Pathway,Reactome,R-MMU-209560,NF-kB is activated and signals survival
+Pathway,Reactome,R-HSA-140342,Apoptosis induced DNA fragmentation
+Pathway,Reactome,R-HSA-5693554,Resolution of D-loop Structures through Synthesis-Dependent Strand Annealing (SDSA)
+Pathway,Reactome,R-RNO-5578775,Ion homeostasis
+Pathway,Reactome,R-MMU-4419969,Depolymerisation of the Nuclear Lamina
+Pathway,Reactome,R-BTA-975957,Nonsense Mediated Decay (NMD) enhanced by the Exon Junction Complex (EJC)
+Pathway,Reactome,R-HSA-1362409,Mitochondrial iron-sulfur cluster biogenesis
+Pathway,Reactome,R-MMU-444257,RSK activation
+Pathway,Reactome,R-MMU-5625740,RHO GTPases activate PKNs
+Pathway,Reactome,R-HSA-111471,Apoptotic factor-mediated response
+Pathway,Reactome,R-HSA-3359473,Defective MMADHC causes methylmalonic aciduria and homocystinuria type cblD
+Pathway,Reactome,R-HSA-165159,MTOR signalling
+Pathway,Reactome,R-HSA-205017,NFG and proNGF binds to p75NTR
+Pathway,Reactome,R-HSA-6791461,RPIA deficiency: failed conversion of RU5P to R5P
+Pathway,Reactome,R-HSA-5578998,Defective OPLAH causes 5-oxoprolinase deficiency (OPLAHD)
+Pathway,Reactome,R-RNO-376176,Signaling by ROBO receptors
+Pathway,Reactome,R-MMU-3295583,TRP channels
+Pathway,Reactome,R-BTA-5668599,RHO GTPases Activate NADPH Oxidases
+Pathway,Reactome,R-HSA-9693928,Defective RIPK1-mediated regulated necrosis
+Pathway,Reactome,R-MMU-9020958,Interleukin-21 signaling
+Pathway,Reactome,R-HSA-432030,Transport of glycerol from adipocytes to the liver by Aquaporins
+Pathway,Reactome,R-RNO-110314,Recognition of DNA damage by PCNA-containing replication complex
+Pathway,Reactome,R-HSA-164378,PKA activation in glucagon signalling
+Pathway,Reactome,R-RNO-6794361,Neurexins and neuroligins
+Pathway,Reactome,R-MMU-1296061,HCN channels
+Pathway,Reactome,R-HSA-381042,PERK regulates gene expression
+Pathway,Reactome,R-HSA-9619665,EGR2 and SOX10-mediated initiation of Schwann cell myelination
+Pathway,Reactome,R-HSA-9694614,Attachment and Entry
+Pathway,Reactome,R-HSA-4720475,Defective ALG3 causes ALG3-CDG (CDG-1d)
+Pathway,Reactome,R-RNO-2024101,CS/DS degradation
+Pathway,Reactome,R-HSA-983231,Factors involved in megakaryocyte development and platelet production
+Pathway,Reactome,R-MMU-165159,MTOR signalling
+Pathway,Reactome,R-HSA-379716,Cytosolic tRNA aminoacylation
+Pathway,Reactome,R-HSA-75815,Ubiquitin-dependent degradation of Cyclin D
+Pathway,Reactome,R-RNO-418597,G alpha (z) signalling events
+Pathway,Reactome,R-HSA-73780,RNA Polymerase III Chain Elongation
+Pathway,Reactome,R-BTA-4551638,SUMOylation of chromatin organization proteins
+Pathway,Reactome,R-MMU-2142753,Arachidonic acid metabolism
+Pathway,Reactome,R-BTA-879518,Transport of organic anions
+Pathway,Reactome,R-MMU-69481,G2/M Checkpoints
+Pathway,Reactome,R-MMU-196757,Metabolism of folate and pterines
+Pathway,Reactome,R-RNO-69166,Removal of the Flap Intermediate
+Pathway,Reactome,R-MMU-156588,Glucuronidation
+Pathway,Reactome,R-MMU-5357956,TNFR1-induced NFkappaB signaling pathway
+Pathway,Reactome,R-HSA-1679131,Trafficking and processing of endosomal TLR
+Pathway,Reactome,R-BTA-70263,Gluconeogenesis
+Pathway,Reactome,R-MMU-3371453,Regulation of HSF1-mediated heat shock response
+Pathway,Reactome,R-MMU-433692,Proton-coupled monocarboxylate transport
+Pathway,Reactome,R-RNO-380612,Metabolism of serotonin
+Pathway,Reactome,R-BTA-3214847,HATs acetylate histones
+Pathway,Reactome,R-BTA-190704,Oligomerization of connexins into connexons
+Pathway,Reactome,R-HSA-163680,AMPK inhibits chREBP transcriptional activation activity
+Pathway,Reactome,R-BTA-69541,Stabilization of p53
+Pathway,Reactome,R-HSA-5250955,Toxicity of botulinum toxin type D (BoNT/D)
+Pathway,Reactome,R-HSA-5663020,Defective SLC35A1 causes congenital disorder of glycosylation 2F (CDG2F)
+Pathway,Reactome,R-HSA-167160,RNA Pol II CTD phosphorylation and interaction with CE during HIV infection
+Pathway,Reactome,R-RNO-211981,Xenobiotics
+Pathway,Reactome,R-RNO-1489509,DAG and IP3 signaling
+Pathway,Reactome,R-HSA-5654687,Downstream signaling of activated FGFR1
+Pathway,Reactome,R-BTA-400206,Regulation of lipid metabolism by PPARalpha
+Pathway,Reactome,R-HSA-3371511,HSF1 activation
+Pathway,Reactome,R-HSA-9673218,Defective F9 secretion
+Pathway,Reactome,R-RNO-561048,Organic anion transport
+Pathway,Reactome,R-HSA-418359,Reduction of cytosolic Ca++ levels
+Pathway,Reactome,R-HSA-381183,ATF6 (ATF6-alpha) activates chaperone genes
+Pathway,Reactome,R-RNO-210991,Basigin interactions
+Pathway,Reactome,R-MMU-199220,Vitamin B5 (pantothenate) metabolism
+Pathway,Reactome,R-BTA-71403,Citric acid cycle (TCA cycle)
+Pathway,Reactome,R-HSA-110314,Recognition of DNA damage by PCNA-containing replication complex
+Pathway,KEGG,hsa00350,Tyrosine metabolism
+Pathway,KEGG,hsa04142,Lysosome
+Pathway,KEGG,hsa00780,Biotin metabolism
+Pathway,KEGG,hsa04140,Autophagy
+Pathway,KEGG,hsa04922,Glucagon signaling pathway
+Pathway,KEGG,hsa04621,NOD-like receptor signaling pathway
+Pathway,KEGG,hsa04115,p53 signaling pathway
+Pathway,KEGG,hsa04974,Protein digestion and absorption
+Pathway,KEGG,hsa00590,Arachidonic acid metabolism
+Pathway,KEGG,hsa01212,Fatty acid metabolism
+Pathway,KEGG,hsa04010,MAPK signaling pathway
+Pathway,KEGG,hsa04146,Peroxisome
+Pathway,KEGG,hsa00280,"Valine, leucine and isoleucine degradation"
+Pathway,KEGG,hsa04721,Synaptic vesicle cycle
+Pathway,KEGG,hsa04020,Calcium signaling pathway
+Pathway,KEGG,hsa04218,Cellular senescence
+Pathway,KEGG,hsa04150,mTOR signaling pathway
+Pathway,KEGG,hsa03410,Base excision repair
+Pathway,KEGG,hsa04330,Notch signaling pathway
+Pathway,KEGG,hsa04060,Cytokine-cytokine receptor interaction
+Pathway,KEGG,hsa04371,Apelin signaling pathway
+Pathway,KEGG,hsa04151,PI3K-Akt signaling pathway
+Pathway,KEGG,hsa04512,ECM-receptor interaction
+Pathway,KEGG,hsa01100,Metabolic pathways
+Pathway,KEGG,hsa04350,TGF-beta signaling pathway
+Pathway,KEGG,hsa04928,"Parathyroid hormone synthesis, secretion and action"
+Pathway,KEGG,hsa04260,Cardiac muscle contraction
+Pathway,KEGG,hsa04144,Endocytosis
+Pathway,KEGG,hsa04510,Focal adhesion
+Pathway,KEGG,hsa04530,Tight junction
+Pathway,KEGG,hsa04610,Complement and coagulation cascades
+Pathway,KEGG,hsa00500,Starch and sucrose metabolism
+Pathway,KEGG,hsa00260,"Glycine, serine and threonine metabolism"
+Pathway,KEGG,hsa00240,Pyrimidine metabolism
+Pathway,KEGG,hsa04210,Apoptosis
+Pathway,KEGG,hsa04960,Aldosterone-regulated sodium reabsorption
+Pathway,KEGG,hsa04380,Osteoclast differentiation
+Pathway,KEGG,hsa04080,Neuroactive ligand-receptor interaction
+Pathway,KEGG,hsa04611,Platelet activation
+Pathway,KEGG,hsa04962,Vasopressin-regulated water reabsorption
+Pathway,KEGG,hsa04913,Ovarian steroidogenesis
+Pathway,KEGG,hsa00052,Galactose metabolism
+Pathway,KEGG,hsa04310,Wnt signaling pathway
+Pathway,KEGG,hsa03013,RNA transport
+Pathway,KEGG,hsa00564,Glycerophospholipid metabolism
+Pathway,KEGG,hsa00531,Glycosaminoglycan degradation
+Pathway,KEGG,hsa03040,Spliceosome
+Pathway,KEGG,hsa04724,Glutamatergic synapse
+Pathway,KEGG,hsa00970,Aminoacyl-tRNA biosynthesis
+Pathway,KEGG,hsa00020,Citrate cycle (TCA cycle)
+Pathway,KEGG,hsa04977,Vitamin digestion and absorption
+Pathway,KEGG,hsa04725,Cholinergic synapse
+Pathway,KEGG,hsa04912,GnRH signaling pathway
+Pathway,KEGG,hsa00250,"Alanine, aspartate and glutamate metabolism"
+Pathway,KEGG,hsa00515,Mannose type O-glycan biosynthesis
+Pathway,KEGG,hsa00603,Glycosphingolipid biosynthesis
+Pathway,KEGG,hsa03420,Nucleotide excision repair
+Pathway,KEGG,hsa03440,Homologous recombination
+Pathway,KEGG,hsa00010,Glycolysis / Gluconeogenesis
+Pathway,KEGG,hsa00440,Phosphonate and phosphinate metabolism
+Pathway,KEGG,hsa04340,Hedgehog signaling pathway
+Pathway,KEGG,hsa04024,cAMP signaling pathway
+Pathway,KEGG,hsa04360,Axon guidance
+Pathway,KEGG,hsa03008,Ribosome biogenesis in eukaryotes
+Pathway,KEGG,hsa04810,Regulation of actin cytoskeleton
+Pathway,KEGG,hsa04540,Gap junction
+Pathway,KEGG,hsa00310,Lysine degradation
+Drug,DrugBank,DB03284,"2,6-Anhydro-3-Deoxy-D-Erythro-Hex-2-Enonic Acid"
+Drug,DrugBank,DB03256,(6R)-Folinic acid
+Drug,DrugBank,DB03693,N-(2-Aminoethyl)-5-Chloroisoquinoline-8-Sulfonamide
+Drug,DrugBank,DB00606,Cyclothiazide
+Drug,DrugBank,DB00241,Butalbital
+Drug,DrugBank,DB02289,2-Aminopropanedioic Acid
+Drug,DrugBank,DB04426,Alpha-Methyl-N-Acetyl-D-Glucosamine
+Drug,DrugBank,DB05253,Telapristone acetate
+Drug,DrugBank,DB01852,Kaempherol
+Drug,DrugBank,DB04505,"8-(2-Chloro-3,4,5-Trimethoxy-Benzyl)-9-Pent-4-Ylnyl-9h-Purin-6-Ylamine"
+Drug,DrugBank,DB02024,3-phenylpropionic acid
+Drug,DrugBank,DB04648,S-propylamine-L-cysteine
+Drug,DrugBank,DB02431,Cytidine-5'-Triphosphate
+Drug,DrugBank,DB00466,Picrotoxin
+Drug,DrugBank,DB06868,N-(3-chlorobenzyl)-1-(4-methylpentanoyl)-L-prolinamide
+Drug,DrugBank,DB06090,Bradanicline
+Drug,DrugBank,DB03871,"lambda-bis(2,2'-bipyridine)imidazole ruthenium (II)"
+Drug,DrugBank,DB01169,Arsenic trioxide
+Drug,DrugBank,DB05332,Romiplostim
+Drug,DrugBank,DB03223,Diphthamide
+Drug,DrugBank,DB02229,5'-O-[(L-methionyl)-sulphamoyl]adenosine
+Drug,DrugBank,DB00808,Indapamide
+Drug,DrugBank,DB03966,Clorobiocin
+Drug,DrugBank,DB04065,N-Cyclopentyl-N-Cyclobutylformamide
+Drug,DrugBank,DB02147,Cyclo-Tetrametavanadate
+Drug,DrugBank,DB00682,Warfarin
+Drug,DrugBank,DB03473,N5-Methylglutamine
+Drug,DrugBank,DB00544,Fluorouracil
+Drug,DrugBank,DB06739,Seratrodast
+Drug,DrugBank,DB05351,Dexlansoprazole
+Drug,DrugBank,DB04285,"{4-[(2s,4e)-2-(1,3-Benzothiazol-2-Yl)-2-(1h-1,2,3-Benzotriazol-1-Yl)-5-Phenylpent-4-Enyl]Phenyl}(Difluoro)Methylphosphonic Acid"
+Drug,DrugBank,DB03562,Tetrahydrodeoxyuridine
+Drug,DrugBank,DB00805,Minaprine
+Drug,DrugBank,DB02297,2-Amino-6-Chloropyrazine
+Drug,DrugBank,DB06451,Aprinocarsen
+Drug,DrugBank,DB03938,Deacetoxycephalosporin C
+Drug,DrugBank,DB00672,Chlorpropamide
+Drug,DrugBank,DB00795,Sulfasalazine
+Drug,DrugBank,DB03949,N-[(2S)-3-Phenyl-2-sulfanylpropanoyl]-L-phenylalanyl-L-tyrosine
+Drug,DrugBank,DB04068,"2',3'-dideoxy-3'-fluoro-urididine-5'-diphosphate"
+Drug,DrugBank,DB00708,Sufentanil
+Drug,DrugBank,DB01422,Nitroxoline
+Drug,DrugBank,DB00916,Metronidazole
+Drug,DrugBank,DB01178,Chlormezanone
+Drug,DrugBank,DB02338,NADPH
+Drug,DrugBank,DB01991,TU-514
+Drug,DrugBank,DB05814,GPI-1485
+Drug,DrugBank,DB03721,N-acetyl-alpha-neuraminic acid
+Drug,DrugBank,DB00450,Droperidol
+Drug,DrugBank,DB03053,1-Aminocyclopropylphosphonate
+Drug,DrugBank,DB04588,"N-[4-(AMINOSULFONYL)BENZYL]-5-(5-CHLORO-2,4-DIHYDROXYPHENYL)-1H-PYRAZOLE-4-CARBOXAMIDE"
+Drug,DrugBank,DB01783,Pantothenic acid
+Drug,DrugBank,DB04736,"2-ACETAMIDO-2-DEOXY-BETA-D-GLUCOPYRANOSE(BETA1-4)-2-ACETAMIDO-1,6-ANHYDRO-3-O-[(R)-1-CARBOXYETHYL]-2-DEOXY-BETA-D-GLUCOPYRANOSE-L-ALANYL-GAMMA-D-GLUTAMYL-MESO-DIAMINOPIMELYL-D-ALANINE"
+Drug,DrugBank,DB00906,Tiagabine
+Drug,DrugBank,DB06751,Drotaverine
+Drug,DrugBank,DB03192,(R)-3-hydroxydecanoyl-CoA
+Drug,DrugBank,DB01608,Periciazine
+Drug,DrugBank,DB02895,3-(Prop-2-Ene-1-Sulfinyl)-Propene-1-Thiol
+Drug,DrugBank,DB03062,(1-Methyl-1h-Imidazol-2-Yl)-(3-Methyl-4-{3-[(Pyridin-3-Ylmethyl)-Amino]-Propoxy}-Benzofuran-2-Yl)-Methanone
+Drug,DrugBank,DB01879,(S)-2-{Methyl-[2-(Naphthalene-2-Sulfonylamino)-5-(Naphthalene-2-Sulfonyloxy)-Benzoyl]-Amino}-Succinicacid
+Drug,DrugBank,DB05282,MCC
+Drug,DrugBank,DB03095,Tetramethylammonium
+Drug,DrugBank,DB03326,"Deoxycytidylyl-3',5'-guanosine"
+Drug,DrugBank,DB01593,Zinc
+Drug,DrugBank,DB02515,sn-glycerol 3-phosphate
+Drug,DrugBank,DB06103,VX-148
+Drug,DrugBank,DB02484,Cytidine 5'-diphosphoglycerol
+Drug,DrugBank,DB00376,Trihexyphenidyl
+Drug,DrugBank,DB03605,"(2s)-2-[(2,4-Dichloro-Benzoyl)-(3-Trifluoromethyl-Benzyl)-Amino]-3-Phenyl-Propionic Acid"
+Drug,DrugBank,DB00566,Succimer
+Drug,DrugBank,DB04272,Citric acid
+Drug,DrugBank,DB03484,sn-glycero-3-phosphoethanolamine
+Drug,DrugBank,DB06840,"diethyl [(1R)-1,5-diaminopentyl]boronate"
+Drug,DrugBank,DB03268,RU82197
+Drug,DrugBank,DB04024,Serine-3'-aminoadenosine
+Drug,DrugBank,DB00954,Dirithromycin
+Drug,DrugBank,DB00519,Trandolapril
+Drug,DrugBank,DB03728,p-Chlorobenzoic acid
+Drug,DrugBank,DB03932,LFA703
+Drug,DrugBank,DB05868,Ciluprevir
+Drug,DrugBank,DB00259,Sulfanilamide
+Drug,DrugBank,DB00148,Creatine
+Drug,DrugBank,DB00900,Didanosine
+Drug,DrugBank,DB00514,Dextromethorphan
+Drug,DrugBank,DB01929,"5-Chloryl-2,4,6-quinazolinetriamine"
+Drug,DrugBank,DB02228,2-deoxy-2-fluoro-β-D-galactose
+Drug,DrugBank,DB00940,Methantheline
+Drug,DrugBank,DB05403,CEP-1347
+Drug,DrugBank,DB04898,Ximelagatran
+Drug,DrugBank,DB02165,Zinc trihydroxide
+Drug,DrugBank,DB00327,Hydromorphone
+Drug,DrugBank,DB01432,Cholestyramine
+Drug,DrugBank,DB03015,"6-hydroxy-1,6-dihydro purine nucleoside"
+Drug,DrugBank,DB06468,Cariporide
+Drug,DrugBank,DB01715,"7,8-Diamino-Nonanoic Acid"
+Drug,DrugBank,DB01610,Valganciclovir
+Drug,DrugBank,DB05383,Pimagedine
+Drug,DrugBank,DB03502,(4s)-4-{[(2s)-2-Amino-3-Oxopropyl]Sulfanyl}-L-Homoserinate
+Drug,DrugBank,DB00528,Lercanidipine
+Drug,DrugBank,DB00684,Tobramycin
+Compound,ChEMBL,CHEMBL107533,
+Compound,ChEMBL,CHEMBL107486,
+Compound,ChEMBL,CHEMBL10770,
+Compound,ChEMBL,CHEMBL101579,
+Compound,ChEMBL,CHEMBL100652,
+Compound,ChEMBL,CHEMBL105177,
+Compound,ChEMBL,CHEMBL1078933,
+Compound,ChEMBL,CHEMBL1080304,
+Compound,ChEMBL,CHEMBL104273,
+Compound,ChEMBL,CHEMBL1079107,
+Compound,ChEMBL,CHEMBL104621,
+Compound,ChEMBL,CHEMBL1079418,
+Compound,ChEMBL,CHEMBL105521,
+Compound,ChEMBL,CHEMBL101207,
+Compound,ChEMBL,CHEMBL1081535,
+Compound,ChEMBL,CHEMBL1080874,
+Compound,ChEMBL,CHEMBL1077603,
+Compound,ChEMBL,CHEMBL102979,
+Compound,ChEMBL,CHEMBL1080369,
+Compound,ChEMBL,CHEMBL107391,
+Compound,ChEMBL,CHEMBL105045,
+Compound,ChEMBL,CHEMBL102032,
+Compound,ChEMBL,CHEMBL107786,
+Compound,ChEMBL,CHEMBL1078074,
+Compound,ChEMBL,CHEMBL104873,
+Compound,ChEMBL,CHEMBL101721,
+Compound,ChEMBL,CHEMBL1076464,
+Compound,ChEMBL,CHEMBL101420,
+Compound,ChEMBL,CHEMBL108137,
+Compound,ChEMBL,CHEMBL1080381,
+Compound,ChEMBL,CHEMBL107862,
+Compound,ChEMBL,CHEMBL1076624,
+Compound,ChEMBL,CHEMBL10202,
+Compound,ChEMBL,CHEMBL105199,
+Compound,ChEMBL,CHEMBL1081150,
+Compound,ChEMBL,CHEMBL1077821,
+Compound,ChEMBL,CHEMBL1017,
+Compound,ChEMBL,CHEMBL1020,
+Compound,ChEMBL,CHEMBL1077829,
+Compound,ChEMBL,CHEMBL1078081,
+Compound,ChEMBL,CHEMBL101775,
+Compound,ChEMBL,CHEMBL103558,
+Compound,ChEMBL,CHEMBL102311,
+Compound,ChEMBL,CHEMBL103001,
+Compound,ChEMBL,CHEMBL105292,
+Compound,ChEMBL,CHEMBL104557,
+Compound,ChEMBL,CHEMBL1080723,
+Compound,ChEMBL,CHEMBL1077156,
+Compound,ChEMBL,CHEMBL101165,
+Compound,ChEMBL,CHEMBL106938,
+Compound,ChEMBL,CHEMBL10793,
+Compound,ChEMBL,CHEMBL104156,
+Compound,ChEMBL,CHEMBL1079558,
+Compound,ChEMBL,CHEMBL102283,
+Compound,ChEMBL,CHEMBL1081377,
+Compound,ChEMBL,CHEMBL107291,
+Compound,ChEMBL,CHEMBL103782,
+Compound,ChEMBL,CHEMBL106562,
+Compound,ChEMBL,CHEMBL106961,
+Compound,ChEMBL,CHEMBL104322,
+Compound,ChEMBL,CHEMBL1080326,
+Compound,ChEMBL,CHEMBL107066,
+Compound,ChEMBL,CHEMBL107574,
+Compound,ChEMBL,CHEMBL103739,
+Compound,ChEMBL,CHEMBL105693,
+Compound,ChEMBL,CHEMBL1080884,
+Compound,ChEMBL,CHEMBL105622,
+Compound,ChEMBL,CHEMBL100965,
+Compound,ChEMBL,CHEMBL1076695,
+Compound,ChEMBL,CHEMBL101469,
+Compound,ChEMBL,CHEMBL1078575,
+Compound,ChEMBL,CHEMBL1076475,
+Compound,ChEMBL,CHEMBL1081476,
+Compound,ChEMBL,CHEMBL107503,
+Compound,ChEMBL,CHEMBL1077985,
+Compound,ChEMBL,CHEMBL102403,
+Compound,ChEMBL,CHEMBL101360,
+Compound,ChEMBL,CHEMBL1077165,
+Compound,ChEMBL,CHEMBL1077815,
+Compound,ChEMBL,CHEMBL1080741,
+Compound,ChEMBL,CHEMBL100702,
+Compound,ChEMBL,CHEMBL100413,
+Compound,ChEMBL,CHEMBL102270,
+Compound,ChEMBL,CHEMBL101347,
+Compound,ChEMBL,CHEMBL104410,
+Compound,ChEMBL,CHEMBL105044,
+Compound,ChEMBL,CHEMBL102374,
+Compound,ChEMBL,CHEMBL1080411,
+Compound,ChEMBL,CHEMBL1079872,
+Compound,ChEMBL,CHEMBL104929,
+Compound,ChEMBL,CHEMBL100835,
+Compound,ChEMBL,CHEMBL103585,
+Compound,ChEMBL,CHEMBL106865,
+Compound,ChEMBL,CHEMBL1081166,
+Compound,ChEMBL,CHEMBL104027,
+Compound,ChEMBL,CHEMBL103785,
+Compound,ChEMBL,CHEMBL1080394,
+Compound,ChEMBL,CHEMBL107655,
+Compound,ChEMBL,CHEMBL101383,
+Compound,ChEMBL,CHEMBL101726,
+Phenotype,HPO,HP:0004322,Short stature
+Phenotype,HPO,HP:0004296,Abnormality of gastrointestinal vasculature
+Phenotype,HPO,HP:0004940,Generalized arterial calcification
+Phenotype,HPO,HP:0000750,Delayed speech and language development
+Phenotype,HPO,HP:0000283,Broad face
+Phenotype,HPO,HP:0002717,Adrenal overactivity
+Phenotype,HPO,HP:0006256,Abnormality of hand joint mobility
+Phenotype,HPO,HP:0007443,Partial albinism
+Phenotype,HPO,HP:0002186,Apraxia
+Phenotype,HPO,HP:0006392,Increased density of long bones
+Phenotype,HPO,HP:0002385,Paraparesis
+Phenotype,HPO,HP:0006593,Anomalous rib insertion to vertebrae
+Phenotype,HPO,HP:0002882,Sudden episodic apnea
+Phenotype,HPO,HP:0000586,Shallow orbits
+Phenotype,HPO,HP:0008751,Laryngeal cleft
+Phenotype,HPO,HP:0008046,Abnormal retinal vascular morphology
+Phenotype,HPO,HP:0005243,Partial abdominal muscle agenesis
+Phenotype,HPO,HP:0001540,Diastasis recti
+Phenotype,HPO,HP:0007501,Streaks of hyperkeratosis along each finger onto the palm
+Phenotype,HPO,HP:0004180,Short distal phalanx of the 3rd finger
+Phenotype,HPO,HP:0002653,Bone pain
+Phenotype,HPO,HP:0001001,Abnormality of subcutaneous fat tissue
+Phenotype,HPO,HP:0005357,Defective B cell differentiation
+Phenotype,HPO,HP:0005537,Decreased mean platelet volume
+Phenotype,HPO,HP:0002576,Intussusception
+Phenotype,HPO,HP:0000845,Growth hormone excess
+Phenotype,HPO,HP:0004566,Pear-shaped vertebrae
+Phenotype,HPO,HP:0000677,Oligodontia
+Phenotype,HPO,HP:0008544,Abnormally folded helix
+Phenotype,HPO,HP:0007513,Generalized hypopigmentation
+Phenotype,HPO,HP:0005986,Limitation of neck motion
+Phenotype,HPO,HP:0004754,Permanent atrial fibrillation
+Phenotype,HPO,HP:0000998,Hypertrichosis
+Phenotype,HPO,HP:0002722,Recurrent abscess formation
+Phenotype,HPO,HP:0008314,Decreased activity of mitochondrial complex II
+Phenotype,HPO,HP:0005326,Hypoplastic philtrum
+Phenotype,HPO,HP:0000834,Abnormality of the adrenal glands
+Phenotype,HPO,HP:0000982,Palmoplantar keratoderma
+Phenotype,HPO,HP:0005339,Abnormality of complement system
+Phenotype,HPO,HP:0005543,Reduced protein C activity
+Phenotype,HPO,HP:0000876,Oligomenorrhea
+Phenotype,HPO,HP:0001841,Preaxial foot polydactyly
+Phenotype,HPO,HP:0001133,Constriction of peripheral visual field
+Phenotype,HPO,HP:0001552,Barrel-shaped chest
+Phenotype,HPO,HP:0002779,Tracheomalacia
+Phenotype,HPO,HP:0002354,Memory impairment
+Phenotype,HPO,HP:0007850,Retinal vascular proliferation
+Phenotype,HPO,HP:0004979,Metaphyseal sclerosis
+Phenotype,HPO,HP:0000567,Chorioretinal coloboma
+Phenotype,HPO,HP:0003678,Rapidly progressive
+Phenotype,HPO,HP:0006511,Laryngeal stridor
+Phenotype,HPO,HP:0002103,Abnormal pleura morphology
+Phenotype,HPO,HP:0006731,Follicular thyroid carcinoma
+Phenotype,HPO,HP:0001118,Juvenile cataract
+Phenotype,HPO,HP:0008559,Hypoplastic superior helix
+Phenotype,HPO,HP:0003988,Long ulna
+Phenotype,HPO,HP:0001944,Dehydration
+Phenotype,HPO,HP:0003436,Prolonged miniature endplate currents
+Phenotype,HPO,HP:0003690,Limb muscle weakness
+Phenotype,HPO,HP:0002213,Fine hair
+Phenotype,HPO,HP:0007465,Honeycomb palmoplantar keratoderma
+Phenotype,HPO,HP:0003740,Myotonia with warm-up phenomenon
+Phenotype,HPO,HP:0004361,Abnormality of circulating leptin level
+Phenotype,HPO,HP:0001924,Sideroblastic anemia
+Phenotype,HPO,HP:0002982,Tibial bowing
+Phenotype,HPO,HP:0008053,Aplasia/Hypoplasia of the iris
+Phenotype,HPO,HP:0002943,Thoracic scoliosis
+Phenotype,HPO,HP:0000479,Abnormal retinal morphology
+Phenotype,HPO,HP:0004831,Recurrent thromboembolism
+Phenotype,HPO,HP:0000705,Amelogenesis imperfecta
+Phenotype,HPO,HP:0005967,Mixed respiratory and metabolic acidosis
+Phenotype,HPO,HP:0004592,Thoracic platyspondyly
+Phenotype,HPO,HP:0008697,Hypoplasia of the fallopian tube
+Phenotype,HPO,HP:0004307,Abnormal anatomic location of the heart
+Phenotype,HPO,HP:0005464,Craniofacial osteosclerosis
+Phenotype,HPO,HP:0001195,Single umbilical artery
+Phenotype,HPO,HP:0000646,Amblyopia
+Phenotype,HPO,HP:0004997,Multicentric ossification of proximal humeral epiphyses
+Phenotype,HPO,HP:0005318,Cerebral vasculitis
+Phenotype,HPO,HP:0007889,Iridescent posterior subcapsular cataract
+Phenotype,HPO,HP:0000308,Microretrognathia
+Phenotype,HPO,HP:0000162,Glossoptosis
+Phenotype,HPO,HP:0001107,Ocular albinism
+Phenotype,HPO,HP:0000640,Gaze-evoked nystagmus
+Phenotype,HPO,HP:0002268,Paroxysmal dystonia
+Phenotype,HPO,HP:0002652,Skeletal dysplasia
+Phenotype,HPO,HP:0001169,Broad palm
+Phenotype,HPO,HP:0007549,Desquamation of skin soon after birth
+Phenotype,HPO,HP:0007020,Progressive spastic paraplegia
+Phenotype,HPO,HP:0002591,Polyphagia
+Phenotype,HPO,HP:0000410,Mixed hearing impairment
+Phenotype,HPO,HP:0001852,Sandal gap
+Phenotype,HPO,HP:0003607,4-hydroxyphenylacetic aciduria
+Phenotype,HPO,HP:0008321,Reduced factor X activity
+Phenotype,HPO,HP:0002041,Intractable diarrhea
+Phenotype,HPO,HP:0001946,Ketosis
+Phenotype,HPO,HP:0007530,Punctate palmoplantar hyperkeratosis
+Phenotype,HPO,HP:0004622,Progressive intervertebral space narrowing
+Phenotype,HPO,HP:0000656,Ectropion
+Phenotype,HPO,HP:0000847,Abnormality of renin-angiotensin system
+Function,GO,GO:0031012,extracellular matrix
+Function,GO,GO:0008201,heparin binding
+Function,GO,GO:0030165,PDZ domain binding
+Function,GO,GO:0043394,proteoglycan binding
+Function,GO,GO:1990416,cellular response to brain-derived neurotrophic factor stimulus
+Function,GO,GO:0048471,perinuclear region of cytoplasm
+Function,GO,GO:0000777,condensed chromosome kinetochore
+Function,GO,GO:0019221,cytokine-mediated signaling pathway
+Function,GO,GO:0008283,cell proliferation
+Function,GO,GO:0006816,calcium ion transport
+Function,GO,GO:0097718,disordered domain specific binding
+Function,GO,GO:0000305,response to oxygen radical
+Function,GO,GO:0006668,sphinganine-1-phosphate metabolic process
+Function,GO,GO:0021853,cerebral cortex GABAergic interneuron migration
+Function,GO,GO:0005829,cytosol
+Function,GO,GO:0015245,fatty acid transmembrane transporter activity
+Function,GO,GO:0043312,neutrophil degranulation
+Function,GO,GO:0010008,endosome membrane
+Function,GO,GO:0060134,prepulse inhibition
+Function,GO,GO:0046983,protein dimerization activity
+Function,GO,GO:0005737,cytoplasm
+Function,GO,GO:0010586,miRNA metabolic process
+Function,GO,GO:0005789,endoplasmic reticulum membrane
+Function,GO,GO:0045725,positive regulation of glycogen biosynthetic process
+Function,GO,GO:0005244,voltage-gated ion channel activity
+Function,GO,GO:0048147,negative regulation of fibroblast proliferation
+Function,GO,GO:0031090,organelle membrane
+Function,GO,GO:0045429,positive regulation of nitric oxide biosynthetic process
+Function,GO,GO:0016243,regulation of autophagosome size
+Function,GO,GO:0007030,Golgi organization
+Function,GO,GO:0000492,box C/D snoRNP assembly
+Function,GO,GO:0034237,protein kinase A regulatory subunit binding
+Function,GO,GO:0000792,heterochromatin
+Function,GO,GO:0046415,urate metabolic process
+Function,GO,GO:0005886,plasma membrane
+Function,GO,GO:0005813,centrosome
+Function,GO,GO:0050905,neuromuscular process
+Function,GO,GO:0051301,cell division
+Function,GO,GO:0003676,nucleic acid binding
+Function,GO,GO:0038100,nodal binding
+Function,GO,GO:0048010,vascular endothelial growth factor receptor signaling pathway
+Function,GO,GO:0046982,protein heterodimerization activity
+Function,GO,GO:0052689,carboxylic ester hydrolase activity
+Function,GO,GO:0097361,CIA complex
+Function,GO,GO:0006906,vesicle fusion
+Function,GO,GO:0050731,positive regulation of peptidyl-tyrosine phosphorylation
+Function,GO,GO:0048808,male genitalia morphogenesis
+Function,GO,GO:0031100,animal organ regeneration
+Function,GO,GO:0030449,regulation of complement activation
+Function,GO,GO:0003677,DNA binding
+Function,GO,GO:0005654,nucleoplasm
+Function,GO,GO:1905872,negative regulation of protein localization to cell leading edge
+Function,GO,GO:0005903,brush border
+Function,GO,GO:0005178,integrin binding
+Function,GO,GO:0034378,chylomicron assembly
+Function,GO,GO:0005634,nucleus
+Function,GO,GO:0038083,peptidyl-tyrosine autophosphorylation
+Function,GO,GO:0007249,I-kappaB kinase/NF-kappaB signaling
+Function,GO,GO:0000981,"DNA-binding transcription factor activity, RNA polymerase II-specific"
+Function,GO,GO:0036150,phosphatidylserine acyl-chain remodeling
+Function,GO,GO:0006974,cellular response to DNA damage stimulus
+Function,GO,GO:0016323,basolateral plasma membrane
+Function,GO,GO:0007565,female pregnancy
+Function,GO,GO:0043552,positive regulation of phosphatidylinositol 3-kinase activity
+Function,GO,GO:0042645,mitochondrial nucleoid
+Function,GO,GO:0005522,profilin binding
+Function,GO,GO:0060322,head development
+Function,GO,GO:0034707,chloride channel complex
+Function,GO,GO:0043687,post-translational protein modification
+Function,GO,GO:0009986,cell surface
+Function,GO,GO:0051281,positive regulation of release of sequestered calcium ion into cytosol
+Function,GO,GO:0103095,wax ester synthase activity
+Function,GO,GO:0031965,nuclear membrane
+Function,GO,GO:0003682,chromatin binding
+Function,GO,GO:0001649,osteoblast differentiation
+Function,GO,GO:0048675,axon extension
+Function,GO,GO:0050678,regulation of epithelial cell proliferation
+Function,GO,GO:0006633,fatty acid biosynthetic process
+Function,GO,GO:0007399,nervous system development
+Function,GO,GO:0045454,cell redox homeostasis
+Function,GO,GO:0014003,oligodendrocyte development
+Function,GO,GO:0035255,ionotropic glutamate receptor binding
+Function,GO,GO:1901888,regulation of cell junction assembly
+Function,GO,GO:0001933,negative regulation of protein phosphorylation
+Function,GO,GO:0035970,peptidyl-threonine dephosphorylation
+Function,GO,GO:1901379,regulation of potassium ion transmembrane transport
+Function,GO,GO:0015485,cholesterol binding
+Function,GO,GO:0003700,DNA-binding transcription factor activity
+Function,GO,GO:0042446,hormone biosynthetic process
+Function,GO,GO:0070570,regulation of neuron projection regeneration
+Function,GO,GO:0031072,heat shock protein binding
+Cell/Tissue,GDSC,SIDM01039,urogenital_system
+Cell/Tissue,GDSC,SIDM01026,aero_digestive_tract
+Cell/Tissue,GDSC,SIDM01172,blood
+Cell/Tissue,GDSC,SIDM00493,lung
+Cell/Tissue,GDSC,SIDM00206,nervous_system
+Cell/Tissue,GDSC,SIDM00512,lung
+Cell/Tissue,GDSC,SIDM00469,pancreas
+Cell/Tissue,GDSC,SIDM00810,lung
+Cell/Tissue,GDSC,SIDM00281,skin
+Cell/Tissue,GDSC,SIDM01194,digestive_system
+Cell/Tissue,GDSC,SIDM00684,nervous_system
+Cell/Tissue,GDSC,SIDM00513,lung
+Cell/Tissue,GDSC,SIDM00421,blood
+Cell/Tissue,GDSC,SIDM01169,urogenital_system
+Cell/Tissue,GDSC,SIDM00413,blood
+Cell/Tissue,GDSC,SIDM00905,urogenital_system
+Cell/Tissue,GDSC,SIDM01101,nervous_system
+Cell/Tissue,GDSC,SIDM00313,blood
+Cell/Tissue,GDSC,SIDM00454,soft_tissue
+Cell/Tissue,GDSC,SIDM00697,lung
+Cell/Tissue,GDSC,SIDM01057,blood
+Cell/Tissue,GDSC,SIDM00044,aero_digestive_tract
+Cell/Tissue,GDSC,SIDM01112,bone
+Cell/Tissue,GDSC,SIDM00473,aero_digestive_tract
+Cell/Tissue,GDSC,SIDM00890,skin
+Cell/Tissue,GDSC,SIDM00198,bone
+Cell/Tissue,GDSC,SIDM00451,blood
+Cell/Tissue,GDSC,SIDM00128,aero_digestive_tract
+Cell/Tissue,GDSC,SIDM00064,digestive_system
+Cell/Tissue,GDSC,SIDM00301,pancreas
+Cell/Tissue,GDSC,SIDM00602,digestive_system
+Cell/Tissue,GDSC,SIDM00585,digestive_system
+Cell/Tissue,GDSC,SIDM00126,skin
+Cell/Tissue,GDSC,SIDM00929,bone
+Cell/Tissue,GDSC,SIDM01220,nervous_system
+Cell/Tissue,GDSC,SIDM00319,skin
+Cell/Tissue,GDSC,SIDM00115,aero_digestive_tract
+Cell/Tissue,GDSC,SIDM00763,lung
+Cell/Tissue,GDSC,SIDM00100,lung
+Cell/Tissue,GDSC,SIDM01025,aero_digestive_tract
+Cell/Tissue,GDSC,SIDM00713,lung
+Cell/Tissue,GDSC,SIDM00472,urogenital_system
+Cell/Tissue,GDSC,SIDM00220,urogenital_system
+Cell/Tissue,GDSC,SIDM00875,breast
+Cell/Tissue,GDSC,SIDM00997,thyroid
+Cell/Tissue,GDSC,SIDM00284,skin
+Cell/Tissue,GDSC,SIDM00363,blood
+Cell/Tissue,GDSC,SIDM01210,nervous_system
+Cell/Tissue,GDSC,SIDM00560,digestive_system
+Cell/Tissue,GDSC,SIDM00910,nervous_system
+Cell/Tissue,GDSC,SIDM01017,blood
+Cell/Tissue,GDSC,SIDM00348,aero_digestive_tract
+Cell/Tissue,GDSC,SIDM00781,digestive_system
+Cell/Tissue,GDSC,SIDM00552,soft_tissue
+Cell/Tissue,GDSC,SIDM00043,aero_digestive_tract
+Cell/Tissue,GDSC,SIDM00410,blood
+Cell/Tissue,GDSC,SIDM00853,soft_tissue
+Cell/Tissue,GDSC,SIDM00296,lung
+Cell/Tissue,GDSC,SIDM00973,skin
+Cell/Tissue,GDSC,SIDM01105,skin
+Cell/Tissue,GDSC,SIDM00632,blood
+Cell/Tissue,GDSC,SIDM00355,lung
+Cell/Tissue,GDSC,SIDM00120,urogenital_system
+Cell/Tissue,GDSC,SIDM01038,blood
+Cell/Tissue,GDSC,SIDM00203,bone
+Cell/Tissue,GDSC,SIDM00816,kidney
+Cell/Tissue,GDSC,SIDM00581,nervous_system
+Cell/Tissue,GDSC,SIDM00442,thyroid
+Cell/Tissue,GDSC,SIDM00425,urogenital_system
+Cell/Tissue,GDSC,SIDM00604,aero_digestive_tract
+Cell/Tissue,GDSC,SIDM01011,blood
+Cell/Tissue,GDSC,SIDM00448,blood
+Cell/Tissue,GDSC,SIDM00829,blood
+Cell/Tissue,GDSC,SIDM00955,skin
+Cell/Tissue,GDSC,SIDM00627,urogenital_system
+Cell/Tissue,GDSC,SIDM00406,blood
+Cell/Tissue,GDSC,SIDM00506,lung
+Cell/Tissue,GDSC,SIDM00672,digestive_system
+Cell/Tissue,GDSC,SIDM01159,soft_tissue
+Cell/Tissue,GDSC,SIDM00299,soft_tissue
+Cell/Tissue,GDSC,SIDM00332,breast
+Cell/Tissue,GDSC,SIDM00482,blood
+Cell/Tissue,GDSC,SIDM00535,bone
+Cell/Tissue,GDSC,SIDM00292,lung
+Cell/Tissue,GDSC,SIDM00480,urogenital_system
+Cell/Tissue,GDSC,SIDM00475,urogenital_system
+Cell/Tissue,GDSC,SIDM01080,aero_digestive_tract
+Cell/Tissue,GDSC,SIDM00611,kidney
+Cell/Tissue,GDSC,SIDM00407,blood
+Cell/Tissue,GDSC,SIDM00136,digestive_system
+Cell/Tissue,GDSC,SIDM00114,lung
+Cell/Tissue,GDSC,SIDM00817,kidney
+Cell/Tissue,GDSC,SIDM00926,lung
+Cell/Tissue,GDSC,SIDM00112,kidney
+Cell/Tissue,GDSC,SIDM00548,lung
+Cell/Tissue,GDSC,SIDM00238,urogenital_system
+Cell/Tissue,GDSC,SIDM01032,aero_digestive_tract
+Cell/Tissue,GDSC,SIDM00694,digestive_system
+Cell/Tissue,GDSC,SIDM00253,nervous_system
+Cell/Tissue,GDSC,SIDM00569,bone
+Cell/Tissue,GDSC,SIDM00205,bone
+Cell/Tissue,GDSC,SIDM01078,lung
+Cell/Tissue,GDSC,SIDM00483,aero_digestive_tract
+Cell/Tissue,GDSC,SIDM00881,breast
+Cell/Tissue,GDSC,SIDM00920,breast
+Cell/Tissue,GDSC,SIDM00426,soft_tissue
+Cell/Tissue,GDSC,SIDM01084,bone
+Cell/Tissue,GDSC,SIDM00336,skin
+Cell/Tissue,GDSC,SIDM00210,urogenital_system
+Cell/Tissue,GDSC,SIDM00570,digestive_system
+Cell/Tissue,GDSC,SIDM00392,skin
+Cell/Tissue,GDSC,SIDM01129,lung
+Cell/Tissue,GDSC,SIDM00529,breast
+Cell/Tissue,GDSC,SIDM00538,aero_digestive_tract
+Cell/Tissue,GDSC,SIDM00261,bone
+Cell/Tissue,GDSC,SIDM01145,digestive_system
+Cell/Tissue,GDSC,SIDM00049,digestive_system
+Cell/Tissue,GDSC,SIDM00293,lung
+Cell/Tissue,GDSC,SIDM01121,lung
+Cell/Tissue,GDSC,SIDM00211,blood
+Cell/Tissue,GDSC,SIDM00094,kidney
+Cell/Tissue,GDSC,SIDM00603,aero_digestive_tract
+Cell/Tissue,GDSC,SIDM00831,aero_digestive_tract
+Cell/Tissue,GDSC,SIDM00121,blood
+Cell/Tissue,GDSC,SIDM00901,urogenital_system
+Cell/Tissue,GDSC,SIDM00884,breast
+Cell/Tissue,GDSC,SIDM01040,urogenital_system
+Cell/Tissue,GDSC,SIDM00111,nervous_system
+Cell/Tissue,GDSC,SIDM00927,lung
+Cell/Tissue,GDSC,SIDM00489,aero_digestive_tract
+Cell/Tissue,GDSC,SIDM00394,urogenital_system
+Cell/Tissue,GDSC,SIDM00134,lung
+Cell/Tissue,GDSC,SIDM00889,urogenital_system
+Cell/Tissue,GDSC,SIDM00400,blood
+Cell/Tissue,GDSC,SIDM00232,kidney
+Cell/Tissue,GDSC,SIDM00477,aero_digestive_tract
+Cell/Tissue,GDSC,SIDM00579,nervous_system
+Cell/Tissue,GDSC,SIDM01141,urogenital_system
+Cell/Tissue,GDSC,SIDM00326,aero_digestive_tract
+Cell/Tissue,GDSC,SIDM01000,skin
+Cell/Tissue,GDSC,SIDM01042,breast
+Cell/Tissue,GDSC,SIDM00252,digestive_system
+Cell/Tissue,GDSC,SIDM00969,urogenital_system
+Cell/Tissue,GDSC,SIDM01186,breast
+Cell/Tissue,GDSC,SIDM01060,skin
+Cell/Tissue,GDSC,SIDM00989,urogenital_system
+Cell/Tissue,GDSC,SIDM00460,blood
+Cell/Tissue,GDSC,SIDM00418,thyroid
+Cell/Tissue,GDSC,SIDM00778,digestive_system
+Cell/Tissue,GDSC,SIDM01259,blood
+Cell/Tissue,GDSC,SIDM01139,pancreas
+Cell/Tissue,GDSC,SIDM00504,nervous_system
+Cell/Tissue,GDSC,SIDM00801,skin
+Cell/Tissue,GDSC,SIDM00416,blood
+Cell/Tissue,GDSC,SIDM01155,nervous_system
+Cell/Tissue,GDSC,SIDM00447,blood
+Cell/Tissue,GDSC,SIDM00716,lung
+Cell/Tissue,GDSC,SIDM00749,lung
+Cell/Tissue,GDSC,SIDM00719,lung
+Cell/Tissue,GDSC,SIDM00505,pancreas
+Cell/Tissue,GDSC,SIDM00320,lung
+Cell/Tissue,GDSC,SIDM00453,pancreas
+Cell/Tissue,GDSC,SIDM00629,breast
+Cell/Tissue,GDSC,SIDM00698,lung
+Cell/Tissue,GDSC,SIDM00735,lung
+Cell/Tissue,GDSC,SIDM00435,blood
+Cell/Tissue,GDSC,SIDM00123,kidney
+Cell/Tissue,GDSC,SIDM00414,urogenital_system
+Cell/Tissue,GDSC,SIDM01156,lung
+Cell/Tissue,GDSC,SIDM00935,urogenital_system
+Cell/Tissue,GDSC,SIDM00352,urogenital_system
+Cell/Tissue,GDSC,SIDM00657,blood
+Cell/Tissue,GDSC,SIDM00181,urogenital_system
+Cell/Tissue,GDSC,SIDM01150,lung
+Cell/Tissue,GDSC,SIDM00047,lung
+Cell/Tissue,GDSC,SIDM00240,urogenital_system
+Cell/Tissue,GDSC,SIDM00051,bone
+Cell/Tissue,GDSC,SIDM01191,bone
+Cell/Tissue,GDSC,SIDM00940,breast
+Cell/Tissue,GDSC,SIDM00750,lung
+Cell/Tissue,GDSC,SIDM00797,skin
+Cell/Tissue,GDSC,SIDM01133,lung
+Cell/Tissue,GDSC,SIDM00091,urogenital_system
+Cell/Tissue,GDSC,SIDM00212,nervous_system
+Cell/Tissue,GDSC,SIDM00315,nervous_system
+Cell/Tissue,GDSC,SIDM00274,digestive_system
+Cell/Tissue,GDSC,SIDM01205,blood
+Cell/Tissue,GDSC,SIDM01173,soft_tissue
+Cell/Tissue,GDSC,SIDM00961,bone
+Cell/Tissue,GDSC,SIDM00909,skin
+Cell/Tissue,GDSC,SIDM00318,kidney
+Cell/Tissue,GDSC,SIDM00150,digestive_system
+Cell/Tissue,GDSC,SIDM00499,urogenital_system
+Cell/Tissue,GDSC,SIDM00662,skin
+Cell/Tissue,GDSC,SIDM01146,digestive_system
+Cell/Tissue,GDSC,SIDM00974,skin
+Cell/Tissue,GDSC,SIDM00270,aero_digestive_tract
+Cell/Tissue,GDSC,SIDM00730,lung
+Cell/Tissue,GDSC,SIDM00502,blood
+Cell/Tissue,GDSC,SIDM01090,digestive_system
+Patient,TCGA,TCGA-DK-A6B2,Bladder
+Patient,TCGA,TCGA-FD-A3B7,Bladder
+Patient,TCGA,TCGA-CQ-A4C7,Floor of mouth
+Patient,TCGA,TCGA-D1-A0ZO,Corpus uteri
+Patient,TCGA,TCGA-CV-7406,Base of tongue
+Patient,TCGA,TCGA-BP-4986,Kidney
+Patient,TCGA,TCGA-IK-8125,Brain
+Patient,TCGA,1037,Hematopoietic and reticuloendothelial systems
+Patient,TCGA,TCGA-DW-5560,Kidney
+Patient,TCGA,TCGA-AA-3950,Colon
+Patient,TCGA,TCGA-EJ-7123,Prostate gland
+Patient,TCGA,TCGA-A2-A0YT,Breast
+Patient,TCGA,TCGA-AX-A1CP,Corpus uteri
+Patient,TCGA,TCGA-33-4533,Bronchus and lung
+Patient,TCGA,1026,Hematopoietic and reticuloendothelial systems
+Patient,TCGA,1033,Hematopoietic and reticuloendothelial systems
+Patient,TCGA,TCGA-CI-6620,Rectum
+Patient,TCGA,TCGA-BP-4965,Kidney
+Patient,TCGA,TCGA-AZ-4681,Colon
+Patient,TCGA,TCGA-CN-6021,Larynx
+Patient,TCGA,TCGA-AZ-4313,Colon
+Patient,TCGA,TCGA-BT-A3PJ,Bladder
+Patient,TCGA,TCGA-CH-5753,Prostate gland
+Patient,TCGA,TCGA-CS-6670,Brain
+Patient,TCGA,TCGA-12-0653,Brain
+Patient,TCGA,1015,Hematopoietic and reticuloendothelial systems
+Patient,TCGA,TCGA-EJ-7791,Prostate gland
+Patient,TCGA,TCGA-DK-A1A5,Bladder
+Patient,TCGA,TCGA-HT-7604,Brain
+Patient,TCGA,TCGA-A8-A09I,Breast
+Patient,TCGA,TCGA-DV-5568,Kidney
+Patient,TCGA,TCGA-AA-3672,Colon
+Patient,TCGA,TCGA-CN-4727,Larynx
+Patient,TCGA,TCGA-CM-5863,Colon
+Patient,TCGA,TCGA-34-2604,Bronchus and lung
+Patient,TCGA,TCGA-3G-AB0T,"Heart, mediastinum, and pleura"
+Patient,TCGA,TCGA-AG-3906,Rectosigmoid junction
+Patient,TCGA,TCGA-CD-5813,Stomach
+Patient,TCGA,TCGA-AA-3688,Colon
+Patient,TCGA,TCGA-EK-A2H0,Cervix uteri
+Patient,TCGA,TCGA-BQ-7046,Kidney
+Patient,TCGA,TCGA-21-1078,Bronchus and lung
+Patient,TCGA,TCGA-F2-6880,Pancreas
+Patient,TCGA,TCGA-A8-A06T,Breast
+Patient,TCGA,TCGA-D1-A2G5,Corpus uteri
+Patient,TCGA,TCGA-BQ-5892,Kidney
+Patient,TCGA,TCGA-HZ-7920,Pancreas
+Patient,TCGA,TCGA-DK-A3IT,Bladder
+Patient,TCGA,TCGA-BQ-7058,Kidney
+Patient,TCGA,TCGA-CQ-7068,"Other and ill-defined sites in lip, oral cavity and pharynx"
+Patient,TCGA,ER-ABEN,Colon
+Patient,TCGA,TCGA-DK-A3IU,Bladder
+Patient,TCGA,TCGA-DZ-6134,Kidney
+Patient,TCGA,TCGA-CQ-6221,Other and unspecified parts of tongue
+Patient,TCGA,TCGA-D1-A3JP,Corpus uteri
+Patient,TCGA,TCGA-EO-A3KU,Corpus uteri
+Patient,TCGA,TCGA-DH-5141,Brain
+Patient,TCGA,TCGA-RL-AAAS,Pancreas
+Patient,TCGA,TCGA-AA-3562,Colon
+Patient,TCGA,TCGA-A6-2682,Colon
+Patient,TCGA,TCGA-DB-5270,Brain
+Patient,TCGA,TCGA-AX-A2HF,Corpus uteri
+Patient,TCGA,TCGA-DV-5573,Kidney
+Patient,TCGA,TCGA-A8-A08F,Breast
+Patient,TCGA,TCGA-CQ-7067,Other and unspecified parts of mouth
+Patient,TCGA,1034,Hematopoietic and reticuloendothelial systems
+Patient,TCGA,1020,Hematopoietic and reticuloendothelial systems
+Patient,TCGA,TCGA-44-2661,Bronchus and lung
+Patient,TCGA,TCGA-US-A77J,Pancreas
+Patient,TCGA,TCGA-AA-3527,Colon
+Patient,TCGA,TCGA-06-0209,Brain
+Patient,TCGA,TCGA-60-2712,Bronchus and lung
+Patient,TCGA,1016,Hematopoietic and reticuloendothelial systems
+Patient,TCGA,1003,Hematopoietic and reticuloendothelial systems
+Patient,TCGA,1014,Hematopoietic and reticuloendothelial systems
+Patient,TCGA,TCGA-AY-4071,Colon
+Patient,TCGA,TCGA-CV-7437,Larynx
+Patient,TCGA,TCGA-BP-4988,Kidney
+Patient,TCGA,TCGA-B5-A0KB,Corpus uteri
+Patient,TCGA,TCGA-A6-4105,Colon
+Patient,TCGA,TCGA-G2-A2ES,Bladder
+Patient,TCGA,TCGA-EY-A1GQ,Corpus uteri
+Patient,TCGA,TCGA-F2-7273,Pancreas
+Patient,TCGA,TCGA-CZ-4862,Kidney
+Patient,TCGA,TCGA-IQ-7631,Other and unspecified parts of mouth
+Patient,TCGA,TCGA-95-7948,Bronchus and lung
+Patient,TCGA,TCGA-CG-5716,Stomach
+Patient,TCGA,TCGA-CN-6023,Larynx
+Patient,TCGA,TCGA-FD-A3SN,Bladder
+Patient,TCGA,TCGA-CQ-6225,"Other and ill-defined sites in lip, oral cavity and pharynx"
+Patient,TCGA,TCGA-AG-3580,Rectosigmoid junction
+Patient,TCGA,1005,Hematopoietic and reticuloendothelial systems
+Patient,TCGA,TCGA-AL-3468,Kidney
+Patient,TCGA,TCGA-EJ-A46H,Prostate gland
+Patient,TCGA,TCGA-AG-3611,Rectosigmoid junction
+Patient,TCGA,TARGET-10-PAKTAL,Hematopoietic and reticuloendothelial systems
+Patient,TCGA,TCGA-AA-3554,Colon
+Patient,TCGA,TARGET-10-PANSFD,Hematopoietic and reticuloendothelial systems
+Patient,TCGA,TCGA-B8-4621,Kidney
+Patient,TCGA,TCGA-HQ-A2OF,Bladder
+Patient,TCGA,TCGA-CG-4476,Stomach
+Patient,TCGA,TCGA-AA-3556,Colon
+Patient,TCGA,1053,Hematopoietic and reticuloendothelial systems
+Patient,TCGA,TCGA-DV-5567,Kidney
+Patient,TCGA,1009,Hematopoietic and reticuloendothelial systems
+Patient,TCGA,TCGA-FU-A3TX,Cervix uteri
+Patient,TCGA,1050,Hematopoietic and reticuloendothelial systems
+Patient,TCGA,TCGA-HF-7131,Stomach
+Patient,TCGA,1025,Hematopoietic and reticuloendothelial systems
+Patient,TCGA,TCGA-94-7033,Bronchus and lung
+Patient,TCGA,TCGA-AX-A06D,Corpus uteri
+Patient,TCGA,TCGA-HU-A4H6,Stomach
+Patient,TCGA,TCGA-GC-A3BM,Bladder
+Patient,TCGA,TCGA-FG-5962,Brain
+Patient,TCGA,TCGA-BA-4077,Other and unspecified parts of tongue
+Patient,TCGA,1007,Hematopoietic and reticuloendothelial systems
+Patient,TCGA,TARGET-10-PANNGL,Hematopoietic and reticuloendothelial systems
+Patient,TCGA,TCGA-MH-A857,Kidney
+Patient,TCGA,TCGA-BP-4995,Kidney
+Patient,TCGA,TCGA-G4-6314,Colon
+Patient,TCGA,TCGA-AA-3697,Colon
+Patient,TCGA,TCGA-AA-3692,Colon
+Patient,TCGA,TCGA-21-1077,Bronchus and lung
+Patient,TCGA,TCGA-FI-A2D5,Corpus uteri
+Patient,TCGA,TCGA-DK-A3IV,Bladder
+Patient,TCGA,TCGA-G4-6586,Colon
+Patient,TCGA,TCGA-AX-A1CR,Corpus uteri
+Patient,TCGA,TCGA-A3-3343,Kidney
+Patient,TCGA,TCGA-DW-7836,Kidney
+Patient,TCGA,TCGA-C8-A1HO,Breast
+Patient,TCGA,TCGA-BQ-5888,Kidney
+Patient,TCGA,TCGA-CU-A0YO,Bladder
+Patient,TCGA,TCGA-DQ-7593,Base of tongue
+Patient,TCGA,1036,Hematopoietic and reticuloendothelial systems
+Patient,TCGA,TCGA-5L-AAT1,Breast
+Patient,TCGA,TCGA-DV-5574,Kidney
+Patient,TCGA,TCGA-CV-7440,Larynx
+Patient,TCGA,TCGA-D1-A102,Corpus uteri
+Patient,TCGA,1012,Hematopoietic and reticuloendothelial systems
+Patient,TCGA,TCGA-AF-2692,Rectum
+Patient,TCGA,TCGA-AA-3521,Colon
+Patient,TCGA,1023,Hematopoietic and reticuloendothelial systems
+Patient,TCGA,TCGA-G4-6625,Colon
+Patient,TCGA,TCGA-EY-A212,Corpus uteri
+Patient,TCGA,TCGA-AG-3891,Rectum
+Patient,TCGA,TCGA-3A-A9IV,Pancreas
+Patient,TCGA,TCGA-G4-6321,Colon
+Patient,TCGA,TCGA-AA-3979,Colon
+Patient,TCGA,1030,Hematopoietic and reticuloendothelial systems
+Patient,TCGA,TCGA-EJ-A46E,Prostate gland
+Patient,TCGA,TCGA-GI-A2C8,Breast
+Patient,TCGA,TCGA-FD-A3NA,Bladder
+Patient,TCGA,TCGA-A8-A084,Breast
+Patient,TCGA,TCGA-CH-5791,Prostate gland
+Patient,TCGA,TCGA-2L-AAQM,Pancreas
+Patient,TCGA,TARGET-10-PAKHZT,Hematopoietic and reticuloendothelial systems
+Patient,TCGA,TCGA-CJ-5689,Kidney
+Patient,TCGA,TCGA-JW-A5VL,Cervix uteri
+Patient,TCGA,TCGA-BP-4344,Kidney
+Patient,TCGA,TCGA-EQ-A4SO,Stomach
+Patient,TCGA,TCGA-DW-7841,Kidney
+Patient,TCGA,TCGA-80-5611,Bronchus and lung
+Patient,TCGA,TCGA-HT-A619,Brain
+Patient,TCGA,TCGA-XK-AAJ3,Prostate gland
+Patient,TCGA,TCGA-KJ-A3U4,Corpus uteri
+Patient,TCGA,1040,Hematopoietic and reticuloendothelial systems
+Patient,TCGA,TCGA-DW-7839,Kidney
+Patient,TCGA,1022,Hematopoietic and reticuloendothelial systems
+Patient,TCGA,1038,Hematopoietic and reticuloendothelial systems
+Patient,TCGA,TCGA-A8-A09E,Breast
+Patient,TCGA,TCGA-BP-5009,Kidney
+Patient,TCGA,TCGA-J4-A6G3,Prostate gland
+Patient,TCGA,TCGA-CJ-4642,Kidney
+Patient,TCGA,TCGA-AA-3844,Colon
+Patient,TCGA,TCGA-CH-5764,Prostate gland
+Patient,TCGA,TCGA-G7-A8LE,Kidney
+Patient,TCGA,TCGA-AK-3450,Kidney
+Patient,TCGA,TCGA-AG-4008,Colon
+Patient,TCGA,TCGA-HW-7490,Brain
+Patient,TCGA,TCGA-18-5595,Bronchus and lung
+Patient,TCGA,TCGA-FD-A43P,Bladder
+Patient,TCGA,TCGA-AA-3715,Colon
+Patient,TCGA,TCGA-44-6147,Bronchus and lung
+Patient,TCGA,TCGA-DK-A2I6,Bladder
+Patient,TCGA,TCGA-GV-A3QK,Bladder
+Patient,TCGA,TCGA-BA-4075,Other and unspecified parts of tongue
+Patient,TCGA,TCGA-XQ-A8TA,Prostate gland
+Patient,TCGA,TCGA-CN-6024,Other and unspecified parts of tongue
+Patient,TCGA,TCGA-G5-6235,Rectosigmoid junction
+Patient,TCGA,TCGA-60-2696,Bronchus and lung
+Patient,TCGA,TCGA-CF-A9FM,Bladder
+Patient,TCGA,TCGA-BP-4158,Kidney
+Patient,TCGA,1045,Hematopoietic and reticuloendothelial systems
+Patient,TCGA,TCGA-BM-6198,Rectum
+Patient,TCGA,TCGA-BQ-7055,Kidney
+Patient,TCGA,TCGA-B1-A47M,Kidney
+Patient,TCGA,TCGA-DU-7300,Brain
+Patient,TCGA,TCGA-DQ-7589,Larynx
+Patient,TCGA,TCGA-06-0137,Brain
+Patient,TCGA,TCGA-DK-A3IS,Bladder
+Domain,InterPro,IPR018143,Folate receptor family
+Domain,InterPro,IPR029452,"Rapamycin-insensitive companion of mTOR, domain 5"
+Domain,InterPro,IPR005101,FAD binding domain of DNA photolyase
+Domain,InterPro,IPR014873,Voltage gated calcium channel IQ domain
+Domain,InterPro,IPR022676,"Myristoyl-CoA:protein N-myristoyltransferase, N-terminal domain"
+Domain,InterPro,IPR041291,Histone methyltransferase Tudor domain 1
+Domain,InterPro,IPR027179,Mature-T-Cell Proliferation I type
+Domain,InterPro,IPR010504,Arfaptin-like domain
+Domain,InterPro,IPR025697,Clustered mitochondria
+Domain,InterPro,IPR015371,"Endonuclease VIII-like 1, DNA bind"
+Domain,InterPro,IPR001581,LIF / OSM family
+Domain,InterPro,IPR002017,Spectrin repeat
+Domain,InterPro,IPR004226,Tubulin binding cofactor A
+Domain,InterPro,IPR015015,F-actin binding
+Domain,InterPro,IPR032365,BCORL-PCGF1-binding domain
+Domain,InterPro,IPR040459,MJ1316 RNA cyclic group end recognition domain
+Domain,InterPro,IPR031964,Caspase recruitment domain
+Domain,InterPro,IPR035372,Malonyl-CoA decarboxylase N-terminal domain
+Domain,InterPro,IPR045703,"POU domain, class 2, transcription factor 1 C-terminal"
+Domain,InterPro,IPR040749,BRCC36 C-terminal helical domain
+Domain,InterPro,IPR007829,TM2 domain
+Domain,InterPro,IPR000795,Elongation factor Tu GTP binding domain
+Domain,InterPro,IPR013216,Methyltransferase domain
+Domain,InterPro,IPR015377,Fumarylacetoacetase N-terminal
+Domain,InterPro,IPR000268,RNA polymerases N / 8 kDa subunit
+Domain,InterPro,IPR041523,Roquin II domain
+Domain,InterPro,IPR002773,Deoxyhypusine synthase
+Domain,InterPro,IPR029002,Zinc dependent phospholipase C
+Domain,InterPro,IPR021566,Prion-like protein Doppel
+Domain,InterPro,IPR015019,Mitogen-activated protein kinase kinase 1 interacting
+Domain,InterPro,IPR018996,Man1-Src1p-C-terminal domain
+Domain,InterPro,IPR001254,Trypsin
+Domain,InterPro,IPR041680,Pleckstrin homology domain
+Domain,InterPro,IPR020438,Interleukin 11
+Domain,InterPro,IPR004104,"Oxidoreductase family, C-terminal alpha/beta domain"
+Domain,InterPro,IPR001810,F-box
+Domain,InterPro,IPR013194,Sin3 family co-repressor
+Domain,InterPro,IPR012978,NUC173 domain
+Domain,InterPro,IPR013500,"Eukaryotic DNA topoisomerase I, catalytic core"
+Domain,InterPro,IPR004600,Transcription factor Tfb4
+Domain,InterPro,IPR005199,"Glycosyl hydrolase family 79, N-terminal domain "
+Domain,InterPro,IPR020470,Interleukin-13
+Domain,InterPro,IPR004123,Mitosis protein DIM1
+Domain,InterPro,IPR012934,Zinc-finger associated domain (zf-AD)  
+Domain,InterPro,IPR033768,Hydin Adenylate kinase-like domain
+Domain,InterPro,IPR025640,GYF domain 2
+Domain,InterPro,IPR002638,"Quinolinate phosphoribosyl transferase, C-terminal domain"
+Domain,InterPro,IPR011625,Alpha-2-macroglobulin bait region domain
+Domain,InterPro,IPR001305,DnaJ central domain
+Domain,InterPro,IPR005720,Dihydroorotate dehydrogenase
+Domain,InterPro,IPR021645,"Shal-type voltage-gated potassium channels, N-terminal"
+Domain,InterPro,IPR007502,Helicase associated domain (HA2)
+Domain,InterPro,IPR004095,TGS domain
+Domain,InterPro,IPR021987,SLED domain
+Domain,InterPro,IPR026823,Complement Clr-like EGF-like
+Domain,InterPro,IPR041489,PDZ domain
+Domain,InterPro,IPR004088,KH domain
+Domain,InterPro,IPR022702,Cytosine specific DNA methyltransferase replication foci domain
+Domain,InterPro,IPR014830,Glycolipid transfer protein (GLTP)
+Domain,InterPro,IPR007012,Poly(A) polymerase central domain
+Domain,InterPro,IPR044046,Proteolysis_6 C-terminal
+Domain,InterPro,IPR008598,"Drought induced 19 protein (Di19), zinc-binding"
+Domain,InterPro,IPR025946,"Cell-cycle sustaining, positive selection, "
+Domain,InterPro,IPR014940,BAAT / Acyl-CoA thioester hydrolase C terminal
+Domain,InterPro,IPR008758,Serine carboxypeptidase S28
+Domain,InterPro,IPR012981,PIH1 N-terminal domain
+Domain,InterPro,IPR009038,Golgi-dynamics membrane-trafficking
+Domain,InterPro,IPR014020,C2 domain of PTEN tumour-suppressor protein
+Domain,InterPro,IPR039064,Zinc-finger
+Domain,InterPro,IPR001130,TatD related DNase
+Domain,InterPro,IPR019533,"Signal peptidase, peptidase S26 "
+Domain,InterPro,IPR004160,Elongation factor Tu C-terminal domain
+Domain,InterPro,IPR032699,Izumo-like Immunoglobulin domain
+Domain,InterPro,IPR005065,"Platelet-activating factor acetylhydrolase, isoform II"
+Domain,InterPro,IPR013934,Utp13 specific WD40 associated domain
+Domain,InterPro,IPR027353,Bromodomain extra-terminal - transcription regulation
+Domain,InterPro,IPR040663,DNA polymerase delta subunit OB-fold domain
+Domain,InterPro,IPR024548,"Copper type II ascorbate-dependent monooxygenase, C-terminal domain"
+Domain,InterPro,IPR017930,Myb-like DNA-binding domain
+Domain,InterPro,IPR015341,Alpha mannosidase middle domain
+Domain,InterPro,IPR032042,ssDNA-binding domain of telomere protection protein
+Domain,InterPro,IPR023780,Chromo (CHRromatin Organisation MOdifier) domain
+Domain,InterPro,IPR019365,Uncharacterized conserved protein CG6151-P
+Domain,InterPro,IPR006555,Helicase C-terminal domain
+Domain,InterPro,IPR029453,Rapamycin-insensitive companion of mTOR RasGEF_N domain
+Domain,InterPro,IPR006011,Syntaxin-like protein
+Domain,InterPro,IPR032191,CCR4-NOT transcription complex subunit 1 CAF1-binding domain
+Domain,InterPro,IPR019401,Zinc-finger domain
+Domain,InterPro,IPR011263,RNA polymerase Rpb3/Rpb11 dimerisation domain
+Domain,InterPro,IPR024767,Pre-mRNA-splicing factor 38-associated hydrophilic C-term
+Domain,InterPro,IPR014030,"Beta-ketoacyl synthase, N-terminal domain"
+Domain,InterPro,IPR006097,"Glu/Leu/Phe/Val dehydrogenase, dimerisation domain"
+Domain,InterPro,IPR032040,beta-propeller of ELYS nucleoporin
+Domain,InterPro,IPR013243,"SCA7, zinc-binding domain"
+Domain,InterPro,IPR008251,Chromo shadow domain
+Domain,InterPro,IPR024974,Silencing defective 2 N-terminal ubiquitin domain
+Domain,InterPro,IPR013746,Hydroxymethylglutaryl-coenzyme A synthase C terminal
+Domain,InterPro,IPR019575,NADH-ubiquinone oxidoreductase-F iron-sulfur binding region
+Domain,InterPro,IPR001811,"Small cytokines (intecrine/chemokine), interleukin-8 like"
+Domain,InterPro,IPR025749,PAP2 superfamily C-terminal
+Side Effect,ADReCS,BADD_A01315,Disturbances in thinking and perception
+Side Effect,ADReCS,BADD_A06316,Bone marrow failure
+Side Effect,ADReCS,BADD_A04235,Taste disorders
+Side Effect,ADReCS,BADD_A05470,Vascular hypotensive disorders
+Side Effect,ADReCS,BADD_A06450,Type 2 diabetes mellitus
+Side Effect,ADReCS,BADD_A01774,Gastrointestinal motility and defaecation conditions
+Side Effect,ADReCS,BADD_A02412,Iron deficiencies
+Side Effect,ADReCS,BADD_A00078,Acute myeloid leukaemia
+Side Effect,ADReCS,BADD_A01950,Hair growth abnormal
+Side Effect,ADReCS,BADD_A01734,Gastric ulcers and perforation
+Side Effect,ADReCS,BADD_A01931,Haemolyses and related conditions
+Side Effect,ADReCS,BADD_A00138,Albuminuria
+Side Effect,ADReCS,BADD_A03732,Renal and urinary disorders
+Side Effect,ADReCS,BADD_A01291,Sexual function and fertility disorders
+Side Effect,ADReCS,BADD_A03048,"Neurological, special senses and psychiatric investigations"
+Side Effect,ADReCS,BADD_A06402,Treatment failure
+Side Effect,ADReCS,BADD_A00503,Blood and lymphatic system disorders
+Side Effect,ADReCS,BADD_A04982,Deep vein thrombosis
+Side Effect,ADReCS,BADD_A02738,Mental disorders due to a general medical condition NEC
+Side Effect,ADReCS,BADD_A03534,"Pregnancy, puerperium and perinatal conditions"
+Side Effect,ADReCS,BADD_A04229,Tachycardia
+Side Effect,ADReCS,BADD_A04044,Skin hypoplasias and atrophies
+Side Effect,ADReCS,BADD_A01656,Fibrosis
+Side Effect,ADReCS,BADD_A00342,Arthropathies NEC
+Side Effect,ADReCS,BADD_A02789,Allergic conditions NEC
+Side Effect,ADReCS,BADD_A02108,Hyperammonaemia
+Side Effect,ADReCS,BADD_A01193,Demyelinating disorders
+Side Effect,ADReCS,BADD_A01533,Eructation
+Side Effect,ADReCS,BADD_A01706,Gait disturbances
+Side Effect,ADReCS,BADD_A02912,Myalgia
+Side Effect,ADReCS,BADD_A03817,Respiratory disorders NEC
+Side Effect,ADReCS,BADD_A04036,Skin exfoliation
+Side Effect,ADReCS,BADD_A04568,Vertigo
+Side Effect,ADReCS,BADD_A05462,Disability issues
+Side Effect,ADReCS,BADD_A03915,Salmonella infections
+Side Effect,ADReCS,BADD_A00968,Cognitive and attention disorders and disturbances
+Side Effect,ADReCS,BADD_A01793,Gastrointestinal stenosis and obstruction NEC
+Side Effect,ADReCS,BADD_A00154,Alopecias
+Side Effect,ADReCS,BADD_A06838,Speech sound disorder
+Side Effect,ADReCS,BADD_A02586,Lower gastrointestinal neoplasms benign
+Side Effect,ADReCS,BADD_A00541,Blood creatinine increased
+Side Effect,ADReCS,BADD_A04041,Skin hyperplasias and hypertrophies
+Side Effect,ADReCS,BADD_A03222,Osteoporosis
+Side Effect,ADReCS,BADD_A00700,Breast pain
+Side Effect,ADReCS,BADD_A01279,"Bone, calcium, magnesium and phosphorus metabolism disorders"
+Side Effect,ADReCS,BADD_A00388,Auditory nerve disorders
+Side Effect,ADReCS,BADD_A04011,Skeletal and cardiac muscle analyses
+Side Effect,ADReCS,BADD_A02361,Inner ear signs and symptoms
+Side Effect,ADReCS,BADD_A01214,Dermatitis
+Side Effect,ADReCS,BADD_A01804,General disorders and administration site conditions
+Side Effect,ADReCS,BADD_A05625,Disturbance in sexual arousal
+Side Effect,ADReCS,BADD_A04157,Stomatitis
+Side Effect,ADReCS,BADD_A03670,Purpura and related conditions
+Side Effect,ADReCS,BADD_A07468,Neonatal respiratory distress syndrome
+Side Effect,ADReCS,BADD_A05941,Parkinson's disease
+Side Effect,ADReCS,BADD_A08260,Biliary dyskinesia
+Side Effect,ADReCS,BADD_A05832,Intervertebral disc degeneration
+Side Effect,ADReCS,BADD_A04753,Performance status decreased
+Side Effect,ADReCS,BADD_A03824,"Respiratory, thoracic and mediastinal disorders"
+Side Effect,ADReCS,BADD_A01208,Depression
+Side Effect,ADReCS,BADD_A00950,Clonus
+Side Effect,ADReCS,BADD_A03046,Neurologic visual problems NEC
+Side Effect,ADReCS,BADD_A01055,Conjunctivitis
+Side Effect,ADReCS,BADD_A04125,Spinal cord and nerve root disorders traumatic
+Side Effect,ADReCS,BADD_A03750,Renal failure and impairment
+Side Effect,ADReCS,BADD_A06785,Limb fractures
+Side Effect,ADReCS,BADD_A02384,Intestinal haemorrhages
+Side Effect,ADReCS,BADD_A01383,Dysuria
+Side Effect,ADReCS,BADD_A01654,Fibrocystic breast disease
+Side Effect,ADReCS,BADD_A04470,Urticarias
+Side Effect,ADReCS,BADD_A02150,Vascular hypertensive disorders NEC
+Side Effect,ADReCS,BADD_A01386,Ear disorder
+Side Effect,ADReCS,BADD_A03376,"Peripheral vasoconstriction, necrosis and vascular insufficiency"
+Side Effect,ADReCS,BADD_A01966,Headaches
+Side Effect,ADReCS,BADD_A02796,Chest and lung injuries NEC
+Side Effect,ADReCS,BADD_A04757,Anal abscess
+Side Effect,ADReCS,BADD_A00005,Abdominal distension
+Side Effect,ADReCS,BADD_A05149,Respiratory failures (excl neonatal)
+Side Effect,ADReCS,BADD_A01536,Erythemas
+Side Effect,ADReCS,BADD_A04459,Urinary tract signs and symptoms NEC
+Side Effect,ADReCS,BADD_A02123,Hyperhidrosis
+Side Effect,ADReCS,BADD_A02687,Mediastinal disorders
+Side Effect,ADReCS,BADD_A04451,Urinary tract infections
+Side Effect,ADReCS,BADD_A01522,Epilepsy
+Side Effect,ADReCS,BADD_A01516,Epidermal and dermal conditions
+Side Effect,ADReCS,BADD_A03527,Pre-existing condition improved
+Side Effect,ADReCS,BADD_A01350,Duodenal ulcer
+Side Effect,ADReCS,BADD_A01099,Coronary artery occlusion
+Side Effect,ADReCS,BADD_A04320,Tongue conditions
+Side Effect,ADReCS,BADD_A02524,Libido decreased
+Side Effect,ADReCS,BADD_A01285,Lipid metabolism disorders
+Side Effect,ADReCS,BADD_A04218,Swollen tongue
+Side Effect,ADReCS,BADD_A01938,Haemorrhage intracranial
+Side Effect,ADReCS,BADD_A00304,Appetite disorders
+Side Effect,ADReCS,BADD_A00008,Abdominal pain
+Side Effect,ADReCS,BADD_A06975,Blood lactic acid
+Location,GOA,ECO:0000323,plasma membrane
+Location,GOA,ECO:0000323,cytoplasm
+Location,GOA,ECO:0000323,membrane
+Location,GOA,ECO:0000323,cell outer membrane
+Location,GOA,ECO:0000323,extracellular region
+Location,GOA,ECO:0000323,periplasmic space
+Organism,UniprotKB,9606,Homo sapiens
