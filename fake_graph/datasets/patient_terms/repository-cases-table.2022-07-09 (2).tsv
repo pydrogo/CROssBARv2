@@ -1,0 +1,101 @@
+Cart	Case ID	Project	Primary Site	Gender	Files	Seq	Exp	SNV	CNV	Meth	Clinical	Bio	Annotations	Slides
+Case Actions	TCGA-XK-AAJ3	TCGA-PRAD	Prostate gland	Male	61	6	4	17	6	3	8	13	1	1
+Case Actions	TCGA-HC-8259	TCGA-PRAD	Prostate gland	Male	76	10	8	17	8	3	7	15	1	3
+Case Actions	TCGA-CH-5763	TCGA-PRAD	Prostate gland	Male	68	6	4	17	6	6	8	16	1	4
+Case Actions	TCGA-HC-7741	TCGA-PRAD	Prostate gland	Male	22	0	0	0	2	0	7	13	1	1
+Case Actions	TCGA-CH-5790	TCGA-PRAD	Prostate gland	Male	61	6	4	15	6	3	8	14	1	2
+Case Actions	TCGA-EJ-7791	TCGA-PRAD	Prostate gland	Male	64	6	4	17	6	3	8	15	1	3
+Case Actions	TCGA-EJ-5542	TCGA-PRAD	Prostate gland	Male	64	6	4	17	6	3	8	15	1	3
+Case Actions	TCGA-CH-5791	TCGA-PRAD	Prostate gland	Male	63	6	4	17	6	3	8	14	1	2
+Case Actions	TCGA-CH-5753	TCGA-PRAD	Prostate gland	Male	64	6	4	17	6	3	8	15	1	3
+Case Actions	TCGA-HC-7821	TCGA-PRAD	Prostate gland	Male	62	6	4	17	6	3	8	14	1	2
+Case Actions	TCGA-EJ-7123	TCGA-PRAD	Prostate gland	Male	81	11	8	17	8	6	8	15	1	3
+Case Actions	TCGA-J4-A6G3	TCGA-PRAD	Prostate gland	Male	61	6	4	17	6	3	7	14	1	2
+Case Actions	TCGA-XQ-A8TA	TCGA-PRAD	Prostate gland	Male	62	6	4	17	6	3	7	15	1	3
+Case Actions	TCGA-HT-A619	TCGA-LGG	Brain	Female	63	6	4	17	6	3	8	14	1	2
+Case Actions	TCGA-HW-7490	TCGA-LGG	Brain	Male	64	6	4	17	6	3	8	15	1	3
+Case Actions	TCGA-CS-6670	TCGA-LGG	Brain	Male	64	6	4	17	6	3	8	15	1	3
+Case Actions	TCGA-HT-7604	TCGA-LGG	Brain	Male	63	6	4	17	6	3	7	15	1	3
+Case Actions	TCGA-HT-7483	TCGA-LGG	Brain	Male	66	6	4	17	6	3	7	18	1	6
+Case Actions	TCGA-P5-A5EY	TCGA-LGG	Brain	Male	61	6	4	17	6	3	7	13	1	1
+Case Actions	TCGA-IK-8125	TCGA-LGG	Brain	Male	64	6	4	17	6	3	8	15	1	3
+Case Actions	TCGA-DU-7300	TCGA-LGG	Brain	Female	59	6	4	17	2	3	8	14	1	2
+Case Actions	TCGA-AX-A1CR	TCGA-UCEC	Corpus uteri	Female	60	4	4	17	6	3	11	15	1	1
+Case Actions	TCGA-FI-A2D5	TCGA-UCEC	Corpus uteri	Female	61	4	4	17	6	3	11	16	1	2
+Case Actions	TCGA-FI-A2CX	TCGA-UCEC	Corpus uteri	Female	61	4	4	17	6	3	11	16	1	2
+Case Actions	TCGA-KP-A3VZ	TCGA-UCEC	Corpus uteri	Female	67	6	4	17	6	3	11	15	1	1
+Case Actions	TCGA-EY-A215	TCGA-UCEC	Corpus uteri	Female	62	4	4	17	6	3	11	16	1	2
+Case Actions	TCGA-EY-A1G8	TCGA-UCEC	Corpus uteri	Female	61	4	4	17	6	3	10	16	1	2
+Case Actions	TCGA-AX-A2HF	TCGA-UCEC	Corpus uteri	Female	61	4	4	17	6	3	11	15	1	1
+Case Actions	TCGA-BG-A0MS	TCGA-UCEC	Corpus uteri	Female	64	5	4	17	6	3	11	17	1	3
+Case Actions	TCGA-AX-A06D	TCGA-UCEC	Corpus uteri	Female	62	4	4	15	6	3	11	18	1	4
+Case Actions	TCGA-KJ-A3U4	TCGA-UCEC	Corpus uteri	Female	66	6	4	15	6	3	11	16	1	2
+Case Actions	TCGA-AP-A05D	TCGA-UCEC	Corpus uteri	Female	60	3	2	17	6	3	11	17	1	3
+Case Actions	TCGA-AX-A1CP	TCGA-UCEC	Corpus uteri	Female	61	4	4	17	6	3	11	16	1	2
+Case Actions	TCGA-D1-A3JP	TCGA-UCEC	Corpus uteri	Female	68	6	4	17	6	3	11	16	1	2
+Case Actions	TCGA-EY-A1GQ	TCGA-UCEC	Corpus uteri	Female	62	4	4	17	6	3	11	16	1	2
+Case Actions	TCGA-FI-A2F4	TCGA-UCEC	Corpus uteri	Female	61	4	4	17	6	3	11	16	1	2
+Case Actions	TCGA-BG-A221	TCGA-UCEC	Corpus uteri	Female	62	4	4	17	6	3	11	16	1	2
+Case Actions	TCGA-A5-A0GM	TCGA-UCEC	Corpus uteri	Female	63	4	4	17	6	3	11	17	1	3
+Case Actions	TCGA-D1-A2G5	TCGA-UCEC	Corpus uteri	Female	61	4	4	17	6	3	11	16	1	2
+Case Actions	TCGA-D1-A0ZO	TCGA-UCEC	Corpus uteri	Female	62	4	4	17	6	3	11	17	1	3
+Case Actions	TCGA-BG-A0M8	TCGA-UCEC	Corpus uteri	Female	64	5	4	17	6	3	11	17	1	3
+Case Actions	TCGA-D1-A102	TCGA-UCEC	Corpus uteri	Female	63	4	4	17	6	3	11	17	1	3
+Case Actions	TCGA-AX-A2H8	TCGA-UCEC	Corpus uteri	Female	71	6	8	17	6	6	11	16	1	2
+Case Actions	TCGA-AX-A3G3	TCGA-UCEC	Corpus uteri	Female	67	6	4	17	6	3	11	15	1	1
+Case Actions	TCGA-EY-A1GK	TCGA-UCEC	Corpus uteri	Female	62	4	4	17	6	3	11	16	1	2
+Case Actions	TCGA-EY-A212	TCGA-UCEC	Corpus uteri	Female	62	4	4	17	6	3	11	16	1	2
+Case Actions	TCGA-EO-A3KU	TCGA-UCEC	Corpus uteri	Female	65	6	4	15	6	3	10	16	1	2
+Case Actions	TCGA-2E-A9G8	TCGA-UCEC	Corpus uteri	Female	67	6	4	17	6	3	11	16	1	2
+Case Actions	TCGA-A5-A0GI	TCGA-UCEC	Corpus uteri	Female	59	4	4	17	2	3	11	17	1	3
+Case Actions	TCGA-B5-A0KB	TCGA-UCEC	Corpus uteri	Female	63	5	4	17	6	3	11	16	1	2
+Case Actions	HTMCP-03-06-02061	CGCI-HTMCP-CC	Cervix uteri	Female	23	2	0	17	0	0	1	3	1	0
+Case Actions	TCGA-DU-7011	TCGA-LGG	Brain	Male	60	5	2	17	6	3	7	15	1	3
+Case Actions	TCGA-R8-A73M	TCGA-LGG	Brain	Female	62	6	4	17	6	3	8	14	1	2
+Case Actions	TCGA-DH-5141	TCGA-LGG	Brain	Male	64	6	4	17	6	3	8	15	1	3
+Case Actions	TCGA-R8-A6ML	TCGA-LGG	Brain	Male	68	6	4	17	6	3	7	20	1	8
+Case Actions	TCGA-FG-5962	TCGA-LGG	Brain	Male	63	6	4	17	6	3	7	15	1	3
+Case Actions	TARGET-20-PATKBK	TARGET-AML	Hematopoietic and reticuloendothelial systems	Male	3	0	0	0	0	0	2	1	1	0
+Case Actions	ER-ABEN	EXCEPTIONAL_RESPONDERS-ER	Colon	Male	6	2	0	0	0	0	2	2	1	0
+Case Actions	1039	BEATAML1.0-CRENOLANIB	Hematopoietic and reticuloendothelial systems	Male	2	1	0	1	0	0	0	0	1	0
+Case Actions	1015	BEATAML1.0-CRENOLANIB	Hematopoietic and reticuloendothelial systems	Female	4	2	0	2	0	0	0	0	1	0
+Case Actions	1017	BEATAML1.0-CRENOLANIB	Hematopoietic and reticuloendothelial systems	Female	4	2	0	2	0	0	0	0	1	0
+Case Actions	1011	BEATAML1.0-CRENOLANIB	Hematopoietic and reticuloendothelial systems	Male	2	1	0	1	0	0	0	0	1	0
+Case Actions	1023	BEATAML1.0-CRENOLANIB	Hematopoietic and reticuloendothelial systems	Female	6	3	0	3	0	0	0	0	1	0
+Case Actions	1006	BEATAML1.0-CRENOLANIB	Hematopoietic and reticuloendothelial systems	Male	4	2	0	2	0	0	0	0	1	0
+Case Actions	1005	BEATAML1.0-CRENOLANIB	Hematopoietic and reticuloendothelial systems	Female	2	1	0	1	0	0	0	0	1	0
+Case Actions	1014	BEATAML1.0-CRENOLANIB	Hematopoietic and reticuloendothelial systems	Male	6	4	0	2	0	0	0	0	1	0
+Case Actions	1032	BEATAML1.0-CRENOLANIB	Hematopoietic and reticuloendothelial systems	Female	4	2	0	2	0	0	0	0	1	0
+Case Actions	1026	BEATAML1.0-CRENOLANIB	Hematopoietic and reticuloendothelial systems	Female	2	1	0	1	0	0	0	0	1	0
+Case Actions	1001	BEATAML1.0-CRENOLANIB	Hematopoietic and reticuloendothelial systems	Male	2	2	0	0	0	0	0	0	1	0
+Case Actions	1028	BEATAML1.0-CRENOLANIB	Hematopoietic and reticuloendothelial systems	Female	4	2	0	2	0	0	0	0	1	0
+Case Actions	1018	BEATAML1.0-CRENOLANIB	Hematopoietic and reticuloendothelial systems	Female	2	1	0	1	0	0	0	0	1	0
+Case Actions	1027	BEATAML1.0-CRENOLANIB	Hematopoietic and reticuloendothelial systems	Female	2	1	0	1	0	0	0	0	1	0
+Case Actions	1041	BEATAML1.0-CRENOLANIB	Hematopoietic and reticuloendothelial systems	Male	4	2	0	2	0	0	0	0	1	0
+Case Actions	1012	BEATAML1.0-CRENOLANIB	Hematopoietic and reticuloendothelial systems	Female	4	2	0	2	0	0	0	0	1	0
+Case Actions	1025	BEATAML1.0-CRENOLANIB	Hematopoietic and reticuloendothelial systems	Female	2	2	0	0	0	0	0	0	1	0
+Case Actions	1030	BEATAML1.0-CRENOLANIB	Hematopoietic and reticuloendothelial systems	Male	4	2	0	2	0	0	0	0	1	0
+Case Actions	1052	BEATAML1.0-CRENOLANIB	Hematopoietic and reticuloendothelial systems	Female	4	2	0	2	0	0	0	0	1	0
+Case Actions	1033	BEATAML1.0-CRENOLANIB	Hematopoietic and reticuloendothelial systems	Male	6	3	0	3	0	0	0	0	1	0
+Case Actions	1055	BEATAML1.0-CRENOLANIB	Hematopoietic and reticuloendothelial systems	Male	2	1	0	1	0	0	0	0	1	0
+Case Actions	1042	BEATAML1.0-CRENOLANIB	Hematopoietic and reticuloendothelial systems	Female	6	3	0	3	0	0	0	0	1	0
+Case Actions	1003	BEATAML1.0-CRENOLANIB	Hematopoietic and reticuloendothelial systems	Male	6	3	0	3	0	0	0	0	1	0
+Case Actions	1047	BEATAML1.0-CRENOLANIB	Hematopoietic and reticuloendothelial systems	Female	1	1	0	0	0	0	0	0	1	0
+Case Actions	1016	BEATAML1.0-CRENOLANIB	Hematopoietic and reticuloendothelial systems	Female	2	1	0	1	0	0	0	0	1	0
+Case Actions	1050	BEATAML1.0-CRENOLANIB	Hematopoietic and reticuloendothelial systems	Male	6	3	0	3	0	0	0	0	1	0
+Case Actions	1009	BEATAML1.0-CRENOLANIB	Hematopoietic and reticuloendothelial systems	Female	3	3	0	0	0	0	0	0	1	0
+Case Actions	1019	BEATAML1.0-CRENOLANIB	Hematopoietic and reticuloendothelial systems	Male	3	2	0	1	0	0	0	0	1	0
+Case Actions	1054	BEATAML1.0-CRENOLANIB	Hematopoietic and reticuloendothelial systems	Female	2	1	0	1	0	0	0	0	1	0
+Case Actions	1010	BEATAML1.0-CRENOLANIB	Hematopoietic and reticuloendothelial systems	Female	10	5	0	5	0	0	0	0	1	0
+Case Actions	1024	BEATAML1.0-CRENOLANIB	Hematopoietic and reticuloendothelial systems	Female	2	1	0	1	0	0	0	0	1	0
+Case Actions	1031	BEATAML1.0-CRENOLANIB	Hematopoietic and reticuloendothelial systems	Female	8	4	0	4	0	0	0	0	1	0
+Case Actions	1007	BEATAML1.0-CRENOLANIB	Hematopoietic and reticuloendothelial systems	Female	4	2	0	2	0	0	0	0	1	0
+Case Actions	1046	BEATAML1.0-CRENOLANIB	Hematopoietic and reticuloendothelial systems	Male	4	2	0	2	0	0	0	0	1	0
+Case Actions	1036	BEATAML1.0-CRENOLANIB	Hematopoietic and reticuloendothelial systems	Female	8	4	0	4	0	0	0	0	1	0
+Case Actions	1038	BEATAML1.0-CRENOLANIB	Hematopoietic and reticuloendothelial systems	Female	2	1	0	1	0	0	0	0	1	0
+Case Actions	1045	BEATAML1.0-CRENOLANIB	Hematopoietic and reticuloendothelial systems	Female	4	2	0	2	0	0	0	0	1	0
+Case Actions	1008	BEATAML1.0-CRENOLANIB	Hematopoietic and reticuloendothelial systems	Female	8	4	0	4	0	0	0	0	1	0
+Case Actions	1004	BEATAML1.0-CRENOLANIB	Hematopoietic and reticuloendothelial systems	Male	2	1	0	1	0	0	0	0	1	0
+Case Actions	1053	BEATAML1.0-CRENOLANIB	Hematopoietic and reticuloendothelial systems	Male	6	3	0	3	0	0	0	0	1	0
+Case Actions	1056	BEATAML1.0-CRENOLANIB	Hematopoietic and reticuloendothelial systems	Male	2	1	0	1	0	0	0	0	1	0
+Case Actions	1043	BEATAML1.0-CRENOLANIB	Hematopoietic and reticuloendothelial systems	Female	2	1	0	1	0	0	0	0	1	0

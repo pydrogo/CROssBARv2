@@ -1,0 +1,101 @@
+Cart	Case ID	Project	Primary Site	Gender	Files	Seq	Exp	SNV	CNV	Meth	Clinical	Bio	Annotations	Slides
+Case Actions	1002	BEATAML1.0-CRENOLANIB	Hematopoietic and reticuloendothelial systems	Male	4	2	0	2	0	0	0	0	1	0
+Case Actions	1037	BEATAML1.0-CRENOLANIB	Hematopoietic and reticuloendothelial systems	Male	2	1	0	1	0	0	0	0	1	0
+Case Actions	1013	BEATAML1.0-CRENOLANIB	Hematopoietic and reticuloendothelial systems	Male	6	3	0	3	0	0	0	0	1	0
+Case Actions	1034	BEATAML1.0-CRENOLANIB	Hematopoietic and reticuloendothelial systems	Male	8	5	0	3	0	0	0	0	1	0
+Case Actions	1051	BEATAML1.0-CRENOLANIB	Hematopoietic and reticuloendothelial systems	Female	9	5	0	4	0	0	0	0	1	0
+Case Actions	1048	BEATAML1.0-CRENOLANIB	Hematopoietic and reticuloendothelial systems	Male	4	2	0	2	0	0	0	0	1	0
+Case Actions	1021	BEATAML1.0-CRENOLANIB	Hematopoietic and reticuloendothelial systems	Male	4	2	0	2	0	0	0	0	1	0
+Case Actions	1029	BEATAML1.0-CRENOLANIB	Hematopoietic and reticuloendothelial systems	Female	2	1	0	1	0	0	0	0	1	0
+Case Actions	1040	BEATAML1.0-CRENOLANIB	Hematopoietic and reticuloendothelial systems	Male	4	2	0	2	0	0	0	0	1	0
+Case Actions	1020	BEATAML1.0-CRENOLANIB	Hematopoietic and reticuloendothelial systems	Female	4	2	0	2	0	0	0	0	1	0
+Case Actions	1035	BEATAML1.0-CRENOLANIB	Hematopoietic and reticuloendothelial systems	Female	2	1	0	1	0	0	0	0	1	0
+Case Actions	1022	BEATAML1.0-CRENOLANIB	Hematopoietic and reticuloendothelial systems	Male	4	2	0	2	0	0	0	0	1	0
+Case Actions	1044	BEATAML1.0-CRENOLANIB	Hematopoietic and reticuloendothelial systems	Male	4	3	0	1	0	0	0	0	1	0
+Case Actions	1049	BEATAML1.0-CRENOLANIB	Hematopoietic and reticuloendothelial systems	Male	2	1	0	1	0	0	0	0	1	0
+Case Actions	TARGET-10-PAKKXB	TARGET-ALL-P1	Hematopoietic and reticuloendothelial systems	Female	9	4	2	0	0	0	0	1	1	0
+Case Actions	TARGET-10-PAKYEP	TARGET-ALL-P1	Hematopoietic and reticuloendothelial systems	Male	9	4	2	0	0	0	0	1	1	0
+Case Actions	TARGET-10-PALJDL	TARGET-ALL-P1	Hematopoietic and reticuloendothelial systems	Male	10	5	2	0	0	0	0	1	1	0
+Case Actions	TARGET-10-PAMDRM	TARGET-ALL-P1	Hematopoietic and reticuloendothelial systems	Male	9	4	2	0	0	0	0	1	1	0
+Case Actions	TARGET-10-PAKHZT	TARGET-ALL-P1	Hematopoietic and reticuloendothelial systems	Male	9	4	2	0	0	0	0	1	1	0
+Case Actions	TARGET-10-PAKKCA	TARGET-ALL-P1	Hematopoietic and reticuloendothelial systems	Male	9	4	2	0	0	0	0	1	1	0
+Case Actions	TARGET-10-PANNGL	TARGET-ALL-P1	Hematopoietic and reticuloendothelial systems	Female	8	3	2	0	0	0	0	1	1	0
+Case Actions	TARGET-10-PANSFD	TARGET-ALL-P1	Hematopoietic and reticuloendothelial systems	Male	8	3	2	0	0	0	0	1	1	0
+Case Actions	TARGET-10-PAKVKK	TARGET-ALL-P1	Hematopoietic and reticuloendothelial systems	Male	9	4	2	0	0	0	0	1	1	0
+Case Actions	TARGET-10-PAKTAL	TARGET-ALL-P1	Hematopoietic and reticuloendothelial systems	Female	9	4	2	0	0	0	0	1	1	0
+Case Actions	TCGA-G5-6641	TCGA-READ	Rectosigmoid junction	Male	66	6	4	17	6	3	9	16	1	2
+Case Actions	TCGA-AG-3890	TCGA-READ	Rectum	Male	60	4	4	17	6	3	9	17	1	3
+Case Actions	TCGA-AF-2692	TCGA-READ	Rectum	Female	78	9	8	17	8	6	8	18	1	4
+Case Actions	TCGA-AF-2693	TCGA-READ	Rectosigmoid junction	Male	65	6	4	17	6	3	8	17	1	3
+Case Actions	TCGA-AF-3914	TCGA-READ	Rectosigmoid junction	Male	48	2	0	17	0	0	8	20	1	6
+Case Actions	TCGA-AG-4008	TCGA-READ	Colon	Male	61	4	4	17	6	3	9	17	1	3
+Case Actions	TCGA-CI-6620	TCGA-READ	Rectum	Female	63	6	4	17	6	3	8	15	1	1
+Case Actions	TCGA-AG-3602	TCGA-READ	Rectosigmoid junction	Female	60	4	4	17	6	3	8	17	1	3
+Case Actions	TCGA-AG-3891	TCGA-READ	Rectum	Female	45	2	0	17	0	0	8	17	1	3
+Case Actions	TCGA-AG-4009	TCGA-READ	Rectum	Male	42	2	0	15	0	0	8	17	1	3
+Case Actions	TCGA-AG-3906	TCGA-READ	Rectosigmoid junction	Female	44	2	0	17	0	0	8	17	1	3
+Case Actions	TCGA-DK-A2I6	TCGA-BLCA	Bladder	Male	62	6	4	17	4	3	10	14	1	2
+Case Actions	TCGA-C4-A0EZ	TCGA-BLCA	Bladder	Female	66	6	4	17	6	3	10	15	1	3
+Case Actions	TCGA-FD-A3SN	TCGA-BLCA	Bladder	Male	65	6	4	17	6	3	10	14	1	2
+Case Actions	TCGA-GV-A40G	TCGA-BLCA	Bladder	Male	65	6	4	17	6	3	10	14	1	2
+Case Actions	TCGA-DK-A6B2	TCGA-BLCA	Bladder	Male	65	6	4	17	6	3	10	14	1	2
+Case Actions	TCGA-FD-A3NA	TCGA-BLCA	Bladder	Male	65	6	4	17	6	3	10	14	1	2
+Case Actions	TCGA-BT-A20V	TCGA-BLCA	Bladder	Female	67	6	4	17	6	6	9	14	1	2
+Case Actions	TCGA-FD-A3B6	TCGA-BLCA	Bladder	Male	65	6	4	17	6	3	10	14	1	2
+Case Actions	TCGA-K4-AAQO	TCGA-BLCA	Bladder	Male	64	6	4	17	6	3	9	14	1	2
+Case Actions	TCGA-GV-A3QF	TCGA-BLCA	Bladder	Male	65	6	4	17	6	3	10	14	1	2
+Case Actions	TCGA-CU-A0YO	TCGA-BLCA	Bladder	Male	65	6	4	17	6	3	10	15	1	3
+Case Actions	TCGA-GC-A3YS	TCGA-BLCA	Bladder	Male	65	6	4	17	6	3	10	14	1	2
+Case Actions	TCGA-FD-A43X	TCGA-BLCA	Bladder	Male	65	6	4	17	6	3	10	14	1	2
+Case Actions	TCGA-DK-A1AA	TCGA-BLCA	Bladder	Male	63	6	4	17	4	3	10	14	1	2
+Case Actions	TCGA-DK-A3IT	TCGA-BLCA	Bladder	Male	63	6	4	17	4	3	10	14	1	2
+Case Actions	TCGA-CU-A0YN	TCGA-BLCA	Bladder	Male	80	10	8	15	6	6	10	16	1	4
+Case Actions	TCGA-K4-A3WS	TCGA-BLCA	Bladder	Male	65	6	4	17	6	3	10	14	1	2
+Case Actions	TCGA-HQ-A2OF	TCGA-BLCA	Bladder	Female	64	6	4	17	6	3	9	14	1	2
+Case Actions	TCGA-G2-A2ES	TCGA-BLCA	Bladder	Male	72	6	4	17	6	3	10	21	1	9
+Case Actions	TCGA-GC-A3BM	TCGA-BLCA	Bladder	Male	84	11	8	17	8	6	10	15	1	3
+Case Actions	TCGA-FD-A3SS	TCGA-BLCA	Bladder	Male	65	6	4	17	6	3	10	14	1	2
+Case Actions	TCGA-CU-A0YR	TCGA-BLCA	Bladder	Male	82	11	8	17	6	6	10	16	1	4
+Case Actions	TCGA-DK-A1A5	TCGA-BLCA	Bladder	Male	65	6	4	17	6	3	10	14	1	2
+Case Actions	TCGA-K4-A3WU	TCGA-BLCA	Bladder	Male	63	6	4	17	4	3	10	14	1	2
+Case Actions	TCGA-GV-A3QK	TCGA-BLCA	Bladder	Female	63	6	4	17	4	3	10	14	1	2
+Case Actions	TCGA-GC-A3RB	TCGA-BLCA	Bladder	Male	64	6	4	17	6	3	10	14	1	2
+Case Actions	TCGA-BL-A0C8	TCGA-BLCA	Bladder	Male	145	17	12	51	16	9	9	18	1	6
+Case Actions	TCGA-GV-A40E	TCGA-BLCA	Bladder	Male	65	6	4	17	6	3	10	14	1	2
+Case Actions	TCGA-CF-A9FM	TCGA-BLCA	Bladder	Male	64	6	4	17	6	3	9	14	1	2
+Case Actions	TCGA-BT-A42C	TCGA-BLCA	Bladder	Male	65	6	4	17	6	3	10	14	1	2
+Case Actions	TCGA-ZF-AA4N	TCGA-BLCA	Bladder	Male	64	6	4	17	6	3	9	14	1	2
+Case Actions	TCGA-DK-A2HX	TCGA-BLCA	Bladder	Female	65	6	4	17	6	3	10	14	1	2
+Case Actions	TCGA-C4-A0F7	TCGA-BLCA	Bladder	Male	67	7	6	17	4	3	10	15	1	3
+Case Actions	TCGA-BT-A3PJ	TCGA-BLCA	Bladder	Male	65	6	4	17	6	3	10	14	1	2
+Case Actions	TCGA-GC-A3WC	TCGA-BLCA	Bladder	Female	84	11	8	17	8	6	10	15	1	3
+Case Actions	TCGA-DK-A3IQ	TCGA-BLCA	Bladder	Male	65	6	4	17	6	3	10	14	1	2
+Case Actions	TCGA-FD-A3B7	TCGA-BLCA	Bladder	Male	65	6	4	17	6	3	10	14	1	2
+Case Actions	TCGA-DK-A3IV	TCGA-BLCA	Bladder	Male	63	6	4	17	4	3	10	14	1	2
+Case Actions	TCGA-DK-A3IN	TCGA-BLCA	Bladder	Male	63	6	4	17	4	3	10	14	1	2
+Case Actions	TCGA-GU-A42P	TCGA-BLCA	Bladder	Male	65	6	4	17	6	3	10	15	1	3
+Case Actions	TCGA-AA-3976	TCGA-COAD	Rectosigmoid junction	Male	60	4	4	17	6	3	9	17	1	3
+Case Actions	TCGA-AA-3522	TCGA-COAD	Colon	Male	81	8	6	17	12	6	9	18	1	4
+Case Actions	TCGA-AD-6964	TCGA-COAD	Colon	Male	65	6	4	17	6	3	9	16	1	2
+Case Actions	TCGA-AA-3560	TCGA-COAD	Colon	Female	61	4	4	17	6	3	9	17	1	3
+Case Actions	TCGA-AA-3675	TCGA-COAD	Colon	Male	62	6	4	17	6	0	8	17	1	3
+Case Actions	TCGA-G4-6588	TCGA-COAD	Colon	Female	67	6	4	17	6	3	9	17	1	3
+Case Actions	TCGA-AA-3867	TCGA-COAD	Colon	Male	60	4	4	17	6	3	9	17	1	3
+Case Actions	TCGA-A6-6649	TCGA-COAD	Colon	Male	67	6	4	17	6	3	9	17	1	3
+Case Actions	TCGA-AA-3986	TCGA-COAD	Colon	Male	61	4	4	17	6	3	9	17	1	3
+Case Actions	TCGA-AA-3527	TCGA-COAD	Colon	Female	81	9	8	15	12	6	9	18	1	4
+Case Actions	TCGA-CM-4750	TCGA-COAD	Rectosigmoid junction	Female	56	4	4	17	2	3	8	17	1	3
+Case Actions	TCGA-AA-3692	TCGA-COAD	Colon	Female	60	4	4	17	6	3	9	17	1	3
+Case Actions	TCGA-AA-3496	TCGA-COAD	Colon	Female	77	9	6	17	6	3	9	18	1	4
+Case Actions	TCGA-AA-3950	TCGA-COAD	Colon	Female	61	4	4	17	6	3	9	17	1	3
+Case Actions	TCGA-AA-A00Z	TCGA-COAD	Colon	Male	56	3	2	17	4	3	9	17	1	3
+Case Actions	TCGA-G4-6294	TCGA-COAD	Colon	Male	66	6	4	17	6	3	9	16	1	2
+Case Actions	TCGA-AA-3862	TCGA-COAD	Colon	Male	59	4	4	17	4	3	9	17	1	3
+Case Actions	TCGA-AZ-4313	TCGA-COAD	Colon	Female	60	4	4	17	6	3	9	17	1	3
+Case Actions	TCGA-G4-6628	TCGA-COAD	Colon	Male	67	6	4	17	6	3	9	17	1	3
+Case Actions	TCGA-AA-3688	TCGA-COAD	Colon	Male	61	4	4	17	6	3	9	17	1	3
+Case Actions	TCGA-AY-4071	TCGA-COAD	Colon	Female	59	4	4	17	6	3	8	17	1	3
+Case Actions	TCGA-AA-3531	TCGA-COAD	Colon	Female	79	8	6	17	10	6	9	18	1	4
+Case Actions	TCGA-AD-6895	TCGA-COAD	Colon	Male	65	6	4	17	6	3	9	16	1	2
+Case Actions	TCGA-AA-3844	TCGA-COAD	Colon	Female	61	4	4	17	6	3	9	17	1	3
+Case Actions	TCGA-AA-3713	TCGA-COAD	Colon	Male	80	9	6	17	6	6	9	18	1	4

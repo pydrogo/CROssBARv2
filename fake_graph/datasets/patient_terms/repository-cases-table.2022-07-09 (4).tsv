@@ -1,0 +1,101 @@
+Cart	Case ID	Project	Primary Site	Gender	Files	Seq	Exp	SNV	CNV	Meth	Clinical	Bio	Annotations	Slides
+Case Actions	TCGA-AZ-4681	TCGA-COAD	Colon	Female	57	3	2	17	6	3	9	17	1	3
+Case Actions	TCGA-G4-6586	TCGA-COAD	Colon	Female	67	6	4	17	6	3	9	17	1	3
+Case Actions	TCGA-A6-2682	TCGA-COAD	Colon	Male	80	8	6	17	12	6	9	18	1	4
+Case Actions	TCGA-AA-3939	TCGA-COAD	Colon	Male	53	4	4	14	2	3	9	17	1	3
+Case Actions	TCGA-AA-3967	TCGA-COAD	Colon	Male	44	2	0	17	0	0	8	17	1	3
+Case Actions	TCGA-A6-4105	TCGA-COAD	Colon	Male	67	6	4	17	6	3	9	18	1	4
+Case Actions	TCGA-DM-A285	TCGA-COAD	Colon	Female	63	6	4	17	4	3	9	16	1	2
+Case Actions	TCGA-G4-6298	TCGA-COAD	Colon	Male	74	7	4	17	8	6	9	18	1	4
+Case Actions	TCGA-AA-3979	TCGA-COAD	Colon	Male	60	4	4	17	6	3	9	17	1	3
+Case Actions	TCGA-CK-5912	TCGA-COAD	Colon	Male	65	6	4	17	6	3	9	16	1	2
+Case Actions	TCGA-AD-6548	TCGA-COAD	Colon	Female	67	6	4	17	6	3	9	17	1	3
+Case Actions	TCGA-AA-3952	TCGA-COAD	Colon	Male	60	4	4	17	6	3	9	17	1	3
+Case Actions	TCGA-CM-5863	TCGA-COAD	Colon	Female	65	6	4	17	6	3	8	16	1	2
+Case Actions	TCGA-AA-3811	TCGA-COAD	Colon	Female	78	5	4	34	6	3	8	17	1	3
+Case Actions	TCGA-A6-2677	TCGA-COAD	Colon	Female	115	9	6	34	20	12	9	20	1	6
+Case Actions	TCGA-G7-A8LE	TCGA-KIRP	Kidney	Male	66	6	4	17	10	3	7	14	1	2
+Case Actions	TCGA-B1-A47M	TCGA-KIRP	Kidney	Male	70	7	4	17	8	6	8	15	1	3
+Case Actions	TCGA-A4-7584	TCGA-KIRP	Kidney	Male	64	6	4	17	6	3	8	15	1	3
+Case Actions	TCGA-BQ-7046	TCGA-KIRP	Kidney	Male	79	10	8	17	6	6	8	15	1	3
+Case Actions	TCGA-DW-7837	TCGA-KIRP	Kidney	Male	64	6	4	17	6	3	8	15	1	3
+Case Actions	TCGA-BQ-5892	TCGA-KIRP	Kidney	Male	68	6	4	17	6	6	8	16	1	4
+Case Actions	TCGA-BQ-5888	TCGA-KIRP	Kidney	Female	80	10	8	17	6	6	8	16	1	4
+Case Actions	TCGA-BQ-7055	TCGA-KIRP	Kidney	Male	79	10	8	17	6	6	8	15	1	3
+Case Actions	TCGA-DW-5560	TCGA-KIRP	Kidney	Female	64	6	4	17	6	3	8	15	1	3
+Case Actions	TCGA-B9-5155	TCGA-KIRP	Kidney	Male	64	6	4	17	6	3	8	15	1	3
+Case Actions	TCGA-DW-7839	TCGA-KIRP	Kidney	Female	64	6	4	17	6	3	8	15	1	3
+Case Actions	TCGA-B1-A47O	TCGA-KIRP	Kidney	Female	63	6	4	17	6	3	8	14	1	2
+Case Actions	TCGA-MH-A857	TCGA-KIRP	Kidney	Male	62	6	4	17	6	3	8	14	1	2
+Case Actions	TCGA-AL-A5DJ	TCGA-KIRP	Kidney	Female	63	6	4	17	6	3	8	14	1	2
+Case Actions	TCGA-DW-7834	TCGA-KIRP	Kidney	Male	64	6	4	17	6	3	8	15	1	3
+Case Actions	TCGA-B9-A44B	TCGA-KIRP	Kidney	Male	64	7	4	17	6	3	8	14	1	2
+Case Actions	TCGA-DW-7842	TCGA-KIRP	Kidney	Male	64	6	4	17	6	3	8	15	1	3
+Case Actions	TCGA-A4-7734	TCGA-KIRP	Kidney	Female	64	6	4	17	6	3	8	15	1	3
+Case Actions	TCGA-DW-7841	TCGA-KIRP	Kidney	Male	64	6	4	17	6	3	8	15	1	3
+Case Actions	TCGA-A4-7288	TCGA-KIRP	Kidney	Female	71	7	6	17	6	6	8	16	1	4
+Case Actions	TCGA-DZ-6134	TCGA-KIRP	Kidney	Male	80	11	8	17	6	6	8	15	1	3
+Case Actions	TCGA-BQ-5886	TCGA-KIRP	Kidney	Male	66	6	4	17	6	6	8	15	1	3
+Case Actions	TCGA-EK-A2RD	TCGA-CESC	Cervix uteri	Female	56	3	2	17	6	3	9	15	1	1
+Case Actions	TCGA-DG-A2KH	TCGA-CESC	Cervix uteri	Female	66	6	4	17	6	3	9	16	1	2
+Case Actions	TCGA-ZJ-A8QQ	TCGA-CESC	Cervix uteri	Female	65	6	4	17	6	3	9	16	1	2
+Case Actions	TCGA-FU-A3TX	TCGA-CESC	Cervix uteri	Female	67	6	4	17	6	3	10	16	1	2
+Case Actions	TCGA-EK-A2H0	TCGA-CESC	Cervix uteri	Female	65	6	4	17	6	3	9	15	1	1
+Case Actions	TCGA-JW-A5VL	TCGA-CESC	Cervix uteri	Female	66	6	4	17	6	3	9	16	1	2
+Case Actions	TCGA-DS-A1OC	TCGA-CESC	Cervix uteri	Female	61	6	4	15	2	3	10	16	1	2
+Case Actions	TCGA-HD-8635	TCGA-HNSC	Other and unspecified parts of tongue	Female	79	11	8	17	6	3	10	16	1	2
+Case Actions	TCGA-CN-6022	TCGA-HNSC	Larynx	Male	67	6	4	17	6	3	10	16	1	2
+Case Actions	TCGA-CQ-5323	TCGA-HNSC	Other and ill-defined sites in lip, oral cavity and pharynx	Male	68	6	4	17	6	3	10	17	1	3
+Case Actions	TCGA-BA-6870	TCGA-HNSC	Larynx	Female	67	6	4	17	6	3	9	17	1	3
+Case Actions	TCGA-CR-6478	TCGA-HNSC	Tonsil	Female	65	6	4	17	6	3	10	15	1	1
+Case Actions	TCGA-CN-4727	TCGA-HNSC	Larynx	Male	68	6	4	17	6	3	10	17	1	3
+Case Actions	TCGA-CV-7437	TCGA-HNSC	Larynx	Male	82	11	8	17	8	3	9	17	1	3
+Case Actions	TCGA-CN-6023	TCGA-HNSC	Larynx	Male	68	6	4	17	6	3	10	17	1	3
+Case Actions	TCGA-CN-6021	TCGA-HNSC	Larynx	Female	68	6	4	17	6	3	10	17	1	3
+Case Actions	TCGA-CV-7410	TCGA-HNSC	Larynx	Male	66	6	4	17	6	3	9	16	1	2
+Case Actions	TCGA-CR-6472	TCGA-HNSC	Base of tongue	Male	65	6	4	17	6	3	10	15	1	1
+Case Actions	TCGA-CQ-A4C7	TCGA-HNSC	Floor of mouth	Male	66	6	4	17	6	3	10	16	1	2
+Case Actions	TCGA-CN-6997	TCGA-HNSC	Larynx	Male	68	6	4	17	6	3	10	17	1	3
+Case Actions	TCGA-BA-5559	TCGA-HNSC	Tonsil	Male	68	6	4	17	6	3	10	17	1	3
+Case Actions	TCGA-HD-8634	TCGA-HNSC	Other and unspecified parts of tongue	Female	66	6	4	17	6	3	10	16	1	2
+Case Actions	TCGA-CN-6024	TCGA-HNSC	Other and unspecified parts of tongue	Male	68	6	4	17	6	3	10	17	1	3
+Case Actions	TCGA-CX-7219	TCGA-HNSC	Floor of mouth	Male	68	6	4	17	6	3	10	17	1	3
+Case Actions	TCGA-DQ-7589	TCGA-HNSC	Larynx	Male	37	2	2	0	4	3	10	16	1	2
+Case Actions	TCGA-CN-6992	TCGA-HNSC	Larynx	Male	68	6	4	17	6	3	10	17	1	3
+Case Actions	TCGA-HD-7229	TCGA-HNSC	Larynx	Male	64	6	4	17	6	3	9	15	1	1
+Case Actions	TCGA-CV-7440	TCGA-HNSC	Larynx	Male	79	11	8	17	4	3	9	18	1	4
+Case Actions	TCGA-DQ-7593	TCGA-HNSC	Base of tongue	Male	58	3	2	17	6	3	10	16	1	2
+Case Actions	TCGA-IQ-7631	TCGA-HNSC	Other and unspecified parts of mouth	Female	65	6	4	17	6	3	9	16	1	2
+Case Actions	TCGA-CQ-7067	TCGA-HNSC	Other and unspecified parts of mouth	Female	39	2	2	0	6	3	10	16	1	2
+Case Actions	TCGA-EQ-A4SO	TCGA-STAD	Stomach	Male	60	4	2	17	8	3	8	17	1	3
+Case Actions	TCGA-CD-5813	TCGA-STAD	Stomach	Male	63	6	4	17	4	3	7	17	1	3
+Case Actions	TCGA-CG-4472	TCGA-STAD	Stomach	Male	38	2	2	0	6	3	7	17	1	3
+Case Actions	TCGA-HU-A4H6	TCGA-STAD	Stomach	Female	63	6	4	17	6	3	7	16	1	2
+Case Actions	TCGA-CG-4476	TCGA-STAD	Stomach	Male	66	6	4	17	6	3	8	17	1	3
+Case Actions	TCGA-CG-4444	TCGA-STAD	Stomach	Male	66	6	4	17	6	3	8	17	1	3
+Case Actions	TCGA-CG-5727	TCGA-STAD	Stomach	Male	58	3	2	17	6	3	8	18	1	4
+Case Actions	TCGA-F1-6177	TCGA-STAD	Stomach	Male	66	6	4	17	6	3	8	17	1	3
+Case Actions	TCGA-BA-5557	TCGA-HNSC	Other and ill-defined sites in lip, oral cavity and pharynx	Female	68	6	4	17	6	3	10	17	1	3
+Case Actions	TCGA-DQ-7588	TCGA-HNSC	Other and ill-defined sites in lip, oral cavity and pharynx	Male	66	6	4	17	6	3	10	16	1	2
+Case Actions	TCGA-CQ-7068	TCGA-HNSC	Other and ill-defined sites in lip, oral cavity and pharynx	Female	67	6	4	17	6	3	10	16	1	2
+Case Actions	TCGA-BA-6871	TCGA-HNSC	Base of tongue	Male	68	6	4	17	6	3	10	17	1	3
+Case Actions	TCGA-CQ-6225	TCGA-HNSC	Other and ill-defined sites in lip, oral cavity and pharynx	Male	67	6	4	17	6	3	9	17	1	3
+Case Actions	TCGA-CV-7416	TCGA-HNSC	Other and ill-defined sites in lip, oral cavity and pharynx	Female	83	11	8	17	8	3	9	18	1	4
+Case Actions	TCGA-3G-AB0Q	TCGA-THYM	Thymus	Male	63	6	4	17	4	3	8	16	1	4
+Case Actions	TCGA-HZ-8638	TCGA-PAAD	Pancreas	Female	65	6	4	17	6	3	8	16	1	2
+Case Actions	TCGA-3A-A9IO	TCGA-PAAD	Pancreas	Male	62	6	4	17	4	3	8	16	1	2
+Case Actions	TCGA-HZ-7920	TCGA-PAAD	Pancreas	Male	66	6	4	17	6	3	8	17	1	3
+Case Actions	TCGA-IB-AAUV	TCGA-PAAD	Pancreas	Male	65	6	4	17	6	3	8	16	1	2
+Case Actions	TCGA-3A-A9IN	TCGA-PAAD	Pancreas	Female	63	6	4	17	4	3	8	16	1	2
+Case Actions	TCGA-RL-AAAS	TCGA-PAAD	Pancreas	Female	64	6	4	17	6	3	8	16	1	2
+Case Actions	TCGA-2L-AAQM	TCGA-PAAD	Pancreas	Male	66	6	4	17	6	3	8	17	1	3
+Case Actions	TCGA-F2-6880	TCGA-PAAD	Pancreas	Male	66	6	4	17	6	3	8	17	1	3
+Case Actions	TCGA-FB-AAPP	TCGA-PAAD	Pancreas	Male	66	6	4	17	6	3	8	17	1	3
+Case Actions	TCGA-HZ-7289	TCGA-PAAD	Pancreas	Male	65	6	4	17	6	3	9	16	1	2
+Case Actions	TCGA-IB-AAUW	TCGA-PAAD	Pancreas	Female	65	6	4	17	6	3	8	16	1	2
+Case Actions	TCGA-3A-A9IV	TCGA-PAAD	Pancreas	Female	64	6	4	17	6	3	8	16	1	2
+Case Actions	TCGA-3A-A9IL	TCGA-PAAD	Pancreas	Female	65	6	4	17	6	3	9	16	1	2
+Case Actions	TCGA-US-A77J	TCGA-PAAD	Pancreas	Female	66	6	4	17	6	3	8	17	1	3
+Case Actions	TCGA-H8-A6C1	TCGA-PAAD	Pancreas	Male	65	6	4	17	6	3	8	16	1	2
+Case Actions	TCGA-F2-7273	TCGA-PAAD	Pancreas	Male	60	6	4	17	2	3	8	16	1	2
+Case Actions	TCGA-HZ-7923	TCGA-PAAD	Pancreas	Male	66	6	4	17	6	3	8	17	1	3
