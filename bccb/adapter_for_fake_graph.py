@@ -83,41 +83,11 @@ class BiocypherAdapter:
               used.
         """
 
-        def gen_nodes(nodes):
-
-            for idx, row in tqdm(nodes.iterrows()):
-                if isinstance(row["Name"], str):
-                    _type = self.process_type(row["Type"])
-                    _id = str(row["ID"])
-                    _props = {
-                        "source_db": str(row["Source Database"]),
-                        "name": str(row["Name"]),
-                    }
-                    yield (_id, _type, _props)
-
-                else:
-                    _type = self.process_type(row["Type"])
-                    _id = str(row["ID"])
-                    _props = {"source_db": str(row["Source Database"])}
-                    yield (_id, _type, _props)
-
-        id_type_tuples = gen_nodes(nodes or self.nodes)
+        id_type_tuples = _gen_nodes(nodes or self.nodes)
         # print(next(id_type_tuples))
         self.bcy.add_nodes(id_type_tuples)
 
-        def gen_edges(edges):
-
-            for idx, row in tqdm(edges.iterrows()):
-                _source = str(row["Source ID"])
-                _target = str(row["Target ID"])
-                _type = str(row["Label"])
-                _props = {
-                    "source_type": self.process_type(row["Source Type"]),
-                    "target_type": self.process_type(row["Target Type"]),
-                }
-                yield (_source, _target, _type, _props)
-
-        src_tar_type_tuples = gen_edges(edges or self.edges)
+        src_tar_type_tuples = _gen_edges(edges or self.edges)
         self.bcy.add_edges(src_tar_type_tuples)
 
     def write_nodes(self, nodes, db_name):
@@ -130,25 +100,8 @@ class BiocypherAdapter:
         """
 
         # write nodes
-        def gen_nodes(nodes):
 
-            for idx, row in tqdm(nodes.iterrows()):
-                if isinstance(row["Name"], str):
-                    _type = process_type(row["Type"])
-                    _id = str(row["ID"])
-                    _props = {
-                        "source_db": str(row["Source Database"]),
-                        "name": str(row["Name"]),
-                    }
-                    yield (_id, _type, _props)
-
-                else:
-                    _type = process_type(row["Type"])
-                    _id = str(row["ID"])
-                    _props = {"source_db": str(row["Source Database"])}
-                    yield (_id, _type, _props)
-
-        id_type_tuples = list(gen_nodes(nodes or self.nodes))
+        id_type_tuples = list(_gen_nodes(nodes or self.nodes))
 
         self.bcy.write_nodes(id_type_tuples, db_name=db_name)
 
@@ -161,20 +114,7 @@ class BiocypherAdapter:
             db_name (str): Name of the database (Neo4j graph) to use.
         """
 
-        # write edges
-        def gen_edges(edges):
-
-            for idx, row in tqdm(edges.iterrows()):
-                _source = str(row["Source ID"])
-                _target = str(row["Target ID"])
-                _type = str(row["Label"])
-                _props = {
-                    "source_type": process_type(row["Source Type"]),
-                    "target_type": process_type(row["Target Type"]),
-                }
-                yield (_source, _target, _type, _props)
-
-        src_tar_type_tuples = list(gen_edges(edges or self.edges))
+        src_tar_type_tuples = list(_gen_edges(edges or self.edges))
 
         self.bcy.write_edges(src_tar_type_tuples, db_name=db_name)
 
@@ -213,7 +153,7 @@ class BiocypherAdapter:
             self.translate_python_object_to_neo4j(network=obj)
 
 
-def process_type(type_):
+def _process_type(type_):
     if type_ == "Cell/Tissue":
         type_ = type_.replace("/", "_")
     elif type_ == "Side Effect":
@@ -238,3 +178,67 @@ def _process_id(identifier):
     """
 
     return identifier
+
+
+def _gen_nodes(nodes):
+    """
+    Generate stream of nodes from data frame.
+    """
+
+    for idx, row in tqdm(nodes.iterrows()):
+        _type = _process_type(row["Type"])
+        _id = str(row["ID"])
+        _props = {"source_db": str(row["Source Database"])}
+        if isinstance(row["Name"], str):
+            _props["name"] = str(row["Name"])
+
+        # skip unwanted
+        if _type == "Location":
+            continue
+
+        yield (_id, _type, _props)
+
+
+def _gen_edges(edges):
+    """
+    Generate stream of edges from data frame.
+    """
+
+    for idx, row in tqdm(edges.iterrows()):
+        _source = str(row["Source ID"])
+        _stype = _process_type(str(row["Source Type"]))
+        _target = str(row["Target ID"])
+        _ttype = _process_type(str(row["Target Type"]))
+        _type = str(row["Label"])
+
+        # input flip
+        if (
+            _type == "Is_related_to"
+            and _stype == "Disease"
+            and _ttype == "Protein"
+        ):
+            _type = "Is_related_to"
+            _stype, _ttype = _ttype, _stype
+            _source, _target = _target, _source
+
+        # more granular edge types
+        if _type in [
+            "Interacts_With",
+            "Has",
+            "Is_Mutated_In",
+            "Is_DEG_In",
+            "Is_Associated_With",
+            "Is_related_to",
+            "Targets",
+        ]:
+            _type = "_".join([_stype, _type, _ttype])
+        _props = {
+            "source_type": _stype,
+            "target_type": _ttype,
+        }
+
+        # skip unwanted
+        if _type in ["Domain_Has_Location"]:
+            continue
+
+        yield (_source, _target, _type, _props)

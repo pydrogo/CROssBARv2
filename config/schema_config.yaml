@@ -58,8 +58,8 @@ MolecularMixture: # there is no compound in Biolink. could be molecular mixture
   
 Disease:
   represented_as: node
-  preferred_id: [MONDO, EFO, ORPHANET, KEGG.DISEASE]
-  label_in_input: [MONDO, EFO, Orphanet, KEGG.DISEASE]
+  preferred_id: MONDO
+  label_in_input: Disease
 
 # Cell:
 #   represented_as: node
@@ -77,7 +77,8 @@ CellLine:
   preferred_id: CCLE
   label_in_input: CellLine
 
-SubjectOfInvestigation:
+Patient:
+  is_a: SubjectOfInvestigation
   represented_as: node
   preferred_id: custom
   label_in_input: Patient
@@ -130,15 +131,15 @@ PostTranslationalInteraction:
   preferred_id: custom
   source: Protein
   target: Protein
-  label_in_input: Interacts_With
+  label_in_input: Protein_Interacts_With_Protein
 
-ProteinDomainToProteinAssociation:
+ProteinToProteinDomainAssociation:
   represented_as: edge
   label_as_edge: Has_Domain
   preferred_id: custom
   source: Protein
   target: ProteinDomain
-  label_in_input: Has
+  label_in_input: Protein_Has_Domain
 
 ProteinToBiologicalProcessAssociation:
   represented_as: edge
@@ -163,48 +164,22 @@ ProteinToPathwayAssociation:
   source: Protein
   target: Pathway
   label_in_input: Take_Part_In
-  
-ProteinToPhenotypicFeatureAssociation:
-  is_a: Association
-  label_as_edge: Is_Associated_With
-  represented_as: edge
-  preferred_id: custom
-  source: Protein
-  target: Phenotype
-  label_in_input: hpodis
 
-DiseaseToPhenotypicFeatureAssociation:
-  represented_as: edge
-  preferred_id: custom
-  source: Disease
-  target: Phenotype
-  label_as_edge: Is_Associated_With
-  label_in_input: HPO
-  
 ProteinToDiseaseAssociation:
-  is_a: EntityToDiseaseAssociation
   represented_as: edge
+  label_as_edge: Is_Targeted_In
   preferred_id: custom
   source: Protein
   target: Disease
-  label_as_edge: Is_Related_To
-  label_in_input: [Disease, kegg_dis_prot]
+  label_in_input: Protein_Is_related_to_Disease
 
-DrugToGeneAssociation:
+DruggableProteinToDiseaseAssociation:
   represented_as: edge
+  label_as_edge: Takes_Part_In
   preferred_id: custom
-  source: [SmallMolecule, MolecularMixture]
-  target: Protein
-  label_as_edge: Targets
-  label_in_input: [drugChembl, Drug, Chembl]
-
-GeneToPathwayAssociation:
-  represented_as: edge
-  label_as_edge: Is_Member_Of
   source: Protein
-  target: Pathway
-  preferred_id: custom
-  label_in_input: Is_Member_Of
+  target: Disease
+  label_in_input: Take_Part_In
 
 GeneToProteinRelationship:
   is_a: GeneToGeneProductRelationship
@@ -223,7 +198,7 @@ GeneToGeneHomologyAssociation:
   target: Gene
   label_in_input: Is_Ortholog_To
 
-GeneToGeneAssociation:
+PairwiseGeneToGeneInteraction:
   represented_as: edge
   label_as_edge: Regulates
   preferred_id: custom
@@ -240,14 +215,22 @@ GeneToOrganismTaxonAssociation:
   target: OrganismTaxon
   label_in_input: Belongs_To
 
-GeneotypeToTissueAssociation: # TODO deal with Cell, Tissue, Patient, Cell Line
-  is_a: Association
+MutationToTissueAssociation:
+  is_a: [GenotypeToTissueAssociation, Association]
   represented_as: edge
   label_as_edge: Is_Mutated_In
   preferred_id: custom
   source: Gene
-  target: Tissue
-  label_in_input: [Is_Mutated_In, Is_DEG_In]
+  target: [Tissue, Patient]
+  label_in_input: [Gene_Is_Mutated_In_Cell_Tissue, Gene_Is_Mutated_In_Patient]
+
+ExpressionToTissueAssociation:
+  represented_as: edge
+  label_as_edge: Is_DEG_In
+  preferred_id: custom
+  source: Gene
+  target: [Tissue, Patient]
+  label_in_input: [Gene_Is_DEG_In_Cell_Tissue, Gene_Is_DEG_In_Patient]
 
 GeneToPhenotypicFeatureAssociation:
   represented_as: edge
@@ -255,7 +238,15 @@ GeneToPhenotypicFeatureAssociation:
   preferred_id: custom
   source: Gene
   target: PhenotypicFeature
-  label_in_input: Is_Associated_With
+  label_in_input: Gene_Is_Associated_With_Phenotype
+
+GeneToPathwayAssociation:
+  represented_as: edge
+  label_as_edge: Is_Member_Of
+  source: Protein
+  target: Pathway
+  preferred_id: custom
+  label_in_input: Is_Member_Of
 
 GeneToDiseaseAssociation:
   represented_as: edge
@@ -263,15 +254,16 @@ GeneToDiseaseAssociation:
   preferred_id: custom
   source: Gene
   target: Disease
-  label_in_input: Is_related_to
+  label_in_input: Gene_Is_related_to_Disease
 
-DiseaseToPathwayAssociation:
+PairwiseSmallMoleculeToSmallMoleculeInteraction:
+  is_a: [SmallMoleculeToSmallMoleculeAssociation, Association]
   represented_as: edge
-  label_as_edge: Is_Member_Of
+  label_as_edge: Interacts_With
   preferred_id: custom
-  source: Disease
-  target: Pathway
-  label_in_input: Is_Member_Of
+  source: SmallMolecule
+  target: SmallMolecule
+  label_in_input: Drug_Interacts_With_Drug
 
 SmallMoleculeToProteinAssociation:
   represented_as: edge
@@ -279,7 +271,23 @@ SmallMoleculeToProteinAssociation:
   preferred_id: custom
   source: SmallMolecule
   target: Protein
-  label_in_input: Targets
+  label_in_input: Drug_Targets_Protein
+
+SmallMoleculeToSideEffectAssociation:
+  represented_as: edge
+  label_as_edge: Has_Side_Effect
+  preferred_id: custom
+  source: SmallMolecule
+  target: SideEffect
+  label_in_input: Drug_Has_Side_Effect
+
+SmallMoleculeToTissueAssociation:
+  represented_as: edge
+  label_as_edge: Is_Active_In_Tissue
+  preferred_id: custom
+  source: SmallMolecule
+  target: Tissue
+  label_in_input: Drug_Targets_Cell_Tissue
 
 SmallMoleculeToPathwayAssociation:
   represented_as: edge
@@ -289,6 +297,38 @@ SmallMoleculeToPathwayAssociation:
   target: Pathway
   label_in_input: Has_Target_In
 
+DrugToSmallMoleculeAssociation:
+  represented_as: edge
+  label_as_edge: Contains_Active_Ingredient
+  preferred_id: custom
+  source: Drug
+  target: SmallMolecule
+  label_in_input: Contains_Active_Ingredient
+
+MolecularMixtureToProteinAssociation:
+  represented_as: edge
+  label_as_edge: Compound_Targets_Protein
+  preferred_id: custom
+  source: MolecularMixture
+  target: Protein
+  label_in_input: Compound_Targets_Protein
+
+TissueToDiseaseAssociation:
+  represented_as: edge
+  label_as_edge: Has_Disease
+  preferred_id: custom
+  source: Tissue
+  target: Disease
+  label_in_input: Cell_Tissue_Has_Disease
+
+PatientToDiseaseAssociation:
+  represented_as: edge
+  label_as_edge: Has_Disease
+  preferred_id: custom
+  source: Patient
+  target: Disease
+  label_in_input: Patient_Has_Disease
+
 DiseaseToDiseaseAssociation:
   represented_as: edge
   label_as_edge: Comorbid_With
@@ -296,6 +336,14 @@ DiseaseToDiseaseAssociation:
   source: Disease
   target: Disease
   label_in_input: Comorbid_With
+
+DiseaseToPhenotypicFeatureAssociation:
+  represented_as: edge
+  label_as_edge: Is_Associated_With
+  preferred_id: custom
+  source: Disease
+  target: PhenotypicFeature
+  label_in_input: Disease_Is_Associated_With_Phenotype
 
 DiseaseToPathwayAssociation:
   represented_as: edge
@@ -305,41 +353,18 @@ DiseaseToPathwayAssociation:
   target: Pathway
   label_in_input: Modulates
 
-DrugToDiseaseAssociation:
+DiseaseToSmallMoleculeAssociation:
   represented_as: edge
   label_as_edge: Is_Treated_By
   preferred_id: custom
   source: Disease
-  target: Pathway
+  target: SmallMolecule
   label_in_input: Is_Treated_By
 
-DrugToSmallMoleculeAssociation:
+ProteinDomainToMolecularActivityAssociation:
   represented_as: edge
-  label_as_edge: Contains_Active_Ingredient
+  label_as_edge: Has_Function
   preferred_id: custom
-  source: Disease
-  target: Pathway
-  label_in_input: Contains_Active_Ingredient
-
-treated_by: 
-# DrugToDiseaseAssociation (NOT IN BIOLINK), treated_by
-# (DiseaseOrPhenotypicFeature -> ChemicalOrDrugOrTreatment) 
-
-# biolink has contraindicated_for (Drug -> DiseaseOrPhenotypicFeature)
-# but not indicated_for
-  represented_as: edge
-  preferred_id: custom
-  source: Drug
-  target: Disease
-  label_as_edge: Indicates
-  label_in_input: kegg_dis_drug
-
-ChemicalToChemicalAssociation:
-  represented_as: edge
-  preferred_id: custom
-  source: SmallMolecule
-  target: SmallMolecule
-  label_as_edge: ChemicalToChemicalAssociation
-  label_in_input: [Prediction, predictionChembl]
-
-
+  source: ProteinDomain
+  target: MolecularActivity
+  label_in_input: Domain_Has_Function
