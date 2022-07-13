@@ -61,15 +61,16 @@ Disease:
   preferred_id: [MONDO, EFO, ORPHANET, KEGG.DISEASE]
   label_in_input: [MONDO, EFO, Orphanet, KEGG.DISEASE]
 
-Cell:
-  represented_as: node
-  preferred_id: CL
-  label_in_input: Cell
+# Cell:
+#   represented_as: node
+#   preferred_id: CL
+#   label_in_input: Cell
 
 Tissue:
+  is_a: GrossAnatomicalStructure
   represented_as: node
   preferred_id: UBERON
-  label_in_input: Tissue
+  label_in_input: Cell_Tissue
 
 CellLine:
   represented_as: node
@@ -84,7 +85,7 @@ SubjectOfInvestigation:
 Phenotype:
   represented_as: node
   preferred_id: HP
-  label_in_input: HPO
+  label_in_input: Phenotype
       
 ProteinDomain:
   represented_as: node
@@ -102,9 +103,10 @@ BiologicalProcess:
   label_in_input: Function
 
 SideEffect:
+  is_a: PhenotypicFeature
   represented_as: node
   preferred_id: SIDER
-  label_in_input: Side_effect
+  label_in_input: Side_Effect
 
 # ---
 # Associations
@@ -128,7 +130,7 @@ PostTranslationalInteraction:
   preferred_id: custom
   source: Protein
   target: Protein
-  label_in_input: PPI
+  label_in_input: Interacts_With
 
 ProteinDomainToProteinAssociation:
   represented_as: edge
@@ -136,7 +138,7 @@ ProteinDomainToProteinAssociation:
   preferred_id: custom
   source: Protein
   target: ProteinDomain
-  label_in_input: has
+  label_in_input: Has
 
 ProteinToBiologicalProcessAssociation:
   represented_as: edge
@@ -144,7 +146,7 @@ ProteinToBiologicalProcessAssociation:
   preferred_id: custom
   source: Protein
   target: BiologicalProcess
-  label_in_input: enables
+  label_in_input: Enables
 
 ProteinToCellularComponentAssociation:
   represented_as: edge
@@ -152,7 +154,7 @@ ProteinToCellularComponentAssociation:
   preferred_id: custom
   source: Protein
   target: CellularComponent
-  label_in_input: localizes_to
+  label_in_input: Localizes_To
 
 ProteinToPathwayAssociation:
   represented_as: edge
@@ -160,25 +162,17 @@ ProteinToPathwayAssociation:
   preferred_id: custom
   source: Protein
   target: Pathway
-  label_in_input: takes_part_in
+  label_in_input: Take_Part_In
   
-# Is_Associated_With: 
-# could be broken up and made available collectively via mixin
-# DiseaseToPhenotypicFeatureAssociation, 
-# GeneToPhenotypicFeatureAssociation,
-# VariantToPhenotypicFeatureAssociation,
-# EntityToPhenotypicFeatureAssociation,
-# occurs_in_disease, has_phenotype, has_manifestation, contributes_to,
-# disease_has_basis_in
-GeneToPhenotypicFeatureAssociation:
+ProteinToPhenotypicFeatureAssociation:
+  is_a: Association
+  label_as_edge: Is_Associated_With
   represented_as: edge
   preferred_id: custom
   source: Protein
   target: Phenotype
-  label_as_edge: Is_Associated_With
   label_in_input: hpodis
 
-# possible pull request: ProteinToPhenotypicFeatureAssociation
 DiseaseToPhenotypicFeatureAssociation:
   represented_as: edge
   preferred_id: custom
@@ -187,17 +181,8 @@ DiseaseToPhenotypicFeatureAssociation:
   label_as_edge: Is_Associated_With
   label_in_input: HPO
   
-# Is_Related_To: 
-# GeneToPhenotypicFeatureAssociation,
-# VariantToPhenotypicFeatureAssociation,
-# EntityToPhenotypicFeatureAssociation,
-# EntityToDiseaseAssociationMixin,
-# GeneToDiseaseAssociation, 
-# DruggableGeneToDiseaseAssociation
-# occurs_in_disease, has_phenotype, has_manifestation, contributes_to,
-# disease_has_basis_in
-# possible pull request: ProteinToDiseaseAssociation
-GeneToDiseaseAssociation:
+ProteinToDiseaseAssociation:
+  is_a: EntityToDiseaseAssociation
   represented_as: edge
   preferred_id: custom
   source: Protein
@@ -205,8 +190,6 @@ GeneToDiseaseAssociation:
   label_as_edge: Is_Related_To
   label_in_input: [Disease, kegg_dis_prot]
 
-# Targets: # DrugToGeneAssociation, has_target (Disease -> Gene), affects
-# possible pull request: DrugToProteinAssociation
 DrugToGeneAssociation:
   represented_as: edge
   preferred_id: custom
@@ -215,17 +198,128 @@ DrugToGeneAssociation:
   label_as_edge: Targets
   label_in_input: [drugChembl, Drug, Chembl]
 
-# Is_Involved_In: 
-# GeneToPathwayAssociation,
-# contributes_to, has_participant, participates_in
-# possible pull request: ProteinToPathwayAssociation
 GeneToPathwayAssociation:
   represented_as: edge
+  label_as_edge: Is_Member_Of
   source: Protein
   target: Pathway
-  label_as_edge: Is_Involved_In
   preferred_id: custom
-  label_in_input: [Pathway, kegg_path_prot]
+  label_in_input: Is_Member_Of
+
+GeneToProteinRelationship:
+  is_a: GeneToGeneProductRelationship
+  represented_as: edge
+  label_as_edge: Encodes
+  preferred_id: custom
+  source: Gene
+  target: Protein
+  label_in_input: Encodes
+
+GeneToGeneHomologyAssociation:
+  represented_as: edge
+  label_as_edge: Is_Ortholog_To
+  preferred_id: custom
+  source: Gene
+  target: Gene
+  label_in_input: Is_Ortholog_To
+
+GeneToGeneAssociation:
+  represented_as: edge
+  label_as_edge: Regulates
+  preferred_id: custom
+  source: Gene
+  target: Gene
+  label_in_input: Regulates
+
+GeneToOrganismTaxonAssociation:
+  is_a: Association
+  represented_as: edge
+  label_as_edge: Belongs_To
+  preferred_id: custom
+  source: Gene
+  target: OrganismTaxon
+  label_in_input: Belongs_To
+
+GeneotypeToTissueAssociation: # TODO deal with Cell, Tissue, Patient, Cell Line
+  is_a: Association
+  represented_as: edge
+  label_as_edge: Is_Mutated_In
+  preferred_id: custom
+  source: Gene
+  target: Tissue
+  label_in_input: [Is_Mutated_In, Is_DEG_In]
+
+GeneToPhenotypicFeatureAssociation:
+  represented_as: edge
+  label_as_edge: Is_Associated_With
+  preferred_id: custom
+  source: Gene
+  target: PhenotypicFeature
+  label_in_input: Is_Associated_With
+
+GeneToDiseaseAssociation:
+  represented_as: edge
+  label_as_edge: Is_related_to
+  preferred_id: custom
+  source: Gene
+  target: Disease
+  label_in_input: Is_related_to
+
+DiseaseToPathwayAssociation:
+  represented_as: edge
+  label_as_edge: Is_Member_Of
+  preferred_id: custom
+  source: Disease
+  target: Pathway
+  label_in_input: Is_Member_Of
+
+SmallMoleculeToProteinAssociation:
+  represented_as: edge
+  label_as_edge: Targets
+  preferred_id: custom
+  source: SmallMolecule
+  target: Protein
+  label_in_input: Targets
+
+SmallMoleculeToPathwayAssociation:
+  represented_as: edge
+  label_as_edge: Has_Target_In
+  preferred_id: custom
+  source: SmallMolecule
+  target: Pathway
+  label_in_input: Has_Target_In
+
+DiseaseToDiseaseAssociation:
+  represented_as: edge
+  label_as_edge: Comorbid_With
+  preferred_id: custom
+  source: Disease
+  target: Disease
+  label_in_input: Comorbid_With
+
+DiseaseToPathwayAssociation:
+  represented_as: edge
+  label_as_edge: Modulates
+  preferred_id: custom
+  source: Disease
+  target: Pathway
+  label_in_input: Modulates
+
+DrugToDiseaseAssociation:
+  represented_as: edge
+  label_as_edge: Is_Treated_By
+  preferred_id: custom
+  source: Disease
+  target: Pathway
+  label_in_input: Is_Treated_By
+
+DrugToSmallMoleculeAssociation:
+  represented_as: edge
+  label_as_edge: Contains_Active_Ingredient
+  preferred_id: custom
+  source: Disease
+  target: Pathway
+  label_in_input: Contains_Active_Ingredient
 
 treated_by: 
 # DrugToDiseaseAssociation (NOT IN BIOLINK), treated_by
@@ -239,17 +333,6 @@ treated_by:
   target: Disease
   label_as_edge: Indicates
   label_in_input: kegg_dis_drug
-
-occurs_in_disease: # not in data?
-# DiseaseToPathwayAssociation (NOT IN BIOLINK),
-# GeneToPathwayAssociation, disease_has_basis_in,
-# has_molecular_consequence, occurs_in_disease
-  represented_as: edge
-  preferred_id: custom
-  source: Disease
-  target: Pathway
-  label_as_edge: Modulates
-  label_in_input: kegg_dis_path
 
 ChemicalToChemicalAssociation:
   represented_as: edge

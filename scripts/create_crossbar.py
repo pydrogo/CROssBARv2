@@ -2,11 +2,11 @@
 CROssBAR generation through BioCypher script
 """
 
-import sys
-sys.path.append('') # fix weird poetry behaviour I don't understand
+# import sys
+# sys.path.append('') # fix weird poetry behaviour I don't understand
 # may not be necessary depending on your setup
 
-from bccb.adapter import BiocypherAdapter
+from bccb.adapter_for_fake_graph import BiocypherAdapter
 
 adapt = BiocypherAdapter(offline=True)
 
