@@ -7,6 +7,7 @@
 # -- Path setup --------------------------------------------------------------
 
 from datetime import datetime
+
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
@@ -18,14 +19,15 @@ here = pathlib.Path(__file__).parent
 sys.path.insert(0, str(here.parent))
 
 import bccb  # noqa: E402
+from bccb import version, authors  # noqa: E402
 
 # -- Project information -----------------------------------------------------
 
-project = 'bccb'
-version = bccb.__version__
-author = ', '.join(bccb.__author__)
-years = '-'.join(sorted({'2022', f'{datetime.now():%Y}'}))
-copyright = f'{years}, Saez Lab'
+project = "CROssBAR v2 BioCypher migration tool"
+version = version
+author = ", ".join(authors)
+years = "-".join(sorted({"2022", f"{datetime.now():%Y}"}))
+copyright = f"{years}, Saez Lab"
 
 # -- General configuration ---------------------------------------------------
 
@@ -33,19 +35,19 @@ copyright = f'{years}, Saez Lab'
 # extensions coming with Sphinx (named "sphinx.ext.*") or your custom
 # ones.
 extensions = [
-    'sphinx.ext.autodoc',
-    'sphinx.ext.napoleon',
-    'sphinx.ext.todo',  # not for output but to remove warnings
-    'sphinx_rtd_theme',
+    "sphinx.ext.autodoc",
+    "sphinx.ext.napoleon",
+    "sphinx.ext.todo",  # not for output but to remove warnings
+    "sphinx_rtd_theme",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+templates_path = ["_templates"]
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
 
 # -- Autodoc configuration ---------------------------------------------------
@@ -57,10 +59,10 @@ autodoc_mock_imports = []
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 
-html_theme = 'sphinx_rtd_theme'
+html_theme = "sphinx_rtd_theme"
 html_theme_options = {
-    'navigation_depth': 2,
-    'collapse_navigation': True,
+    "navigation_depth": 2,
+    "collapse_navigation": True,
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,
