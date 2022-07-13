@@ -31,6 +31,8 @@ python = "^3.8"
 toml = "*"
 numpy = "^1.23.1"
 tqdm = "^4.64.0"
+biocypher = {path = "dev/biocypher", develop = true}
+pandas = "^1.4.3"
 
 [tool.poetry.dev-dependencies]
 pytest = ">=6.0"
@@ -42,7 +44,6 @@ sphinx = ">=5.0.0"
 sphinx-rtd-theme = ">=1.0.0"
 sphinx-last-updated-by-git = ">=0.3"
 sphinx-autodoc-typehints = ">=1.18.0"
-biocypher = {path = "dev/biocypher"}
 
 [tool.poetry.urls]
 "Bug Tracker" = "https://github.com/saezlab/python-project/issues"
