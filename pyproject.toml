@@ -29,6 +29,8 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.8"
 toml = "*"
+numpy = "^1.23.1"
+tqdm = "^4.64.0"
 
 [tool.poetry.dev-dependencies]
 pytest = ">=6.0"
