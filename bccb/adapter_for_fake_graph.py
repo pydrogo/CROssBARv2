@@ -41,7 +41,7 @@ class BiocypherAdapter:
         self,
         driver=None,
         db_name="neo4j",
-        db_uri="URİ_HERE",
+        db_uri="bolt://localhost:7687",
         db_user="neo4j",
         db_passwd="your_password_here",
         user_schema_config_path="config/schema_config.yaml",
@@ -82,15 +82,19 @@ class BiocypherAdapter:
               object. If `None`, the value of :py:attr:`network` will be
               used.
         """
+        if nodes is None:
+            nodes = self.nodes
+        if edges is None:
+            edges = self.edges
 
-        id_type_tuples = _gen_nodes(nodes or self.nodes)
-        # print(next(id_type_tuples))
+
+        id_type_tuples = _gen_nodes(nodes)
         self.bcy.add_nodes(id_type_tuples)
 
-        src_tar_type_tuples = _gen_edges(edges or self.edges)
+        src_tar_type_tuples = _gen_edges(edges)
         self.bcy.add_edges(src_tar_type_tuples)
 
-    def write_nodes(self, nodes, db_name):
+    def write_nodes(self, nodes=None, db_name='neo4j'):
         """
         Writes biocypher nodes to CSV files for admin import.
 
@@ -100,12 +104,14 @@ class BiocypherAdapter:
         """
 
         # write nodes
+        if nodes is None:
+            nodes = self.nodes
 
-        id_type_tuples = list(_gen_nodes(nodes or self.nodes))
+        id_type_tuples = list(_gen_nodes(nodes))
 
         self.bcy.write_nodes(id_type_tuples, db_name=db_name)
 
-    def write_edges(self, edges, db_name):
+    def write_edges(self, edges=None, db_name='neo4j'):
         """
         Writes biocypher edges to CSV files for admin import.
 
@@ -113,8 +119,10 @@ class BiocypherAdapter:
             edges (list): A list of edges.
             db_name (str): Name of the database (Neo4j graph) to use.
         """
-
-        src_tar_type_tuples = list(_gen_edges(edges or self.edges))
+        if edges is None:
+            edges = self.edges
+        
+        src_tar_type_tuples = list(_gen_edges(edges))
 
         self.bcy.write_edges(src_tar_type_tuples, db_name=db_name)
 
@@ -132,6 +140,12 @@ class BiocypherAdapter:
             edges (list): A list of edges.
             db_name (str): Name of the database (Neo4j graph) to use.
         """
+        if nodes is None:
+            nodes = self.nodes
+
+        if edges is None:
+            edges = self.edges
+
 
         self.write_nodes(nodes, db_name)
         self.write_edges(edges, db_name)
@@ -168,14 +182,6 @@ def _process_id(identifier):
     a type error.
     """
     identifier = str(identifier)
-
-    """
-    replace_characters = [':', '-']
-    
-    for character in replace_characters:            
-        if character in identifier:
-            identifier = identifier.replace(character, "_")
-    """
 
     return identifier
 
