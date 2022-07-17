@@ -251,94 +251,102 @@ def node_creator():
     return all_nodes_list_df
     
     
+if __name__ == "__main__":
     
-nodes_df = node_creator()
+    nodes_df = node_creator()
 
 
-def create_relationship(df, source, target, label, interaction_number, randomly_choose=True):
-    """
-    Creates interaction pairs from nodes dataframe
-    args:
-        df -> nodes_df
-        source -> source term of directed edge (node type in the dataframe)
-        target -> target term of directed edge (node type in the dataframe)
-        label -> label of edge
-        interaction_number[int] -> total interaction number between pairs
-        randomly choose[boolean] -> whether randomly select source and target or not
-    """
-    source_df = df[df["Type"] == source].reset_index(drop=True)
-    target_df = df[df["Type"] == target].reset_index(drop=True)
+    def create_relationship(df, source, target, label, interaction_number, randomly_choose=True):
+        """
+        Creates interaction pairs from nodes dataframe
+        args:
+            df -> nodes_df
+            source -> source term of directed edge (node type in the dataframe)
+            target -> target term of directed edge (node type in the dataframe)
+            label -> label of edge
+            interaction_number[int] -> total interaction number between pairs
+            randomly choose[boolean] -> whether randomly select source and target or not
+        """
+        source_df = df[df["Type"] == source].reset_index(drop=True)
+        target_df = df[df["Type"] == target].reset_index(drop=True)
 
-    for count in range(interaction_number):
-        if randomly_choose:            
-            while True:            
-                source_choice = np.random.choice(source_df.index.values, size=1)[0]
-                target_choice = np.random.choice(target_df.index.values, size=1)[0]
-                if source_choice != target_choice:
-                    break
-        else:
-            if target == "Organism":
-                source_choice = count
-                target_choice = 0
-            else:                
-                source_choice = count
-                target_choice = count
-        
-        source_id = source_df.iloc[source_choice, :]["ID"]
-        target_id = target_df.iloc[target_choice, :]["ID"]
+        for count in range(interaction_number):
+            if randomly_choose:            
+                while True:            
+                    source_choice = np.random.choice(source_df.index.values, size=1)[0]
+                    target_choice = np.random.choice(target_df.index.values, size=1)[0]
+                    if source_choice != target_choice:
+                        break
+            else:
+                if target == "Organism":
+                    source_choice = count
+                    target_choice = 0
+                else:                
+                    source_choice = count
+                    target_choice = count
 
-        
-        yield (source, source_id, target, target_id, label)
-        
+            source_id = source_df.iloc[source_choice, :]["ID"]
+            target_id = target_df.iloc[target_choice, :]["ID"]
 
-# mapping of interactions
-Interactions_map = [("Protein", "Protein", "Interacts_With", 150, True),
-                   ("Protein", "Domain", "Has", 85, True),
-                   ("Protein", "Function", "Enables", 85, True),
-                   ("Protein", "Location", "Localizes_To", 85, True),
-                   ("Protein", "Pathway", "Take_Part_In", 175, True),
-                   ("Protein", "Disease", "Is_Related_To", 100, True), # added Protein-Disease interaction
-                   ("Gene", "Protein", "Encodes", 300, False),
-                   ("Gene", "Gene", "Is_Ortholog_To", 100, True),
-                   ("Gene", "Gene", "Regulates", 100, True),
-                   ("Gene", "Organism", "Belongs_To", 300, False),
-                   ("Gene", "Tissue", "Is_Mutated_In", 100, True),
-                   ("Gene", "Cell Line", "Is_Mutated_In", 100, True), # added
-                   ("Gene", "Cell Line", "Is_DEG_In", 100, True), # added
-                   ("Gene", "Tissue", "Is_DEG_In", 85, True),
-                   ("Gene", "Phenotype", "Is_Associated_With", 85, True),
-                   ("Gene", "Patient", "Is_Mutated_In", 85, True),
-                   ("Gene", "Patient", "Is_DEG_In", 85, True),
-                   ("Gene", "Pathway", "Is_Member_Of", 175, True),
-                   ("Gene", "Disease", "Is_related_to", 175, True),
-                   ("Disease", "Protein", "Is_related_to", 175, True),
-                   ("Drug", "Drug", "Interacts_With", 75, True),
-                   ("Drug", "Protein", "Targets", 85, True),
-                   ("Drug", "Side Effect", "Has", 75, True),
-                   ("Drug", "Tissue", "Targets", 85, True),
-                   ("Drug", "Cell Line", "Targets", 85, True), # added
-                   ("Drug", "Pathway", "Has_Target_In", 85, True),
-                   ("Compound", "Protein", "Targets", 85, True),
-                   ("Tissue", "Disease", "Has", 85, True),
-                   ("Cell Line", "Disease", "Has", 85, True), # added
-                   ("Patient", "Disease", "Has", 100, True),
-                   ("Disease", "Disease", "Comorbid_With", 100, True),
-                   ("Disease", "Phenotype", "Is_Associated_With", 75, True),
-                   ("Disease", "Pathway", "Modulates", 85, True),
-                   ("Disease", "Drug", "Is_Treated_By", 50, True),
-                   ("Domain", "Function", "Has", 50, True),
-                   ("Domain", "Location", "Has", 50, True)]
-                   
-all_interactions = []
-for relation in Interactions_map:
-    print(relation)    
-    interactions = list(create_relationship(df=nodes_df, source=relation[0], target=relation[1], label=relation[2], interaction_number=relation[3], randomly_choose=relation[4]))
-    all_interactions.extend(interactions)
-    
 
-# create dataframe from all_interactions   
-edges_df = pd.DataFrame(all_interactions, columns=["Source Type", "Source ID", "Target Type", "Target ID", "Label"])
-edges_df.drop_duplicates(inplace=True)
+            yield (source, source_id, target, target_id, label)
 
-# write to csv
-edges_df.to_csv(r"data/edges/edges.csv", index=False) # size (after dropping duplicates) -> 3891 rows × 5 columns
+
+    # mapping of interactions
+    Interactions_map = [("Protein", "Protein", "Interacts_With", 150, True),
+                       ("Protein", "Domain", "Has", 85, True),
+                       ("Protein", "Function", "Enables", 85, True),
+                       ("Protein", "Location", "Localizes_To", 85, True),
+                       ("Protein", "Pathway", "Take_Part_In", 175, True),
+                       ("Protein", "Disease", "Is_Related_To", 100, True), # added Protein-Disease interaction
+                       ("Gene", "Protein", "Encodes", 300, False),
+                       ("Gene", "Gene", "Is_Ortholog_To", 100, True),
+                       ("Gene", "Gene", "Regulates", 100, True),
+                       ("Gene", "Organism", "Belongs_To", 300, False),
+                       ("Gene", "Tissue", "Is_Mutated_In", 100, True),
+                       ("Gene", "Cell Line", "Is_Mutated_In", 100, True), # added Cell Line
+                       ("Gene", "Cell Line", "Is_DEG_In", 100, True), # added Cell Line
+                       ("Gene", "Tissue", "Is_DEG_In", 85, True),
+                       ("Gene", "Phenotype", "Is_Associated_With", 85, True),
+                       ("Gene", "Patient", "Is_Mutated_In", 85, True),
+                       ("Gene", "Patient", "Is_DEG_In", 85, True),
+                       ("Gene", "Pathway", "Is_Member_Of", 175, True),
+                       ("Gene", "Disease", "Is_related_to", 175, True),
+                       ("Disease", "Protein", "Is_related_to", 175, True),
+                       ("Drug", "Drug", "Interacts_With", 75, True),
+                       ("Drug", "Protein", "Targets", 85, True),
+                       ("Drug", "Side Effect", "Has", 75, True),
+                       ("Drug", "Tissue", "Targets", 85, True),
+                       ("Drug", "Cell Line", "Targets", 85, True), # added Cell Line
+                       ("Drug", "Pathway", "Has_Target_In", 85, True),
+                       ("Compound", "Protein", "Targets", 85, True),
+                       ("Tissue", "Disease", "Has", 85, True),
+                       ("Cell Line", "Disease", "Has", 85, True), # added Cell Line
+                       ("Patient", "Disease", "Has", 100, True),
+                       ("Disease", "Disease", "Comorbid_With", 100, True),
+                       ("Disease", "Phenotype", "Is_Associated_With", 75, True),
+                       ("Disease", "Pathway", "Modulates", 85, True),
+                       ("Disease", "Drug", "Is_Treated_By", 50, True),
+                       ("Domain", "Function", "Has", 50, True),
+                       ("Domain", "Location", "Has", 50, True)]
+
+    all_interactions = []
+    for relation in Interactions_map:
+        print(relation)    
+        interactions = list(
+            create_relationship(
+                df=nodes_df, 
+                source=relation[0], 
+                target=relation[1], label=relation[2], 
+                interaction_number=relation[3], 
+                randomly_choose=relation[4])
+        )
+        all_interactions.extend(interactions)
+
+
+    # create dataframe from all_interactions   
+    edges_df = pd.DataFrame(all_interactions, columns=["Source Type", "Source ID", "Target Type", "Target ID", "Label"])
+    edges_df.drop_duplicates(inplace=True)
+
+    # write to csv
+    edges_df.to_csv(r"data/edges/edges.csv", index=False) # size (after dropping duplicates) -> 3891 rows × 5 columns
