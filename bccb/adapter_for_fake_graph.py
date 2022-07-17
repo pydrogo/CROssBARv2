@@ -168,8 +168,8 @@ class BiocypherAdapter:
 
 
 def _process_type(type_):
-    if type_ == "Cell/Tissue":
-        type_ = type_.replace("/", "_")
+    if type_ == "Cell Line":
+        type_ = type_.replace(" ", "_")
     elif type_ == "Side Effect":
         type_ = type_.replace(" ", "_")
 
