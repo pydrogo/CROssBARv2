@@ -243,8 +243,4 @@ def _gen_edges(edges):
             "target_type": _ttype,
         }
 
-        # skip unwanted
-        if _type in ["Domain_Has_Location"]:
-            continue
-
         yield (_source, _target, _type, _props)
