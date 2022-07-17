@@ -82,13 +82,13 @@ class BiocypherAdapter:
               object. If `None`, the value of :py:attr:`network` will be
               used.
         """
-        if nodes is None:
+        if nodes is None: 
             nodes = self.nodes
         if edges is None:
             edges = self.edges
 
 
-        id_type_tuples = _gen_nodes(nodes)
+        id_type_tuples = _gen_nodes(nodes) # logical statements such as "or" gives an error in pandas dataframes
         self.bcy.add_nodes(id_type_tuples)
 
         src_tar_type_tuples = _gen_edges(edges)
@@ -103,12 +103,13 @@ class BiocypherAdapter:
             db_name (str): Name of the database (Neo4j graph) to use.
         """
 
-        # write nodes
+        
         if nodes is None:
             nodes = self.nodes
 
         id_type_tuples = list(_gen_nodes(nodes))
-
+        
+        # write nodes
         self.bcy.write_nodes(id_type_tuples, db_name=db_name)
 
     def write_edges(self, edges=None, db_name='neo4j'):
@@ -197,10 +198,6 @@ def _gen_nodes(nodes):
         _props = {"source_db": str(row["Source Database"])}
         if isinstance(row["Name"], str):
             _props["name"] = str(row["Name"])
-
-        # skip unwanted
-        if _type == "Location":
-            continue
 
         yield (_id, _type, _props)
 
