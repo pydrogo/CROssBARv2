@@ -8,7 +8,7 @@ CROssBAR generation through BioCypher script
 
 from bccb.adapter_for_fake_graph import BiocypherAdapter
 
-adapt = BiocypherAdapter(offline=True)
+adapt = BiocypherAdapter(offline=True, db_name="import220720")
 
 adapt.build_python_object()
 adapt.write_to_csv_for_admin_import()

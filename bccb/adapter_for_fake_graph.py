@@ -58,6 +58,7 @@ class BiocypherAdapter:
             user_schema_config_path=user_schema_config_path,
             wipe=wipe,
             offline=offline,
+            delimiter="¦",
         )
 
         self.nodes = None
@@ -82,19 +83,20 @@ class BiocypherAdapter:
               object. If `None`, the value of :py:attr:`network` will be
               used.
         """
-        if nodes is None: 
+        if nodes is None:
             nodes = self.nodes
         if edges is None:
             edges = self.edges
 
-
-        id_type_tuples = _gen_nodes(nodes) # logical statements such as "or" gives an error in pandas dataframes
+        id_type_tuples = _gen_nodes(
+            nodes
+        )  # logical statements such as "or" gives an error in pandas dataframes
         self.bcy.add_nodes(id_type_tuples)
 
         src_tar_type_tuples = _gen_edges(edges)
         self.bcy.add_edges(src_tar_type_tuples)
 
-    def write_nodes(self, nodes=None, db_name='neo4j'):
+    def write_nodes(self, nodes=None, db_name="neo4j"):
         """
         Writes biocypher nodes to CSV files for admin import.
 
@@ -103,16 +105,15 @@ class BiocypherAdapter:
             db_name (str): Name of the database (Neo4j graph) to use.
         """
 
-        
         if nodes is None:
             nodes = self.nodes
 
         id_type_tuples = list(_gen_nodes(nodes))
-        
+
         # write nodes
         self.bcy.write_nodes(id_type_tuples, db_name=db_name)
 
-    def write_edges(self, edges=None, db_name='neo4j'):
+    def write_edges(self, edges=None, db_name="neo4j"):
         """
         Writes biocypher edges to CSV files for admin import.
 
@@ -122,7 +123,7 @@ class BiocypherAdapter:
         """
         if edges is None:
             edges = self.edges
-        
+
         src_tar_type_tuples = list(_gen_edges(edges))
 
         self.bcy.write_edges(src_tar_type_tuples, db_name=db_name)
@@ -146,7 +147,6 @@ class BiocypherAdapter:
 
         if edges is None:
             edges = self.edges
-
 
         self.write_nodes(nodes, db_name)
         self.write_edges(edges, db_name)
@@ -199,6 +199,10 @@ def _gen_nodes(nodes):
         if isinstance(row["Name"], str):
             _props["name"] = str(row["Name"])
 
+        # more granular node types
+        if _type == "Pathway":
+            _type += "_" + str(row["Source Database"])
+
         yield (_id, _type, _props)
 
 
@@ -216,11 +220,11 @@ def _gen_edges(edges):
 
         # input flip
         if (
-            _type == "Is_related_to"
+            _type == "Is_Related_To"
             and _stype == "Disease"
             and _ttype == "Protein"
         ):
-            _type = "Is_related_to"
+            _type = "Is_Related_To"
             _stype, _ttype = _ttype, _stype
             _source, _target = _target, _source
 
@@ -231,7 +235,7 @@ def _gen_edges(edges):
             "Is_Mutated_In",
             "Is_DEG_In",
             "Is_Associated_With",
-            "Is_related_to",
+            "Is_Related_To",
             "Targets",
         ]:
             _type = "_".join([_stype, _type, _ttype])
