@@ -1,5 +1,8 @@
 import pandas as pd
 import numpy as np
+import os
+
+print(os.getcwd())
 
 Interactions_map = [
     ("Protein", "Protein", "Interacts_With", 150, True),
@@ -73,7 +76,7 @@ def node_creator():
     """
     # Gene and Protein ids
     gene_name_and_protein_acc_df = pd.read_csv(
-        r"data/datasets/gene_name_and_protein_acc.csv"
+        r"bccb/data/datasets/gene_name_and_protein_acc.csv"
     )
     sampled_gene_and_protein = gene_name_and_protein_acc_df.sample(
         n=300, random_state=49
@@ -94,7 +97,7 @@ def node_creator():
     print("Gene and Protein are finished..")
 
     # Efo disease ids and names
-    efo_diseases_df = pd.read_csv(r"data/datasets/efo_disease_terms.csv")
+    efo_diseases_df = pd.read_csv(r"bccb/data/datasets/efo_disease_terms.csv")
     sampled_efo = efo_diseases_df.sample(n=100, random_state=49).reset_index(
         drop=True
     )
@@ -111,7 +114,7 @@ def node_creator():
 
     # KEGG pathway and disease ids and names
     kegg_pathway_and_disease_df = pd.read_csv(
-        r"data/datasets/kegg_pathway_and_disease.csv"
+        r"bccb/data/datasets/kegg_pathway_and_disease.csv"
     )
     kegg_pathway_and_disease_df = kegg_pathway_and_disease_df.drop_duplicates(
         subset=["kegg_pathwayname", "kegg_diseasename"]
@@ -138,7 +141,9 @@ def node_creator():
     )
 
     # Reactome pathway ids and names
-    reactome_pathway_df = pd.read_csv(r"data/datasets/reactome_pathway.csv")
+    reactome_pathway_df = pd.read_csv(
+        r"bccb/data/datasets/reactome_pathway.csv"
+    )
     sampled_reactome_pathway = reactome_pathway_df.sample(
         n=100, random_state=49
     ).reset_index(drop=True)
@@ -164,7 +169,7 @@ def node_creator():
     print("Disease and Pathway are finished..")
 
     # drug ids and names
-    drug_df = pd.read_csv(r"data/datasets/drug_terms.csv")
+    drug_df = pd.read_csv(r"bccb/data/datasets/drug_terms.csv")
     sampled_drug_df = drug_df.sample(n=100, random_state=49).reset_index(
         drop=True
     )
@@ -179,7 +184,7 @@ def node_creator():
     print("Drug is finished..")
 
     # compound ids
-    compound_df = pd.read_csv(r"data/datasets/compound_terms.csv")
+    compound_df = pd.read_csv(r"bccb/data/datasets/compound_terms.csv")
     sampled_compound_df = compound_df.sample(
         n=100, random_state=49
     ).reset_index(drop=True)
@@ -196,7 +201,7 @@ def node_creator():
     print("Compound is finished..")
 
     # Phenotype ids and names
-    phenotype_df = pd.read_csv(r"data/datasets/phenotype_terms.csv")
+    phenotype_df = pd.read_csv(r"bccb/data/datasets/phenotype_terms.csv")
     sampled_phenotype_df = phenotype_df.sample(
         n=100, random_state=49
     ).reset_index(drop=True)
@@ -213,7 +218,7 @@ def node_creator():
     print("Phenotype is finished..")
 
     # go function ids and names
-    go_function_df = pd.read_csv(r"data/datasets/go_function_terms.csv")
+    go_function_df = pd.read_csv(r"bccb/data/datasets/go_function_terms.csv")
     go_function_df = go_function_df[
         go_function_df["GO Term Type"] == "Function"
     ].drop_duplicates("GO Term go_id")
@@ -237,7 +242,7 @@ def node_creator():
 
     # gdsc - cell model passport id
     tissue_terms_gdsc_df = pd.read_csv(
-        r"data/datasets/tissue_terms_gdsc.csv"
+        r"bccb/data/datasets/tissue_terms_gdsc.csv"
     ).reset_index()
     tissue_terms_gdsc_df.drop(labels=["level_0"], axis=1, inplace=True)
     tissue_terms_gdsc_df.columns = [
@@ -270,7 +275,7 @@ def node_creator():
 
     # pharos - uberon id
     tissue_terms_uberon_df = pd.read_csv(
-        r"data/datasets/tissue_terms_pharos.csv"
+        r"bccb/data/datasets/tissue_terms_pharos.csv"
     )
     tissue_terms_uberon_df.dropna(
         subset="Expression Uberon ID", axis=0, inplace=True
@@ -301,7 +306,7 @@ def node_creator():
     print("Tissue is finished..")
 
     # Cell Line ids and names
-    cell_line_terms_df = pd.read_csv(r"data/datasets/cell_line_terms.csv")
+    cell_line_terms_df = pd.read_csv(r"bccb/data/datasets/cell_line_terms.csv")
     sampled_cell_line_terms_df = cell_line_terms_df.sample(
         n=400, random_state=49
     ).reset_index(drop=True)
@@ -321,7 +326,7 @@ def node_creator():
     frames = []
     for n in range(5):
         patient_df = pd.read_csv(
-            rf"data/datasets/patient_terms/repository-cases-table.2022-07-09 ({n}).tsv",
+            rf"bccb/data/datasets/patient_terms/repository-cases-table.2022-07-09 ({n}).tsv",
             sep="\t",
         )
         frames.append(patient_df)
@@ -342,7 +347,7 @@ def node_creator():
     print("Patient is finished..")
 
     # domain ids and names
-    domain_df = pd.read_csv(r"data/datasets/domain_terms.tsv", sep="\t")
+    domain_df = pd.read_csv(r"bccb/data/datasets/domain_terms.tsv", sep="\t")
     domain_df.drop(
         labels=["Integrated Signatures", "GO Terms"], axis=1, inplace=True
     )
@@ -364,7 +369,7 @@ def node_creator():
     print("Domain is finished..")
 
     # side effect ids and names
-    side_effect_df = pd.read_excel(r"data/datasets/Drug_ADR.xlsx")
+    side_effect_df = pd.read_excel(r"bccb/data/datasets/Drug_ADR.xlsx")
     sampled_side_effect_df = side_effect_df.sample(
         n=100, random_state=49
     ).reset_index(drop=True)
@@ -381,7 +386,9 @@ def node_creator():
     print("Side Effect is finished..")
 
     # location ids and names
-    location_df = pd.read_csv(r"data/datasets/location_terms.tsv", sep="\t")
+    location_df = pd.read_csv(
+        r"bccb/data/datasets/location_terms.tsv", sep="\t"
+    )
     location_df.drop_duplicates("GO TERM", inplace=True)
     sampled_location_df = location_df.sample(
         n=100, replace=True, random_state=49
@@ -429,7 +436,7 @@ def node_creator():
     print("Concatenation is finished..")
     # write to csv
     print("Writing to csv..")
-    all_nodes_list_df.to_csv(r"data/nodes/nodes.csv", index=False)
+    all_nodes_list_df.to_csv(r"bccb/data/nodes/nodes.csv", index=False)
     print("Finished..")
 
     # return final dataframe
@@ -512,5 +519,5 @@ if __name__ == "__main__":
 
     # write to csv
     edges_df.to_csv(
-        r"data/edges/edges.csv", index=False
+        r"bccb/data/edges/edges.csv", index=False
     )  # size (after dropping duplicates) -> 3891 rows × 5 columns
