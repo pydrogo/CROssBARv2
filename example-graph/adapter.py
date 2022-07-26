@@ -174,7 +174,7 @@ class BiocypherAdapter:
                     )
                     _props = {
                         "display_name": str(n["data"]["display_name"]), 
-                        "enrich_score": float(0), # TODO is this the right way to do this?
+                        "enrich_score": float(0),
                     }
                     yield (_id, _type, _props)
 
