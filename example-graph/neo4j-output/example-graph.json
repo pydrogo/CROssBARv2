@@ -1,0 +1,674 @@
+{"type":"node","id":"849","labels":["Protein"],"properties":{"UniProtKB":"O14746","id":"O14746","display_name":"TERT"}}
+{"type":"node","id":"850","labels":["Protein"],"properties":{"UniProtKB":"P01111","id":"P01111","display_name":"NRAS"}}
+{"type":"node","id":"851","labels":["Protein"],"properties":{"UniProtKB":"P01116","id":"P01116","display_name":"KRAS"}}
+{"type":"node","id":"852","labels":["Protein"],"properties":{"UniProtKB":"P04626","id":"P04626","display_name":"ERBB2"}}
+{"type":"node","id":"853","labels":["Protein"],"properties":{"UniProtKB":"P04637","id":"P04637","display_name":"TP53"}}
+{"type":"node","id":"854","labels":["Protein"],"properties":{"UniProtKB":"P08581","id":"P08581","display_name":"MET"}}
+{"type":"node","id":"855","labels":["Protein"],"properties":{"UniProtKB":"P10826","id":"P10826","display_name":"RARB"}}
+{"type":"node","id":"856","labels":["Protein"],"properties":{"UniProtKB":"P12830","id":"P12830","display_name":"CDH1"}}
+{"type":"node","id":"857","labels":["Protein"],"properties":{"UniProtKB":"P21802","id":"P21802","display_name":"FGFR2"}}
+{"type":"node","id":"858","labels":["Protein"],"properties":{"UniProtKB":"P24864","id":"P24864","display_name":"CCNE1"}}
+{"type":"node","id":"859","labels":["Protein"],"properties":{"UniProtKB":"P25054","id":"P25054","display_name":"APC"}}
+{"type":"node","id":"860","labels":["Protein"],"properties":{"UniProtKB":"P35222","id":"P35222","display_name":"CTNNB1"}}
+{"type":"node","id":"861","labels":["Protein"],"properties":{"UniProtKB":"P36897","id":"P36897","display_name":"TGFBR1"}}
+{"type":"node","id":"862","labels":["Protein"],"properties":{"UniProtKB":"P40692","id":"P40692","display_name":"MLH1"}}
+{"type":"node","id":"863","labels":["Protein"],"properties":{"UniProtKB":"P46527","id":"P46527","display_name":"CDKN1B"}}
+{"type":"node","id":"864","labels":["Protein"],"properties":{"UniProtKB":"Q99626","id":"Q99626","display_name":"CDX2"}}
+{"type":"node","id":"865","labels":["Protein"],"properties":{"UniProtKB":"P10914","id":"P10914","display_name":"IRF1"}}
+{"type":"node","id":"866","labels":["Protein"],"properties":{"UniProtKB":"Q92851","id":"Q92851","display_name":"CASP10"}}
+{"type":"node","id":"867","labels":["Protein"],"properties":{"UniProtKB":"Q99612","id":"Q99612","display_name":"KLF6"}}
+{"type":"node","id":"868","labels":["Protein"],"properties":{"UniProtKB":"Q9UIF7","id":"Q9UIF7","display_name":"MUTYH"}}
+{"type":"node","id":"869","labels":["Protein"],"properties":{"UniProtKB":"P05177","id":"P05177","display_name":"CYP1A2"}}
+{"type":"node","id":"870","labels":["Protein"],"properties":{"UniProtKB":"P0DP23","id":"P0DP23","display_name":"CALM1"}}
+{"type":"node","id":"871","labels":["Protein"],"properties":{"UniProtKB":"P10635","id":"P10635","display_name":"CYP2D6"}}
+{"type":"node","id":"872","labels":["Protein"],"properties":{"UniProtKB":"P14416","id":"P14416","display_name":"DRD2"}}
+{"type":"node","id":"873","labels":["Protein"],"properties":{"UniProtKB":"P26447","id":"P26447","display_name":"S100A4"}}
+{"type":"node","id":"874","labels":["Protein"],"properties":{"UniProtKB":"P35348","id":"P35348","display_name":"ADRA1A"}}
+{"type":"node","id":"875","labels":["Protein"],"properties":{"UniProtKB":"P63316","id":"P63316","display_name":"TNNC1"}}
+{"type":"node","id":"876","labels":["Protein"],"properties":{"UniProtKB":"Q15125","id":"Q15125","display_name":"EBP"}}
+{"type":"node","id":"877","labels":["Protein"],"properties":{"UniProtKB":"Q99714","id":"Q99714","display_name":"HSD17B10"}}
+{"type":"node","id":"878","labels":["Protein"],"properties":{"UniProtKB":"Q99720","id":"Q99720","display_name":"SIGMAR1"}}
+{"type":"node","id":"879","labels":["Protein"],"properties":{"UniProtKB":"Q9BY08","id":"Q9BY08","display_name":"EBPL"}}
+{"type":"node","id":"880","labels":["Protein"],"properties":{"UniProtKB":"Q9NYX4","id":"Q9NYX4","display_name":"CALY"}}
+{"type":"node","id":"881","labels":["Protein"],"properties":{"enrich_score":1614.0,"UniProtKB":"P33724","id":"P33724","display_name":"CAV1"}}
+{"type":"node","id":"882","labels":["Protein"],"properties":{"enrich_score":1614.0,"UniProtKB":"O60481","id":"O60481","display_name":"ZIC3"}}
+{"type":"node","id":"883","labels":["Protein"],"properties":{"enrich_score":1489.846,"UniProtKB":"O75474","id":"O75474","display_name":"FRAT2"}}
+{"type":"node","id":"884","labels":["Protein"],"properties":{"enrich_score":1291.2,"UniProtKB":"Q14093","id":"Q14093","display_name":"CYLC2"}}
+{"type":"node","id":"885","labels":["Protein"],"properties":{"enrich_score":1210.5,"UniProtKB":"O35445","id":"O35445","display_name":"Rnf5"}}
+{"type":"node","id":"886","labels":["Protein"],"properties":{"enrich_score":1210.5,"UniProtKB":"Q01887","id":"Q01887","display_name":"Ryk"}}
+{"type":"node","id":"887","labels":["Protein"],"properties":{"enrich_score":1210.5,"UniProtKB":"Q969T7","id":"Q969T7","display_name":"NT5C3B"}}
+{"type":"node","id":"888","labels":["Protein"],"properties":{"enrich_score":1210.5,"UniProtKB":"P18012","id":"P18012","display_name":"ipaC"}}
+{"type":"node","id":"889","labels":["Protein"],"properties":{"enrich_score":1210.5,"UniProtKB":"Q9YGY0","id":"Q9YGY0","display_name":"axin1"}}
+{"type":"node","id":"890","labels":["Protein"],"properties":{"enrich_score":1210.5,"UniProtKB":"Q9WYW0","id":"Q9WYW0","display_name":"cobB"}}
+{"type":"node","id":"891","labels":["Protein"],"properties":{"enrich_score":1210.5,"UniProtKB":"Q46342","id":"Q46342","display_name":"tcsL"}}
+{"type":"node","id":"892","labels":["Protein"],"properties":{"enrich_score":1210.5,"UniProtKB":"Q9HCS4","id":"Q9HCS4","display_name":"TCF7L1"}}
+{"type":"node","id":"893","labels":["Protein"],"properties":{"enrich_score":1210.5,"UniProtKB":"P0DQD2","id":"P0DQD2","display_name":"inlB"}}
+{"type":"node","id":"894","labels":["Protein"],"properties":{"enrich_score":1210.5,"UniProtKB":"Q8N4K4","id":"Q8N4K4","display_name":"RPRML"}}
+{"type":"node","id":"895","labels":["Protein"],"properties":{"enrich_score":1210.5,"UniProtKB":"O43246","id":"O43246","display_name":"SLC7A4"}}
+{"type":"node","id":"896","labels":["Protein"],"properties":{"enrich_score":1210.5,"UniProtKB":"O15438","id":"O15438","display_name":"ABCC3"}}
+{"type":"node","id":"897","labels":["Protein"],"properties":{"enrich_score":1210.5,"UniProtKB":"P63072","id":"P63072","display_name":"Ubd"}}
+{"type":"node","id":"898","labels":["Protein"],"properties":{"enrich_score":1210.5,"UniProtKB":"Q5T0D9","id":"Q5T0D9","display_name":"TPRG1L"}}
+{"type":"node","id":"899","labels":["Protein"],"properties":{"enrich_score":1210.5,"UniProtKB":"Q9JM96","id":"Q9JM96","display_name":"Cdc42ep4"}}
+{"type":"node","id":"900","labels":["Protein"],"properties":{"enrich_score":1210.5,"UniProtKB":"Q8R5A0","id":"Q8R5A0","display_name":"Smyd2"}}
+{"type":"node","id":"901","labels":["MONDO.Disease"],"properties":{"MONDO":"MONDO:0001056","enrich_score":9999999.0,"id":"MONDO:0001056","display_name":"gastric cancer"}}
+{"type":"node","id":"902","labels":["MONDO.Disease"],"properties":{"enrich_score":534.2885,"MONDO":"EFO:0000178","id":"EFO:0000178","display_name":"gastric carcinoma"}}
+{"type":"node","id":"903","labels":["MONDO.Disease"],"properties":{"MONDO":"Orphanet:220460","enrich_score":152.6538,"id":"Orphanet:220460","display_name":"Attenuated familial adenomatous polyposis"}}
+{"type":"node","id":"904","labels":["MONDO.Disease"],"properties":{"MONDO":"MONDO:0008170","enrich_score":85.8678,"id":"MONDO:0008170","display_name":"ovarian cancer"}}
+{"type":"node","id":"905","labels":["MONDO.Disease"],"properties":{"enrich_score":85.8678,"MONDO":"EFO:0001075","id":"EFO:0001075","display_name":"ovarian carcinoma"}}
+{"type":"node","id":"906","labels":["MONDO.Disease"],"properties":{"MONDO":"Orphanet:65748","enrich_score":76.3269,"id":"Orphanet:65748","display_name":"Multiple keratoacanthoma, Ferguson-Smith type"}}
+{"type":"node","id":"907","labels":["MONDO.Disease"],"properties":{"MONDO":"Orphanet:247798","enrich_score":76.3269,"id":"Orphanet:247798","display_name":"MUTYH-related attenuated familial adenomatous polyposis"}}
+{"type":"node","id":"908","labels":["MONDO.Disease"],"properties":{"MONDO":"MONDO:0007608","enrich_score":76.3269,"id":"MONDO:0007608","display_name":"desmoid tumor"}}
+{"type":"node","id":"909","labels":["MONDO.Disease"],"properties":{"MONDO":"MONDO:0007648","enrich_score":76.3269,"id":"MONDO:0007648","display_name":"hereditary diffuse gastric adenocarcinoma"}}
+{"type":"node","id":"910","labels":["MONDO.Disease"],"properties":{"enrich_score":76.3269,"MONDO":"Orphanet:87","id":"Orphanet:87","display_name":"Apert syndrome"}}
+{"type":"node","id":"911","labels":["MONDO.Disease"],"properties":{"MONDO":"MONDO:0008734","enrich_score":76.3269,"id":"MONDO:0008734","display_name":"adrenocortical carcinoma, hereditary"}}
+{"type":"node","id":"912","labels":["MONDO.Disease"],"properties":{"MONDO":"MONDO:0009578","enrich_score":76.3269,"id":"MONDO:0009578","display_name":"neurocutaneous melanocytosis"}}
+{"type":"node","id":"913","labels":["MONDO.Disease"],"properties":{"MONDO":"MONDO:0014548","enrich_score":76.3269,"id":"MONDO:0014548","display_name":"long QT syndrome 14"}}
+{"type":"node","id":"921","labels":["MONDO.Disease"],"properties":{"MONDO":"MONDO:0044792","enrich_score":76.3269,"id":"MONDO:0044792","display_name":"large congenital melanocytic nevus"}}
+{"type":"node","id":"922","labels":["MONDO.Disease"],"properties":{"MONDO":"Orphanet:139552","enrich_score":76.3269,"id":"Orphanet:139552","display_name":"Distal hereditary motor neuropathy, Jerash type"}}
+{"type":"node","id":"923","labels":["MONDO.Disease"],"properties":{"MONDO":"Orphanet:1555","enrich_score":76.3269,"id":"Orphanet:1555","display_name":"Cutis gyrata - acanthosis nigricans - craniosynostosis"}}
+{"type":"node","id":"924","labels":["MONDO.Disease"],"properties":{"MONDO":"Orphanet:168624","enrich_score":76.3269,"id":"Orphanet:168624","display_name":"Familial scaphocephaly syndrome, McGillivray type"}}
+{"type":"node","id":"925","labels":["MONDO.Disease"],"properties":{"MONDO":"Orphanet:207","enrich_score":76.3269,"id":"Orphanet:207","display_name":"Crouzon disease"}}
+{"type":"node","id":"926","labels":["MONDO.Disease"],"properties":{"enrich_score":76.3269,"MONDO":"Orphanet:83","id":"Orphanet:83","display_name":"Antley-Bixler syndrome"}}
+{"type":"node","id":"927","labels":["MONDO.Disease"],"properties":{"MONDO":"Orphanet:247806","enrich_score":76.3269,"id":"Orphanet:247806","display_name":"APC-related attenuated familial adenomatous polyposis"}}
+{"type":"node","id":"928","labels":["Drug"],"properties":{"enrich_score":9999999.0,"id":"DB00831","display_name":"Trifluoperazine","DRUGBANK":"DB00831"}}
+{"type":"node","id":"929","labels":["Drug"],"properties":{"enrich_score":169.4231,"id":"DB00450","display_name":"Droperidol","DRUGBANK":"DB00450"}}
+{"type":"node","id":"930","labels":["Drug"],"properties":{"enrich_score":112.9487,"id":"DB04513","display_name":"N-(6-Aminohexyl)-5-Chloro-1-Naphthalenesulfonamide","DRUGBANK":"DB04513"}}
+{"type":"node","id":"931","labels":["Drug"],"properties":{"enrich_score":112.9487,"id":"DB00850","display_name":"Perphenazine","DRUGBANK":"DB00850"}}
+{"type":"node","id":"932","labels":["Drug"],"properties":{"enrich_score":84.7115,"id":"DB01100","display_name":"Pimozide","DRUGBANK":"DB01100"}}
+{"type":"node","id":"933","labels":["Drug"],"properties":{"enrich_score":84.7115,"id":"DB08950","display_name":"Indoramin","DRUGBANK":"DB08950"}}
+{"type":"node","id":"934","labels":["Drug"],"properties":{"enrich_score":84.7115,"id":"DB04480","display_name":"3-(4-Fluorophenyl)-2-(6-Methylpyridin-2-Yl)-5,6-Dihydro-4h-Pyrrolo[1,2-B]Pyrazole","DRUGBANK":"DB04480"}}
+{"type":"node","id":"935","labels":["Drug"],"properties":{"enrich_score":84.7115,"id":"DB05773","display_name":"Trastuzumab emtansine","DRUGBANK":"DB05773"}}
+{"type":"node","id":"936","labels":["Drug"],"properties":{"enrich_score":84.7115,"id":"DB07369","display_name":"N-(3-chlorophenyl)-N-methyl-2-oxo-3-[(3,4,5-trimethyl-1H-pyrrol-2-yl)methyl]-2H-indole-5-sulfonamide","DRUGBANK":"DB07369"}}
+{"type":"node","id":"937","labels":["Drug"],"properties":{"enrich_score":84.7115,"id":"DB08791","display_name":"1-[(2-NITROPHENYL)SULFONYL]-1H-PYRROLO[3,2-B]PYRIDINE-6-CARBOXAMIDE","DRUGBANK":"DB08791"}}
+{"type":"node","id":"938","labels":["Drug"],"properties":{"enrich_score":9999999.0,"id":"DB00072","display_name":"Trastuzumab","DRUGBANK":"DB00072"}}
+{"type":"node","id":"939","labels":["Drug"],"properties":{"enrich_score":9999999.0,"id":"DB00305","display_name":"Mitomycin","DRUGBANK":"DB00305"}}
+{"type":"node","id":"940","labels":["Drug"],"properties":{"enrich_score":9999999.0,"id":"DB00322","display_name":"Floxuridine","DRUGBANK":"DB00322"}}
+{"type":"node","id":"941","labels":["Drug"],"properties":{"enrich_score":9999999.0,"id":"DB00445","display_name":"Epirubicin","DRUGBANK":"DB00445"}}
+{"type":"node","id":"977","labels":["Drug"],"properties":{"enrich_score":9999999.0,"id":"DB00515","display_name":"Cisplatin","DRUGBANK":"DB00515"}}
+{"type":"node","id":"978","labels":["Drug"],"properties":{"enrich_score":9999999.0,"id":"DB00526","display_name":"Oxaliplatin","DRUGBANK":"DB00526"}}
+{"type":"node","id":"979","labels":["Drug"],"properties":{"enrich_score":9999999.0,"id":"DB00531","display_name":"Cyclophosphamide","DRUGBANK":"DB00531"}}
+{"type":"node","id":"980","labels":["Drug"],"properties":{"enrich_score":9999999.0,"id":"DB00544","display_name":"Fluorouracil","DRUGBANK":"DB00544"}}
+{"type":"node","id":"981","labels":["Drug"],"properties":{"enrich_score":9999999.0,"id":"DB00563","display_name":"Methotrexate","DRUGBANK":"DB00563"}}
+{"type":"node","id":"982","labels":["Drug"],"properties":{"enrich_score":9999999.0,"id":"DB00707","display_name":"Porfimer sodium","DRUGBANK":"DB00707"}}
+{"type":"node","id":"983","labels":["Drug"],"properties":{"enrich_score":9999999.0,"id":"DB00762","display_name":"Irinotecan","DRUGBANK":"DB00762"}}
+{"type":"node","id":"984","labels":["Drug"],"properties":{"enrich_score":9999999.0,"id":"DB00987","display_name":"Cytarabine","DRUGBANK":"DB00987"}}
+{"type":"node","id":"985","labels":["Drug"],"properties":{"enrich_score":9999999.0,"id":"DB01101","display_name":"Capecitabine","DRUGBANK":"DB01101"}}
+{"type":"node","id":"986","labels":["Drug"],"properties":{"enrich_score":9999999.0,"id":"DB01229","display_name":"Paclitaxel","DRUGBANK":"DB01229"}}
+{"type":"node","id":"987","labels":["Drug"],"properties":{"enrich_score":9999999.0,"id":"DB01248","display_name":"Docetaxel","DRUGBANK":"DB01248"}}
+{"type":"node","id":"988","labels":["Drug"],"properties":{"enrich_score":9999999.0,"id":"DB03209","display_name":"Oteracil","DRUGBANK":"DB03209"}}
+{"type":"node","id":"989","labels":["Drug"],"properties":{"enrich_score":9999999.0,"id":"DB05578","display_name":"Ramucirumab","DRUGBANK":"DB05578"}}
+{"type":"node","id":"990","labels":["Drug"],"properties":{"enrich_score":9999999.0,"id":"DB09035","display_name":"Nivolumab","DRUGBANK":"DB09035"}}
+{"type":"node","id":"991","labels":["Drug"],"properties":{"enrich_score":9999999.0,"id":"DB09037","display_name":"Pembrolizumab","DRUGBANK":"DB09037"}}
+{"type":"node","id":"992","labels":["Drug"],"properties":{"enrich_score":9999999.0,"id":"DB09256","display_name":"Tegafur","DRUGBANK":"DB09256"}}
+{"type":"node","id":"993","labels":["Drug"],"properties":{"enrich_score":9999999.0,"id":"DB11596","display_name":"Levoleucovorin","DRUGBANK":"DB11596"}}
+{"type":"node","id":"994","labels":["Drug"],"properties":{"enrich_score":9999999.0,"id":"DB12947","display_name":"Doxifluridine","DRUGBANK":"DB12947"}}
+{"type":"node","id":"995","labels":["REACT.Pathway"],"properties":{"enrich_score":678.0,"id":"R-HSA-9649913","display_name":"RAS GTPase cycle mutants","REACT":"R-HSA-9649913"}}
+{"type":"node","id":"996","labels":["REACT.Pathway"],"properties":{"enrich_score":508.5,"id":"R-HSA-9608290","display_name":"Defective MUTYH substrate processing","REACT":"R-HSA-9608290"}}
+{"type":"node","id":"997","labels":["REACT.Pathway"],"properties":{"enrich_score":508.5,"id":"R-HSA-5467333","REACT":"R-HSA-5467333","display_name":"APC truncation mutants are not K63 polyubiquitinated"}}
+{"type":"node","id":"1019","labels":["REACT.Pathway"],"properties":{"enrich_score":508.5,"id":"R-HSA-211957","display_name":"Aromatic amines can be N-hydroxylated or N-dealkylated by CYP1A2","REACT":"R-HSA-211957"}}
+{"type":"node","id":"1020","labels":["REACT.Pathway"],"properties":{"enrich_score":508.5,"id":"R-HSA-2023837","REACT":"R-HSA-2023837","display_name":"Signaling by FGFR2 amplification mutants"}}
+{"type":"node","id":"1021","labels":["REACT.Pathway"],"properties":{"enrich_score":508.5,"id":"R-HSA-9608287","display_name":"Defective MUTYH substrate binding","REACT":"R-HSA-9608287"}}
+{"type":"node","id":"1022","labels":["REACT.Pathway"],"properties":{"enrich_score":508.5,"id":"R-HSA-111997","display_name":"CaM pathway","REACT":"R-HSA-111997"}}
+{"type":"node","id":"1023","labels":["REACT.Pathway"],"properties":{"enrich_score":508.5,"id":"R-HSA-8853333","display_name":"Signaling by FGFR2 fusions","REACT":"R-HSA-8853333"}}
+{"type":"node","id":"1024","labels":["REACT.Pathway"],"properties":{"enrich_score":416.0455,"id":"R-HSA-8851805","display_name":"MET activates RAS signaling","REACT":"R-HSA-8851805"}}
+{"type":"node","id":"1025","labels":["REACT.Pathway"],"properties":{"enrich_score":416.0455,"id":"R-HSA-9634285","REACT":"R-HSA-9634285","display_name":"Constitutive Signaling by Overexpressed ERBB2"}}
+{"type":"node","id":"1026","labels":["REACT.Pathway"],"properties":{"enrich_score":406.8,"id":"R-HSA-1169092","display_name":"Activation of RAS in B cells","REACT":"R-HSA-1169092"}}
+{"type":"node","id":"1027","labels":["REACT.Pathway"],"properties":{"enrich_score":339.0,"id":"R-HSA-9027307","display_name":"Biosynthesis of maresin-like SPMs","REACT":"R-HSA-9027307"}}
+{"type":"node","id":"1028","labels":["REACT.Pathway"],"properties":{"enrich_score":339.0,"id":"R-HSA-9634635","REACT":"R-HSA-9634635","display_name":"Estrogen-stimulated signaling through PRKCZ"}}
+{"type":"node","id":"1029","labels":["REACT.Pathway"],"properties":{"enrich_score":339.0,"id":"R-HSA-8849470","display_name":"PTK6 Regulates Cell Cycle","REACT":"R-HSA-8849470"}}
+{"type":"node","id":"1030","labels":["REACT.Pathway"],"properties":{"enrich_score":326.8929,"id":"R-HSA-6804116","REACT":"R-HSA-6804116","display_name":"TP53 Regulates Transcription of Genes Involved in G1 Cell Cycle Arrest"}}
+{"type":"node","id":"1031","labels":["REACT.Pathway"],"properties":{"enrich_score":290.5714,"id":"R-HSA-69563","display_name":"p53-Dependent G1 DNA Damage Response","REACT":"R-HSA-69563"}}
+{"type":"node","id":"1032","labels":["REACT.Pathway"],"properties":{"enrich_score":290.5714,"id":"R-HSA-6802953","REACT":"R-HSA-6802953","display_name":"RAS signaling downstream of NF1 loss-of-function variants"}}
+{"type":"node","id":"1033","labels":["REACT.Pathway"],"properties":{"enrich_score":290.5714,"id":"R-HSA-112412","display_name":"SOS-mediated signalling","REACT":"R-HSA-112412"}}
+{"type":"node","id":"1034","labels":["REACT.Pathway"],"properties":{"enrich_score":286.0313,"id":"R-HSA-9665348","display_name":"Signaling by ERBB2 ECD mutants","REACT":"R-HSA-9665348"}}
+{"type":"node","id":"1035","labels":["REACT.Pathway"],"properties":{"enrich_score":286.0313,"id":"R-HSA-1963640","display_name":"GRB2 events in ERBB2 signaling","REACT":"R-HSA-1963640"}}
+{"type":"node","id":"1036","labels":["HPO"],"properties":{"enrich_score":174.269,"HP":"HP:0007649","id":"HP:0007649","display_name":"Congenital hypertrophy of retinal pigment epithelium"}}
+{"type":"node","id":"1037","labels":["HPO"],"properties":{"enrich_score":174.269,"HP":"HP:0200022","id":"HP:0200022","display_name":"Choroid plexus papilloma"}}
+{"type":"node","id":"1038","labels":["HPO"],"properties":{"enrich_score":154.906,"HP":"HP:0006572","id":"HP:0006572","display_name":"Subacute progressive viral hepatitis"}}
+{"type":"node","id":"1039","labels":["HPO"],"properties":{"enrich_score":130.702,"HP":"HP:0030886","id":"HP:0030886","display_name":"Abnormal lymphocyte apoptosis"}}
+{"type":"node","id":"1040","labels":["HPO"],"properties":{"enrich_score":130.702,"HP":"HP:0002731","id":"HP:0002731","display_name":"Decreased lymphocyte apoptosis"}}
+{"type":"node","id":"1041","labels":["HPO"],"properties":{"enrich_score":116.179,"HP":"HP:0010815","id":"HP:0010815","display_name":"Nevus sebaceous"}}
+{"type":"node","id":"1042","labels":["HPO"],"properties":{"enrich_score":116.179,"HP":"HP:0010817","id":"HP:0010817","display_name":"Linear nevus sebaceous"}}
+{"type":"node","id":"1043","labels":["HPO"],"properties":{"enrich_score":108.918,"HP":"HP:0002888","id":"HP:0002888","display_name":"Ependymoma"}}
+{"type":"node","id":"1044","labels":["HPO"],"properties":{"enrich_score":99.582,"HP":"HP:0006562","id":"HP:0006562","display_name":"Viral hepatitis"}}
+{"type":"node","id":"1045","labels":["HPO"],"properties":{"enrich_score":99.017,"HP":"HP:0012174","id":"HP:0012174","display_name":"Glioblastoma multiforme"}}
+{"type":"node","id":"1046","labels":["HPO"],"properties":{"enrich_score":98.026,"HP":"HP:0100621","id":"HP:0100621","display_name":"Dysgerminoma"}}
+{"type":"node","id":"1047","labels":["HPO"],"properties":{"enrich_score":87.135,"HP":"HP:0500022","id":"HP:0500022","display_name":"Abnormal serum dehydroepiandrosterone level"}}
+{"type":"node","id":"1048","labels":["HPO"],"properties":{"enrich_score":87.135,"HP":"HP:0002885","id":"HP:0002885","display_name":"Medulloblastoma"}}
+{"type":"node","id":"1049","labels":["HPO"],"properties":{"enrich_score":87.135,"HP":"HP:0005603","id":"HP:0005603","display_name":"Numerous congenital melanocytic nevi"}}
+{"type":"node","id":"1050","labels":["HPO"],"properties":{"enrich_score":87.135,"HP":"HP:0004487","id":"HP:0004487","display_name":"Acrobrachycephaly"}}
+{"type":"node","id":"1051","labels":["HPO"],"properties":{"enrich_score":87.135,"HP":"HP:0025436","id":"HP:0025436","display_name":"Elevated serum 11-deoxycortisol"}}
+{"type":"node","id":"1052","labels":["HPO"],"properties":{"enrich_score":87.135,"HP":"HP:0025380","id":"HP:0025380","display_name":"Increased serum androstenedione"}}
+{"type":"node","id":"1053","labels":["HPO"],"properties":{"enrich_score":87.135,"HP":"HP:0008131","id":"HP:0008131","display_name":"Tarsal stippling"}}
+{"type":"node","id":"1054","labels":["HPO"],"properties":{"enrich_score":87.135,"HP":"HP:0011223","id":"HP:0011223","display_name":"Metopic depression"}}
+{"type":"node","id":"1055","labels":["HPO"],"properties":{"enrich_score":87.135,"HP":"HP:0004450","id":"HP:0004450","display_name":"Preauricular skin furrow"}}
+{"type":"node","id":"1056","labels":["Drug"],"properties":{"enrich_score":1000000.0,"id":"DB13104","display_name":"X-396","DRUGBANK":"DB13104"}}
+{"type":"node","id":"1057","labels":["Drug"],"properties":{"enrich_score":1000000.0,"id":"DB13113","display_name":"JNJ-38877605","DRUGBANK":"DB13113"}}
+{"type":"node","id":"1058","labels":["Compound"],"properties":{"enrich_score":142.5,"id":"CHEMBL365842","CHEMBL.COMPOUND":"CHEMBL365842","display_name":"CHEMBL365842"}}
+{"type":"node","id":"1059","labels":["Compound"],"properties":{"enrich_score":142.5,"id":"CHEMBL62540","CHEMBL.COMPOUND":"CHEMBL62540","display_name":"CHEMBL62540"}}
+{"type":"node","id":"1060","labels":["Compound"],"properties":{"enrich_score":95.0,"id":"CHEMBL17470","CHEMBL.COMPOUND":"CHEMBL17470","display_name":"CHEMBL17470"}}
+{"type":"node","id":"1061","labels":["Compound"],"properties":{"enrich_score":71.25,"id":"CHEMBL3299094","CHEMBL.COMPOUND":"CHEMBL3299094","display_name":"CHEMBL3299094"}}
+{"type":"node","id":"1062","labels":["Compound"],"properties":{"enrich_score":71.25,"id":"CHEMBL3298828","CHEMBL.COMPOUND":"CHEMBL3298828","display_name":"CHEMBL3298828"}}
+{"type":"node","id":"1063","labels":["Compound"],"properties":{"enrich_score":71.25,"id":"CHEMBL4101751","CHEMBL.COMPOUND":"CHEMBL4101751","display_name":"CHEMBL4101751"}}
+{"type":"node","id":"1064","labels":["Compound"],"properties":{"enrich_score":71.25,"id":"CHEMBL4092293","CHEMBL.COMPOUND":"CHEMBL4092293","display_name":"CHEMBL4092293"}}
+{"type":"node","id":"1065","labels":["Compound"],"properties":{"enrich_score":71.25,"id":"CHEMBL519948","CHEMBL.COMPOUND":"CHEMBL519948","display_name":"CHEMBL519948"}}
+{"type":"node","id":"1066","labels":["Compound"],"properties":{"enrich_score":71.25,"id":"CHEMBL3959443","CHEMBL.COMPOUND":"CHEMBL3959443","display_name":"CHEMBL3959443"}}
+{"type":"node","id":"1067","labels":["Compound"],"properties":{"enrich_score":71.25,"id":"CHEMBL3337496","CHEMBL.COMPOUND":"CHEMBL3337496","display_name":"CHEMBL3337496"}}
+{"type":"node","id":"1075","labels":["Compound"],"properties":{"enrich_score":71.25,"id":"CHEMBL3414922","CHEMBL.COMPOUND":"CHEMBL3414922","display_name":"CHEMBL3414922"}}
+{"type":"node","id":"1076","labels":["Compound"],"properties":{"enrich_score":71.25,"id":"CHEMBL3582305","CHEMBL.COMPOUND":"CHEMBL3582305","display_name":"CHEMBL3582305"}}
+{"type":"node","id":"1077","labels":["Compound"],"properties":{"enrich_score":71.25,"id":"CHEMBL3582300","CHEMBL.COMPOUND":"CHEMBL3582300","display_name":"CHEMBL3582300"}}
+{"type":"node","id":"1078","labels":["Compound"],"properties":{"enrich_score":71.25,"id":"CHEMBL3952761","CHEMBL.COMPOUND":"CHEMBL3952761","display_name":"CHEMBL3952761"}}
+{"type":"node","id":"1079","labels":["Compound"],"properties":{"enrich_score":71.25,"id":"CHEMBL3912435","CHEMBL.COMPOUND":"CHEMBL3912435","display_name":"CHEMBL3912435"}}
+{"type":"node","id":"1080","labels":["Compound"],"properties":{"enrich_score":71.25,"id":"CHEMBL2165120","CHEMBL.COMPOUND":"CHEMBL2165120","display_name":"CHEMBL2165120"}}
+{"type":"node","id":"1081","labels":["Compound"],"properties":{"enrich_score":71.25,"id":"CHEMBL3409378","CHEMBL.COMPOUND":"CHEMBL3409378","display_name":"CHEMBL3409378"}}
+{"type":"node","id":"1089","labels":["Compound"],"properties":{"enrich_score":71.25,"id":"CHEMBL3402761","CHEMBL.COMPOUND":"CHEMBL3402761","display_name":"CHEMBL3402761"}}
+{"type":"node","id":"1090","labels":["Compound"],"properties":{"enrich_score":71.25,"id":"CHEMBL3394472","CHEMBL.COMPOUND":"CHEMBL3394472","display_name":"CHEMBL3394472"}}
+{"type":"node","id":"1091","labels":["Compound"],"properties":{"enrich_score":71.25,"id":"CHEMBL3286578","CHEMBL.COMPOUND":"CHEMBL3286578","display_name":"CHEMBL3286578"}}
+{"type":"node","id":"1092","labels":["Compound"],"properties":{"enrich_score":10.0385,"id":"CHEMBL3966991","CHEMBL.COMPOUND":"CHEMBL3966991","display_name":"CHEMBL3966991"}}
+{"type":"node","id":"1093","labels":["Compound"],"properties":{"enrich_score":10.0385,"id":"CHEMBL1546320","CHEMBL.COMPOUND":"CHEMBL1546320","display_name":"CHEMBL1546320"}}
+{"type":"node","id":"1094","labels":["Compound"],"properties":{"enrich_score":10.0385,"id":"CHEMBL3644570","CHEMBL.COMPOUND":"CHEMBL3644570","display_name":"CHEMBL3644570"}}
+{"type":"node","id":"1095","labels":["Compound"],"properties":{"enrich_score":10.0385,"id":"CHEMBL3770370","CHEMBL.COMPOUND":"CHEMBL3770370","display_name":"CHEMBL3770370"}}
+{"type":"node","id":"1131","labels":["Compound"],"properties":{"enrich_score":10.0385,"id":"CHEMBL3907426","CHEMBL.COMPOUND":"CHEMBL3907426","display_name":"CHEMBL3907426"}}
+{"type":"node","id":"1132","labels":["Compound"],"properties":{"enrich_score":10.0385,"id":"CHEMBL3407901","CHEMBL.COMPOUND":"CHEMBL3407901","display_name":"CHEMBL3407901"}}
+{"type":"node","id":"1133","labels":["Compound"],"properties":{"enrich_score":10.0385,"id":"CHEMBL1547915","CHEMBL.COMPOUND":"CHEMBL1547915","display_name":"CHEMBL1547915"}}
+{"type":"node","id":"1134","labels":["Compound"],"properties":{"enrich_score":10.0385,"id":"CHEMBL1582182","CHEMBL.COMPOUND":"CHEMBL1582182","display_name":"CHEMBL1582182"}}
+{"type":"node","id":"1135","labels":["Compound"],"properties":{"enrich_score":10.0385,"id":"CHEMBL3656153","CHEMBL.COMPOUND":"CHEMBL3656153","display_name":"CHEMBL3656153"}}
+{"type":"node","id":"1136","labels":["Compound"],"properties":{"enrich_score":10.0385,"id":"CHEMBL2332527","CHEMBL.COMPOUND":"CHEMBL2332527","display_name":"CHEMBL2332527"}}
+{"type":"node","id":"1137","labels":["Compound"],"properties":{"enrich_score":10.0385,"id":"CHEMBL3403688","CHEMBL.COMPOUND":"CHEMBL3403688","display_name":"CHEMBL3403688"}}
+{"type":"node","id":"1138","labels":["Compound"],"properties":{"enrich_score":10.0385,"id":"CHEMBL2070225","CHEMBL.COMPOUND":"CHEMBL2070225","display_name":"CHEMBL2070225"}}
+{"type":"node","id":"1139","labels":["Compound"],"properties":{"enrich_score":10.0385,"id":"CHEMBL1546359","CHEMBL.COMPOUND":"CHEMBL1546359","display_name":"CHEMBL1546359"}}
+{"type":"node","id":"1140","labels":["Compound"],"properties":{"enrich_score":10.0385,"id":"CHEMBL375144","CHEMBL.COMPOUND":"CHEMBL375144","display_name":"CHEMBL375144"}}
+{"type":"node","id":"1141","labels":["Compound"],"properties":{"enrich_score":10.0385,"id":"CHEMBL3962329","CHEMBL.COMPOUND":"CHEMBL3962329","display_name":"CHEMBL3962329"}}
+{"type":"node","id":"1142","labels":["Compound"],"properties":{"enrich_score":10.0385,"id":"CHEMBL3197212","CHEMBL.COMPOUND":"CHEMBL3197212","display_name":"CHEMBL3197212"}}
+{"type":"node","id":"1143","labels":["Compound"],"properties":{"enrich_score":10.0385,"id":"CHEMBL1583529","CHEMBL.COMPOUND":"CHEMBL1583529","display_name":"CHEMBL1583529"}}
+{"type":"node","id":"1144","labels":["Compound"],"properties":{"enrich_score":10.0385,"id":"CHEMBL2338804","CHEMBL.COMPOUND":"CHEMBL2338804","display_name":"CHEMBL2338804"}}
+{"type":"node","id":"1145","labels":["Compound"],"properties":{"enrich_score":10.0385,"id":"CHEMBL3909739","CHEMBL.COMPOUND":"CHEMBL3909739","display_name":"CHEMBL3909739"}}
+{"type":"node","id":"1146","labels":["Compound"],"properties":{"enrich_score":10.0385,"id":"CHEMBL3356559","CHEMBL.COMPOUND":"CHEMBL3356559","display_name":"CHEMBL3356559"}}
+{"type":"node","id":"1147","labels":["REACT.Pathway"],"properties":{"enrich_score":66.6761,"id":"hsa04520","display_name":"Adherens junction","REACT":"hsa04520"}}
+{"type":"node","id":"1148","labels":["REACT.Pathway"],"properties":{"enrich_score":60.5991,"id":"hsa04015","display_name":"Rap1 signaling pathway","REACT":"hsa04015"}}
+{"type":"node","id":"1149","labels":["REACT.Pathway"],"properties":{"enrich_score":59.662,"id":"hsa04916","display_name":"Melanogenesis","REACT":"hsa04916"}}
+{"type":"node","id":"1150","labels":["REACT.Pathway"],"properties":{"enrich_score":50.6988,"id":"hsa04218","display_name":"Cellular senescence","REACT":"hsa04218"}}
+{"type":"node","id":"1151","labels":["REACT.Pathway"],"properties":{"enrich_score":45.0594,"id":"hsa04371","display_name":"Apelin signaling pathway","REACT":"hsa04371"}}
+{"type":"node","id":"1152","labels":["REACT.Pathway"],"properties":{"enrich_score":45.0342,"id":"hsa04720","display_name":"Long-term potentiation","REACT":"hsa04720"}}
+{"type":"node","id":"1153","labels":["REACT.Pathway"],"properties":{"enrich_score":43.0364,"id":"hsa04625","display_name":"C-type lectin receptor signaling pathway","REACT":"hsa04625"}}
+{"type":"node","id":"1154","labels":["REACT.Pathway"],"properties":{"enrich_score":37.872,"id":"hsa04722","display_name":"Neurotrophin signaling pathway","REACT":"hsa04722"}}
+{"type":"node","id":"1155","labels":["REACT.Pathway"],"properties":{"enrich_score":34.8088,"id":"hsa04744","display_name":"Phototransduction","REACT":"hsa04744"}}
+{"type":"node","id":"1156","labels":["REACT.Pathway"],"properties":{"enrich_score":33.338,"id":"hsa04550","display_name":"Signaling pathways regulating pluripotency of stem cells","REACT":"hsa04550"}}
+{"type":"node","id":"1157","labels":["REACT.Pathway"],"properties":{"enrich_score":32.875,"id":"hsa04912","display_name":"GnRH signaling pathway","REACT":"hsa04912"}}
+{"type":"node","id":"1158","labels":["REACT.Pathway"],"properties":{"enrich_score":27.303,"id":"hsa04014","display_name":"Ras signaling pathway","REACT":"hsa04014"}}
+{"type":"node","id":"1159","labels":["REACT.Pathway"],"properties":{"enrich_score":26.3,"id":"hsa00232","display_name":"Caffeine metabolism","REACT":"hsa00232"}}
+{"type":"node","id":"1160","labels":["REACT.Pathway"],"properties":{"enrich_score":24.7529,"id":"hsa04012","display_name":"ErbB signaling pathway","REACT":"hsa04012"}}
+{"type":"node","id":"1161","labels":["REACT.Pathway"],"properties":{"enrich_score":23.7889,"id":"hsa04020","display_name":"Calcium signaling pathway","REACT":"hsa04020"}}
+{"type":"node","id":"1162","labels":["REACT.Pathway"],"properties":{"enrich_score":23.774,"id":"hsa04151","display_name":"PI3K-Akt signaling pathway","REACT":"hsa04151"}}
+{"type":"node","id":"1163","labels":["REACT.Pathway"],"properties":{"enrich_score":23.6511,"id":"hsa04728","display_name":"Dopaminergic synapse","REACT":"hsa04728"}}
+{"type":"node","id":"1164","labels":["REACT.Pathway"],"properties":{"enrich_score":22.6724,"id":"hsa04910","display_name":"Insulin signaling pathway","REACT":"hsa04910"}}
+{"type":"node","id":"1165","labels":["REACT.Pathway"],"properties":{"enrich_score":22.3639,"id":"hsa04915","display_name":"Estrogen signaling pathway","REACT":"hsa04915"}}
+{"type":"node","id":"1166","labels":["REACT.Pathway"],"properties":{"enrich_score":21.9167,"id":"hsa04970","display_name":"Salivary secretion","REACT":"hsa04970"}}
+{"type":"node","id":"1167","labels":["MONDO.Disease"],"properties":{"enrich_score":9999999.0,"MONDO":"H00018","id":"H00018","display_name":"Gastric cancer"}}
+{"type":"node","id":"1168","labels":["MONDO.Disease"],"properties":{"enrich_score":293.8301,"MONDO":"H00026","id":"H00026","display_name":"Endometrial cancer"}}
+{"type":"node","id":"1169","labels":["MONDO.Disease"],"properties":{"enrich_score":188.0513,"MONDO":"H00046","id":"H00046","display_name":"Cholangiocarcinoma"}}
+{"type":"node","id":"1170","labels":["MONDO.Disease"],"properties":{"enrich_score":158.6683,"MONDO":"H00047","id":"H00047","display_name":"Gallbladder cancer"}}
+{"type":"node","id":"1171","labels":["MONDO.Disease"],"properties":{"enrich_score":141.0385,"MONDO":"H01025","id":"H01025","display_name":"Familial adenomatous polyposis"}}
+{"type":"node","id":"1172","labels":["MONDO.Disease"],"properties":{"enrich_score":141.0385,"MONDO":"H02302","id":"H02302","display_name":"Hepatoblastoma"}}
+{"type":"node","id":"1173","labels":["MONDO.Disease"],"properties":{"enrich_score":141.0385,"MONDO":"H01557","id":"H01557","display_name":"Hepatic angiosarcoma"}}
+{"type":"node","id":"1174","labels":["MONDO.Disease"],"properties":{"enrich_score":112.8308,"MONDO":"H00027","id":"H00027","display_name":"Ovarian cancer"}}
+{"type":"node","id":"1175","labels":["MONDO.Disease"],"properties":{"enrich_score":110.1863,"MONDO":"H00032","id":"H00032","display_name":"Thyroid cancer"}}
+{"type":"node","id":"1176","labels":["MONDO.Disease"],"properties":{"enrich_score":94.0256,"MONDO":"H00044","id":"H00044","display_name":"Cancer of the anal canal"}}
+{"type":"node","id":"1177","labels":["MONDO.Disease"],"properties":{"enrich_score":94.0256,"MONDO":"H01666","id":"H01666","display_name":"Angiosarcoma"}}
+{"type":"node","id":"1178","labels":["MONDO.Disease"],"properties":{"enrich_score":90.6676,"MONDO":"H00019","id":"H00019","display_name":"Pancreatic cancer"}}
+{"type":"node","id":"1179","labels":["MONDO.Disease"],"properties":{"enrich_score":79.3341,"MONDO":"H00016","id":"H00016","display_name":"Oral cancer"}}
+{"type":"node","id":"1201","labels":["MONDO.Disease"],"properties":{"enrich_score":70.5192,"MONDO":"H01755","id":"H01755","display_name":"Apert syndrome"}}
+{"type":"node","id":"1202","labels":["MONDO.Disease"],"properties":{"enrich_score":70.5192,"MONDO":"H00947","id":"H00947","display_name":"Pilomatricoma"}}
+{"type":"node","id":"1203","labels":["MONDO.Disease"],"properties":{"enrich_score":70.5192,"MONDO":"H02301","id":"H02301","display_name":"Nephroblastoma"}}
+{"type":"node","id":"1204","labels":["MONDO.Disease"],"properties":{"enrich_score":70.5192,"MONDO":"H01007","id":"H01007","display_name":"Choroid plexus papilloma"}}
+{"type":"node","id":"1205","labels":["MONDO.Disease"],"properties":{"enrich_score":70.5192,"MONDO":"H00040","id":"H00040","display_name":"Squamous cell carcinoma"}}
+{"type":"node","id":"1206","labels":["MONDO.Disease"],"properties":{"enrich_score":70.5192,"MONDO":"H01989","id":"H01989","display_name":"Beare-Stevenson syndrome"}}
+{"type":"node","id":"1207","labels":["MONDO.Disease"],"properties":{"enrich_score":70.5192,"MONDO":"H02248","id":"H02248","display_name":"MEND syndrome"}}
+{"id":"131","type":"relationship","label":"Interacts_With","properties":{"Edge_Type":"PPI"},"start":{"id":"849","labels":["Protein"]},"end":{"id":"849","labels":["Protein"]}}
+{"id":"132","type":"relationship","label":"Interacts_With","properties":{"Edge_Type":"PPI"},"start":{"id":"850","labels":["Protein"]},"end":{"id":"883","labels":["Protein"]}}
+{"id":"133","type":"relationship","label":"Interacts_With","properties":{"Edge_Type":"PPI"},"start":{"id":"850","labels":["Protein"]},"end":{"id":"884","labels":["Protein"]}}
+{"id":"134","type":"relationship","label":"Interacts_With","properties":{"Edge_Type":"PPI"},"start":{"id":"850","labels":["Protein"]},"end":{"id":"891","labels":["Protein"]}}
+{"id":"135","type":"relationship","label":"Interacts_With","properties":{"Edge_Type":"PPI"},"start":{"id":"851","labels":["Protein"]},"end":{"id":"883","labels":["Protein"]}}
+{"id":"136","type":"relationship","label":"Interacts_With","properties":{"Edge_Type":"PPI"},"start":{"id":"851","labels":["Protein"]},"end":{"id":"851","labels":["Protein"]}}
+{"id":"137","type":"relationship","label":"Interacts_With","properties":{"Edge_Type":"PPI"},"start":{"id":"851","labels":["Protein"]},"end":{"id":"891","labels":["Protein"]}}
+{"id":"138","type":"relationship","label":"Interacts_With","properties":{"Edge_Type":"PPI"},"start":{"id":"852","labels":["Protein"]},"end":{"id":"895","labels":["Protein"]}}
+{"id":"139","type":"relationship","label":"Interacts_With","properties":{"Edge_Type":"PPI"},"start":{"id":"852","labels":["Protein"]},"end":{"id":"883","labels":["Protein"]}}
+{"id":"140","type":"relationship","label":"Interacts_With","properties":{"Edge_Type":"PPI"},"start":{"id":"852","labels":["Protein"]},"end":{"id":"852","labels":["Protein"]}}
+{"id":"141","type":"relationship","label":"Interacts_With","properties":{"Edge_Type":"PPI"},"start":{"id":"852","labels":["Protein"]},"end":{"id":"884","labels":["Protein"]}}
+{"id":"142","type":"relationship","label":"Interacts_With","properties":{"Edge_Type":"PPI"},"start":{"id":"852","labels":["Protein"]},"end":{"id":"894","labels":["Protein"]}}
+{"id":"143","type":"relationship","label":"Interacts_With","properties":{"Edge_Type":"PPI"},"start":{"id":"853","labels":["Protein"]},"end":{"id":"882","labels":["Protein"]}}
+{"id":"144","type":"relationship","label":"Interacts_With","properties":{"Edge_Type":"PPI"},"start":{"id":"853","labels":["Protein"]},"end":{"id":"853","labels":["Protein"]}}
+{"id":"145","type":"relationship","label":"Interacts_With","properties":{"Edge_Type":"PPI"},"start":{"id":"853","labels":["Protein"]},"end":{"id":"890","labels":["Protein"]}}
+{"id":"146","type":"relationship","label":"Interacts_With","properties":{"Edge_Type":"PPI"},"start":{"id":"853","labels":["Protein"]},"end":{"id":"900","labels":["Protein"]}}
+{"id":"147","type":"relationship","label":"Interacts_With","properties":{"Edge_Type":"PPI"},"start":{"id":"854","labels":["Protein"]},"end":{"id":"893","labels":["Protein"]}}
+{"id":"148","type":"relationship","label":"Interacts_With","properties":{"Edge_Type":"PPI"},"start":{"id":"854","labels":["Protein"]},"end":{"id":"854","labels":["Protein"]}}
+{"id":"149","type":"relationship","label":"Interacts_With","properties":{"Edge_Type":"PPI"},"start":{"id":"856","labels":["Protein"]},"end":{"id":"856","labels":["Protein"]}}
+{"id":"150","type":"relationship","label":"Interacts_With","properties":{"Edge_Type":"PPI"},"start":{"id":"856","labels":["Protein"]},"end":{"id":"881","labels":["Protein"]}}
+{"id":"151","type":"relationship","label":"Interacts_With","properties":{"Edge_Type":"PPI"},"start":{"id":"857","labels":["Protein"]},"end":{"id":"857","labels":["Protein"]}}
+{"id":"152","type":"relationship","label":"Interacts_With","properties":{"Edge_Type":"PPI"},"start":{"id":"858","labels":["Protein"]},"end":{"id":"858","labels":["Protein"]}}
+{"id":"153","type":"relationship","label":"Interacts_With","properties":{"Edge_Type":"PPI"},"start":{"id":"860","labels":["Protein"]},"end":{"id":"882","labels":["Protein"]}}
+{"id":"154","type":"relationship","label":"Interacts_With","properties":{"Edge_Type":"PPI"},"start":{"id":"860","labels":["Protein"]},"end":{"id":"888","labels":["Protein"]}}
+{"id":"155","type":"relationship","label":"Interacts_With","properties":{"Edge_Type":"PPI"},"start":{"id":"860","labels":["Protein"]},"end":{"id":"881","labels":["Protein"]}}
+{"id":"156","type":"relationship","label":"Interacts_With","properties":{"Edge_Type":"PPI"},"start":{"id":"860","labels":["Protein"]},"end":{"id":"889","labels":["Protein"]}}
+{"id":"157","type":"relationship","label":"Interacts_With","properties":{"Edge_Type":"PPI"},"start":{"id":"860","labels":["Protein"]},"end":{"id":"886","labels":["Protein"]}}
+{"id":"158","type":"relationship","label":"Interacts_With","properties":{"Edge_Type":"PPI"},"start":{"id":"860","labels":["Protein"]},"end":{"id":"892","labels":["Protein"]}}
+{"id":"159","type":"relationship","label":"Interacts_With","properties":{"Edge_Type":"PPI"},"start":{"id":"861","labels":["Protein"]},"end":{"id":"885","labels":["Protein"]}}
+{"id":"160","type":"relationship","label":"Interacts_With","properties":{"Edge_Type":"PPI"},"start":{"id":"861","labels":["Protein"]},"end":{"id":"897","labels":["Protein"]}}
+{"id":"161","type":"relationship","label":"Interacts_With","properties":{"Edge_Type":"PPI"},"start":{"id":"861","labels":["Protein"]},"end":{"id":"899","labels":["Protein"]}}
+{"id":"162","type":"relationship","label":"Interacts_With","properties":{"Edge_Type":"PPI"},"start":{"id":"862","labels":["Protein"]},"end":{"id":"896","labels":["Protein"]}}
+{"id":"163","type":"relationship","label":"Interacts_With","properties":{"Edge_Type":"PPI"},"start":{"id":"862","labels":["Protein"]},"end":{"id":"898","labels":["Protein"]}}
+{"id":"164","type":"relationship","label":"Interacts_With","properties":{"Edge_Type":"PPI"},"start":{"id":"862","labels":["Protein"]},"end":{"id":"887","labels":["Protein"]}}
+{"id":"165","type":"relationship","label":"Interacts_With","properties":{"Edge_Type":"PPI"},"start":{"id":"862","labels":["Protein"]},"end":{"id":"883","labels":["Protein"]}}
+{"id":"166","type":"relationship","label":"Interacts_With","properties":{"Edge_Type":"PPI"},"start":{"id":"862","labels":["Protein"]},"end":{"id":"884","labels":["Protein"]}}
+{"id":"167","type":"relationship","label":"Interacts_With","properties":{"Edge_Type":"PPI"},"start":{"id":"866","labels":["Protein"]},"end":{"id":"866","labels":["Protein"]}}
+{"id":"168","type":"relationship","label":"Interacts_With","properties":{"Edge_Type":"PPI"},"start":{"id":"868","labels":["Protein"]},"end":{"id":"884","labels":["Protein"]}}
+{"id":"169","type":"relationship","label":"Interacts_With","properties":{"Edge_Type":"PPI"},"start":{"id":"872","labels":["Protein"]},"end":{"id":"872","labels":["Protein"]}}
+{"id":"170","type":"relationship","label":"Interacts_With","properties":{"Edge_Type":"PPI"},"start":{"id":"873","labels":["Protein"]},"end":{"id":"873","labels":["Protein"]}}
+{"id":"171","type":"relationship","label":"Interacts_With","properties":{"Edge_Type":"PPI"},"start":{"id":"874","labels":["Protein"]},"end":{"id":"874","labels":["Protein"]}}
+{"id":"172","type":"relationship","label":"Interacts_With","properties":{"Edge_Type":"PPI"},"start":{"id":"876","labels":["Protein"]},"end":{"id":"876","labels":["Protein"]}}
+{"id":"173","type":"relationship","label":"Interacts_With","properties":{"Edge_Type":"PPI"},"start":{"id":"878","labels":["Protein"]},"end":{"id":"878","labels":["Protein"]}}
+{"id":"174","type":"relationship","label":"Is_Associated_With","properties":{"Edge_Type":"hpodis"},"start":{"id":"1036","labels":["HPO"]},"end":{"id":"927","labels":["MONDO.Disease"]}}
+{"id":"175","type":"relationship","label":"Is_Associated_With","properties":{"Edge_Type":"hpodis"},"start":{"id":"1036","labels":["HPO"]},"end":{"id":"907","labels":["MONDO.Disease"]}}
+{"id":"176","type":"relationship","label":"Is_Associated_With","properties":{"Edge_Type":"hpodis"},"start":{"id":"1036","labels":["HPO"]},"end":{"id":"903","labels":["MONDO.Disease"]}}
+{"id":"177","type":"relationship","label":"Is_Associated_With","properties":{"Edge_Type":"hpodis"},"start":{"id":"1037","labels":["HPO"]},"end":{"id":"912","labels":["MONDO.Disease"]}}
+{"id":"178","type":"relationship","label":"Is_Associated_With","properties":{"Edge_Type":"hpodis"},"start":{"id":"1046","labels":["HPO"]},"end":{"id":"925","labels":["MONDO.Disease"]}}
+{"id":"179","type":"relationship","label":"Is_Associated_With","properties":{"Edge_Type":"hpodis"},"start":{"id":"1046","labels":["HPO"]},"end":{"id":"904","labels":["MONDO.Disease"]}}
+{"id":"180","type":"relationship","label":"Is_Associated_With","properties":{"Edge_Type":"hpodis"},"start":{"id":"1048","labels":["HPO"]},"end":{"id":"903","labels":["MONDO.Disease"]}}
+{"id":"181","type":"relationship","label":"Is_Associated_With","properties":{"Edge_Type":"hpodis"},"start":{"id":"1048","labels":["HPO"]},"end":{"id":"927","labels":["MONDO.Disease"]}}
+{"id":"182","type":"relationship","label":"Is_Associated_With","properties":{"Edge_Type":"hpodis"},"start":{"id":"1049","labels":["HPO"]},"end":{"id":"912","labels":["MONDO.Disease"]}}
+{"id":"183","type":"relationship","label":"Is_Associated_With","properties":{"Edge_Type":"hpodis"},"start":{"id":"1050","labels":["HPO"]},"end":{"id":"910","labels":["MONDO.Disease"]}}
+{"id":"184","type":"relationship","label":"Is_Associated_With","properties":{"Edge_Type":"hpodis"},"start":{"id":"1055","labels":["HPO"]},"end":{"id":"923","labels":["MONDO.Disease"]}}
+{"id":"185","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"Disease"},"start":{"id":"851","labels":["Protein"]},"end":{"id":"901","labels":["MONDO.Disease"]}}
+{"id":"186","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"Disease"},"start":{"id":"852","labels":["Protein"]},"end":{"id":"901","labels":["MONDO.Disease"]}}
+{"id":"187","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"Disease"},"start":{"id":"859","labels":["Protein"]},"end":{"id":"901","labels":["MONDO.Disease"]}}
+{"id":"188","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"Disease"},"start":{"id":"865","labels":["Protein"]},"end":{"id":"901","labels":["MONDO.Disease"]}}
+{"id":"189","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"Disease"},"start":{"id":"866","labels":["Protein"]},"end":{"id":"901","labels":["MONDO.Disease"]}}
+{"id":"190","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"Disease"},"start":{"id":"867","labels":["Protein"]},"end":{"id":"901","labels":["MONDO.Disease"]}}
+{"id":"191","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"Disease"},"start":{"id":"868","labels":["Protein"]},"end":{"id":"901","labels":["MONDO.Disease"]}}
+{"id":"192","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"Disease"},"start":{"id":"856","labels":["Protein"]},"end":{"id":"901","labels":["MONDO.Disease"]}}
+{"id":"193","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"Disease"},"start":{"id":"851","labels":["Protein"]},"end":{"id":"902","labels":["MONDO.Disease"]}}
+{"id":"194","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"Disease"},"start":{"id":"852","labels":["Protein"]},"end":{"id":"902","labels":["MONDO.Disease"]}}
+{"id":"195","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"Disease"},"start":{"id":"859","labels":["Protein"]},"end":{"id":"902","labels":["MONDO.Disease"]}}
+{"id":"196","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"Disease"},"start":{"id":"865","labels":["Protein"]},"end":{"id":"902","labels":["MONDO.Disease"]}}
+{"id":"197","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"Disease"},"start":{"id":"866","labels":["Protein"]},"end":{"id":"902","labels":["MONDO.Disease"]}}
+{"id":"198","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"Disease"},"start":{"id":"867","labels":["Protein"]},"end":{"id":"902","labels":["MONDO.Disease"]}}
+{"id":"199","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"Disease"},"start":{"id":"868","labels":["Protein"]},"end":{"id":"902","labels":["MONDO.Disease"]}}
+{"id":"200","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"Disease"},"start":{"id":"859","labels":["Protein"]},"end":{"id":"903","labels":["MONDO.Disease"]}}
+{"id":"201","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"Disease"},"start":{"id":"868","labels":["Protein"]},"end":{"id":"903","labels":["MONDO.Disease"]}}
+{"id":"202","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"Disease"},"start":{"id":"852","labels":["Protein"]},"end":{"id":"904","labels":["MONDO.Disease"]}}
+{"id":"203","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"Disease"},"start":{"id":"856","labels":["Protein"]},"end":{"id":"904","labels":["MONDO.Disease"]}}
+{"id":"204","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"Disease"},"start":{"id":"860","labels":["Protein"]},"end":{"id":"904","labels":["MONDO.Disease"]}}
+{"id":"205","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"Disease"},"start":{"id":"852","labels":["Protein"]},"end":{"id":"905","labels":["MONDO.Disease"]}}
+{"id":"206","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"Disease"},"start":{"id":"856","labels":["Protein"]},"end":{"id":"905","labels":["MONDO.Disease"]}}
+{"id":"207","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"Disease"},"start":{"id":"860","labels":["Protein"]},"end":{"id":"905","labels":["MONDO.Disease"]}}
+{"id":"208","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"Disease"},"start":{"id":"861","labels":["Protein"]},"end":{"id":"906","labels":["MONDO.Disease"]}}
+{"id":"209","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"Disease"},"start":{"id":"868","labels":["Protein"]},"end":{"id":"907","labels":["MONDO.Disease"]}}
+{"id":"210","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"Disease"},"start":{"id":"859","labels":["Protein"]},"end":{"id":"908","labels":["MONDO.Disease"]}}
+{"id":"211","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"Disease"},"start":{"id":"856","labels":["Protein"]},"end":{"id":"909","labels":["MONDO.Disease"]}}
+{"id":"212","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"Disease"},"start":{"id":"857","labels":["Protein"]},"end":{"id":"910","labels":["MONDO.Disease"]}}
+{"id":"213","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"Disease"},"start":{"id":"853","labels":["Protein"]},"end":{"id":"911","labels":["MONDO.Disease"]}}
+{"id":"214","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"Disease"},"start":{"id":"850","labels":["Protein"]},"end":{"id":"912","labels":["MONDO.Disease"]}}
+{"id":"215","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"Disease"},"start":{"id":"870","labels":["Protein"]},"end":{"id":"913","labels":["MONDO.Disease"]}}
+{"id":"216","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"Disease"},"start":{"id":"850","labels":["Protein"]},"end":{"id":"921","labels":["MONDO.Disease"]}}
+{"id":"217","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"Disease"},"start":{"id":"878","labels":["Protein"]},"end":{"id":"922","labels":["MONDO.Disease"]}}
+{"id":"218","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"Disease"},"start":{"id":"857","labels":["Protein"]},"end":{"id":"923","labels":["MONDO.Disease"]}}
+{"id":"219","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"Disease"},"start":{"id":"857","labels":["Protein"]},"end":{"id":"924","labels":["MONDO.Disease"]}}
+{"id":"220","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"Disease"},"start":{"id":"857","labels":["Protein"]},"end":{"id":"925","labels":["MONDO.Disease"]}}
+{"id":"221","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"Disease"},"start":{"id":"857","labels":["Protein"]},"end":{"id":"926","labels":["MONDO.Disease"]}}
+{"id":"222","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"Disease"},"start":{"id":"859","labels":["Protein"]},"end":{"id":"927","labels":["MONDO.Disease"]}}
+{"id":"223","type":"relationship","label":"Targets","properties":{"Edge_Type":"Drug"},"start":{"id":"928","labels":["Drug"]},"end":{"id":"872","labels":["Protein"]}}
+{"id":"224","type":"relationship","label":"Targets","properties":{"Edge_Type":"Drug"},"start":{"id":"928","labels":["Drug"]},"end":{"id":"880","labels":["Protein"]}}
+{"id":"225","type":"relationship","label":"Targets","properties":{"Edge_Type":"Drug"},"start":{"id":"928","labels":["Drug"]},"end":{"id":"874","labels":["Protein"]}}
+{"id":"226","type":"relationship","label":"Targets","properties":{"Edge_Type":"Drug"},"start":{"id":"928","labels":["Drug"]},"end":{"id":"870","labels":["Protein"]}}
+{"id":"227","type":"relationship","label":"Targets","properties":{"Edge_Type":"Drug"},"start":{"id":"928","labels":["Drug"]},"end":{"id":"875","labels":["Protein"]}}
+{"id":"228","type":"relationship","label":"Targets","properties":{"Edge_Type":"Drug"},"start":{"id":"928","labels":["Drug"]},"end":{"id":"873","labels":["Protein"]}}
+{"id":"229","type":"relationship","label":"Targets","properties":{"Edge_Type":"Chembl"},"start":{"id":"928","labels":["Drug"]},"end":{"id":"869","labels":["Protein"]}}
+{"id":"230","type":"relationship","label":"Targets","properties":{"Edge_Type":"Chembl"},"start":{"id":"928","labels":["Drug"]},"end":{"id":"871","labels":["Protein"]}}
+{"id":"231","type":"relationship","label":"Targets","properties":{"Edge_Type":"Chembl"},"start":{"id":"928","labels":["Drug"]},"end":{"id":"876","labels":["Protein"]}}
+{"id":"232","type":"relationship","label":"Targets","properties":{"Edge_Type":"Chembl"},"start":{"id":"928","labels":["Drug"]},"end":{"id":"877","labels":["Protein"]}}
+{"id":"233","type":"relationship","label":"Targets","properties":{"Edge_Type":"Chembl"},"start":{"id":"928","labels":["Drug"]},"end":{"id":"878","labels":["Protein"]}}
+{"id":"234","type":"relationship","label":"Targets","properties":{"Edge_Type":"Chembl"},"start":{"id":"928","labels":["Drug"]},"end":{"id":"879","labels":["Protein"]}}
+{"id":"235","type":"relationship","label":"Targets","properties":{"Edge_Type":"Drug"},"start":{"id":"929","labels":["Drug"]},"end":{"id":"872","labels":["Protein"]}}
+{"id":"236","type":"relationship","label":"Targets","properties":{"Edge_Type":"Drug"},"start":{"id":"929","labels":["Drug"]},"end":{"id":"874","labels":["Protein"]}}
+{"id":"237","type":"relationship","label":"Targets","properties":{"Edge_Type":"Drug"},"start":{"id":"930","labels":["Drug"]},"end":{"id":"870","labels":["Protein"]}}
+{"id":"238","type":"relationship","label":"Targets","properties":{"Edge_Type":"Drug"},"start":{"id":"930","labels":["Drug"]},"end":{"id":"875","labels":["Protein"]}}
+{"id":"239","type":"relationship","label":"Targets","properties":{"Edge_Type":"Drug"},"start":{"id":"931","labels":["Drug"]},"end":{"id":"872","labels":["Protein"]}}
+{"id":"240","type":"relationship","label":"Targets","properties":{"Edge_Type":"Drug"},"start":{"id":"931","labels":["Drug"]},"end":{"id":"870","labels":["Protein"]}}
+{"id":"241","type":"relationship","label":"Targets","properties":{"Edge_Type":"Drug"},"start":{"id":"932","labels":["Drug"]},"end":{"id":"872","labels":["Protein"]}}
+{"id":"242","type":"relationship","label":"Targets","properties":{"Edge_Type":"Drug"},"start":{"id":"932","labels":["Drug"]},"end":{"id":"870","labels":["Protein"]}}
+{"id":"243","type":"relationship","label":"Targets","properties":{"Edge_Type":"Drug"},"start":{"id":"933","labels":["Drug"]},"end":{"id":"874","labels":["Protein"]}}
+{"id":"244","type":"relationship","label":"Targets","properties":{"Edge_Type":"Drug"},"start":{"id":"934","labels":["Drug"]},"end":{"id":"861","labels":["Protein"]}}
+{"id":"245","type":"relationship","label":"Targets","properties":{"Edge_Type":"Drug"},"start":{"id":"935","labels":["Drug"]},"end":{"id":"852","labels":["Protein"]}}
+{"id":"246","type":"relationship","label":"Targets","properties":{"Edge_Type":"Drug"},"start":{"id":"936","labels":["Drug"]},"end":{"id":"854","labels":["Protein"]}}
+{"id":"247","type":"relationship","label":"Targets","properties":{"Edge_Type":"Drug"},"start":{"id":"937","labels":["Drug"]},"end":{"id":"854","labels":["Protein"]}}
+{"id":"248","type":"relationship","label":"Targets","properties":{"Edge_Type":"Drug"},"start":{"id":"938","labels":["Drug"]},"end":{"id":"852","labels":["Protein"]}}
+{"id":"249","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"Pathway"},"start":{"id":"850","labels":["Protein"]},"end":{"id":"995","labels":["REACT.Pathway"]}}
+{"id":"250","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"Pathway"},"start":{"id":"851","labels":["Protein"]},"end":{"id":"995","labels":["REACT.Pathway"]}}
+{"id":"251","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"Pathway"},"start":{"id":"868","labels":["Protein"]},"end":{"id":"996","labels":["REACT.Pathway"]}}
+{"id":"252","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"Pathway"},"start":{"id":"859","labels":["Protein"]},"end":{"id":"997","labels":["REACT.Pathway"]}}
+{"id":"253","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"Pathway"},"start":{"id":"869","labels":["Protein"]},"end":{"id":"1019","labels":["REACT.Pathway"]}}
+{"id":"254","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"Pathway"},"start":{"id":"857","labels":["Protein"]},"end":{"id":"1020","labels":["REACT.Pathway"]}}
+{"id":"255","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"Pathway"},"start":{"id":"868","labels":["Protein"]},"end":{"id":"1021","labels":["REACT.Pathway"]}}
+{"id":"256","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"Pathway"},"start":{"id":"870","labels":["Protein"]},"end":{"id":"1022","labels":["REACT.Pathway"]}}
+{"id":"257","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"Pathway"},"start":{"id":"857","labels":["Protein"]},"end":{"id":"1023","labels":["REACT.Pathway"]}}
+{"id":"258","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"Pathway"},"start":{"id":"850","labels":["Protein"]},"end":{"id":"1024","labels":["REACT.Pathway"]}}
+{"id":"259","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"Pathway"},"start":{"id":"851","labels":["Protein"]},"end":{"id":"1024","labels":["REACT.Pathway"]}}
+{"id":"260","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"Pathway"},"start":{"id":"854","labels":["Protein"]},"end":{"id":"1024","labels":["REACT.Pathway"]}}
+{"id":"261","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"Pathway"},"start":{"id":"850","labels":["Protein"]},"end":{"id":"1025","labels":["REACT.Pathway"]}}
+{"id":"262","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"Pathway"},"start":{"id":"851","labels":["Protein"]},"end":{"id":"1025","labels":["REACT.Pathway"]}}
+{"id":"263","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"Pathway"},"start":{"id":"852","labels":["Protein"]},"end":{"id":"1025","labels":["REACT.Pathway"]}}
+{"id":"264","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"Pathway"},"start":{"id":"850","labels":["Protein"]},"end":{"id":"1026","labels":["REACT.Pathway"]}}
+{"id":"265","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"Pathway"},"start":{"id":"851","labels":["Protein"]},"end":{"id":"1026","labels":["REACT.Pathway"]}}
+{"id":"266","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"Pathway"},"start":{"id":"869","labels":["Protein"]},"end":{"id":"1027","labels":["REACT.Pathway"]}}
+{"id":"267","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"Pathway"},"start":{"id":"871","labels":["Protein"]},"end":{"id":"1027","labels":["REACT.Pathway"]}}
+{"id":"268","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"Pathway"},"start":{"id":"850","labels":["Protein"]},"end":{"id":"1028","labels":["REACT.Pathway"]}}
+{"id":"269","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"Pathway"},"start":{"id":"851","labels":["Protein"]},"end":{"id":"1028","labels":["REACT.Pathway"]}}
+{"id":"270","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"Pathway"},"start":{"id":"858","labels":["Protein"]},"end":{"id":"1029","labels":["REACT.Pathway"]}}
+{"id":"271","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"Pathway"},"start":{"id":"863","labels":["Protein"]},"end":{"id":"1029","labels":["REACT.Pathway"]}}
+{"id":"272","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"Pathway"},"start":{"id":"853","labels":["Protein"]},"end":{"id":"1030","labels":["REACT.Pathway"]}}
+{"id":"273","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"Pathway"},"start":{"id":"858","labels":["Protein"]},"end":{"id":"1030","labels":["REACT.Pathway"]}}
+{"id":"274","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"Pathway"},"start":{"id":"863","labels":["Protein"]},"end":{"id":"1030","labels":["REACT.Pathway"]}}
+{"id":"275","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"Pathway"},"start":{"id":"858","labels":["Protein"]},"end":{"id":"1031","labels":["REACT.Pathway"]}}
+{"id":"276","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"Pathway"},"start":{"id":"863","labels":["Protein"]},"end":{"id":"1031","labels":["REACT.Pathway"]}}
+{"id":"277","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"Pathway"},"start":{"id":"850","labels":["Protein"]},"end":{"id":"1032","labels":["REACT.Pathway"]}}
+{"id":"278","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"Pathway"},"start":{"id":"851","labels":["Protein"]},"end":{"id":"1032","labels":["REACT.Pathway"]}}
+{"id":"279","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"Pathway"},"start":{"id":"850","labels":["Protein"]},"end":{"id":"1033","labels":["REACT.Pathway"]}}
+{"id":"280","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"Pathway"},"start":{"id":"851","labels":["Protein"]},"end":{"id":"1033","labels":["REACT.Pathway"]}}
+{"id":"281","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"Pathway"},"start":{"id":"850","labels":["Protein"]},"end":{"id":"1034","labels":["REACT.Pathway"]}}
+{"id":"282","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"Pathway"},"start":{"id":"851","labels":["Protein"]},"end":{"id":"1034","labels":["REACT.Pathway"]}}
+{"id":"283","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"Pathway"},"start":{"id":"852","labels":["Protein"]},"end":{"id":"1034","labels":["REACT.Pathway"]}}
+{"id":"284","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"Pathway"},"start":{"id":"850","labels":["Protein"]},"end":{"id":"1035","labels":["REACT.Pathway"]}}
+{"id":"285","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"Pathway"},"start":{"id":"851","labels":["Protein"]},"end":{"id":"1035","labels":["REACT.Pathway"]}}
+{"id":"286","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"Pathway"},"start":{"id":"852","labels":["Protein"]},"end":{"id":"1035","labels":["REACT.Pathway"]}}
+{"id":"287","type":"relationship","label":"Is_Associated_With","properties":{"Edge_Type":"HPO"},"start":{"id":"859","labels":["Protein"]},"end":{"id":"1036","labels":["HPO"]}}
+{"id":"288","type":"relationship","label":"Is_Associated_With","properties":{"Edge_Type":"HPO"},"start":{"id":"868","labels":["Protein"]},"end":{"id":"1036","labels":["HPO"]}}
+{"id":"289","type":"relationship","label":"Is_Associated_With","properties":{"Edge_Type":"HPO"},"start":{"id":"850","labels":["Protein"]},"end":{"id":"1037","labels":["HPO"]}}
+{"id":"290","type":"relationship","label":"Is_Associated_With","properties":{"Edge_Type":"HPO"},"start":{"id":"853","labels":["Protein"]},"end":{"id":"1037","labels":["HPO"]}}
+{"id":"291","type":"relationship","label":"Is_Associated_With","properties":{"Edge_Type":"HPO"},"start":{"id":"853","labels":["Protein"]},"end":{"id":"1038","labels":["HPO"]}}
+{"id":"292","type":"relationship","label":"Is_Associated_With","properties":{"Edge_Type":"HPO"},"start":{"id":"854","labels":["Protein"]},"end":{"id":"1038","labels":["HPO"]}}
+{"id":"293","type":"relationship","label":"Is_Associated_With","properties":{"Edge_Type":"HPO"},"start":{"id":"859","labels":["Protein"]},"end":{"id":"1038","labels":["HPO"]}}
+{"id":"294","type":"relationship","label":"Is_Associated_With","properties":{"Edge_Type":"HPO"},"start":{"id":"860","labels":["Protein"]},"end":{"id":"1038","labels":["HPO"]}}
+{"id":"295","type":"relationship","label":"Is_Associated_With","properties":{"Edge_Type":"HPO"},"start":{"id":"850","labels":["Protein"]},"end":{"id":"1039","labels":["HPO"]}}
+{"id":"296","type":"relationship","label":"Is_Associated_With","properties":{"Edge_Type":"HPO"},"start":{"id":"851","labels":["Protein"]},"end":{"id":"1039","labels":["HPO"]}}
+{"id":"297","type":"relationship","label":"Is_Associated_With","properties":{"Edge_Type":"HPO"},"start":{"id":"866","labels":["Protein"]},"end":{"id":"1039","labels":["HPO"]}}
+{"id":"298","type":"relationship","label":"Is_Associated_With","properties":{"Edge_Type":"HPO"},"start":{"id":"850","labels":["Protein"]},"end":{"id":"1040","labels":["HPO"]}}
+{"id":"299","type":"relationship","label":"Is_Associated_With","properties":{"Edge_Type":"HPO"},"start":{"id":"851","labels":["Protein"]},"end":{"id":"1040","labels":["HPO"]}}
+{"id":"300","type":"relationship","label":"Is_Associated_With","properties":{"Edge_Type":"HPO"},"start":{"id":"866","labels":["Protein"]},"end":{"id":"1040","labels":["HPO"]}}
+{"id":"301","type":"relationship","label":"Is_Associated_With","properties":{"Edge_Type":"HPO"},"start":{"id":"850","labels":["Protein"]},"end":{"id":"1041","labels":["HPO"]}}
+{"id":"302","type":"relationship","label":"Is_Associated_With","properties":{"Edge_Type":"HPO"},"start":{"id":"851","labels":["Protein"]},"end":{"id":"1041","labels":["HPO"]}}
+{"id":"303","type":"relationship","label":"Is_Associated_With","properties":{"Edge_Type":"HPO"},"start":{"id":"850","labels":["Protein"]},"end":{"id":"1042","labels":["HPO"]}}
+{"id":"304","type":"relationship","label":"Is_Associated_With","properties":{"Edge_Type":"HPO"},"start":{"id":"851","labels":["Protein"]},"end":{"id":"1042","labels":["HPO"]}}
+{"id":"305","type":"relationship","label":"Is_Associated_With","properties":{"Edge_Type":"HPO"},"start":{"id":"852","labels":["Protein"]},"end":{"id":"1043","labels":["HPO"]}}
+{"id":"306","type":"relationship","label":"Is_Associated_With","properties":{"Edge_Type":"HPO"},"start":{"id":"853","labels":["Protein"]},"end":{"id":"1043","labels":["HPO"]}}
+{"id":"307","type":"relationship","label":"Is_Associated_With","properties":{"Edge_Type":"HPO"},"start":{"id":"859","labels":["Protein"]},"end":{"id":"1043","labels":["HPO"]}}
+{"id":"308","type":"relationship","label":"Is_Associated_With","properties":{"Edge_Type":"HPO"},"start":{"id":"862","labels":["Protein"]},"end":{"id":"1043","labels":["HPO"]}}
+{"id":"309","type":"relationship","label":"Is_Associated_With","properties":{"Edge_Type":"HPO"},"start":{"id":"863","labels":["Protein"]},"end":{"id":"1043","labels":["HPO"]}}
+{"id":"310","type":"relationship","label":"Is_Associated_With","properties":{"Edge_Type":"HPO"},"start":{"id":"853","labels":["Protein"]},"end":{"id":"1044","labels":["HPO"]}}
+{"id":"311","type":"relationship","label":"Is_Associated_With","properties":{"Edge_Type":"HPO"},"start":{"id":"854","labels":["Protein"]},"end":{"id":"1044","labels":["HPO"]}}
+{"id":"312","type":"relationship","label":"Is_Associated_With","properties":{"Edge_Type":"HPO"},"start":{"id":"859","labels":["Protein"]},"end":{"id":"1044","labels":["HPO"]}}
+{"id":"313","type":"relationship","label":"Is_Associated_With","properties":{"Edge_Type":"HPO"},"start":{"id":"860","labels":["Protein"]},"end":{"id":"1044","labels":["HPO"]}}
+{"id":"314","type":"relationship","label":"Is_Associated_With","properties":{"Edge_Type":"HPO"},"start":{"id":"851","labels":["Protein"]},"end":{"id":"1045","labels":["HPO"]}}
+{"id":"315","type":"relationship","label":"Is_Associated_With","properties":{"Edge_Type":"HPO"},"start":{"id":"852","labels":["Protein"]},"end":{"id":"1045","labels":["HPO"]}}
+{"id":"316","type":"relationship","label":"Is_Associated_With","properties":{"Edge_Type":"HPO"},"start":{"id":"853","labels":["Protein"]},"end":{"id":"1045","labels":["HPO"]}}
+{"id":"317","type":"relationship","label":"Is_Associated_With","properties":{"Edge_Type":"HPO"},"start":{"id":"859","labels":["Protein"]},"end":{"id":"1045","labels":["HPO"]}}
+{"id":"318","type":"relationship","label":"Is_Associated_With","properties":{"Edge_Type":"HPO"},"start":{"id":"862","labels":["Protein"]},"end":{"id":"1045","labels":["HPO"]}}
+{"id":"319","type":"relationship","label":"Is_Associated_With","properties":{"Edge_Type":"HPO"},"start":{"id":"856","labels":["Protein"]},"end":{"id":"1046","labels":["HPO"]}}
+{"id":"320","type":"relationship","label":"Is_Associated_With","properties":{"Edge_Type":"HPO"},"start":{"id":"857","labels":["Protein"]},"end":{"id":"1046","labels":["HPO"]}}
+{"id":"321","type":"relationship","label":"Is_Associated_With","properties":{"Edge_Type":"HPO"},"start":{"id":"860","labels":["Protein"]},"end":{"id":"1046","labels":["HPO"]}}
+{"id":"322","type":"relationship","label":"Is_Associated_With","properties":{"Edge_Type":"HPO"},"start":{"id":"853","labels":["Protein"]},"end":{"id":"1047","labels":["HPO"]}}
+{"id":"323","type":"relationship","label":"Is_Associated_With","properties":{"Edge_Type":"HPO"},"start":{"id":"853","labels":["Protein"]},"end":{"id":"1048","labels":["HPO"]}}
+{"id":"324","type":"relationship","label":"Is_Associated_With","properties":{"Edge_Type":"HPO"},"start":{"id":"859","labels":["Protein"]},"end":{"id":"1048","labels":["HPO"]}}
+{"id":"325","type":"relationship","label":"Is_Associated_With","properties":{"Edge_Type":"HPO"},"start":{"id":"860","labels":["Protein"]},"end":{"id":"1048","labels":["HPO"]}}
+{"id":"326","type":"relationship","label":"Is_Associated_With","properties":{"Edge_Type":"HPO"},"start":{"id":"862","labels":["Protein"]},"end":{"id":"1048","labels":["HPO"]}}
+{"id":"327","type":"relationship","label":"Is_Associated_With","properties":{"Edge_Type":"HPO"},"start":{"id":"850","labels":["Protein"]},"end":{"id":"1049","labels":["HPO"]}}
+{"id":"328","type":"relationship","label":"Is_Associated_With","properties":{"Edge_Type":"HPO"},"start":{"id":"857","labels":["Protein"]},"end":{"id":"1050","labels":["HPO"]}}
+{"id":"329","type":"relationship","label":"Is_Associated_With","properties":{"Edge_Type":"HPO"},"start":{"id":"853","labels":["Protein"]},"end":{"id":"1051","labels":["HPO"]}}
+{"id":"330","type":"relationship","label":"Is_Associated_With","properties":{"Edge_Type":"HPO"},"start":{"id":"853","labels":["Protein"]},"end":{"id":"1052","labels":["HPO"]}}
+{"id":"331","type":"relationship","label":"Is_Associated_With","properties":{"Edge_Type":"HPO"},"start":{"id":"876","labels":["Protein"]},"end":{"id":"1053","labels":["HPO"]}}
+{"id":"332","type":"relationship","label":"Is_Associated_With","properties":{"Edge_Type":"HPO"},"start":{"id":"857","labels":["Protein"]},"end":{"id":"1054","labels":["HPO"]}}
+{"id":"333","type":"relationship","label":"Is_Associated_With","properties":{"Edge_Type":"HPO"},"start":{"id":"857","labels":["Protein"]},"end":{"id":"1055","labels":["HPO"]}}
+{"id":"334","type":"relationship","label":"Targets","properties":{"Edge_Type":"drugChembl"},"start":{"id":"1056","labels":["Drug"]},"end":{"id":"854","labels":["Protein"]}}
+{"id":"335","type":"relationship","label":"Targets","properties":{"Edge_Type":"drugChembl"},"start":{"id":"1057","labels":["Drug"]},"end":{"id":"854","labels":["Protein"]}}
+{"id":"336","type":"relationship","label":"Targets","properties":{"Edge_Type":"Chembl"},"start":{"id":"1058","labels":["Compound"]},"end":{"id":"876","labels":["Protein"]}}
+{"id":"337","type":"relationship","label":"Targets","properties":{"Edge_Type":"Chembl"},"start":{"id":"1058","labels":["Compound"]},"end":{"id":"878","labels":["Protein"]}}
+{"id":"338","type":"relationship","label":"Targets","properties":{"Edge_Type":"Chembl"},"start":{"id":"1059","labels":["Compound"]},"end":{"id":"876","labels":["Protein"]}}
+{"id":"339","type":"relationship","label":"Targets","properties":{"Edge_Type":"Chembl"},"start":{"id":"1059","labels":["Compound"]},"end":{"id":"878","labels":["Protein"]}}
+{"id":"340","type":"relationship","label":"Targets","properties":{"Edge_Type":"Chembl"},"start":{"id":"1060","labels":["Compound"]},"end":{"id":"876","labels":["Protein"]}}
+{"id":"341","type":"relationship","label":"Targets","properties":{"Edge_Type":"Chembl"},"start":{"id":"1060","labels":["Compound"]},"end":{"id":"878","labels":["Protein"]}}
+{"id":"342","type":"relationship","label":"Targets","properties":{"Edge_Type":"Chembl"},"start":{"id":"1061","labels":["Compound"]},"end":{"id":"872","labels":["Protein"]}}
+{"id":"343","type":"relationship","label":"Targets","properties":{"Edge_Type":"Chembl"},"start":{"id":"1062","labels":["Compound"]},"end":{"id":"872","labels":["Protein"]}}
+{"id":"344","type":"relationship","label":"Targets","properties":{"Edge_Type":"Chembl"},"start":{"id":"1063","labels":["Compound"]},"end":{"id":"861","labels":["Protein"]}}
+{"id":"345","type":"relationship","label":"Targets","properties":{"Edge_Type":"Chembl"},"start":{"id":"1064","labels":["Compound"]},"end":{"id":"854","labels":["Protein"]}}
+{"id":"346","type":"relationship","label":"Targets","properties":{"Edge_Type":"Chembl"},"start":{"id":"1065","labels":["Compound"]},"end":{"id":"861","labels":["Protein"]}}
+{"id":"347","type":"relationship","label":"Targets","properties":{"Edge_Type":"Chembl"},"start":{"id":"1066","labels":["Compound"]},"end":{"id":"854","labels":["Protein"]}}
+{"id":"348","type":"relationship","label":"Targets","properties":{"Edge_Type":"Chembl"},"start":{"id":"1067","labels":["Compound"]},"end":{"id":"870","labels":["Protein"]}}
+{"id":"349","type":"relationship","label":"Targets","properties":{"Edge_Type":"Chembl"},"start":{"id":"1075","labels":["Compound"]},"end":{"id":"854","labels":["Protein"]}}
+{"id":"350","type":"relationship","label":"Targets","properties":{"Edge_Type":"Chembl"},"start":{"id":"1076","labels":["Compound"]},"end":{"id":"854","labels":["Protein"]}}
+{"id":"351","type":"relationship","label":"Targets","properties":{"Edge_Type":"Chembl"},"start":{"id":"1077","labels":["Compound"]},"end":{"id":"854","labels":["Protein"]}}
+{"id":"352","type":"relationship","label":"Targets","properties":{"Edge_Type":"Chembl"},"start":{"id":"1078","labels":["Compound"]},"end":{"id":"872","labels":["Protein"]}}
+{"id":"353","type":"relationship","label":"Targets","properties":{"Edge_Type":"Chembl"},"start":{"id":"1079","labels":["Compound"]},"end":{"id":"872","labels":["Protein"]}}
+{"id":"354","type":"relationship","label":"Targets","properties":{"Edge_Type":"Chembl"},"start":{"id":"1080","labels":["Compound"]},"end":{"id":"872","labels":["Protein"]}}
+{"id":"355","type":"relationship","label":"Targets","properties":{"Edge_Type":"Chembl"},"start":{"id":"1081","labels":["Compound"]},"end":{"id":"878","labels":["Protein"]}}
+{"id":"356","type":"relationship","label":"Targets","properties":{"Edge_Type":"Chembl"},"start":{"id":"1089","labels":["Compound"]},"end":{"id":"854","labels":["Protein"]}}
+{"id":"357","type":"relationship","label":"Targets","properties":{"Edge_Type":"Chembl"},"start":{"id":"1090","labels":["Compound"]},"end":{"id":"854","labels":["Protein"]}}
+{"id":"358","type":"relationship","label":"Targets","properties":{"Edge_Type":"Chembl"},"start":{"id":"1091","labels":["Compound"]},"end":{"id":"872","labels":["Protein"]}}
+{"id":"359","type":"relationship","label":"Targets","properties":{"Edge_Type":"Prediction"},"start":{"id":"1092","labels":["Compound"]},"end":{"id":"874","labels":["Protein"]}}
+{"id":"360","type":"relationship","label":"Targets","properties":{"Edge_Type":"Prediction"},"start":{"id":"1093","labels":["Compound"]},"end":{"id":"874","labels":["Protein"]}}
+{"id":"361","type":"relationship","label":"Targets","properties":{"Edge_Type":"Prediction"},"start":{"id":"1094","labels":["Compound"]},"end":{"id":"874","labels":["Protein"]}}
+{"id":"362","type":"relationship","label":"Targets","properties":{"Edge_Type":"Prediction"},"start":{"id":"1095","labels":["Compound"]},"end":{"id":"874","labels":["Protein"]}}
+{"id":"363","type":"relationship","label":"Targets","properties":{"Edge_Type":"Prediction"},"start":{"id":"1131","labels":["Compound"]},"end":{"id":"874","labels":["Protein"]}}
+{"id":"364","type":"relationship","label":"Targets","properties":{"Edge_Type":"Prediction"},"start":{"id":"1132","labels":["Compound"]},"end":{"id":"874","labels":["Protein"]}}
+{"id":"365","type":"relationship","label":"Targets","properties":{"Edge_Type":"Prediction"},"start":{"id":"1133","labels":["Compound"]},"end":{"id":"874","labels":["Protein"]}}
+{"id":"366","type":"relationship","label":"Targets","properties":{"Edge_Type":"Prediction"},"start":{"id":"1134","labels":["Compound"]},"end":{"id":"874","labels":["Protein"]}}
+{"id":"367","type":"relationship","label":"Targets","properties":{"Edge_Type":"Prediction"},"start":{"id":"1135","labels":["Compound"]},"end":{"id":"874","labels":["Protein"]}}
+{"id":"368","type":"relationship","label":"Targets","properties":{"Edge_Type":"Prediction"},"start":{"id":"1136","labels":["Compound"]},"end":{"id":"874","labels":["Protein"]}}
+{"id":"369","type":"relationship","label":"Targets","properties":{"Edge_Type":"Prediction"},"start":{"id":"1137","labels":["Compound"]},"end":{"id":"874","labels":["Protein"]}}
+{"id":"370","type":"relationship","label":"Targets","properties":{"Edge_Type":"Prediction"},"start":{"id":"1138","labels":["Compound"]},"end":{"id":"874","labels":["Protein"]}}
+{"id":"371","type":"relationship","label":"Targets","properties":{"Edge_Type":"Prediction"},"start":{"id":"1139","labels":["Compound"]},"end":{"id":"874","labels":["Protein"]}}
+{"id":"372","type":"relationship","label":"Targets","properties":{"Edge_Type":"Prediction"},"start":{"id":"1140","labels":["Compound"]},"end":{"id":"852","labels":["Protein"]}}
+{"id":"373","type":"relationship","label":"Targets","properties":{"Edge_Type":"Prediction"},"start":{"id":"1141","labels":["Compound"]},"end":{"id":"874","labels":["Protein"]}}
+{"id":"397","type":"relationship","label":"Targets","properties":{"Edge_Type":"predictionChembl"},"start":{"id":"1142","labels":["Compound"]},"end":{"id":"869","labels":["Protein"]}}
+{"id":"398","type":"relationship","label":"Targets","properties":{"Edge_Type":"Prediction"},"start":{"id":"1142","labels":["Compound"]},"end":{"id":"874","labels":["Protein"]}}
+{"id":"399","type":"relationship","label":"Targets","properties":{"Edge_Type":"Prediction"},"start":{"id":"1143","labels":["Compound"]},"end":{"id":"874","labels":["Protein"]}}
+{"id":"400","type":"relationship","label":"Targets","properties":{"Edge_Type":"Prediction"},"start":{"id":"1144","labels":["Compound"]},"end":{"id":"874","labels":["Protein"]}}
+{"id":"401","type":"relationship","label":"Targets","properties":{"Edge_Type":"Prediction"},"start":{"id":"1145","labels":["Compound"]},"end":{"id":"874","labels":["Protein"]}}
+{"id":"402","type":"relationship","label":"Targets","properties":{"Edge_Type":"Prediction"},"start":{"id":"1146","labels":["Compound"]},"end":{"id":"874","labels":["Protein"]}}
+{"id":"403","type":"relationship","label":"Indicates","properties":{"Edge_Type":"kegg_dis_drug"},"start":{"id":"1167","labels":["MONDO.Disease"]},"end":{"id":"985","labels":["Drug"]}}
+{"id":"404","type":"relationship","label":"Indicates","properties":{"Edge_Type":"kegg_dis_drug"},"start":{"id":"1167","labels":["MONDO.Disease"]},"end":{"id":"977","labels":["Drug"]}}
+{"id":"405","type":"relationship","label":"Indicates","properties":{"Edge_Type":"kegg_dis_drug"},"start":{"id":"1167","labels":["MONDO.Disease"]},"end":{"id":"979","labels":["Drug"]}}
+{"id":"406","type":"relationship","label":"Indicates","properties":{"Edge_Type":"kegg_dis_drug"},"start":{"id":"1167","labels":["MONDO.Disease"]},"end":{"id":"984","labels":["Drug"]}}
+{"id":"407","type":"relationship","label":"Indicates","properties":{"Edge_Type":"kegg_dis_drug"},"start":{"id":"1167","labels":["MONDO.Disease"]},"end":{"id":"987","labels":["Drug"]}}
+{"id":"408","type":"relationship","label":"Indicates","properties":{"Edge_Type":"kegg_dis_drug"},"start":{"id":"1167","labels":["MONDO.Disease"]},"end":{"id":"994","labels":["Drug"]}}
+{"id":"409","type":"relationship","label":"Indicates","properties":{"Edge_Type":"kegg_dis_drug"},"start":{"id":"1167","labels":["MONDO.Disease"]},"end":{"id":"941","labels":["Drug"]}}
+{"id":"410","type":"relationship","label":"Indicates","properties":{"Edge_Type":"kegg_dis_drug"},"start":{"id":"1167","labels":["MONDO.Disease"]},"end":{"id":"940","labels":["Drug"]}}
+{"id":"411","type":"relationship","label":"Indicates","properties":{"Edge_Type":"kegg_dis_drug"},"start":{"id":"1167","labels":["MONDO.Disease"]},"end":{"id":"980","labels":["Drug"]}}
+{"id":"412","type":"relationship","label":"Indicates","properties":{"Edge_Type":"kegg_dis_drug"},"start":{"id":"1167","labels":["MONDO.Disease"]},"end":{"id":"983","labels":["Drug"]}}
+{"id":"413","type":"relationship","label":"Indicates","properties":{"Edge_Type":"kegg_dis_drug"},"start":{"id":"1167","labels":["MONDO.Disease"]},"end":{"id":"993","labels":["Drug"]}}
+{"id":"414","type":"relationship","label":"Indicates","properties":{"Edge_Type":"kegg_dis_drug"},"start":{"id":"1167","labels":["MONDO.Disease"]},"end":{"id":"981","labels":["Drug"]}}
+{"id":"415","type":"relationship","label":"Indicates","properties":{"Edge_Type":"kegg_dis_drug"},"start":{"id":"1167","labels":["MONDO.Disease"]},"end":{"id":"939","labels":["Drug"]}}
+{"id":"416","type":"relationship","label":"Indicates","properties":{"Edge_Type":"kegg_dis_drug"},"start":{"id":"1167","labels":["MONDO.Disease"]},"end":{"id":"990","labels":["Drug"]}}
+{"id":"417","type":"relationship","label":"Indicates","properties":{"Edge_Type":"kegg_dis_drug"},"start":{"id":"1167","labels":["MONDO.Disease"]},"end":{"id":"988","labels":["Drug"]}}
+{"id":"418","type":"relationship","label":"Indicates","properties":{"Edge_Type":"kegg_dis_drug"},"start":{"id":"1167","labels":["MONDO.Disease"]},"end":{"id":"978","labels":["Drug"]}}
+{"id":"419","type":"relationship","label":"Indicates","properties":{"Edge_Type":"kegg_dis_drug"},"start":{"id":"1167","labels":["MONDO.Disease"]},"end":{"id":"986","labels":["Drug"]}}
+{"id":"471","type":"relationship","label":"Indicates","properties":{"Edge_Type":"kegg_dis_drug"},"start":{"id":"1167","labels":["MONDO.Disease"]},"end":{"id":"991","labels":["Drug"]}}
+{"id":"472","type":"relationship","label":"Indicates","properties":{"Edge_Type":"kegg_dis_drug"},"start":{"id":"1167","labels":["MONDO.Disease"]},"end":{"id":"982","labels":["Drug"]}}
+{"id":"473","type":"relationship","label":"Indicates","properties":{"Edge_Type":"kegg_dis_drug"},"start":{"id":"1167","labels":["MONDO.Disease"]},"end":{"id":"989","labels":["Drug"]}}
+{"id":"474","type":"relationship","label":"Indicates","properties":{"Edge_Type":"kegg_dis_drug"},"start":{"id":"1167","labels":["MONDO.Disease"]},"end":{"id":"992","labels":["Drug"]}}
+{"id":"475","type":"relationship","label":"Indicates","properties":{"Edge_Type":"kegg_dis_drug"},"start":{"id":"1167","labels":["MONDO.Disease"]},"end":{"id":"938","labels":["Drug"]}}
+{"id":"476","type":"relationship","label":"Indicates","properties":{"Edge_Type":"kegg_dis_drug"},"start":{"id":"1168","labels":["MONDO.Disease"]},"end":{"id":"977","labels":["Drug"]}}
+{"id":"477","type":"relationship","label":"Indicates","properties":{"Edge_Type":"kegg_dis_drug"},"start":{"id":"1168","labels":["MONDO.Disease"]},"end":{"id":"984","labels":["Drug"]}}
+{"id":"478","type":"relationship","label":"Indicates","properties":{"Edge_Type":"kegg_dis_drug"},"start":{"id":"1168","labels":["MONDO.Disease"]},"end":{"id":"987","labels":["Drug"]}}
+{"id":"479","type":"relationship","label":"Indicates","properties":{"Edge_Type":"kegg_dis_drug"},"start":{"id":"1168","labels":["MONDO.Disease"]},"end":{"id":"980","labels":["Drug"]}}
+{"id":"480","type":"relationship","label":"Indicates","properties":{"Edge_Type":"kegg_dis_drug"},"start":{"id":"1168","labels":["MONDO.Disease"]},"end":{"id":"939","labels":["Drug"]}}
+{"id":"481","type":"relationship","label":"Indicates","properties":{"Edge_Type":"kegg_dis_drug"},"start":{"id":"1168","labels":["MONDO.Disease"]},"end":{"id":"986","labels":["Drug"]}}
+{"id":"482","type":"relationship","label":"Indicates","properties":{"Edge_Type":"kegg_dis_drug"},"start":{"id":"1174","labels":["MONDO.Disease"]},"end":{"id":"977","labels":["Drug"]}}
+{"id":"483","type":"relationship","label":"Indicates","properties":{"Edge_Type":"kegg_dis_drug"},"start":{"id":"1174","labels":["MONDO.Disease"]},"end":{"id":"979","labels":["Drug"]}}
+{"id":"484","type":"relationship","label":"Indicates","properties":{"Edge_Type":"kegg_dis_drug"},"start":{"id":"1174","labels":["MONDO.Disease"]},"end":{"id":"987","labels":["Drug"]}}
+{"id":"485","type":"relationship","label":"Indicates","properties":{"Edge_Type":"kegg_dis_drug"},"start":{"id":"1174","labels":["MONDO.Disease"]},"end":{"id":"941","labels":["Drug"]}}
+{"id":"486","type":"relationship","label":"Indicates","properties":{"Edge_Type":"kegg_dis_drug"},"start":{"id":"1174","labels":["MONDO.Disease"]},"end":{"id":"980","labels":["Drug"]}}
+{"id":"487","type":"relationship","label":"Indicates","properties":{"Edge_Type":"kegg_dis_drug"},"start":{"id":"1174","labels":["MONDO.Disease"]},"end":{"id":"983","labels":["Drug"]}}
+{"id":"488","type":"relationship","label":"Indicates","properties":{"Edge_Type":"kegg_dis_drug"},"start":{"id":"1174","labels":["MONDO.Disease"]},"end":{"id":"986","labels":["Drug"]}}
+{"id":"489","type":"relationship","label":"Indicates","properties":{"Edge_Type":"kegg_dis_drug"},"start":{"id":"1177","labels":["MONDO.Disease"]},"end":{"id":"986","labels":["Drug"]}}
+{"id":"490","type":"relationship","label":"Indicates","properties":{"Edge_Type":"kegg_dis_drug"},"start":{"id":"1178","labels":["MONDO.Disease"]},"end":{"id":"979","labels":["Drug"]}}
+{"id":"491","type":"relationship","label":"Indicates","properties":{"Edge_Type":"kegg_dis_drug"},"start":{"id":"1178","labels":["MONDO.Disease"]},"end":{"id":"984","labels":["Drug"]}}
+{"id":"492","type":"relationship","label":"Indicates","properties":{"Edge_Type":"kegg_dis_drug"},"start":{"id":"1178","labels":["MONDO.Disease"]},"end":{"id":"940","labels":["Drug"]}}
+{"id":"493","type":"relationship","label":"Indicates","properties":{"Edge_Type":"kegg_dis_drug"},"start":{"id":"1178","labels":["MONDO.Disease"]},"end":{"id":"980","labels":["Drug"]}}
+{"id":"494","type":"relationship","label":"Indicates","properties":{"Edge_Type":"kegg_dis_drug"},"start":{"id":"1178","labels":["MONDO.Disease"]},"end":{"id":"983","labels":["Drug"]}}
+{"id":"495","type":"relationship","label":"Indicates","properties":{"Edge_Type":"kegg_dis_drug"},"start":{"id":"1178","labels":["MONDO.Disease"]},"end":{"id":"993","labels":["Drug"]}}
+{"id":"496","type":"relationship","label":"Indicates","properties":{"Edge_Type":"kegg_dis_drug"},"start":{"id":"1178","labels":["MONDO.Disease"]},"end":{"id":"939","labels":["Drug"]}}
+{"id":"497","type":"relationship","label":"Indicates","properties":{"Edge_Type":"kegg_dis_drug"},"start":{"id":"1178","labels":["MONDO.Disease"]},"end":{"id":"988","labels":["Drug"]}}
+{"id":"498","type":"relationship","label":"Indicates","properties":{"Edge_Type":"kegg_dis_drug"},"start":{"id":"1178","labels":["MONDO.Disease"]},"end":{"id":"978","labels":["Drug"]}}
+{"id":"499","type":"relationship","label":"Indicates","properties":{"Edge_Type":"kegg_dis_drug"},"start":{"id":"1178","labels":["MONDO.Disease"]},"end":{"id":"986","labels":["Drug"]}}
+{"id":"500","type":"relationship","label":"Modulates","properties":{"Edge_Type":"kegg_dis_path"},"start":{"id":"1202","labels":["MONDO.Disease"]},"end":{"id":"1147","labels":["REACT.Pathway"]}}
+{"id":"501","type":"relationship","label":"Modulates","properties":{"Edge_Type":"kegg_dis_path"},"start":{"id":"1202","labels":["MONDO.Disease"]},"end":{"id":"1149","labels":["REACT.Pathway"]}}
+{"id":"502","type":"relationship","label":"Modulates","properties":{"Edge_Type":"kegg_dis_path"},"start":{"id":"1204","labels":["MONDO.Disease"]},"end":{"id":"1154","labels":["REACT.Pathway"]}}
+{"id":"503","type":"relationship","label":"Indicates","properties":{"Edge_Type":"kegg_dis_drug"},"start":{"id":"1205","labels":["MONDO.Disease"]},"end":{"id":"980","labels":["Drug"]}}
+{"id":"504","type":"relationship","label":"Indicates","properties":{"Edge_Type":"kegg_dis_drug"},"start":{"id":"1205","labels":["MONDO.Disease"]},"end":{"id":"983","labels":["Drug"]}}
+{"id":"505","type":"relationship","label":"Indicates","properties":{"Edge_Type":"kegg_dis_drug"},"start":{"id":"1205","labels":["MONDO.Disease"]},"end":{"id":"990","labels":["Drug"]}}
+{"id":"506","type":"relationship","label":"Indicates","properties":{"Edge_Type":"kegg_dis_drug"},"start":{"id":"1205","labels":["MONDO.Disease"]},"end":{"id":"991","labels":["Drug"]}}
+{"id":"507","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"852","labels":["Protein"]},"end":{"id":"1147","labels":["REACT.Pathway"]}}
+{"id":"508","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"854","labels":["Protein"]},"end":{"id":"1147","labels":["REACT.Pathway"]}}
+{"id":"509","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"856","labels":["Protein"]},"end":{"id":"1147","labels":["REACT.Pathway"]}}
+{"id":"510","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"860","labels":["Protein"]},"end":{"id":"1147","labels":["REACT.Pathway"]}}
+{"id":"511","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"861","labels":["Protein"]},"end":{"id":"1147","labels":["REACT.Pathway"]}}
+{"id":"512","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"892","labels":["Protein"]},"end":{"id":"1147","labels":["REACT.Pathway"]}}
+{"id":"513","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"850","labels":["Protein"]},"end":{"id":"1148","labels":["REACT.Pathway"]}}
+{"id":"514","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"851","labels":["Protein"]},"end":{"id":"1148","labels":["REACT.Pathway"]}}
+{"id":"515","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"854","labels":["Protein"]},"end":{"id":"1148","labels":["REACT.Pathway"]}}
+{"id":"516","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"856","labels":["Protein"]},"end":{"id":"1148","labels":["REACT.Pathway"]}}
+{"id":"517","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"857","labels":["Protein"]},"end":{"id":"1148","labels":["REACT.Pathway"]}}
+{"id":"518","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"860","labels":["Protein"]},"end":{"id":"1148","labels":["REACT.Pathway"]}}
+{"id":"519","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"870","labels":["Protein"]},"end":{"id":"1148","labels":["REACT.Pathway"]}}
+{"id":"520","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"872","labels":["Protein"]},"end":{"id":"1148","labels":["REACT.Pathway"]}}
+{"id":"521","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"850","labels":["Protein"]},"end":{"id":"1149","labels":["REACT.Pathway"]}}
+{"id":"765","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"851","labels":["Protein"]},"end":{"id":"1149","labels":["REACT.Pathway"]}}
+{"id":"766","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"860","labels":["Protein"]},"end":{"id":"1149","labels":["REACT.Pathway"]}}
+{"id":"767","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"870","labels":["Protein"]},"end":{"id":"1149","labels":["REACT.Pathway"]}}
+{"id":"768","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"892","labels":["Protein"]},"end":{"id":"1149","labels":["REACT.Pathway"]}}
+{"id":"769","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"850","labels":["Protein"]},"end":{"id":"1150","labels":["REACT.Pathway"]}}
+{"id":"770","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"851","labels":["Protein"]},"end":{"id":"1150","labels":["REACT.Pathway"]}}
+{"id":"771","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"853","labels":["Protein"]},"end":{"id":"1150","labels":["REACT.Pathway"]}}
+{"id":"772","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"858","labels":["Protein"]},"end":{"id":"1150","labels":["REACT.Pathway"]}}
+{"id":"773","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"861","labels":["Protein"]},"end":{"id":"1150","labels":["REACT.Pathway"]}}
+{"id":"774","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"870","labels":["Protein"]},"end":{"id":"1150","labels":["REACT.Pathway"]}}
+{"id":"775","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"850","labels":["Protein"]},"end":{"id":"1151","labels":["REACT.Pathway"]}}
+{"id":"776","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"851","labels":["Protein"]},"end":{"id":"1151","labels":["REACT.Pathway"]}}
+{"id":"777","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"856","labels":["Protein"]},"end":{"id":"1151","labels":["REACT.Pathway"]}}
+{"id":"778","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"861","labels":["Protein"]},"end":{"id":"1151","labels":["REACT.Pathway"]}}
+{"id":"779","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"870","labels":["Protein"]},"end":{"id":"1151","labels":["REACT.Pathway"]}}
+{"id":"780","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"850","labels":["Protein"]},"end":{"id":"1152","labels":["REACT.Pathway"]}}
+{"id":"781","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"851","labels":["Protein"]},"end":{"id":"1152","labels":["REACT.Pathway"]}}
+{"id":"782","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"870","labels":["Protein"]},"end":{"id":"1152","labels":["REACT.Pathway"]}}
+{"id":"783","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"850","labels":["Protein"]},"end":{"id":"1153","labels":["REACT.Pathway"]}}
+{"id":"784","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"851","labels":["Protein"]},"end":{"id":"1153","labels":["REACT.Pathway"]}}
+{"id":"785","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"865","labels":["Protein"]},"end":{"id":"1153","labels":["REACT.Pathway"]}}
+{"id":"786","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"870","labels":["Protein"]},"end":{"id":"1153","labels":["REACT.Pathway"]}}
+{"id":"787","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"850","labels":["Protein"]},"end":{"id":"1154","labels":["REACT.Pathway"]}}
+{"id":"788","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"851","labels":["Protein"]},"end":{"id":"1154","labels":["REACT.Pathway"]}}
+{"id":"789","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"853","labels":["Protein"]},"end":{"id":"1154","labels":["REACT.Pathway"]}}
+{"id":"790","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"870","labels":["Protein"]},"end":{"id":"1154","labels":["REACT.Pathway"]}}
+{"id":"791","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"870","labels":["Protein"]},"end":{"id":"1155","labels":["REACT.Pathway"]}}
+{"id":"792","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"850","labels":["Protein"]},"end":{"id":"1156","labels":["REACT.Pathway"]}}
+{"id":"793","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"851","labels":["Protein"]},"end":{"id":"1156","labels":["REACT.Pathway"]}}
+{"id":"794","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"857","labels":["Protein"]},"end":{"id":"1156","labels":["REACT.Pathway"]}}
+{"id":"795","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"859","labels":["Protein"]},"end":{"id":"1156","labels":["REACT.Pathway"]}}
+{"id":"796","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"860","labels":["Protein"]},"end":{"id":"1156","labels":["REACT.Pathway"]}}
+{"id":"797","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"882","labels":["Protein"]},"end":{"id":"1156","labels":["REACT.Pathway"]}}
+{"id":"798","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"850","labels":["Protein"]},"end":{"id":"1157","labels":["REACT.Pathway"]}}
+{"id":"799","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"851","labels":["Protein"]},"end":{"id":"1157","labels":["REACT.Pathway"]}}
+{"id":"800","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"870","labels":["Protein"]},"end":{"id":"1157","labels":["REACT.Pathway"]}}
+{"id":"801","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"850","labels":["Protein"]},"end":{"id":"1158","labels":["REACT.Pathway"]}}
+{"id":"802","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"851","labels":["Protein"]},"end":{"id":"1158","labels":["REACT.Pathway"]}}
+{"id":"803","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"854","labels":["Protein"]},"end":{"id":"1158","labels":["REACT.Pathway"]}}
+{"id":"804","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"857","labels":["Protein"]},"end":{"id":"1158","labels":["REACT.Pathway"]}}
+{"id":"805","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"870","labels":["Protein"]},"end":{"id":"1158","labels":["REACT.Pathway"]}}
+{"id":"806","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"869","labels":["Protein"]},"end":{"id":"1159","labels":["REACT.Pathway"]}}
+{"id":"807","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"850","labels":["Protein"]},"end":{"id":"1160","labels":["REACT.Pathway"]}}
+{"id":"808","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"851","labels":["Protein"]},"end":{"id":"1160","labels":["REACT.Pathway"]}}
+{"id":"809","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"852","labels":["Protein"]},"end":{"id":"1160","labels":["REACT.Pathway"]}}
+{"id":"810","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"863","labels":["Protein"]},"end":{"id":"1160","labels":["REACT.Pathway"]}}
+{"id":"811","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"852","labels":["Protein"]},"end":{"id":"1161","labels":["REACT.Pathway"]}}
+{"id":"812","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"870","labels":["Protein"]},"end":{"id":"1161","labels":["REACT.Pathway"]}}
+{"id":"813","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"874","labels":["Protein"]},"end":{"id":"1161","labels":["REACT.Pathway"]}}
+{"id":"814","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"875","labels":["Protein"]},"end":{"id":"1161","labels":["REACT.Pathway"]}}
+{"id":"815","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"850","labels":["Protein"]},"end":{"id":"1162","labels":["REACT.Pathway"]}}
+{"id":"816","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"851","labels":["Protein"]},"end":{"id":"1162","labels":["REACT.Pathway"]}}
+{"id":"817","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"852","labels":["Protein"]},"end":{"id":"1162","labels":["REACT.Pathway"]}}
+{"id":"818","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"853","labels":["Protein"]},"end":{"id":"1162","labels":["REACT.Pathway"]}}
+{"id":"819","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"854","labels":["Protein"]},"end":{"id":"1162","labels":["REACT.Pathway"]}}
+{"id":"820","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"857","labels":["Protein"]},"end":{"id":"1162","labels":["REACT.Pathway"]}}
+{"id":"821","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"858","labels":["Protein"]},"end":{"id":"1162","labels":["REACT.Pathway"]}}
+{"id":"822","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"863","labels":["Protein"]},"end":{"id":"1162","labels":["REACT.Pathway"]}}
+{"id":"823","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"870","labels":["Protein"]},"end":{"id":"1163","labels":["REACT.Pathway"]}}
+{"id":"824","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"872","labels":["Protein"]},"end":{"id":"1163","labels":["REACT.Pathway"]}}
+{"id":"825","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"880","labels":["Protein"]},"end":{"id":"1163","labels":["REACT.Pathway"]}}
+{"id":"826","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"850","labels":["Protein"]},"end":{"id":"1164","labels":["REACT.Pathway"]}}
+{"id":"827","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"851","labels":["Protein"]},"end":{"id":"1164","labels":["REACT.Pathway"]}}
+{"id":"828","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"870","labels":["Protein"]},"end":{"id":"1164","labels":["REACT.Pathway"]}}
+{"id":"829","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"850","labels":["Protein"]},"end":{"id":"1165","labels":["REACT.Pathway"]}}
+{"id":"830","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"851","labels":["Protein"]},"end":{"id":"1165","labels":["REACT.Pathway"]}}
+{"id":"831","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"870","labels":["Protein"]},"end":{"id":"1165","labels":["REACT.Pathway"]}}
+{"id":"832","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"870","labels":["Protein"]},"end":{"id":"1166","labels":["REACT.Pathway"]}}
+{"id":"833","type":"relationship","label":"Is_Involved_In","properties":{"Edge_Type":"kegg_path_prot"},"start":{"id":"874","labels":["Protein"]},"end":{"id":"1166","labels":["REACT.Pathway"]}}
+{"id":"834","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"849","labels":["Protein"]},"end":{"id":"1167","labels":["MONDO.Disease"]}}
+{"id":"835","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"850","labels":["Protein"]},"end":{"id":"1167","labels":["MONDO.Disease"]}}
+{"id":"836","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"851","labels":["Protein"]},"end":{"id":"1167","labels":["MONDO.Disease"]}}
+{"id":"837","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"852","labels":["Protein"]},"end":{"id":"1167","labels":["MONDO.Disease"]}}
+{"id":"838","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"853","labels":["Protein"]},"end":{"id":"1167","labels":["MONDO.Disease"]}}
+{"id":"839","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"854","labels":["Protein"]},"end":{"id":"1167","labels":["MONDO.Disease"]}}
+{"id":"840","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"855","labels":["Protein"]},"end":{"id":"1167","labels":["MONDO.Disease"]}}
+{"id":"841","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"856","labels":["Protein"]},"end":{"id":"1167","labels":["MONDO.Disease"]}}
+{"id":"842","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"857","labels":["Protein"]},"end":{"id":"1167","labels":["MONDO.Disease"]}}
+{"id":"843","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"858","labels":["Protein"]},"end":{"id":"1167","labels":["MONDO.Disease"]}}
+{"id":"844","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"859","labels":["Protein"]},"end":{"id":"1167","labels":["MONDO.Disease"]}}
+{"id":"845","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"860","labels":["Protein"]},"end":{"id":"1167","labels":["MONDO.Disease"]}}
+{"id":"846","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"861","labels":["Protein"]},"end":{"id":"1167","labels":["MONDO.Disease"]}}
+{"id":"847","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"862","labels":["Protein"]},"end":{"id":"1167","labels":["MONDO.Disease"]}}
+{"id":"848","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"863","labels":["Protein"]},"end":{"id":"1167","labels":["MONDO.Disease"]}}
+{"id":"849","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"864","labels":["Protein"]},"end":{"id":"1167","labels":["MONDO.Disease"]}}
+{"id":"850","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"851","labels":["Protein"]},"end":{"id":"1168","labels":["MONDO.Disease"]}}
+{"id":"851","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"852","labels":["Protein"]},"end":{"id":"1168","labels":["MONDO.Disease"]}}
+{"id":"852","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"853","labels":["Protein"]},"end":{"id":"1168","labels":["MONDO.Disease"]}}
+{"id":"853","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"860","labels":["Protein"]},"end":{"id":"1168","labels":["MONDO.Disease"]}}
+{"id":"854","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"862","labels":["Protein"]},"end":{"id":"1168","labels":["MONDO.Disease"]}}
+{"id":"855","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"851","labels":["Protein"]},"end":{"id":"1169","labels":["MONDO.Disease"]}}
+{"id":"856","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"852","labels":["Protein"]},"end":{"id":"1169","labels":["MONDO.Disease"]}}
+{"id":"857","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"853","labels":["Protein"]},"end":{"id":"1169","labels":["MONDO.Disease"]}}
+{"id":"858","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"854","labels":["Protein"]},"end":{"id":"1169","labels":["MONDO.Disease"]}}
+{"id":"859","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"851","labels":["Protein"]},"end":{"id":"1170","labels":["MONDO.Disease"]}}
+{"id":"860","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"853","labels":["Protein"]},"end":{"id":"1170","labels":["MONDO.Disease"]}}
+{"id":"861","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"859","labels":["Protein"]},"end":{"id":"1170","labels":["MONDO.Disease"]}}
+{"id":"862","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"859","labels":["Protein"]},"end":{"id":"1171","labels":["MONDO.Disease"]}}
+{"id":"863","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"868","labels":["Protein"]},"end":{"id":"1171","labels":["MONDO.Disease"]}}
+{"id":"864","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"859","labels":["Protein"]},"end":{"id":"1172","labels":["MONDO.Disease"]}}
+{"id":"865","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"860","labels":["Protein"]},"end":{"id":"1172","labels":["MONDO.Disease"]}}
+{"id":"866","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"851","labels":["Protein"]},"end":{"id":"1173","labels":["MONDO.Disease"]}}
+{"id":"867","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"853","labels":["Protein"]},"end":{"id":"1173","labels":["MONDO.Disease"]}}
+{"id":"868","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"851","labels":["Protein"]},"end":{"id":"1174","labels":["MONDO.Disease"]}}
+{"id":"869","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"852","labels":["Protein"]},"end":{"id":"1174","labels":["MONDO.Disease"]}}
+{"id":"870","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"853","labels":["Protein"]},"end":{"id":"1174","labels":["MONDO.Disease"]}}
+{"id":"871","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"862","labels":["Protein"]},"end":{"id":"1174","labels":["MONDO.Disease"]}}
+{"id":"872","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"850","labels":["Protein"]},"end":{"id":"1175","labels":["MONDO.Disease"]}}
+{"id":"873","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"851","labels":["Protein"]},"end":{"id":"1175","labels":["MONDO.Disease"]}}
+{"id":"874","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"853","labels":["Protein"]},"end":{"id":"1175","labels":["MONDO.Disease"]}}
+{"id":"875","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"856","labels":["Protein"]},"end":{"id":"1175","labels":["MONDO.Disease"]}}
+{"id":"876","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"860","labels":["Protein"]},"end":{"id":"1175","labels":["MONDO.Disease"]}}
+{"id":"877","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"853","labels":["Protein"]},"end":{"id":"1176","labels":["MONDO.Disease"]}}
+{"id":"878","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"859","labels":["Protein"]},"end":{"id":"1176","labels":["MONDO.Disease"]}}
+{"id":"879","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"850","labels":["Protein"]},"end":{"id":"1177","labels":["MONDO.Disease"]}}
+{"id":"880","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"851","labels":["Protein"]},"end":{"id":"1177","labels":["MONDO.Disease"]}}
+{"id":"881","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"851","labels":["Protein"]},"end":{"id":"1178","labels":["MONDO.Disease"]}}
+{"id":"882","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"852","labels":["Protein"]},"end":{"id":"1178","labels":["MONDO.Disease"]}}
+{"id":"883","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"853","labels":["Protein"]},"end":{"id":"1178","labels":["MONDO.Disease"]}}
+{"id":"884","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"850","labels":["Protein"]},"end":{"id":"1179","labels":["MONDO.Disease"]}}
+{"id":"885","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"851","labels":["Protein"]},"end":{"id":"1179","labels":["MONDO.Disease"]}}
+{"id":"886","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"853","labels":["Protein"]},"end":{"id":"1179","labels":["MONDO.Disease"]}}
+{"id":"887","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"857","labels":["Protein"]},"end":{"id":"1201","labels":["MONDO.Disease"]}}
+{"id":"888","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"860","labels":["Protein"]},"end":{"id":"1202","labels":["MONDO.Disease"]}}
+{"id":"889","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"853","labels":["Protein"]},"end":{"id":"1203","labels":["MONDO.Disease"]}}
+{"id":"890","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"860","labels":["Protein"]},"end":{"id":"1203","labels":["MONDO.Disease"]}}
+{"id":"891","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"853","labels":["Protein"]},"end":{"id":"1204","labels":["MONDO.Disease"]}}
+{"id":"892","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"851","labels":["Protein"]},"end":{"id":"1205","labels":["MONDO.Disease"]}}
+{"id":"893","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"853","labels":["Protein"]},"end":{"id":"1205","labels":["MONDO.Disease"]}}
+{"id":"894","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"857","labels":["Protein"]},"end":{"id":"1206","labels":["MONDO.Disease"]}}
+{"id":"895","type":"relationship","label":"Is_Related_To","properties":{"Edge_Type":"kegg_dis_prot"},"start":{"id":"876","labels":["Protein"]},"end":{"id":"1207","labels":["MONDO.Disease"]}}
