@@ -31,34 +31,34 @@ Title: BioCypher graph schema configuration file for CROssBAR v2
   # this is the entity name (ie, type) in the input database
   
 
-Gene:
+gene:
   represented_as: node
-  preferred_id: HGNC
+  preferred_id: hgnc.symbol
   label_in_input: Gene 
 
-Protein:
+protein:
   represented_as: node
-  preferred_id: UniProtKB
+  preferred_id: uniprot.molecule
   label_in_input: Protein
   
-Disease:
+disease:
   represented_as: node
-  preferred_id: MONDO
+  preferred_id: mondo
   label_in_input: Disease
 
-Pathway:
+pathway:
   represented_as: node
-  preferred_id: [REACT, KEGG.PATHWAY]
+  preferred_id: [reactome, kegg]
   label_in_input: [Pathway_Reactome, Pathway_KEGG]
 
-SmallMolecule:  # drug has only RXCUI, NDC, UMLS identifiers
+small molecule:  # drug has only RXCUI, NDC, UMLS identifiers
   represented_as: node
-  preferred_id: DRUGBANK
+  preferred_id: drugbank
   label_in_input: Drug
   
-MolecularMixture: # there is no compound in Biolink. could be molecular mixture
+molecular mixture: # there is no compound in Biolink. could be molecular mixture
   represented_as: node
-  preferred_id: CHEMBL.COMPOUND
+  preferred_id: chembl.compound
   label_in_input: Compound
 
 # Cell: # relevant?
@@ -66,52 +66,52 @@ MolecularMixture: # there is no compound in Biolink. could be molecular mixture
 #   preferred_id: CL
 #   label_in_input: Cell
 
-Phenotype:
+phenotype:
   represented_as: node
-  preferred_id: HP
+  preferred_id: hp
   label_in_input: Phenotype
       
-BiologicalProcess: # other two go categories?
+biological process: # other two go categories?
   represented_as: node
-  preferred_id: GO
+  preferred_id: go
   label_in_input: Function
 
-CellLine:
+cell line:
   represented_as: node
-  preferred_id: CCLE
+  preferred_id: ccle
   label_in_input: Cell_Line
 
-Tissue:
-  is_a: GrossAnatomicalStructure
+tissue:
+  is_a: grossanatomicalstructure
   represented_as: node
-  preferred_id: UBERON
+  preferred_id: uberon
   label_in_input: Tissue
 
-Patient:
-  is_a: Case
+patient:
+  is_a: case
   represented_as: node
-  preferred_id: custom
+  preferred_id: id
   label_in_input: Patient
   
-ProteinDomain:
+protein domain:
   represented_as: node
-  preferred_id: InterPro
+  preferred_id: interpro
   label_in_input: Domain
 
-SideEffect:
-  is_a: PhenotypicFeature
+side effect:
+  is_a: phenotypic feature
   represented_as: node
-  preferred_id: SIDER
+  preferred_id: sider.effect
   label_in_input: Side_Effect
 
-Location:
+location:
   represented_as: node
-  preferred_id: GO
+  preferred_id: go
   label_in_input: Location
 
-OrganismTaxon:
+organism taxon:
   represented_as: node
-  preferred_id: NCBITaxon
+  preferred_id: ncbitaxon
   label_in_input: Organism
 
 # ---
@@ -130,298 +130,299 @@ OrganismTaxon:
 # targeting, etc. Biolink proposes to use interaction identifiers from 
 # ontologies, such as https://www.ebi.ac.uk/ols/ontologies/mi/.
 
-PostTranslationalInteraction:
+post translational interaction:
   represented_as: edge
   label_as_edge: Interacts_With
-  preferred_id: custom
-  source: Protein
-  target: Protein
+  preferred_id: id
+  source: protein
+  target: protein
   label_in_input: Protein_Interacts_With_Protein
 
-ProteinToProteinDomainAssociation:
+protein to protein domain association:
   represented_as: edge
   label_as_edge: Has_Domain
-  preferred_id: custom
-  source: Protein
-  target: ProteinDomain
+  preferred_id: id
+  source: protein
+  target: protein domain
   label_in_input: Protein_Has_Domain
 
-ProteinToBiologicalProcessAssociation:
-  is_a: MacromolecularMachineToBiologicalProcessAssociation
+protein to biological process association:
+  is_a: macromolecular machine to biological process association
   represented_as: edge
   label_as_edge: Enables
-  preferred_id: custom
-  source: Protein
-  target: BiologicalProcess
+  preferred_id: id
+  source: protein
+  target: biological process
   label_in_input: Enables
 
-ProteinToCellularComponentAssociation:
-  is_a: MacromolecularMachineToCellularComponentAssociation
+protein to cellular component association:
+  is_a: macromolecular machine to cellular component association
   represented_as: edge
   label_as_edge: Localizes_To
-  preferred_id: custom
-  source: Protein
-  target: CellularComponent
+  preferred_id: id
+  source: protein
+  target: cellular component
   label_in_input: Localizes_To
 
-ProteinToPathwayAssociation:
+protein to pathway association:
   represented_as: edge
   label_as_edge: Takes_Part_In
-  preferred_id: custom
-  source: Protein
-  target: Pathway
+  preferred_id: id
+  source: protein
+  target: pathway
   label_in_input: Take_Part_In
 
-ProteinToDiseaseAssociation:
+protein to disease association:
   represented_as: edge
   label_as_edge: Is_Targeted_In
-  preferred_id: custom
-  source: Protein
-  target: Disease
+  preferred_id: id
+  source: protein
+  target: disease
   label_in_input: Protein_Is_Related_To_Disease
 
-GeneToProteinRelationship:
-  is_a: GeneToGeneProductRelationship
+gene to protein relationship:
+  is_a: gene to gene product relationship
   represented_as: edge
   label_as_edge: Encodes
-  preferred_id: custom
-  source: Gene
-  target: Protein
+  preferred_id: id
+  source: gene
+  target: protein
   label_in_input: Encodes
 
-GeneToGeneHomologyAssociation:
+gene to gene homology association:
   represented_as: edge
   label_as_edge: Is_Ortholog_To
-  preferred_id: custom
-  source: Gene
-  target: Gene
+  preferred_id: id
+  source: gene
+  target: gene
   label_in_input: Is_Ortholog_To
 
-PairwiseGeneToGeneInteraction:
+pairwise gene to gene interaction:
   represented_as: edge
   label_as_edge: Regulates
-  preferred_id: custom
-  source: Gene
-  target: Gene
+  preferred_id: id
+  source: gene
+  target: gene
   label_in_input: Regulates
 
-GeneToOrganismTaxonAssociation:
-  is_a: Association
+gene to organism taxon association:
+  is_a: association
   represented_as: edge
   label_as_edge: Belongs_To
-  preferred_id: custom
-  source: Gene
-  target: OrganismTaxon
+  preferred_id: id
+  source: gene
+  target: organismTaxon
   label_in_input: Belongs_To
 
-MutationToTissueAssociation:
-  is_a: [GenotypeToTissueAssociation, Association]
+mutation to tissue association:
+  is_a: [genotype to tissue association, association]
   represented_as: edge
   label_as_edge: Is_Mutated_In
-  preferred_id: custom
-  source: Gene
-  target: Tissue
+  preferred_id: id
+  source: gene
+  target: tissue
   label_in_input: Gene_Is_Mutated_In_Tissue
 
-MutationToCellLineAssociation:
-  is_a: [GenotypeToCellLineAssociation, Association]
+mutation to cell line association:
+  is_a: [genotype to cell line association, association]
   represented_as: edge
   label_as_edge: Is_Mutated_In
-  preferred_id: custom
-  source: Gene
-  target: CellLine
+  preferred_id: id
+  source: gene
+  target: cell line
   label_in_input: Gene_Is_Mutated_In_Cell_Line
 
-ExpressionToTissueAssociation:
-  is_a: [GenotypeToTissueAssociation, Association]
+expression to tissue association:
+  is_a: [genotype to tissue association, association]
   represented_as: edge
   label_as_edge: Is_DEG_In
-  preferred_id: custom
-  source: Gene
-  target: Tissue
+  preferred_id: id
+  source: gene
+  target: tissue
   label_in_input: Gene_Is_DEG_In_Tissue
 
-ExpressionToCellLineAssociation:
-  is_a: [GenotypeToCellLineAssociation, Association]
+expression to cell line association:
+  is_a: [genotype to cell line association, association]
   represented_as: edge
   label_as_edge: Is_DEG_In
-  preferred_id: custom
-  source: Gene
-  target: CellLine
-  label_in_input: Gene_Is_DEG_In_Cell_Line
+  preferred_id: id
+  source: gene
+  target: cell line
+label_in_input: Gene_Is_DEG_In_Cell_Line
 
-GeneToPhenotypicFeatureAssociation:
+gene to phenotypic feature association:
   represented_as: edge
   label_as_edge: Is_Associated_With
-  preferred_id: custom
-  source: Gene
-  target: PhenotypicFeature
+  preferred_id: id
+  source: gene
+  target: phenotypic feature
   label_in_input: Gene_Is_Associated_With_Phenotype
 
-MutationToCaseAssociation:
-  is_a: Association
+mutation to case association:
+  is_a: association
   represented_as: edge
   label_as_edge: Is_Mutated_In
-  preferred_id: custom
-  source: Gene
-  target: Case
+  preferred_id: id
+  source: gene
+  target: case
   label_in_input: Gene_Is_Mutated_In_Patient
 
-ExpressionToCaseAssociation:
-  is_a: Association
+expression to case association:
+  is_a: association
   represented_as: edge
   label_as_edge: Is_DEG_In
-  preferred_id: custom
-  source: Gene
-  target: Case
+  preferred_id: id
+  source: gene
+  target: case
   label_in_input: Gene_Is_DEG_In_Patient
 
-GeneToPathwayAssociation:
+gene to pathway association:
   represented_as: edge
   label_as_edge: Is_Member_Of
-  source: Protein
-  target: Pathway
-  preferred_id: custom
+  source: protein
+  target: pathway
+  preferred_id: id
   label_in_input: Is_Member_Of
 
-GeneToDiseaseAssociation:
+gene to disease association:
   represented_as: edge
   label_as_edge: Is_Related_To
-  preferred_id: custom
-  source: Gene
-  target: Disease
+  preferred_id: id
+  source: gene
+  target: disease
   label_in_input: Gene_Is_Related_To_Disease
 
-DrugInteraction:
-  is_a: ChemicalToChemicalAssociation
+drug interaction:
+  is_a: chemical to chemical association
   represented_as: edge
   label_as_edge: Interacts_With
-  preferred_id: custom
-  source: SmallMolecule
-  target: SmallMolecule
+  preferred_id: id
+  source: small molecule
+  target: small molecule
   label_in_input: Drug_Interacts_With_Drug
 
-SmallMoleculeToProteinAssociation:
+small molecule to protein association:
   represented_as: edge
   label_as_edge: Targets
-  preferred_id: custom
-  source: SmallMolecule
-  target: Protein
+  preferred_id: id
+  source: small molecule
+  target: protein
   label_in_input: Drug_Targets_Protein
 
-SmallMoleculeToSideEffectAssociation:
+small molecule to side effect association:
   represented_as: edge
   label_as_edge: Has_Side_Effect
-  preferred_id: custom
-  source: SmallMolecule
-  target: SideEffect
+  preferred_id: id
+  source: small molecule
+  target: side effect
   label_in_input: Drug_Has_Side_Effect
 
-SmallMoleculeToTissueAssociation:
+small molecule to tissue association:
   represented_as: edge
-  preferred_id: custom
-  source: SmallMolecule
-  target: Tissue
+  preferred_id: id
+  source: small molecule
+  target: tissue
   label_in_input: Drug_Targets_Tissue
 
-SmallMoleculeToCellLineAssociation:
+small molecule to cell line association:
   represented_as: edge
-  preferred_id: custom
-  source: SmallMolecule
-  target: Tissue
+  preferred_id: id
+  source: small molecule
+  target: tissue
   label_in_input: Drug_Targets_Cell_Line
 
-SmallMoleculeToPathwayAssociation:
+small molecule to pathway association:
   represented_as: edge
   label_as_edge: Has_Target_In
-  preferred_id: custom
-  source: SmallMolecule
-  target: Pathway
+  preferred_id: id
+  source: small molecule
+  target: pathway
   label_in_input: Has_Target_In
 
-MolecularMixtureToProteinAssociation:
+molecular mixture to protein association:
   represented_as: edge
   label_as_edge: Compound_Targets_Protein
-  preferred_id: custom
-  source: MolecularMixture
-  target: Protein
+  preferred_id: id
+  source: molecular mixture
+  target: protein
   label_in_input: Compound_Targets_Protein
 
-TissueToDiseaseAssociation:
+tissue to disease association:
   represented_as: edge
   label_as_edge: Has_Disease
-  preferred_id: custom
-  source: Tissue
-  target: Disease
+  preferred_id: id
+  source: tissue
+  target: disease
   label_in_input: Tissue_Has_Disease
 
-CellLineAsAModelOfDiseaseAssociation:
+cell line as a model of disease association:
   represented_as: edge
-  preferred_id: custom
-  source: CellLine
-  target: Disease
+  preferred_id: id
+  source: cell line
+  target: disease
   label_in_input: Cell_Line_Has_Disease
 
-CaseToDiseaseAssociation:
+case to disease association:
   represented_as: edge
   label_as_edge: Has_Disease
-  preferred_id: custom
-  source: Patient
-  target: Disease
+  preferred_id: id
+  source: patient
+  target: disease
   label_in_input: Patient_Has_Disease
 
-DiseaseToDiseaseAssociation:
+disease to disease association:
   represented_as: edge
   label_as_edge: Comorbid_With
-  preferred_id: custom
-  source: Disease
-  target: Disease
+  preferred_id: id
+  source: disease
+  target: disease
   label_in_input: Comorbid_With
 
-DiseaseToPhenotypicFeatureAssociation:
+disease to phenotypic feature association:
   represented_as: edge
   label_as_edge: Is_Associated_With
-  preferred_id: custom
-  source: Disease
-  target: PhenotypicFeature
+  preferred_id: id
+  source: disease
+  target: phenotypic feature
   label_in_input: Disease_Is_Associated_With_Phenotype
 
-DiseaseToPathwayAssociation:
+disease to pathway association:
   represented_as: edge
   label_as_edge: Modulates
-  preferred_id: custom
-  source: Disease
-  target: Pathway
+  preferred_id: id
+  source: disease
+  target: pathway
   label_in_input: Modulates
 
-DiseaseToSmallMoleculeAssociation:
+disease to small molecule association:
   represented_as: edge
   label_as_edge: Is_Treated_By
-  preferred_id: custom
-  source: Disease
-  target: SmallMolecule
+  preferred_id: id
+  source: disease
+  target: small molecule
   label_in_input: Is_Treated_By
 
-ProteinDomainToMolecularActivityAssociation:
+protein domain to molecular activity association:
   represented_as: edge
   label_as_edge: Has_Function
-  preferred_id: custom
-  source: ProteinDomain
-  target: MolecularActivity
+  preferred_id: id
+  source: protein domain
+  target: molecular activity
   label_in_input: Domain_Has_Function
 
-ProteinDomainToCellularComponentAssociation:
+protein domain to cellular component association:
   represented_as: edge
-  preferred_id: custom
-  source: ProteinDomain
-  target: CellularComponent
+  preferred_id: id
+  source: protein domain
+  target: cellular component
   label_in_input: Domain_Has_Location
 
 # suggestion for drug - small molecule
-DrugToSmallMoleculeAssociation:
+drug to small molecule association:
+  is_a: association
   represented_as: edge
   label_as_edge: Contains_Active_Ingredient
-  preferred_id: custom
-  source: Drug
-  target: SmallMolecule
+  preferred_id: id
+  source: drug
+  target: small molecule
   label_in_input: Contains_Active_Ingredient
