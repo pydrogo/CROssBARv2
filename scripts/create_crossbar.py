@@ -6,9 +6,9 @@ CROssBAR generation through BioCypher script
 # sys.path.append('') # fix weird poetry behaviour I don't understand
 # may not be necessary depending on your setup
 
-from bccb.adapter_for_fake_graph import BiocypherAdapter
+from bccb.protein import Uniprot_data
 
-adapt = BiocypherAdapter(offline=True, db_name="bcv3")
-
-adapt.build_python_object()
-adapt.write_to_csv_for_admin_import()
+uniprot_data =  Uniprot_data()
+uniprot_data.uniprot_data_download()
+uniprot_data.build_dataframe()
+uniprot_data.call_biocypher_adapter(early_stopping=5000) # if you want to process whole dataset make early_stopping None
