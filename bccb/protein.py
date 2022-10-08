@@ -142,7 +142,11 @@ class Uniprot_data:
         self.uniprot_df.fillna(value=np.nan, inplace=True) # replace None with NaN
         print("Dataframe is builded")
         
-    def generate_nodes_and_edges(uniprot_df, early_stopping=None):
+    def generate_nodes_and_edges(self, uniprot_df=None, early_stopping=None):
+        
+        if uniprot_df is None:
+            uniprot_df = self.uniprot_df
+        
         node_values = ["accession", "secondary_accessions", "length", "mass", "tax_id", "organism", "protein_names", "chromosome_ids", 
                        "chromosome_info", "entrez_id", "ec_numbers", "kegg", "ensembl_transcript", "ensembl_gene_ids", "genes", 
                        "virus_hosts_tax_ids"] # list of values that will be added graph database
@@ -248,7 +252,7 @@ class Uniprot_data:
         return protein_check_duplicates_admin_import, gene_check_duplicates_admin_import, organism_check_duplicates_admin_import,\
                gene_to_protein_interactions, protein_to_organism_interactions
 
-    def clean_uniprot_data_for_nodes(row):
+    def clean_uniprot_data_for_nodes(self, row):
         # accession
         # CURRENT FORMAT:STR
         # returns accession
