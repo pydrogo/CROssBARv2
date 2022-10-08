@@ -599,17 +599,19 @@ class Uniprot_data:
                entrez_id, ec_numbers, kegg, ensembl_transcript, ensemble_gene_ids, genes, virus_hosts_tax_ids
     
     def build_nodes_and_edges(self, early_stopping=None):
-        # generate nodes and edges
-        protein_nodes, gene_nodes, organism_nodes, gene_to_protein_edges, protein_to_organism_edges = self.generate_nodes_and_edges(data, early_stopping=early_stopping)
-        
-        self.nodes = protein_nodes + gene_nodes + organism_nodes
-        self.edges = gene_to_protein_edges + protein_to_organism_edges
-        
-    def call_biocypher_adapter(self):
         """
         if "early_stopping" is specified with an integer value, it stops preprocessing on the specified row.
         """
-
+        print("Generating nodes and edges")
+        
+        # generate nodes and edges
+        protein_nodes, gene_nodes, organism_nodes, gene_to_protein_edges, protein_to_organism_edges = self.generate_nodes_and_edges(uniprot_df=self.uniprot_df, early_stopping=early_stopping)
+        
+        # concatenate them into a single node and edge variable
+        self.nodes = protein_nodes + gene_nodes + organism_nodes
+        self.edges = gene_to_protein_edges + protein_to_organism_edges
+        
+    def call_biocypher_adapter(self):        
         print("Calling Biocypher adapter")
         adapt = BiocypherAdapter(offline=True, db_name="neo4j", wipe=True, quote_char="'")
         adapt.write_to_csv_for_admin_import(nodes=self.nodes, edges=self.edges)
