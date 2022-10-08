@@ -76,14 +76,10 @@ class BiocypherAdapter:
         self.nodes = None
         self.edges = None
 
-    def build_python_object(self, data=None, early_stopping=None):
+    def build_python_object(self, data=None):
         """
         Loads uniprot data and preprocess it
         """
-        protein_nodes, gene_nodes, organism_nodes, gene_to_protein_edges, protein_to_organism_edges = generate_nodes_and_edges(data, early_stopping=early_stopping)
-        
-        self.nodes = protein_nodes + gene_nodes + organism_nodes
-        self.edges = gene_to_protein_edges + protein_to_organism_edges
 
     def translate_python_object_to_neo4j(self, nodes=None, edges=None):
         """
