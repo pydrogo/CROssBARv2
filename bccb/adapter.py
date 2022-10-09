@@ -108,7 +108,7 @@ class BiocypherAdapter:
         if nodes is None:
             nodes = self.nodes
 
-        id_type_tuples = list(process_nodes(nodes))
+        id_type_tuples = list(gen_nodes(nodes))
 
         # write nodes
         self.bcy.write_nodes(id_type_tuples, db_name=db_name)
@@ -124,7 +124,7 @@ class BiocypherAdapter:
         if edges is None:
             edges = self.edges
 
-        src_tar_type_tuples = list(process_edges(edges))
+        src_tar_type_tuples = list(gen_edges(edges))
 
         self.bcy.write_edges(src_tar_type_tuples, db_name=db_name)
 
@@ -169,7 +169,7 @@ class BiocypherAdapter:
 
 
 
-def process_nodes(nodes):
+def gen_nodes(nodes):
     for node_dict in nodes:
         if "accession" in node_dict.keys():
             _id = str(node_dict["accession"])
@@ -203,7 +203,7 @@ def process_nodes(nodes):
                         
         yield (_id, _type, _props)
 
-def process_edges(edges):
+def gen_edges(edges):
     _props = {}
     for edge_dict in edges:
         if "entrez_id" in edge_dict.keys():
