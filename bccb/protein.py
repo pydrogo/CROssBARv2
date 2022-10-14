@@ -5,11 +5,14 @@ from tqdm import tqdm  # progress bar
 from pypath.share import curl
 from pypath.utils import mapping
 from pypath.inputs import uniprot
+from biocypher._logger import logger
 
 import numpy as np
 import pandas as pd
 
 from bccb.adapter import BiocypherAdapter
+
+logger.debug(f"Loading module {__name__}.")
 
 
 class Uniprot_data:
@@ -96,15 +99,10 @@ class Uniprot_data:
         # download attribute dicts
         self.data = {}
         for query_key in tqdm(self.attributes):
-            try:  # try downloading two times in case of connection issues etc
-                self.data[query_key] = uniprot.uniprot_data(
-                    query_key, self.organism, self.rev
-                )
-            except Exception as e:
-                self.data[query_key] = uniprot.uniprot_data(
-                    query_key, self.organism, self.rev
-                )
-            print(f' {query_key} field is downloaded')
+            self.data[query_key] = uniprot.uniprot_data(
+                query_key, self.organism, self.rev
+            )
+            logger.debug(f' {query_key} field is downloaded')
 
         secondary_ids = uniprot.get_uniprot_sec(None)
         self.data['secondary_ids'] = collections.defaultdict(list)
@@ -114,12 +112,14 @@ class Uniprot_data:
             self.data['secondary_ids'][k] = ';'.join(v)
 
         t1 = time()
-        print(
-            f' Downloaded data from UniProtKB in {round((t1-t0) / 60, 2)} mins, now writing csv files'
+        msg = (
+            f'Downloaded data from UniProtKB in {round((t1-t0) / 60, 2)} '
+            'mins, now writing csv files'
         )
+        logger.info(msg)
 
     def build_dataframe(self):
-        print("Building dataframe")
+        logger.debug("Building dataframe")
         protein_dict_list = []
         for protein in tqdm(self.uniprot_ids):
             protein_dict = {
@@ -170,7 +170,7 @@ class Uniprot_data:
         self.uniprot_df.fillna(
             value=np.nan, inplace=True
         )  # replace None with NaN
-        print("Dataframe is builded")
+        logger.info("Dataframe is built")
 
     def generate_nodes_and_edges(self, uniprot_df=None, early_stopping=None):
 
@@ -743,24 +743,24 @@ class Uniprot_data:
             ensemble_gene_ids = np.nan
 
         """
-        print("accession:", accession)
-        print("secondary_accessions:", secondary_accessions)
-        print("length:", length)
-        print("mass:", mass)
-        print("tax_id:", tax_id)
-        print("organism:", organism)
-        print("before protein_names:", str(row["protein_names"]))
-        print("protein_names:", protein_names)
-        print("chromosome_ids:", chromosome_ids)
-        print("chromosome_info:", chromosome_info)
-        print("genes:", genes)
-        print("ec_numbers:", ec_numbers)
-        print("kegg:", kegg)
-        print("ensembl_transcript:", ensembl_transcript)
-        print("all ensemble ids:", ensemble_gene_ids)
-        print("entrez_id:", entrez_id)
-        print("before virus_hosts:", str(row["virus hosts"]))
-        print("virus_hosts_tax_ids:", virus_hosts_tax_ids)
+        logger.debug("accession:", accession)
+        logger.debug("secondary_accessions:", secondary_accessions)
+        logger.debug("length:", length)
+        logger.debug("mass:", mass)
+        logger.debug("tax_id:", tax_id)
+        logger.debug("organism:", organism)
+        logger.debug("before protein_names:", str(row["protein_names"]))
+        logger.debug("protein_names:", protein_names)
+        logger.debug("chromosome_ids:", chromosome_ids)
+        logger.debug("chromosome_info:", chromosome_info)
+        logger.debug("genes:", genes)
+        logger.debug("ec_numbers:", ec_numbers)
+        logger.debug("kegg:", kegg)
+        logger.debug("ensembl_transcript:", ensembl_transcript)
+        logger.debug("all ensemble ids:", ensemble_gene_ids)
+        logger.debug("entrez_id:", entrez_id)
+        logger.debug("before virus_hosts:", str(row["virus hosts"]))
+        logger.debug("virus_hosts_tax_ids:", virus_hosts_tax_ids)
         """
 
         return (
@@ -786,7 +786,7 @@ class Uniprot_data:
         """
         if "early_stopping" is specified with an integer value, it stops preprocessing on the specified row.
         """
-        print("Generating nodes and edges")
+        logger.info("Generating nodes and edges")
 
         # generate nodes and edges
         (
@@ -804,7 +804,7 @@ class Uniprot_data:
         self.edges = gene_to_protein_edges + protein_to_organism_edges
 
     def call_biocypher_adapter(self):
-        print("Calling Biocypher adapter")
+        logger.info("Calling Biocypher adapter")
         adapt = BiocypherAdapter(
             offline=True, db_name="neo4j", wipe=True, quote_char="'"
         )
