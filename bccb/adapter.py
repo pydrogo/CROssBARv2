@@ -80,6 +80,7 @@ class BiocypherAdapter:
         """
         Loads uniprot data and preprocess it
         """
+        pass
 
     def translate_python_object_to_neo4j(self, nodes=None, edges=None):
         """
@@ -146,9 +147,12 @@ class BiocypherAdapter:
 
         if edges is None:
             edges = self.edges
-
-        self.write_nodes(nodes, db_name)
-        self.write_edges(edges, db_name)
+        
+        if nodes is not None:            
+            self.write_nodes(nodes, db_name)
+        if edges is not None:
+            self.write_edges(edges, db_name)
+        
         self.bcy.write_import_call()
 
     def load(self, obj):

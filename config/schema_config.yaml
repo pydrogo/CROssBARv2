@@ -173,7 +173,17 @@ protein to organism taxon association:
   # preferred_id: id
   # source: protein
   # target: protein
-  # label_in_input: Protein_Interacts_With_Protein
+  # label_in_input: Interacts_With
+  # properties:
+    #source: str
+    #pubmed_id: int
+    #method: str
+    #interaction_type: str
+    #intact_score: float
+    #string_combined_score: int
+    #string_physical_combined_score: int
+    
+    
 
 # protein to protein domain association:
   # represented_as: edge
