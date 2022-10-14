@@ -5,16 +5,16 @@
 BioCypher - CROssBAR prototype
 """
 
-import pandas as pd
-import numpy as np
-from tqdm import tqdm  # Progress bar
-
 import os
-import yaml
 import importlib as imp
 
-import biocypher
+from tqdm import tqdm  # Progress bar
 from biocypher._logger import logger
+import yaml
+import biocypher
+
+import numpy as np
+import pandas as pd
 
 logger.debug(f"Loading module {__name__}.")
 
@@ -47,14 +47,14 @@ class BiocypherAdapter:
         db_uri="bolt://localhost:7687",
         db_user="neo4j",
         db_passwd="password_here",
-        user_schema_config_path= r"config/schema_config.yaml",
+        user_schema_config_path=r"config/schema_config.yaml",
         wipe=True,
         offline=False,
-        delimeter = ";",
-        array_delimiter = "|",
-        quote_char = "'",
-        skip_bad_relationships = True,
-        skip_duplicate_nodes = True,
+        delimeter=";",
+        array_delimiter="|",
+        quote_char="'",
+        skip_bad_relationships=True,
+        skip_duplicate_nodes=True,
     ):
 
         self.bcy = biocypher.Driver(
@@ -94,7 +94,6 @@ class BiocypherAdapter:
             nodes = self.nodes
         if edges is None:
             edges = self.edges
-
 
     def write_nodes(self, nodes=None, db_name="neo4j"):
         """
@@ -168,7 +167,6 @@ class BiocypherAdapter:
             self.translate_python_object_to_neo4j(network=obj)
 
 
-
 def gen_nodes(nodes):
     for node_dict in nodes:
         if "accession" in node_dict.keys():
@@ -183,7 +181,7 @@ def gen_nodes(nodes):
                         _props[k] = v
                     else:
                         _props[k] = str(v).split("|")
-            
+
         elif "entrez_id" in node_dict.keys():
             _id = str(node_dict["entrez_id"])
             _type = "Gene"
@@ -199,9 +197,10 @@ def gen_nodes(nodes):
         else:
             _id = str(node_dict["tax_id"])
             _type = "Organism"
-            _props = {"organism":node_dict["organism"]}
-                        
+            _props = {"organism": node_dict["organism"]}
+
         yield (_id, _type, _props)
+
 
 def gen_edges(edges):
     _props = {}
@@ -214,5 +213,5 @@ def gen_edges(edges):
             _source = str(edge_dict["accession"])
             _target = str(edge_dict["tax_id"])
             _type = "Belongs_To"
-        
+
         yield (_source, _target, _type, _props)
