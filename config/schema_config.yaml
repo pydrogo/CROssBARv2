@@ -45,7 +45,7 @@ gene:
 protein:
   represented_as: node
   preferred_id: uniprot.molecule
-  label_in_input: Protein
+  label_in_input: protein
   properties:
     secondary_accessions: str
     length: int
@@ -53,8 +53,8 @@ protein:
     protein_names: str
     chromosome_ids: str
     chromosome_info: str
-    tax_id: int
-    ec_numbers: str
+    organism_id: int
+    ec: str
     virus_hosts_tax_ids: str # should be int however currently biocypher doesnt seem to create list from integers
   
 organism taxon:

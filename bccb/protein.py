@@ -6,11 +6,10 @@ from pypath.share import curl
 from pypath.utils import mapping
 from pypath.inputs import uniprot
 from biocypher._logger import logger
+import biocypher
 
 import numpy as np
 import pandas as pd
-
-from bccb.adapter import BiocypherAdapter
 
 logger.debug(f"Loading module {__name__}.")
 
@@ -20,6 +19,14 @@ class Uniprot_data:
         self.organism = organism
         self.rev = rev
         self.uniprot_df = None
+
+        self.driver = biocypher.Driver(
+            offline=True,
+            db_name="neo4j",
+            wipe=True,
+            quote_char="'",
+            user_schema_config_path="config/schema_config.yaml",
+        )
 
     def xref_process(self, attribute_key, protein):
         # delete trailing ';' from fields containing only one id
@@ -84,13 +91,7 @@ class Uniprot_data:
             'database(GeneID)',
             'virus hosts',
             'database(OpenTargets)',
-            'database(KEGG)',
-            'database(DisGeNET)',
-            'database(EnsemblBacteria)',
-            'database(EnsemblFungi)',
-            'database(EnsemblMetazoa)',
-            'database(EnsemblPlants)',
-            'database(EnsemblProtists)',
+            'database(lProtists)',
         ]
 
         # download all swissprot ids
@@ -102,7 +103,7 @@ class Uniprot_data:
             self.data[query_key] = uniprot.uniprot_data(
                 query_key, self.organism, self.rev
             )
-            logger.debug(f' {query_key} field is downloaded')
+            logger.debug(f'{query_key} field is downloaded')
 
         secondary_ids = uniprot.get_uniprot_sec(None)
         self.data['secondary_ids'] = collections.defaultdict(list)
@@ -113,10 +114,44 @@ class Uniprot_data:
 
         t1 = time()
         msg = (
-            f'Downloaded data from UniProtKB in {round((t1-t0) / 60, 2)} '
-            'mins, now writing csv files'
+            f'Downloaded data from UniProtKB in {round((t1-t0) / 60, 2)} mins.'
         )
         logger.info(msg)
+
+    def write_uniprot_nodes(self):
+        """
+        Write nodes through BioCypher.
+        """
+
+        logger.info("Writing nodes to CSV for admin import")
+
+        def node_gen():
+            for protein in self.uniprot_ids:
+                _id = protein
+                _type = "protein"
+                _props = {}
+                for arg in self.attributes:
+                    # replace spaces and hyphens with underscores, otherwise
+                    # keep uniprot field names
+                    arg_dict_name = arg.replace(" ", "_").replace("-", "_")
+
+                    if arg == "mass":
+                        _props[arg_dict_name] = (
+                            self.data.get(arg).get(protein).replace(",", "")
+                        )
+                        # TODO this could be cast to int in BioCypher once
+                        # implemented
+                    else:
+                        _props[arg_dict_name] = self.data.get(arg).get(protein)
+
+                # add additional
+                _props["secondary_accessions"] = self.data.get(
+                    'secondary_ids'
+                ).get(protein)
+
+                yield _id, _type, _props
+
+        self.driver.write_nodes(node_gen())
 
     def build_dataframe(self):
         logger.debug("Building dataframe")
@@ -124,34 +159,34 @@ class Uniprot_data:
         for protein in tqdm(self.uniprot_ids):
             protein_dict = {
                 # define primary attributes which needs specific preprocessing
-                'accession': protein,
-                'secondary_accessions': self.data['secondary_ids'].get(
-                    protein
-                ),
-                'length': int(self.data['length'].get(protein)),
-                'mass': (
-                    int(self.data['mass'][protein].replace(',', ''))
-                    if protein in self.data['mass']
-                    else None
-                ),
-                'tax_id': int(self.data['organism-id'].get(protein)),
-                'organism': self.data['organism'].get(protein),
-                'protein_names': self.data['protein names'].get(protein),
-                'chromosome': (
+                # 'accession': protein,
+                # 'secondary_accessions': self.data['secondary_ids'].get(
+                #     protein
+                # ),
+                # 'length': int(self.data['length'].get(protein)),
+                # 'mass': (
+                #     int(self.data['mass'][protein].replace(',', ''))
+                #     if protein in self.data['mass']
+                #     else None
+                # ),
+                # 'tax_id': int(self.data['organism-id'].get(protein)),
+                # 'organism': self.data['organism'].get(protein),
+                # 'protein_names': self.data['protein names'].get(protein),
+                'chromosome': (  # TODO why
                     ';'.join(self.data['proteome'].get(protein).split(','))
                     if self.data['proteome'].get(protein)
                     else None
                 ),
-                'genes': (
+                'genes': (  # TODO why
                     ';'.join(self.data['genes'][protein].split(' '))
                     if protein in self.data['genes']
                     else None
                 ),
-                'ec_numbers': self.data['ec'].get(protein),
-                'ensembl_transcript': self.xref_process(
+                # 'ec_numbers': self.data['ec'].get(protein),
+                'ensembl_transcript': self.xref_process(  # TODO is this an edge?
                     'database(Ensembl)', protein
                 ),
-                'ensembl_gene': (
+                'ensembl_gene': (  # TODO is this an edge?
                     self.ensembl_process(
                         self.xref_process('database(Ensembl)', protein)
                     )
@@ -742,7 +777,6 @@ class Uniprot_data:
         if len(ensemble_gene_ids) == 0:  # if nothing in there make it NaN
             ensemble_gene_ids = np.nan
 
-        """
         logger.debug("accession:", accession)
         logger.debug("secondary_accessions:", secondary_accessions)
         logger.debug("length:", length)
@@ -761,7 +795,6 @@ class Uniprot_data:
         logger.debug("entrez_id:", entrez_id)
         logger.debug("before virus_hosts:", str(row["virus hosts"]))
         logger.debug("virus_hosts_tax_ids:", virus_hosts_tax_ids)
-        """
 
         return (
             accession,
@@ -802,10 +835,3 @@ class Uniprot_data:
         # concatenate them into a single node and edge variable
         self.nodes = protein_nodes + gene_nodes + organism_nodes
         self.edges = gene_to_protein_edges + protein_to_organism_edges
-
-    def call_biocypher_adapter(self):
-        logger.info("Calling Biocypher adapter")
-        adapt = BiocypherAdapter(
-            offline=True, db_name="neo4j", wipe=True, quote_char="'"
-        )
-        adapt.write_to_csv_for_admin_import(nodes=self.nodes, edges=self.edges)
