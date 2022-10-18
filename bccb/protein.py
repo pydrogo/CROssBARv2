@@ -125,33 +125,38 @@ class Uniprot_data:
 
         logger.info("Writing nodes to CSV for admin import")
 
-        def node_gen():
-            for protein in self.uniprot_ids:
-                _id = protein
-                _type = "protein"
-                _props = {}
-                for arg in self.attributes:
-                    # replace spaces and hyphens with underscores, otherwise
-                    # keep uniprot field names
-                    arg_dict_name = arg.replace(" ", "_").replace("-", "_")
+        uniprot_nodes = []
+        ensembl_nodes = []
+        gene_to_protein_edges = []
 
-                    if arg == "mass":
-                        _props[arg_dict_name] = (
-                            self.data.get(arg).get(protein).replace(",", "")
-                        )
-                        # TODO this could be cast to int in BioCypher once
-                        # implemented
-                    else:
-                        _props[arg_dict_name] = self.data.get(arg).get(protein)
+        for protein in self.uniprot_ids:
+            _id = protein
+            _type = "protein"
+            _props = {}
+            for arg in self.attributes:
+                # replace spaces and hyphens with underscores, otherwise
+                # keep uniprot field names
+                arg_dict_name = arg.replace(" ", "_").replace("-", "_")
 
-                # add additional
-                _props["secondary_accessions"] = self.data.get(
-                    'secondary_ids'
-                ).get(protein)
+                if arg == "mass":
+                    _props[arg_dict_name] = (
+                        self.data.get(arg).get(protein).replace(",", "")
+                    )
+                    # TODO this could be cast to int in BioCypher once
+                    # implemented
+                else:
+                    _props[arg_dict_name] = self.data.get(arg).get(protein)
 
-                yield _id, _type, _props
+            # add additional
+            _props["secondary_accessions"] = self.data.get(
+                'secondary_ids'
+            ).get(protein)
 
-        self.driver.write_nodes(node_gen())
+            uniprot_nodes.append((_id, _type, _props))
+
+        self.driver.write_nodes(uniprot_nodes)
+        self.driver.write_nodes(ensembl_nodes)
+        self.driver.write_edges(gene_to_protein_edges)
 
     def build_dataframe(self):
         logger.debug("Building dataframe")

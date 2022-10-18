@@ -51,6 +51,7 @@ protein:
     length: int
     mass: int
     protein_names: str
+    proteome: str
     chromosome_ids: str
     chromosome_info: str
     organism_id: int
