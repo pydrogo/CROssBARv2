@@ -378,6 +378,8 @@ class Uniprot_data:
         
         self.driver.write_edges(gene_to_protein_edges)
         self.driver.write_edges(protein_to_organism_edges)
+        
+        self.driver.write_import_call()
 
     def build_dataframe(self):
         logger.debug("Building dataframe")
