@@ -25,6 +25,8 @@ class Uniprot_data:
             db_name="neo4j",
             wipe=True,
             quote_char="'",
+            delimiter="\t",
+            array_delimiter="|",
             user_schema_config_path="config/schema_config.yaml",
         )
 
@@ -90,8 +92,12 @@ class Uniprot_data:
             # xref attributes
             'database(GeneID)',
             'virus hosts',
-            'database(OpenTargets)',
-            'database(lProtists)',
+            'database(KEGG)',
+            'database(EnsemblBacteria)',
+            'database(EnsemblFungi)',
+            'database(EnsemblMetazoa)',
+            'database(EnsemblPlants)',
+            'database(EnsemblProtists)',
         ]
 
         # download all swissprot ids
@@ -117,46 +123,261 @@ class Uniprot_data:
             f'Downloaded data from UniProtKB in {round((t1-t0) / 60, 2)} mins.'
         )
         logger.info(msg)
+    
+    def fields_splitter(field_key, field_value):
+        """
+        Split fields with multiple entries in uniprot
+        Args:
+            field_key: field name
+            field_value: entry of the field
+        """
+        if field_value:
+            # replace sensitive elements for admin-import
+            field_value = field_value.replace("|",",").replace("'","") 
+            
+            # define fields that will not be splitted by semicolon
+            split_dict = {"proteome":",", "genes":" "}
+            
+            # if field in split_dict split accordingly
+            if field_key in split_dict.keys():
+                field_value = field_value.split(split_dict[field_key])
+                # if field has just one element in the list make it string
+                if len(field_value) == 1:
+                    field_value = field_value[0]
+                    
+            # split semicolons (;)
+            else:
+                field_value = field_value.strip(";").split(";")
+                
+                # split colons (":") in kegg field
+                if field_key == "database(KEGG)":
+                    _list = []
+                    for e in field_value:
+                        _list.append(e.split(":")[1])
+                    field_value = _list
+                
+                # take first element in database(GeneID) field
+                if field_key == "database(GeneID)":
+                    field_value = field_value[0]
+                
+                # if field has just one element in the list make it string
+                if isinstance(field_value, list) and len(field_value) == 1:
+                    field_value = field_value[0]
+            
+            return field_value
+        
+        else:
+            return None
+    
+    def split_protein_names_field(field_value):
+        """
+        Split protein names field in uniprot
+        Args:
+            field_value: entry of the protein names field
+        """
+        field_value = field_value.replace("|",",").replace("'","") # replace sensitive elements
+    
+        if "[Cleaved" in field_value:
+            # discarding part after the "[Cleaved"
+            clip_index = field_value.index("[Cleaved")
+            protein_names = field_value[:clip_index].replace("(Fragment)","").strip()
+        
+            # handling multiple protein names
+            if "(EC" in protein_names[0]:
+                splitted = protein_names[0].split(" (")
+                protein_names = []
 
+                for name in splitted:                    
+                    if not name.strip().startswith("EC"):
+                        if not name.strip().startswith("Fragm"):
+                            protein_names.append(name.rstrip(")").strip())
+
+            elif " (" in protein_names[0]:
+                splitted = protein_names[0].split(" (")
+                protein_names = []
+                for name in splitted:
+                    if not name.strip().startswith("Fragm"):
+                        protein_names.append(name.rstrip(")").strip())
+
+        elif "[Includes" in field_value:
+            # discarding part after the "[Includes"
+            clip_index = field_value.index("[Includes")
+            protein_names = field_value[:clip_index].replace("(Fragment)","").strip()
+            # handling multiple protein names
+            if "(EC" in protein_names[0]:
+
+                splitted = protein_names[0].split(" (")
+                protein_names = []
+
+                for name in splitted:                    
+                    if not name.strip().startswith("EC"):
+                        if not name.strip().startswith("Fragm"):
+                            protein_names.append(name.rstrip(")").strip())
+
+            elif " (" in protein_names[0]:
+                splitted = protein_names[0].split(" (")
+                protein_names = []
+                for name in splitted:
+                    if not name.strip().startswith("Fragm"):
+                        protein_names.append(name.rstrip(")").strip())                    
+
+        # handling multiple protein names
+        elif "(EC" in field_value.replace("(Fragment)",""):
+            splitted = field_value.split(" (")
+            protein_names = []
+
+            for name in splitted:                
+                if not name.strip().startswith("EC"):
+                    if not name.strip().startswith("Fragm"):
+                        protein_names.append(name.rstrip(")").strip())
+
+        elif " (" in field_value.replace("(Fragment)",""):
+            splitted = field_value.split(" (")
+            protein_names = []
+            for name in splitted:
+                if not name.strip().startswith("Fragm"):
+                    protein_names.append(name.rstrip(")").strip())                    
+
+        else:
+            protein_names = field_value.replace("(Fragment)","").strip()
+
+
+        return protein_names
+    
+    def split_virus_hosts_field(field_value):
+        """
+        Split virus hosts fields in uniprot
+        
+        Args:
+            field_value: entry of the virus hosts field
+        """
+        if field_value:
+            if ";" in field_value:
+                splitted = field_value.split(";")
+                virus_hosts_tax_ids = []
+                for v in splitted:
+                    virus_hosts_tax_ids.append(v[v.index("[")+1:v.index("]")].split(":")[1].strip())
+            else:
+                virus_hosts_tax_ids = field_value[field_value.index("[")+1:field_value.index("]")].split(":")[1].strip()
+
+            return virus_hosts_tax_ids
+        else:
+            return None
+    
     def write_uniprot_nodes(self):
         """
         Write nodes through BioCypher.
         """
 
         logger.info("Writing nodes to CSV for admin import")
-
-        uniprot_nodes = []
-        ensembl_nodes = []
+        
+        # define fields that need splitting
+        split_fields = ["secondary_ids", "proteome", "genes", "ec", "database(GeneID)", 
+                    "database(EnsemblBacteria)", "database(EnsemblFungi)", "database(EnsemblMetazoa)", 
+                    "database(EnsemblPlants)", "database(EnsemblProtists)", "database(KEGG)"]
+        
+        # define properties of nodes
+        protein_properties = ["secondary_ids", "length", "mass", "protein names", "proteome", "ec", "virus hosts", "organism-id"]
+        gene_properties = ["genes", "database(GeneID)", "database(KEGG)", "database(EnsemblBacteria)", "database(EnsemblFungi)",
+                            "database(EnsemblMetazoa)", "database(EnsemblPlants)", "database(EnsemblProtists)"]
+        organism_properties = ["organism"]
+        
+        # add secondary_ids to self.attributes
+        attributes = self.attributes + ["secondary_ids"]
+        
+        # 
+        gene_id = str()
+        
+        # create lists of nodes
+        protein_nodes = []
+        gene_nodes = []
+        organism_nodes = []
+        
+        # create lists of edges
         gene_to_protein_edges = []
+        protein_to_organism_edges = []
 
         for protein in self.uniprot_ids:
-            _id = protein
-            _type = "protein"
+            protein_id = protein
             _props = {}
-            for arg in self.attributes:
-                # replace spaces and hyphens with underscores, otherwise
-                # keep uniprot field names
-                arg_dict_name = arg.replace(" ", "_").replace("-", "_")
-
-                if arg == "mass":
-                    _props[arg_dict_name] = (
-                        self.data.get(arg).get(protein).replace(",", "")
-                    )
-                    # TODO this could be cast to int in BioCypher once
-                    # implemented
-                else:
-                    _props[arg_dict_name] = self.data.get(arg).get(protein)
-
-            # add additional
-            _props["secondary_accessions"] = self.data.get(
-                'secondary_ids'
-            ).get(protein)
-
-            uniprot_nodes.append((_id, _type, _props))
-
-        self.driver.write_nodes(uniprot_nodes)
-        self.driver.write_nodes(ensembl_nodes)
+            for arg in attributes:
+                # To do: Handle Ensembl
+                if arg in ["database(Ensembl)"]:
+                    continue                    
+                # split fields
+                if arg in split_fields:
+                    attribute_value = self.data.get(arg).get(protein)
+                    if attribute_value:
+                        _props[arg] = self.fields_splitter(arg, attribute_value)
+                elif arg == "protein names":
+                    _props[arg] = self.split_protein_names_field(self.data.get(arg).get(protein))
+                elif arg == "virus hosts":                    
+                    attribute_value = self.split_virus_hosts_field(self.data.get(arg).get(protein))
+                    if attribute_value:                        
+                        _props[arg] = attribute_value
+                else:                    
+                    attribute_value = self.data.get(arg).get(protein)
+                    if attribute_value:                        
+                        _props[arg] = attribute_value
+            
+            protein_props = dict()
+            gene_props = dict()
+            organism_props = dict()
+            
+            for k, v in _props.items():
+                # define protein_properties
+                if k in protein_properties:
+                    # make length, mass and organism-id fields integer and replace hyphen in keys
+                    if k in ["length", "mass", "organism-id"]:                       
+                        protein_props[k.replace("-","_")] = int(_props[k].replace(",",""))
+                        if k == "organism-id":                            
+                            organism_id = _props[k]
+                    
+                    # replace hyphens and spaces with underscore
+                    else:                        
+                        protein_props[k.replace(" ","_").replace("-","_")] = _props[k]
+                
+                # if genes and database(GeneID) fields exist, define gene_properties
+                elif k in gene_properties and "genes" in _props.keys() and "database(GeneID)" in _props.keys():                    
+                    if "database" in k:
+                        # make ncbi gene id as gene_id
+                        if "GeneID" in k:                            
+                            gene_id = _props[k]                        
+                        # merge emsembl fields as one
+                        elif "ensembl" in k.split("(")[1].split(")")[0].lower():
+                            gene_props["ensembl_gene_ids"] = _props[k]
+                        
+                        # replace parantheses in field names and make their name lowercase
+                        else:
+                            gene_props[k.split("(")[1].split(")")[0].lower()] = _props[k]
+                    else:
+                        gene_props[k] = _props[k]
+                
+                # define organism_properties        
+                elif k in organism_properties:
+                    organism_props[k] = _props[k]
+            
+            # append related fields to protein_nodes
+            protein_nodes.append((protein_id, "protein", protein_props))
+            
+            # append related fields to gene_nodes and gene_to_protein_edges
+            if gene_props:
+                gene_nodes.append((gene_id, "gene", gene_props))
+                gene_to_protein_edges.append((gene_id, protein_id, "Encodes", dict()))
+            
+            # append related fields to organism_nodes
+            organism_nodes.append((organism_id, "organism", organism_props))
+            
+            # append related fields to protein_to_organism_edges
+            protein_to_organism_edges.append((protein_id, organism_id, "Belongs_To", dict()))
+            
+        
+        self.driver.write_nodes(protein_nodes)
+        self.driver.write_nodes(gene_nodes)
+        self.driver.write_nodes(organism_nodes)
+        
         self.driver.write_edges(gene_to_protein_edges)
+        self.driver.write_edges(protein_to_organism_edges)
 
     def build_dataframe(self):
         logger.debug("Building dataframe")
