@@ -34,34 +34,31 @@ Title: BioCypher graph schema configuration file for CROssBAR v2
 gene:
   represented_as: node
   preferred_id: entrez
-  label_in_input: Gene
+  label_in_input: gene
   properties:    
     genes: str
     kegg: str
-    ensembl_transcript: str
-    ensembl_gene_ids: str
-    tax_id: int  
+    ensembl_gene_ids: str  
 
 protein:
   represented_as: node
   preferred_id: uniprot.molecule
   label_in_input: protein
   properties:
-    secondary_accessions: str
+    secondary_ids: str
     length: int
     mass: int
     protein_names: str
     proteome: str
-    chromosome_ids: str
-    chromosome_info: str
+    proteome: str
     organism_id: int
     ec: str
-    virus_hosts_tax_ids: str # should be int however currently biocypher doesnt seem to create list from integers
+    virus_hosts: str # should be int however currently biocypher doesnt seem to create list from integers
   
 organism taxon:
   represented_as: node
   preferred_id: ncbitaxon
-  label_in_input: Organism
+  label_in_input: organism
   properties:
     organism: str
   
