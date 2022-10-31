@@ -250,6 +250,9 @@ class Uniprot_data:
         
         Args:
             field_value: entry of the virus hosts field
+        
+        Example:
+            "Pyrobaculum arsenaticum [TaxID: 121277]; Pyrobaculum oguniense [TaxID: 99007]" -> ['121277', '99007']
         """
         if field_value:
             if ";" in field_value:
