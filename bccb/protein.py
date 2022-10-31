@@ -174,6 +174,8 @@ class Uniprot_data:
         Split protein names field in uniprot
         Args:
             field_value: entry of the protein names field
+        Example:
+            "Acetate kinase (EC 2.7.2.1) (Acetokinase)" -> ["Acetate kinase", "Acetokinase"]
         """
         field_value = field_value.replace("|",",").replace("'","") # replace sensitive elements
     
