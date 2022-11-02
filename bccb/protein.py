@@ -377,13 +377,16 @@ class Uniprot_data:
             protein_to_organism_edges.append((protein_id, organism_id, "Belongs_To", dict()))
             
         
+        # write nodes to admin-import compatible csvs
         self.driver.write_nodes(protein_nodes)
         self.driver.write_nodes(gene_nodes)
         self.driver.write_nodes(organism_nodes)
         
+        # write edges to admin-import compatible csvs
         self.driver.write_edges(gene_to_protein_edges)
         self.driver.write_edges(protein_to_organism_edges)
         
+        # write admin-import call
         self.driver.write_import_call()
 
     def build_dataframe(self):
