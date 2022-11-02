@@ -133,7 +133,7 @@ class Uniprot_data:
         """
         if field_value:
             # replace sensitive elements for admin-import
-            field_value = field_value.replace("|",",").replace("'","") 
+            field_value = field_value.replace("|",",").replace("'","").strip()
             
             # define fields that will not be splitted by semicolon
             split_dict = {"proteome":",", "genes":" "}
@@ -147,13 +147,13 @@ class Uniprot_data:
                     
             # split semicolons (;)
             else:
-                field_value = field_value.strip(";").split(";")
+                field_value = field_value.strip().strip(";").split(";")
                 
                 # split colons (":") in kegg field
                 if field_key == "database(KEGG)":
                     _list = []
                     for e in field_value:
-                        _list.append(e.split(":")[1])
+                        _list.append(e.split(":")[1].strip())
                     field_value = _list
                 
                 # take first element in database(GeneID) field
