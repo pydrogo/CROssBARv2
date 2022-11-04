@@ -302,7 +302,7 @@ class Uniprot_data:
         protein_to_organism_edges = []
 
         for protein in tqdm(self.uniprot_ids):
-            protein_id = protein
+            protein_id = "uniprot:" + protein
             _props = {}
 
 
@@ -319,11 +319,10 @@ class Uniprot_data:
                     if attribute_value:                        
                         _props[arg] = attribute_value
 
-                if arg == 'database(Ensembl)' and arg in _props:
-                    if arg in _props:
-                        _props[arg], ensg_ids = self.ensembl_process(_props[arg])
-                        if ensg_ids:
-                            _props["ensembl_gene_ids"] = ensg_ids
+                if arg == 'database(Ensembl)':                                        
+                    _props[arg], ensg_ids = self.ensembl_process(_props[arg])
+                    if ensg_ids:                        
+                        _props["ensembl_gene_ids"] = ensg_ids
 
                 elif arg == "protein names":
                     _props[arg] = self.split_protein_names_field(self.data.get(arg).get(protein))
@@ -345,7 +344,7 @@ class Uniprot_data:
                     if k in ["length", "mass", "organism-id"]:                       
                         protein_props[k.replace("-","_")] = int(_props[k].replace(",",""))
                         if k == "organism-id":                            
-                            organism_id = _props[k]
+                            organism_id = "ncbitaxon:" + _props[k]
                     
                     # replace hyphens and spaces with underscore
                     else:                        
@@ -356,7 +355,7 @@ class Uniprot_data:
                     if "database" in k:
                         # make ncbi gene id as gene_id
                         if "GeneID" in k:                            
-                            gene_id = _props[k]                                                    
+                            gene_id = "ncbigene:" + _props[k]                                                    
                         # replace parantheses in field names and make their name lowercase
                         else:
                             gene_props[k.split("(")[1].split(")")[0].lower()] = _props[k]
