@@ -61,11 +61,6 @@ class Uniprot_data:
             'database(GeneID)',
             'virus hosts',
             'database(KEGG)',
-            'database(EnsemblBacteria)',
-            'database(EnsemblFungi)',
-            'database(EnsemblMetazoa)',
-            'database(EnsemblPlants)',
-            'database(EnsemblProtists)',
         ]
 
         # download all swissprot ids
