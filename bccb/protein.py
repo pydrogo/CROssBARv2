@@ -124,7 +124,7 @@ class Uniprot_data:
         )
         logger.info(msg)
     
-    def fields_splitter(field_key, field_value):
+    def fields_splitter(self, field_key, field_value):
         """
         Split fields with multiple entries in uniprot
         Args:
@@ -169,7 +169,7 @@ class Uniprot_data:
         else:
             return None
     
-    def split_protein_names_field(field_value):
+    def split_protein_names_field(self, field_value):
         """
         Split protein names field in uniprot
         Args:
@@ -246,7 +246,7 @@ class Uniprot_data:
 
         return protein_names
     
-    def split_virus_hosts_field(field_value):
+    def split_virus_hosts_field(self, field_value):
         """
         Split virus hosts fields in uniprot
         
@@ -268,6 +268,45 @@ class Uniprot_data:
             return virus_hosts_tax_ids
         else:
             return None
+
+    def ensembl_process(self, ens_list):
+        """
+        take ensembl transcript ids, return ensembl gene ids by using pypath mapping tool
+        
+        Args:
+            field_value: ensembl transcript list
+
+        """
+
+        listed_enst = []
+        if isinstance(ens_list, str):
+            listed_enst.append(ens_list)
+
+        else:
+            listed_enst = ens_list
+            
+
+        listed_enst = [enst.split(' [')[0] for enst in listed_enst]
+        if len(listed_enst) == 1:
+            listed_enst = listed_enst[0]
+
+        ensg_ids = set()
+        for enst_id in listed_enst:
+            ensg_id = list(
+                mapping.map_name(
+                    enst_id.split('.')[0], 'enst_biomart', 'ensg_biomart'
+                )
+            )
+            ensg_id = ensg_id[0] if ensg_id else None
+            if ensg_id:
+                ensg_ids.add(ensg_id)
+        ensg_ids = list(ensg_ids)
+
+        if len(ensg_ids) == 1:
+            ensg_ids = ensg_ids[0]
+
+        return listed_enst, ensg_ids
+
     
     def write_uniprot_nodes(self):
         """
@@ -277,14 +316,11 @@ class Uniprot_data:
         logger.info("Writing nodes to CSV for admin import")
         
         # define fields that need splitting
-        split_fields = ["secondary_ids", "proteome", "genes", "ec", "database(GeneID)", 
-                    "database(EnsemblBacteria)", "database(EnsemblFungi)", "database(EnsemblMetazoa)", 
-                    "database(EnsemblPlants)", "database(EnsemblProtists)", "database(KEGG)"]
+        split_fields = ["secondary_ids", "proteome", "genes", "ec", "database(GeneID)", "database(Ensembl)", "database(KEGG)"]
         
         # define properties of nodes
         protein_properties = ["secondary_ids", "length", "mass", "protein names", "proteome", "ec", "virus hosts", "organism-id"]
-        gene_properties = ["genes", "database(GeneID)", "database(KEGG)", "database(EnsemblBacteria)", "database(EnsemblFungi)",
-                            "database(EnsemblMetazoa)", "database(EnsemblPlants)", "database(EnsemblProtists)"]
+        gene_properties = ["genes", "database(GeneID)", "database(KEGG)", "database(Ensembl)", "ensembl_gene_ids"]
         organism_properties = ["organism"]
         
         # add secondary_ids to self.attributes
@@ -305,26 +341,36 @@ class Uniprot_data:
         for protein in self.uniprot_ids:
             protein_id = protein
             _props = {}
+
+
             for arg in attributes:
-                # To do: Handle Ensembl
-                if arg in ["database(Ensembl)"]:
-                    continue                    
+
                 # split fields
                 if arg in split_fields:
                     attribute_value = self.data.get(arg).get(protein)
                     if attribute_value:
                         _props[arg] = self.fields_splitter(arg, attribute_value)
+
+                else:
+                    attribute_value = self.data.get(arg).get(protein)
+                    if attribute_value:                        
+                        _props[arg] = attribute_value
+
+                if arg == 'database(Ensembl)' and arg in _props:
+                    if arg in _props:
+                        _props[arg], ensg_ids = self.ensembl_process(_props[arg])
+                        if ensg_ids:
+                            _props["ensembl_gene_ids"] = ensg_ids
+
                 elif arg == "protein names":
                     _props[arg] = self.split_protein_names_field(self.data.get(arg).get(protein))
+
                 elif arg == "virus hosts":                    
                     attribute_value = self.split_virus_hosts_field(self.data.get(arg).get(protein))
                     if attribute_value:                        
                         _props[arg] = attribute_value
-                else:                    
-                    attribute_value = self.data.get(arg).get(protein)
-                    if attribute_value:                        
-                        _props[arg] = attribute_value
-            
+
+
             protein_props = dict()
             gene_props = dict()
             organism_props = dict()
@@ -347,16 +393,14 @@ class Uniprot_data:
                     if "database" in k:
                         # make ncbi gene id as gene_id
                         if "GeneID" in k:                            
-                            gene_id = _props[k]                        
-                        # merge emsembl fields as one
-                        elif "ensembl" in k.split("(")[1].split(")")[0].lower():
-                            gene_props["ensembl_gene_ids"] = _props[k]
-                        
+                            gene_id = _props[k]                                                    
                         # replace parantheses in field names and make their name lowercase
                         else:
                             gene_props[k.split("(")[1].split(")")[0].lower()] = _props[k]
+
                     else:
                         gene_props[k] = _props[k]
+
                 
                 # define organism_properties        
                 elif k in organism_properties:
