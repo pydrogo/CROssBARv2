@@ -301,7 +301,7 @@ class Uniprot_data:
         gene_to_protein_edges = []
         protein_to_organism_edges = []
 
-        for protein in self.uniprot_ids:
+        for protein in tqdm(self.uniprot_ids):
             protein_id = protein
             _props = {}
 
