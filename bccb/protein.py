@@ -76,8 +76,8 @@ class Uniprot_data:
 
         secondary_ids = uniprot.get_uniprot_sec(None)
         self.data['secondary_ids'] = collections.defaultdict(list)
-        for id in secondary_ids:
-            self.data['secondary_ids'][id[1]].append(id[0])
+        for sec_id in secondary_ids:
+            self.data['secondary_ids'][sec_id[1]].append(sec_id[0])
         for k, v in self.data['secondary_ids'].items():
             self.data['secondary_ids'][k] = ';'.join(v)
 
@@ -319,7 +319,7 @@ class Uniprot_data:
                     if attribute_value:                        
                         _props[arg] = attribute_value
 
-                if arg == 'database(Ensembl)':                                        
+                if arg == 'database(Ensembl)' and arg in _props:                                        
                     _props[arg], ensg_ids = self.ensembl_process(_props[arg])
                     if ensg_ids:                        
                         _props["ensembl_gene_ids"] = ensg_ids
