@@ -28,6 +28,8 @@ class Uniprot_data:
             delimiter="\t",
             array_delimiter="|",
             user_schema_config_path="config/schema_config.yaml",
+            skip_bad_relationships=True,
+            skip_duplicate_nodes=True
         )
 
     def uniprot_data_download(self, cache=False):
@@ -68,10 +70,14 @@ class Uniprot_data:
 
         # download attribute dicts
         self.data = {}
-        for query_key in tqdm(self.attributes):
-            self.data[query_key] = uniprot.uniprot_data(
-                query_key, self.organism, self.rev
-            )
+        for query_key in tqdm(self.attributes):            
+            try:
+                self.data[query_key] = uniprot.uniprot_data(
+                    query_key, self.organism, self.rev)
+            except:
+                self.data[query_key] = uniprot.uniprot_data(
+                    query_key, self.organism, self.rev)
+
             logger.debug(f'{query_key} field is downloaded')
 
         secondary_ids = uniprot.get_uniprot_sec(None)
@@ -96,7 +102,7 @@ class Uniprot_data:
         """
         if field_value:
             # replace sensitive elements for admin-import
-            field_value = field_value.replace("|",",").replace("'","").strip()
+            field_value = field_value.replace("|",",").replace("'","^").strip()
             
             # define fields that will not be splitted by semicolon
             split_dict = {"proteome":",", "genes":" "}
@@ -140,7 +146,7 @@ class Uniprot_data:
         Example:
             "Acetate kinase (EC 2.7.2.1) (Acetokinase)" -> ["Acetate kinase", "Acetokinase"]
         """
-        field_value = field_value.replace("|",",").replace("'","") # replace sensitive elements
+        field_value = field_value.replace("|",",").replace("'","^") # replace sensitive elements
     
         if "[Cleaved" in field_value:
             # discarding part after the "[Cleaved"
@@ -271,7 +277,7 @@ class Uniprot_data:
         return listed_enst, ensg_ids
 
     
-    def write_uniprot_nodes(self):
+    def write_uniprot_nodes_and_edges(self):
         """
         Write nodes through BioCypher.
         """
@@ -317,9 +323,9 @@ class Uniprot_data:
                 else:
                     attribute_value = self.data.get(arg).get(protein)
                     if attribute_value:                        
-                        _props[arg] = attribute_value
+                        _props[arg] = attribute_value.replace("|",",").replace("'","^").strip()
 
-                if arg == 'database(Ensembl)' and arg in _props:                                        
+                if arg == 'database(Ensembl)' and arg in _props:                    
                     _props[arg], ensg_ids = self.ensembl_process(_props[arg])
                     if ensg_ids:                        
                         _props["ensembl_gene_ids"] = ensg_ids
