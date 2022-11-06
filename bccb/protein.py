@@ -244,14 +244,10 @@ class Uniprot_data:
         listed_enst = []
         if isinstance(ens_list, str):
             listed_enst.append(ens_list)
-
         else:
             listed_enst = ens_list
             
-
         listed_enst = [enst.split(' [')[0] for enst in listed_enst]
-        if len(listed_enst) == 1:
-            listed_enst = listed_enst[0]
 
         ensg_ids = set()
         for enst_id in listed_enst:
@@ -263,10 +259,14 @@ class Uniprot_data:
             ensg_id = ensg_id[0] if ensg_id else None
             if ensg_id:
                 ensg_ids.add(ensg_id)
+                
         ensg_ids = list(ensg_ids)
 
         if len(ensg_ids) == 1:
             ensg_ids = ensg_ids[0]
+
+        if len(listed_enst) == 1:
+            listed_enst = listed_enst[0]
 
         return listed_enst, ensg_ids
 
