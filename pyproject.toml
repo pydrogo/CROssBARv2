@@ -34,7 +34,6 @@ tqdm = "^4.64.0"
 pandas = "^1.4.3"
 biocypher = {path = "../BioCypher", develop = true}
 pypath-omnipath = "^0.14.16"
-black = "^22.10.0"
 
 [tool.poetry.dev-dependencies]
 pytest = ">=6.0"
