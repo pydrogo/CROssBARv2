@@ -79,16 +79,9 @@ class Uniprot:
         # download attribute dicts
         self.data = {}
         for query_key in tqdm(self.attributes):
-            # until we learn how to use retries in the scripts, try-except blocks will remain
-            # otherwise, download errors will waste a lot of time
-            try:
-                self.data[query_key] = uniprot.uniprot_data(
-                    query_key, self.organism, self.rev
-                )
-            except:
-                self.data[query_key] = uniprot.uniprot_data(
-                    query_key, self.organism, self.rev
-                )
+            self.data[query_key] = uniprot.uniprot_data(
+                query_key, self.organism, self.rev
+            )
 
             logger.debug(f"{query_key} field is downloaded")
 
