@@ -18,7 +18,7 @@ class Uniprot:
     for import into a BioCypher database.
 
     Args:
-        organism: organism code in uniprot format, e.g. "hsa" for human.
+        organism: organism code in NCBI taxid format, e.g. "9606" for human.
 
         rev: if True, it downloads reviewed entries only.
 
