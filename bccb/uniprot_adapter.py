@@ -14,7 +14,7 @@ import pandas as pd
 logger.debug(f"Loading module {__name__}.")
 
 
-class Uniprot_data:
+class Uniprot:
     def __init__(self, organism='*', rev=True):
         self.organism = organism
         self.rev = rev
