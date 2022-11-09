@@ -42,7 +42,7 @@ class Uniprot:
             retries: number of retries in case of download error.
         """
 
-        # add context managers to stack
+        # stack pypath context managers
         with ExitStack() as stack:
 
             stack.enter_context(settings.context(retries=retries))
@@ -58,6 +58,8 @@ class Uniprot:
     def uniprot_data_downloader(self):
         """
         Download uniprot data from uniprot.org through pypath.
+
+        TODO make use of multi-field query
         """
 
         t0 = time()
