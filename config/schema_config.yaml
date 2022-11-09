@@ -53,7 +53,7 @@ protein:
     proteome: str[]
     organism_id: int
     ec: str[]
-    virus_hosts: str[] # should be int however currently biocypher doesnt seem to create list from integers
+    virus_hosts: str[] 
   
 organism taxon:
   represented_as: node

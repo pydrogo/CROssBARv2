@@ -345,14 +345,13 @@ class Uniprot:
         # add secondary_ids to self.attributes
         attributes = self.attributes + ["secondary_ids"]
 
-        gene_id = str()
-
         # create list of nodes
         node_list = []
 
         for protein in tqdm(self.uniprot_ids):
             protein_id = "uniprot:" + protein
             _props = {}
+            gene_id = ""
 
             for arg in attributes:
 
@@ -447,6 +446,8 @@ class Uniprot:
     def get_uniprot_edges(self):
         """
         Get nodes and edges from UniProt data.
+
+        TODO simplify and make sure this is correct
         """
 
         logger.info("Preparing edges.")
@@ -484,15 +485,17 @@ class Uniprot:
         # add secondary_ids to self.attributes
         attributes = self.attributes + ["secondary_ids"]
 
-        gene_id = str()
-
         # create lists of edges
         edge_list = []
 
         for protein in tqdm(self.uniprot_ids):
             protein_id = "uniprot:" + protein
             _props = {}
+            gene_id = ""
+            organism_id = ""
 
+            # this is just to account for the data is organised in fields 
+            # instead of per-protein
             for arg in attributes:
 
                 # split fields
@@ -527,15 +530,13 @@ class Uniprot:
                     if attribute_value:
                         _props[arg] = attribute_value
 
+            if _props.get("organism-id"):
+                organism_id = "ncbitaxon:" + _props.get("organism-id")
+
             for k in _props.keys():
-                # define protein_properties
-                if k in protein_properties:
-                    # make organism-id field integer and replace hyphen in keys
-                    if k == "organism-id":
-                        organism_id = "ncbitaxon:" + _props[k]
 
                 # if genes and database(GeneID) fields exist, define gene_properties
-                elif (
+                if (
                     k in gene_properties
                     and "genes" in _props.keys()
                     and "database(GeneID)" in _props.keys()
