@@ -48,10 +48,10 @@ class Uniprot:
             stack.enter_context(settings.context(retries=retries))
             
             if debug:
-                stack.enter_context(curl.debug_on)
+                stack.enter_context(curl.debug_on())
             
             if not cache:
-                stack.enter_context(curl.cache_off)
+                stack.enter_context(curl.cache_off())
 
             self.uniprot_data_downloader()
 

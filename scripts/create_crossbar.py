@@ -18,8 +18,8 @@ driver = biocypher.Driver(
         )
 
 
-uniprot_adapter = Uniprot()
-uniprot_adapter.download_uniprot_data(cache=True)
+uniprot_adapter = Uniprot(organism="9606")
+uniprot_adapter.download_uniprot_data(cache=False, retries=5)
 
 driver.write_nodes(uniprot_adapter.get_uniprot_nodes())
 driver.write_edges(uniprot_adapter.get_uniprot_edges())
