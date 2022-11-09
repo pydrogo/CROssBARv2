@@ -3,11 +3,12 @@ import collections
 from typing import Dict, List
 
 from tqdm import tqdm  # progress bar
-from pypath.share import curl
+from pypath.share import curl, settings
 from pypath.utils import mapping
 from pypath.inputs import uniprot
 from biocypher._logger import logger
 import biocypher
+from contextlib import ExitStack
 
 import numpy as np
 import pandas as pd
@@ -21,19 +22,35 @@ class Uniprot:
         self.rev = rev
         self.uniprot_df = None
 
-    def uniprot_data_download(self, cache=False):
+    def download_uniprot_data(self, cache=False, debug=False, retries=3):
         """
-        Download uniprot data from uniprot.org through pypath.
+        Wrapper function to download uniprot data using pypath; used to access
+        settings.
 
         Args:
             cache: if True, it uses the cached version of the data, otherwise
             forces download.
+            debug: if True, turns on debug mode in pypath.
+            retries: number of retries in case of download error.
         """
 
-        if not cache:
-            # set curl CACHE variable to False to force pypath to download the
-            # data from uniprot
-            curl.CACHE = False
+        # add context managers to stack
+        with ExitStack() as stack:
+
+            stack.enter_context(settings.context(retries=retries))
+            
+            if debug:
+                stack.enter_context(curl.debug_on)
+            
+            if not cache:
+                stack.enter_context(curl.cache_off)
+
+            self.uniprot_data_downloader()
+
+    def uniprot_data_downloader(self):
+        """
+        Download uniprot data from uniprot.org through pypath.
+        """
 
         t0 = time()
 
@@ -82,7 +99,7 @@ class Uniprot:
 
         t1 = time()
         msg = (
-            f"Downloaded data from UniProtKB in {round((t1-t0) / 60, 2)} mins."
+            f"Acquired UniProt data in {round((t1-t0) / 60, 2)} mins."
         )
         logger.info(msg)
 
