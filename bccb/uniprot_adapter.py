@@ -7,11 +7,7 @@ from pypath.share import curl, settings
 from pypath.utils import mapping
 from pypath.inputs import uniprot
 from biocypher._logger import logger
-import biocypher
 from contextlib import ExitStack
-
-import numpy as np
-import pandas as pd
 
 logger.debug(f"Loading module {__name__}.")
 
@@ -394,7 +390,7 @@ class Uniprot:
             gene_props = dict()
             organism_props = dict()
 
-            for k, v in _props.items():
+            for k in _props.keys():
                 # define protein_properties
                 if k in protein_properties:
                     # make length, mass and organism-id fields integer and replace hyphen in keys
