@@ -28,6 +28,40 @@ class Uniprot:
         self.organism = organism
         self.rev = rev
 
+        # class variables:
+        # fields that need splitting
+        self.split_fields = [
+            "secondary_ids",
+            "proteome",
+            "genes",
+            "ec",
+            "database(GeneID)",
+            "database(Ensembl)",
+            "database(KEGG)",
+        ]
+
+        # properties of nodes
+        self.protein_properties = [
+            "secondary_ids",
+            "length",
+            "mass",
+            "protein names",
+            "proteome",
+            "ec",
+            "virus hosts",
+            "organism-id",
+        ]
+
+        self.gene_properties = [
+            "genes",
+            "database(GeneID)",
+            "database(KEGG)",
+            "database(Ensembl)",
+            "ensembl_gene_ids",
+        ]
+
+        self.organism_properties = ["organism"]
+
     def download_uniprot_data(self, cache=False, debug=False, retries=3):
         """
         Wrapper function to download uniprot data using pypath; used to access
@@ -311,36 +345,6 @@ class Uniprot:
 
         logger.info("Preparing nodes.")
 
-        # define fields that need splitting
-        split_fields = [
-            "secondary_ids",
-            "proteome",
-            "genes",
-            "ec",
-            "database(GeneID)",
-            "database(Ensembl)",
-            "database(KEGG)",
-        ]
-
-        # define properties of nodes
-        protein_properties = [
-            "secondary_ids",
-            "length",
-            "mass",
-            "protein names",
-            "proteome",
-            "ec",
-            "virus hosts",
-            "organism-id",
-        ]
-        gene_properties = [
-            "genes",
-            "database(GeneID)",
-            "database(KEGG)",
-            "database(Ensembl)",
-            "ensembl_gene_ids",
-        ]
-        organism_properties = ["organism"]
 
         # add secondary_ids to self.attributes
         attributes = self.attributes + ["secondary_ids"]
@@ -356,7 +360,7 @@ class Uniprot:
             for arg in attributes:
 
                 # split fields
-                if arg in split_fields:
+                if arg in self.split_fields:
                     attribute_value = self.data.get(arg).get(protein)
                     if attribute_value:
                         _props[arg] = self.fields_splitter(arg, attribute_value)
@@ -393,7 +397,7 @@ class Uniprot:
 
             for k in _props.keys():
                 # define protein_properties
-                if k in protein_properties:
+                if k in self.protein_properties:
                     # make length, mass and organism-id fields integer and replace hyphen in keys
                     if k in ["length", "mass", "organism-id"]:
                         protein_props[k.replace("-", "_")] = int(
@@ -410,7 +414,7 @@ class Uniprot:
 
                 # if genes and database(GeneID) fields exist, define gene_properties
                 elif (
-                    k in gene_properties
+                    k in self.gene_properties
                     and "genes" in _props.keys()
                     and "database(GeneID)" in _props.keys()
                 ):
@@ -428,7 +432,7 @@ class Uniprot:
                         gene_props[k] = _props[k]
 
                 # define organism_properties
-                elif k in organism_properties:
+                elif k in self.organism_properties:
                     organism_props[k] = _props[k]
 
             # append related fields to protein_nodes
@@ -452,38 +456,10 @@ class Uniprot:
 
         logger.info("Preparing edges.")
 
-        # define fields that need splitting
-        split_fields = [
-            "secondary_ids",
-            "proteome",
-            "genes",
-            "ec",
+        edge_args = [
             "database(GeneID)",
-            "database(Ensembl)",
-            "database(KEGG)",
-        ]
-
-        # define properties of nodes
-        protein_properties = [
-            "secondary_ids",
-            "length",
-            "mass",
-            "protein names",
-            "proteome",
-            "ec",
-            "virus hosts",
             "organism-id",
         ]
-        gene_properties = [
-            "genes",
-            "database(GeneID)",
-            "database(KEGG)",
-            "database(Ensembl)",
-            "ensembl_gene_ids",
-        ]
-
-        # add secondary_ids to self.attributes
-        attributes = self.attributes + ["secondary_ids"]
 
         # create lists of edges
         edge_list = []
@@ -494,63 +470,37 @@ class Uniprot:
             gene_id = ""
             organism_id = ""
 
-            # this is just to account for the data is organised in fields 
+            # this is just to account for the data being organised in fields 
             # instead of per-protein
-            for arg in attributes:
+            for arg in edge_args:
 
                 # split fields
-                if arg in split_fields:
-                    attribute_value = self.data.get(arg).get(protein)
-                    if attribute_value:
+                attribute_value = self.data.get(arg).get(protein)
+
+                if attribute_value:
+
+                    if arg in self.split_fields:
+
                         _props[arg] = self.fields_splitter(arg, attribute_value)
 
-                else:
-                    attribute_value = self.data.get(arg).get(protein)
-                    if attribute_value:
+                    else:
+
                         _props[arg] = (
                             attribute_value.replace("|", ",")
                             .replace("'", "^")
                             .strip()
                         )
 
-                if arg == "database(Ensembl)" and arg in _props:
-                    _props[arg], ensg_ids = self.ensembl_process(_props[arg])
-                    if ensg_ids:
-                        _props["ensembl_gene_ids"] = ensg_ids
-
-                elif arg == "protein names":
-                    _props[arg] = self.split_protein_names_field(
-                        self.data.get(arg).get(protein)
-                    )
-
-                elif arg == "virus hosts":
-                    attribute_value = self.split_virus_hosts_field(
-                        self.data.get(arg).get(protein)
-                    )
-                    if attribute_value:
-                        _props[arg] = attribute_value
-
             if _props.get("organism-id"):
                 organism_id = "ncbitaxon:" + _props.get("organism-id")
 
-            for k in _props.keys():
+            if _props.get("database(GeneID)"):
+                gene_id = "ncbigene:" + _props.get("database(GeneID)")
 
-                # if genes and database(GeneID) fields exist, define gene_properties
-                if (
-                    k in gene_properties
-                    and "genes" in _props.keys()
-                    and "database(GeneID)" in _props.keys()
-                ):
-                    if "database" in k:
-                        # make ncbi gene id as gene_id
-                        if "GeneID" in k:
-                            gene_id = "ncbigene:" + _props[k]
-
-            # append related fields to gene_nodes and gene_to_protein_edges
+            # create edges
             if gene_id:
                 edge_list.append((gene_id, protein_id, "Encodes", dict()))
 
-            # append related fields to protein_to_organism_edges
             if organism_id:
                 edge_list.append(
                     (protein_id, organism_id, "Belongs_To", dict())

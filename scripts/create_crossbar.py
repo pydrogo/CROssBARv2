@@ -18,7 +18,9 @@ driver = biocypher.Driver(
         )
 
 
-uniprot_adapter = Uniprot(organism="9606")
+uniprot_adapter = Uniprot(
+    organism="9606"
+)
 uniprot_adapter.download_uniprot_data(cache=True, retries=5)
 
 driver.write_nodes(uniprot_adapter.get_uniprot_nodes())
