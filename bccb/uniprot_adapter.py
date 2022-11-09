@@ -30,7 +30,9 @@ class Uniprot:
         Args:
             cache: if True, it uses the cached version of the data, otherwise
             forces download.
+
             debug: if True, turns on debug mode in pypath.
+
             retries: number of retries in case of download error.
         """
 
@@ -477,7 +479,6 @@ class Uniprot:
             "database(Ensembl)",
             "ensembl_gene_ids",
         ]
-        organism_properties = ["organism"]
 
         # add secondary_ids to self.attributes
         attributes = self.attributes + ["secondary_ids"]
@@ -554,57 +555,3 @@ class Uniprot:
                 )
 
         return edge_list
-
-    def build_dataframe(self):
-        logger.debug("Building dataframe")
-        protein_dict_list = []
-        for protein in tqdm(self.uniprot_ids):
-            protein_dict = {
-                # define primary attributes which needs specific preprocessing
-                # 'accession': protein,
-                # 'secondary_accessions': self.data['secondary_ids'].get(
-                #     protein
-                # ),
-                # 'length': int(self.data['length'].get(protein)),
-                # 'mass': (
-                #     int(self.data['mass'][protein].replace(',', ''))
-                #     if protein in self.data['mass']
-                #     else None
-                # ),
-                # 'tax_id': int(self.data['organism-id'].get(protein)),
-                # 'organism': self.data['organism'].get(protein),
-                # 'protein_names': self.data['protein names'].get(protein),
-                "chromosome": (  # TODO why
-                    ";".join(self.data["proteome"].get(protein).split(","))
-                    if self.data["proteome"].get(protein)
-                    else None
-                ),
-                "genes": (  # TODO why
-                    ";".join(self.data["genes"][protein].split(" "))
-                    if protein in self.data["genes"]
-                    else None
-                ),
-                # 'ec_numbers': self.data['ec'].get(protein),
-                "ensembl_transcript": self.xref_process(  # TODO is this an edge?
-                    "database(Ensembl)", protein
-                ),
-                "ensembl_gene": (  # TODO is this an edge?
-                    self.ensembl_process(
-                        self.xref_process("database(Ensembl)", protein)
-                    )
-                    if self.xref_process("database(Ensembl)", protein)
-                    else None
-                ),
-            }
-
-            protein_dict_list.append(protein_dict)
-
-        self.uniprot_df = pd.DataFrame.from_dict(
-            protein_dict_list, orient="columns"
-        )  # create uniprot dataframe
-
-        self.uniprot_df.replace("nan", np.nan, inplace=True)
-        self.uniprot_df.fillna(
-            value=np.nan, inplace=True
-        )  # replace None with NaN
-        logger.info("Dataframe is built")
