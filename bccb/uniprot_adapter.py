@@ -1,5 +1,6 @@
 from time import time
 import collections
+from typing import Dict, List
 
 from tqdm import tqdm  # progress bar
 from pypath.share import curl
@@ -19,18 +20,6 @@ class Uniprot:
         self.organism = organism
         self.rev = rev
         self.uniprot_df = None
-
-        self.driver = biocypher.Driver(
-            offline=True,
-            db_name="neo4j",
-            wipe=True,
-            quote_char="'",
-            delimiter="\t",
-            array_delimiter="|",
-            user_schema_config_path="config/schema_config.yaml",
-            skip_bad_relationships=True,
-            skip_duplicate_nodes=True
-        )
 
     def uniprot_data_download(self, cache=False):
         """
@@ -278,13 +267,13 @@ class Uniprot:
 
         return listed_enst, ensg_ids
 
-    
-    def write_uniprot_nodes_and_edges(self):
+  
+    def get_uniprot_nodes(self) -> List[Dict]:
         """
-        Write nodes through BioCypher.
+        Get nodes from UniProt data.
         """
 
-        logger.info("Writing nodes to CSV for admin import")
+        logger.info("Preparing nodes.")
         
         # define fields that need splitting
         split_fields = ["secondary_ids", "proteome", "genes", "ec", "database(GeneID)", "database(Ensembl)", "database(KEGG)"]
@@ -297,22 +286,14 @@ class Uniprot:
         # add secondary_ids to self.attributes
         attributes = self.attributes + ["secondary_ids"]
         
-        # 
         gene_id = str()
         
-        # create lists of nodes
-        protein_nodes = []
-        gene_nodes = []
-        organism_nodes = []
+        # create list of nodes
+        node_list = []
         
-        # create lists of edges
-        gene_to_protein_edges = []
-        protein_to_organism_edges = []
-
         for protein in tqdm(self.uniprot_ids):
             protein_id = "uniprot:" + protein
             _props = {}
-
 
             for arg in attributes:
 
@@ -339,7 +320,6 @@ class Uniprot:
                     attribute_value = self.split_virus_hosts_field(self.data.get(arg).get(protein))
                     if attribute_value:                        
                         _props[arg] = attribute_value
-
 
             protein_props = dict()
             gene_props = dict()
@@ -377,31 +357,96 @@ class Uniprot:
                     organism_props[k] = _props[k]
             
             # append related fields to protein_nodes
-            protein_nodes.append((protein_id, "protein", protein_props))
+            node_list.append((protein_id, "protein", protein_props))
             
             # append related fields to gene_nodes and gene_to_protein_edges
             if gene_props:
-                gene_nodes.append((gene_id, "gene", gene_props))
-                gene_to_protein_edges.append((gene_id, protein_id, "Encodes", dict()))
+                node_list.append((gene_id, "gene", gene_props))
             
             # append related fields to organism_nodes
-            organism_nodes.append((organism_id, "organism", organism_props))
+            node_list.append((organism_id, "organism", organism_props))
+            
+        return node_list
+    
+    def get_uniprot_edges(self):
+        """
+        Get nodes and edges from UniProt data.
+        """
+
+        logger.info("Preparing edges.")
+        
+        # define fields that need splitting
+        split_fields = ["secondary_ids", "proteome", "genes", "ec", "database(GeneID)", "database(Ensembl)", "database(KEGG)"]
+        
+        # define properties of nodes
+        protein_properties = ["secondary_ids", "length", "mass", "protein names", "proteome", "ec", "virus hosts", "organism-id"]
+        gene_properties = ["genes", "database(GeneID)", "database(KEGG)", "database(Ensembl)", "ensembl_gene_ids"]
+        organism_properties = ["organism"]
+        
+        # add secondary_ids to self.attributes
+        attributes = self.attributes + ["secondary_ids"]
+        
+        gene_id = str()
+        
+        # create lists of edges
+        edge_list = []
+
+        for protein in tqdm(self.uniprot_ids):
+            protein_id = "uniprot:" + protein
+            _props = {}
+
+
+            for arg in attributes:
+
+                # split fields
+                if arg in split_fields:
+                    attribute_value = self.data.get(arg).get(protein)
+                    if attribute_value:
+                        _props[arg] = self.fields_splitter(arg, attribute_value)
+
+                else:
+                    attribute_value = self.data.get(arg).get(protein)
+                    if attribute_value:                        
+                        _props[arg] = attribute_value.replace("|",",").replace("'","^").strip()
+
+                if arg == 'database(Ensembl)' and arg in _props:                    
+                    _props[arg], ensg_ids = self.ensembl_process(_props[arg])
+                    if ensg_ids:                        
+                        _props["ensembl_gene_ids"] = ensg_ids
+
+                elif arg == "protein names":
+                    _props[arg] = self.split_protein_names_field(self.data.get(arg).get(protein))
+
+                elif arg == "virus hosts":                    
+                    attribute_value = self.split_virus_hosts_field(self.data.get(arg).get(protein))
+                    if attribute_value:                        
+                        _props[arg] = attribute_value
+
+
+            for k in _props.keys():
+                # define protein_properties
+                if k in protein_properties:
+                    # make organism-id field integer and replace hyphen in keys
+                    if k == "organism-id":                            
+                        organism_id = "ncbitaxon:" + _props[k]
+                    
+                # if genes and database(GeneID) fields exist, define gene_properties
+                elif k in gene_properties and "genes" in _props.keys() and "database(GeneID)" in _props.keys():                    
+                    if "database" in k:
+                        # make ncbi gene id as gene_id
+                        if "GeneID" in k:                            
+                            gene_id = "ncbigene:" + _props[k]                                                    
+                
+            # append related fields to gene_nodes and gene_to_protein_edges
+            if gene_id:
+                edge_list.append((gene_id, protein_id, "Encodes", dict()))
             
             # append related fields to protein_to_organism_edges
-            protein_to_organism_edges.append((protein_id, organism_id, "Belongs_To", dict()))
+            if organism_id:
+                edge_list.append((protein_id, organism_id, "Belongs_To", dict()))
             
-        
-        # write nodes to admin-import compatible csvs
-        self.driver.write_nodes(protein_nodes)
-        self.driver.write_nodes(gene_nodes)
-        self.driver.write_nodes(organism_nodes)
-        
-        # write edges to admin-import compatible csvs
-        self.driver.write_edges(gene_to_protein_edges)
-        self.driver.write_edges(protein_to_organism_edges)
-        
-        # write admin-import call
-        self.driver.write_import_call()
+        return edge_list
+
 
     def build_dataframe(self):
         logger.debug("Building dataframe")
