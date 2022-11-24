@@ -27,7 +27,7 @@ repository = "https://github.com/saezlab/python-project"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.9"
 toml = "*"
 numpy = "^1.23.1"
 tqdm = "^4.64.0"

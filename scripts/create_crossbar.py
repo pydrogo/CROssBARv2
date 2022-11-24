@@ -2,7 +2,7 @@
 CROssBAR generation through BioCypher script
 """
 
-from bccb.uniprot_adapter import Uniprot, Fields
+from bccb.uniprot_adapter import Uniprot, UniprotNodeFields, UniprotEdgeFields
 import biocypher
 
 driver = biocypher.Driver(
@@ -18,14 +18,31 @@ driver = biocypher.Driver(
         )
 
 
-fields = [
-    Fields.PROTEIN_LENGTH,
-    Fields.PROTEIN_MASS,
-    Fields.PROTEIN_ORGANISM,
+node_fields = [
+    UniprotNodeFields.PROTEIN_SECONDARY_IDS,
+    UniprotNodeFields.PROTEIN_LENGTH,
+    UniprotNodeFields.PROTEIN_MASS,
+    UniprotNodeFields.PROTEIN_ORGANISM,
+    UniprotNodeFields.PROTEIN_ORGANISM_ID,
+    UniprotNodeFields.PROTEIN_NAMES,
+    UniprotNodeFields.PROTEOME,
+    UniprotNodeFields.EC,
+    UniprotNodeFields.GENE_NAMES,
+    UniprotNodeFields.ENSEMBL_GENE_IDS,
+    UniprotNodeFields.ENTREZ_GENE_IDS,
+    UniprotNodeFields.VIRUS_HOSTS,
+    UniprotNodeFields.KEGG_IDS,
 ]
+
+edge_fields = [
+    UniprotEdgeFields.PROTEIN_TO_ORGANISM,
+    UniprotEdgeFields.GENE_TO_PROTEIN,
+]
+
 uniprot_adapter = Uniprot(
     organism="9606",
-    fields=fields,
+    node_fields=node_fields,
+    edge_fields=edge_fields,
 )
 
 uniprot_adapter.download_uniprot_data(

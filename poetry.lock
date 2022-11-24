@@ -79,7 +79,7 @@ version = "0.3.4"
 description = "Graph database standard for molecular biology"
 category = "main"
 optional = false
-python-versions = "^3.8"
+python-versions = "^3.9"
 develop = true
 
 [package.dependencies]
@@ -103,7 +103,7 @@ url = "../BioCypher"
 
 [[package]]
 name = "bioregistry"
-version = "0.6.9"
+version = "0.6.10"
 description = "Integrated registry of biological databases and nomenclatures"
 category = "main"
 optional = false
@@ -579,21 +579,6 @@ perf = ["ipython"]
 testing = ["flake8 (<5)", "flufl.flake8", "importlib-resources (>=1.3)", "packaging", "pyfakefs", "pytest (>=6)", "pytest-black (>=0.3.7)", "pytest-checkdocs (>=2.4)", "pytest-cov", "pytest-enabler (>=1.3)", "pytest-flake8", "pytest-mypy (>=0.9.1)", "pytest-perf (>=0.9.2)"]
 
 [[package]]
-name = "importlib-resources"
-version = "5.10.0"
-description = "Read resources from Python packages"
-category = "main"
-optional = false
-python-versions = ">=3.7"
-
-[package.dependencies]
-zipp = {version = ">=3.1.0", markers = "python_version < \"3.10\""}
-
-[package.extras]
-docs = ["furo", "jaraco.packaging (>=9)", "jaraco.tidelift (>=1.4)", "rst.linker (>=1.9)", "sphinx (>=3.5)"]
-testing = ["flake8 (<5)", "pytest (>=6)", "pytest-black (>=0.3.7)", "pytest-checkdocs (>=2.4)", "pytest-cov", "pytest-enabler (>=1.3)", "pytest-flake8", "pytest-mypy (>=0.9.1)"]
-
-[[package]]
 name = "iniconfig"
 version = "1.1.1"
 description = "iniconfig: brain-dead simple config-ini parsing"
@@ -712,10 +697,8 @@ python-versions = ">=3.7"
 attrs = ">=17.4.0"
 fqdn = {version = "*", optional = true, markers = "extra == \"format\""}
 idna = {version = "*", optional = true, markers = "extra == \"format\""}
-importlib-resources = {version = ">=1.4.0", markers = "python_version < \"3.9\""}
 isoduration = {version = "*", optional = true, markers = "extra == \"format\""}
 jsonpointer = {version = ">1.13", optional = true, markers = "extra == \"format\""}
-pkgutil-resolve-name = {version = ">=1.3.10", markers = "python_version < \"3.9\""}
 pyrsistent = ">=0.14.0,<0.17.0 || >0.17.0,<0.17.1 || >0.17.1,<0.17.2 || >0.17.2"
 rfc3339-validator = {version = "*", optional = true, markers = "extra == \"format\""}
 rfc3987 = {version = "*", optional = true, markers = "extra == \"format\""}
@@ -1076,14 +1059,6 @@ docs = ["furo", "olefile", "sphinx (>=2.4)", "sphinx-copybutton", "sphinx-issues
 tests = ["check-manifest", "coverage", "defusedxml", "markdown2", "olefile", "packaging", "pyroma", "pytest", "pytest-cov", "pytest-timeout"]
 
 [[package]]
-name = "pkgutil-resolve-name"
-version = "1.3.10"
-description = "Resolve a name to an object."
-category = "main"
-optional = false
-python-versions = ">=3.6"
-
-[[package]]
 name = "platformdirs"
 version = "2.5.3"
 description = "A small Python package for determining appropriate platform-specific dirs, e.g. a \"user data dir\"."
@@ -1248,11 +1223,11 @@ diagrams = ["jinja2", "railroad-diagrams"]
 
 [[package]]
 name = "pypath-omnipath"
-version = "0.14.16"
+version = "0.14.21"
 description = "Molecular signaling prior knowledge processing"
 category = "main"
 optional = false
-python-versions = ">=3.8,<4.0"
+python-versions = ">=3.9,<4.0"
 
 [package.dependencies]
 beautifulsoup4 = "*"
@@ -2098,8 +2073,8 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 
 [metadata]
 lock-version = "1.1"
-python-versions = "^3.8"
-content-hash = "67d488c37d54fecb7368042087677a85531e5550537ff4aaff0456a5f495a859"
+python-versions = "^3.9"
+content-hash = "275c766e729bddac00b560fd20d0ae60c8efba8a81138c5f3486e6818f449872"
 
 [metadata.files]
 alabaster = [
@@ -2131,8 +2106,8 @@ beautifulsoup4 = [
 ]
 biocypher = []
 bioregistry = [
-    {file = "bioregistry-0.6.9-py3-none-any.whl", hash = "sha256:2bdbc4f29e466ea097c1f8e2f0d975ef54ca76e0820ee0a0256cd8e8d95d228c"},
-    {file = "bioregistry-0.6.9.tar.gz", hash = "sha256:f0adb1d301d080eeffc19d8a50dee061ee01b9768b56aa39db3d4e45e4eee58c"},
+    {file = "bioregistry-0.6.10-py3-none-any.whl", hash = "sha256:faff24d833868c6f67faf928dbd543931c06476e11dd44147397a1d581eb6efa"},
+    {file = "bioregistry-0.6.10.tar.gz", hash = "sha256:e52137c313e686cce95480ce8c9099bce279a250a32a726f0c514cb7a26c671b"},
 ]
 black = [
     {file = "black-21.6b0-py3-none-any.whl", hash = "sha256:dfb8c5a069012b2ab1e972e7b908f5fb42b6bbabcba0a788b86dc05067c7d9c7"},
@@ -2457,10 +2432,6 @@ imagesize = [
 importlib-metadata = [
     {file = "importlib_metadata-4.13.0-py3-none-any.whl", hash = "sha256:8a8a81bcf996e74fee46f0d16bd3eaa382a7eb20fd82445c3ad11f4090334116"},
     {file = "importlib_metadata-4.13.0.tar.gz", hash = "sha256:dd0173e8f150d6815e098fd354f6414b0f079af4644ddfe90c71e2fc6174346d"},
-]
-importlib-resources = [
-    {file = "importlib_resources-5.10.0-py3-none-any.whl", hash = "sha256:ee17ec648f85480d523596ce49eae8ead87d5631ae1551f913c0100b5edd3437"},
-    {file = "importlib_resources-5.10.0.tar.gz", hash = "sha256:c01b1b94210d9849f286b86bb51bcea7cd56dde0600d8db721d7b81330711668"},
 ]
 iniconfig = [
     {file = "iniconfig-1.1.1-py2.py3-none-any.whl", hash = "sha256:011e24c64b7f47f6ebd835bb12a743f2fbe9a26d4cecaa7f53bc4f35ee9da8b3"},
@@ -2921,10 +2892,6 @@ pillow = [
     {file = "Pillow-9.3.0-pp38-pypy38_pp73-win_amd64.whl", hash = "sha256:073adb2ae23431d3b9bcbcff3fe698b62ed47211d0716b067385538a1b0f28b8"},
     {file = "Pillow-9.3.0.tar.gz", hash = "sha256:c935a22a557a560108d780f9a0fc426dd7459940dc54faa49d83249c8d3e760f"},
 ]
-pkgutil-resolve-name = [
-    {file = "pkgutil_resolve_name-1.3.10-py3-none-any.whl", hash = "sha256:ca27cc078d25c5ad71a9de0a7a330146c4e014c2462d9af19c6b828280649c5e"},
-    {file = "pkgutil_resolve_name-1.3.10.tar.gz", hash = "sha256:357d6c9e6a755653cfd78893817c0853af365dd51ec97f3d358a819373bbd174"},
-]
 platformdirs = [
     {file = "platformdirs-2.5.3-py3-none-any.whl", hash = "sha256:0cb405749187a194f444c25c82ef7225232f11564721eabffc6ec70df83b11cb"},
     {file = "platformdirs-2.5.3.tar.gz", hash = "sha256:6e52c21afff35cb659c6e52d8b4d61b9bd544557180440538f255d9382c8cbe0"},
@@ -3019,8 +2986,7 @@ pyparsing = [
     {file = "pyparsing-3.0.9.tar.gz", hash = "sha256:2b020ecf7d21b687f219b71ecad3631f644a47f01403fa1d1036b0c6416d70fb"},
 ]
 pypath-omnipath = [
-    {file = "pypath-omnipath-0.14.16.tar.gz", hash = "sha256:fe7c378e46b76b3499b66884839ba26cd55a59828b727297706d2f368ad11479"},
-    {file = "pypath_omnipath-0.14.16-py3-none-any.whl", hash = "sha256:2989a401cb0fa37587eea5d375c3f6764c9599f27fc42ef3bab812429ec4acbc"},
+    {file = "pypath-omnipath-0.14.21.tar.gz", hash = "sha256:2e55549d257eefb082674ff6d59d31861dbda63769c01bb584397bc472507672"},
 ]
 pyreadr = [
     {file = "pyreadr-0.4.7-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:749ead06aa48503f2dd7e54c1f94d228e3a22616527d5e21a43c4f97338f88a7"},
