@@ -289,6 +289,7 @@ class PPI_data:
             # this tax id give an error
             tax_ids_to_be_skipped = ['4565', ]
             
+            # it may take around 100 hours to download this data
             for tax in tqdm(self.tax_ids):
                 if tax not in tax_ids_to_be_skipped:
                     # remove proteins that does not have swissprot ids
