@@ -371,7 +371,7 @@ class PPI_data:
       
     def merge_mall(self):
         """
-        Merge function for all 3 databases. Merges dataframe according to uniprot_a and uniprot_b (i.e., protein pairs) columns.
+        Merge function for all 3 databases. Merge dataframes according to uniprot_a and uniprot_b (i.e., protein pairs) columns.
                   
         """
         
