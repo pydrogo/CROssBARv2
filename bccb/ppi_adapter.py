@@ -289,7 +289,6 @@ class PPI_data:
             # this tax id give an error
             tax_ids_to_be_skipped = ['4565', ]
             
-            counter = 0
             for tax in tqdm(self.tax_ids):
                 if tax not in tax_ids_to_be_skipped:
                     # remove proteins that does not have swissprot ids
@@ -301,11 +300,6 @@ class PPI_data:
                     
                     if organism_string_ints:
                         self.string_ints.extend(organism_string_ints)
-                    
-                    counter += 1
-                    
-                    if counter == 50:
-                        break
             
         t1 = time()
         logger.info(f'STRING data is downloaded in {round((t1-t0) / 60, 2)} mins')
