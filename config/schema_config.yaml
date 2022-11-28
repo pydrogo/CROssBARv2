@@ -53,7 +53,7 @@ protein:
     proteome: str[]
     organism_id: int
     ec: str[]
-    virus_hosts: str[] 
+    virus_hosts: int[] 
   
 organism taxon:
   represented_as: node
@@ -165,22 +165,21 @@ protein to organism taxon association:
   target: organismTaxon
   label_in_input: Belongs_To  
   
-# post translational interaction:
-  # represented_as: edge
-  # label_as_edge: Interacts_With
-  # preferred_id: id
-  # source: protein
-  # target: protein
-  # label_in_input: Interacts_With
-  # properties:
-    #source: str
-    #pubmed_id: int
-    #method: str
-    #interaction_type: str
-    #intact_score: float
-    #string_combined_score: int
-    #string_physical_combined_score: int
-    
+post translational interaction:
+  represented_as: edge
+  label_as_edge: Interacts_With
+  preferred_id: id
+  source: protein
+  target: protein
+  label_in_input: Interacts_With
+  properties:    
+    source: str[]
+    pubmed_id: int[]
+    method: str
+    interaction_type: str
+    intact_score: float
+    string_combined_score: int
+    string_physical_combined_score: int    
     
 
 # protein to protein domain association:
