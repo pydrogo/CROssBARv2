@@ -19,6 +19,8 @@ from tqdm import tqdm # progress bar
 from biocypher._logger import logger
 from contextlib import ExitStack
 
+from bioregistry import normalize_curie
+
 class PPI_data:
     def __init__(self, output_dir = None, export_csvs = False, split_output = False, cache=False, debug=False, retries=6):
         """
@@ -500,8 +502,8 @@ class PPI_data:
                         _props[column] = str(row[column])
             
 
-            _source = str(row["uniprot_a"])
-            _target = str(row["uniprot_b"])
+            _source = normalize_curie("uniprot:" + str(row["uniprot_a"]))
+            _target = normalize_curie("uniprot:" + str(row["uniprot_b"]))           
 
             edge_list.append((None, _source, _target, "Interacts_With", _props))
             
