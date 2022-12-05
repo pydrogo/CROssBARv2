@@ -476,7 +476,7 @@ class PPI_data:
             
         if self.export_csvs:            
             all_df_path = self.export_dataframe(self.all_selected_features_df, "ppi_all")
-            logger.info(f'Final STRING data is written: {all_df_path}')
+            logger.info(f'Final data is written: {all_df_path}')
             
     
     def gen_edges(self):
