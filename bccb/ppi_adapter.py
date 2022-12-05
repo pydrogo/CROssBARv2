@@ -61,7 +61,7 @@ class PPI_data:
 
         return output_path
 
-    def download_intact_data(self):
+    def download_intact_data(self, organism=None):
         """
         Wrapper function to download IntAct data using pypath; used to access
         settings.
@@ -79,7 +79,7 @@ class PPI_data:
             if not self.cache:
                 stack.enter_context(curl.cache_off())
 
-            self.intact_ints = intact.intact_interactions(miscore=0, organism=None, complex_expansion=True, only_proteins=True)
+            self.intact_ints = intact.intact_interactions(miscore=0, organism=organism, complex_expansion=True, only_proteins=True)
         t1 = time()
         
         logger.info(f'IntAct data is downloaded in {round((t1-t0) / 60, 2)} mins')
@@ -141,7 +141,7 @@ class PPI_data:
         t2 = time()
         logger.info(f'IntAct data is processed in {round((t2-t1) / 60, 2)} mins')
                          
-    def download_biogrid_data(self):
+    def download_biogrid_data(self, organism=None):
         """
         Wrapper function to download BioGRID data using pypath; used to access
         settings.
@@ -162,7 +162,7 @@ class PPI_data:
                 stack.enter_context(curl.cache_off())
 
             # download biogrid data
-            self.biogrid_ints = biogrid.biogrid_all_interactions(None, 9999999999, False)
+            self.biogrid_ints = biogrid.biogrid_all_interactions(organism, 9999999999, False)
                         
             # download these fields for mapping from gene symbol to uniprot id          
             self.uniprot_to_gene = uniprot.uniprot_data("genes", "*", True)
@@ -254,7 +254,7 @@ class PPI_data:
         logger.info(f'BioGRID data is processed in {round((t2-t1) / 60, 2)} mins')
     
 
-    def download_string_data(self):
+    def download_string_data(self, organism=None):
         """
         Wrapper function to download STRING data using pypath; used to access
         settings.
@@ -272,9 +272,12 @@ class PPI_data:
                 stack.enter_context(curl.debug_on())
             if not self.cache:
                 stack.enter_context(curl.cache_off())
-             
-            string_species = string.string_species()
-            self.tax_ids = list(string_species.keys())
+
+            if organism is None:
+                string_species = string.string_species()
+                self.tax_ids = list(string_species.keys())
+            else:
+                self.tax_ids = [organism]
         
             # map string ids to swissprot ids
             uniprot_to_string = uniprot.uniprot_data("database(STRING)", "*", True)
@@ -487,7 +490,7 @@ class PPI_data:
         columns_with_multiple_entries = ['source', 'pubmed_id']
         columns = ['source', 'pubmed_id', 'method', 'interaction_type', 'intact_score', 
         'string_combined_score', 'string_physical_combined_score']
-        for index, row in tqdm(self.all_selected_features_df.iterrows()):       
+        for _, row in tqdm(self.all_selected_features_df.iterrows()):       
             _props = dict()
             
             for column in columns:
