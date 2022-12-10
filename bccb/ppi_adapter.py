@@ -24,6 +24,11 @@ from bioregistry import normalize_curie
 class PPI_data:
     def __init__(self, output_dir = None, export_csvs = False, split_output = False, cache=False, debug=False, retries=6):
         """
+            WARNING: STRING database download urls contain version number/date.
+                Please update this urls (or request an update) in 
+                resources.urls module of the pypath library before using this script
+                in order to access the latest versions of data.
+
             Args:
                 export_csvs: Flag for whether or not create csvs of outputs
                 split_csvs: whether or not to split output csv files to multiple parts
