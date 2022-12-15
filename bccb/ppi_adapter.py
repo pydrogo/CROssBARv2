@@ -22,8 +22,35 @@ from contextlib import ExitStack
 
 from bioregistry import normalize_curie
 
+from enum import Enum
+
+class IntactEdgeFields(Enum):
+    SOURCE = "source"
+    UNIPROT_A = "id_a"
+    UNIPROT_B = "id_b"
+    PUBMED_IDS = "pubmeds"
+    INTACT_SCORE = "mi_score"
+    METHODS = "methods"
+    INTERACTION_TYPES = "interaction_types"
+    
+class BiogridEdgeFields(Enum):
+    SOURCE = "source"
+    UNIPROT_A = "uniprot_a"
+    UNIPROT_B = "uniprot_b"
+    PUBMED_IDS = "pmid"
+    EXPERIMENTAL_SYSTEM = "experimental_system"
+    
+class StringEdgeFields(Enum):
+    SOURCE = "source"
+    UNIPROT_A = "uniprot_a"
+    UNIPROT_B = "uniprot_b"
+    COMBINED_SCORE = "combined_score"
+    PHYSICAL_COMBINED_SCORE = "physical_combined_score"
+    
+
 class PPI_data:
-    def __init__(self, output_dir = None, export_csvs = False, split_output = False, cache=False, debug=False, retries=6):
+    def __init__(self, output_dir = None, export_csvs = False, split_output = False, cache=False, debug=False, retries=6,
+                organism=9606):
         """
             WARNING: STRING database download urls contain version number/date.
                 Please update this urls (or request an update) in 
@@ -45,7 +72,9 @@ class PPI_data:
         self.swissprots = list(uniprot._all_uniprots("*", True))
         self.cache = cache
         self.debug = debug
-        self.retries = retries
+        self.retries = retries        
+        self.organism = organism
+
         
         if export_csvs:
             Path(output_dir).mkdir(parents=True, exist_ok=True)
@@ -76,7 +105,7 @@ class PPI_data:
         """
                      
         logger.debug("Started downloading IntAct data")
-        logger.info(f'This is the link of IntAct data we downloaded:{urls.urls['intact']['mitab']}. Please check if it is up to date')
+        logger.info(f"This is the link of IntAct data we downloaded:{urls.urls['intact']['mitab']}. Please check if it is up to date")
         t0 = time()
         
         with ExitStack() as stack:                         
@@ -87,13 +116,13 @@ class PPI_data:
             if not self.cache:
                 stack.enter_context(curl.cache_off())
 
-            self.intact_ints = intact.intact_interactions(miscore=0, organism=organism, complex_expansion=True, only_proteins=True)
+            self.intact_ints = intact.intact_interactions(miscore=0, organism=self.organism, complex_expansion=True, only_proteins=True)
         t1 = time()
         
         logger.info(f'IntAct data is downloaded in {round((t1-t0) / 60, 2)} mins')
 
 
-    def intact_process(self, selected_fields=['source', 'id_a', 'id_b', 'pubmeds', 'mi_score', 'methods',  'interaction_types']):
+    def intact_process(self, selected_fields=None):
         """
         Processor function for IntAct data. It drops duplicate and reciprocal duplicate protein pairs and collects pubmed ids of duplicated pairs. Also, it filters
         protein pairs found in swissprot.
@@ -102,6 +131,9 @@ class PPI_data:
             selected_fields: fields to be used in the data.
             
         """
+        if selected_fields is None:
+            selected_fields = [field.value for field in IntactEdgeFields]
+            
         logger.debug("Started processing IntAct data")
         t1 = time()
                          
@@ -149,7 +181,7 @@ class PPI_data:
         t2 = time()
         logger.info(f'IntAct data is processed in {round((t2-t1) / 60, 2)} mins')
                          
-    def download_biogrid_data(self, organism=None):
+    def download_biogrid_data(self):
         """
         Wrapper function to download BioGRID data using pypath; used to access
         settings.
@@ -157,7 +189,7 @@ class PPI_data:
         To do: Make arguments of biogrid.biogrid_all_interactions selectable for user. 
         """
         
-        logger.info(f'This is the link of BioGRID data we downloaded:{urls.urls['biogrid']['all']}. Please check if it is up to date')    
+        logger.info(f"This is the link of BioGRID data we downloaded:{urls.urls['biogrid']['all']}. Please check if it is up to date")    
         logger.debug("Started downloading BioGRID data")
         t0 = time()
 
@@ -170,7 +202,7 @@ class PPI_data:
                 stack.enter_context(curl.cache_off())
 
             # download biogrid data
-            self.biogrid_ints = biogrid.biogrid_all_interactions(organism, 9999999999, False)
+            self.biogrid_ints = biogrid.biogrid_all_interactions(self.organism, 9999999999, False)
                         
             # download these fields for mapping from gene symbol to uniprot id          
             self.uniprot_to_gene = uniprot.uniprot_data("genes", "*", True)
@@ -180,7 +212,7 @@ class PPI_data:
         logger.info(f'BioGRID data is downloaded in {round((t1-t0) / 60, 2)} mins')
                          
 
-    def biogrid_process(self, selected_fields=['source', 'uniprot_a', 'uniprot_b', 'pmid', 'experimental_system']):
+    def biogrid_process(self, selected_fields=None):
         """
         Processor function for BioGRID data. It drops duplicate and reciprocal duplicate protein pairs and collects pubmed ids of duplicated pairs. In addition, it
         maps entries to uniprot ids using gene name and tax id information in the BioGRID data. Also, it filters protein pairs found in swissprot.
@@ -189,8 +221,10 @@ class PPI_data:
             selected_fields: fields to be used in the data.            
         """
         
+        if selected_fields is None:            
+            selected_fields = [field.value for field in BiogridEdgeFields]
+        
         logger.debug("Started processing BioGRID data")
-
         t1 = time()
                          
         # create dataframe          
@@ -262,7 +296,7 @@ class PPI_data:
         logger.info(f'BioGRID data is processed in {round((t2-t1) / 60, 2)} mins')
     
 
-    def download_string_data(self, organism=None):
+    def download_string_data(self):
         """
         Wrapper function to download STRING data using pypath; used to access
         settings.
@@ -281,11 +315,11 @@ class PPI_data:
             if not self.cache:
                 stack.enter_context(curl.cache_off())
 
-            if organism is None:
+            if self.organism is None:
                 string_species = string.string_species()
                 self.tax_ids = list(string_species.keys())
             else:
-                self.tax_ids = [organism]
+                self.tax_ids = [self.organism]
         
             # map string ids to swissprot ids
             uniprot_to_string = uniprot.uniprot_data("database(STRING)", "*", True)
@@ -298,7 +332,7 @@ class PPI_data:
             self.string_ints = []
             
             logger.debug("Started downloading STRING data")
-            logger.info(f'This is the link of STRING data we downloaded:{urls.urls['string']['links']}. Please check if it is up to date')
+            logger.info(f"This is the link of STRING data we downloaded:{urls.urls['string']['links']}. Please check if it is up to date")
             
             # this tax id give an error
             tax_ids_to_be_skipped = ['4565', ]
@@ -320,7 +354,7 @@ class PPI_data:
         logger.info(f'STRING data is downloaded in {round((t1-t0) / 60, 2)} mins')
                          
 
-    def string_process(self, selected_fields=['source', 'uniprot_a', 'uniprot_b', 'combined_score', 'physical_combined_score']):
+    def string_process(self, selected_fields=None):
         """
         Processor function for STRING data. It drops duplicate and reciprocal duplicate protein pairs. In addition, it maps entries to uniprot ids 
         using crossreferences to STRING in the Uniprot data. Also, it filters protein pairs found in swissprot.
@@ -328,6 +362,8 @@ class PPI_data:
         Args:
             selected_fields: fields to be used in the data.            
         """
+        if selected_fields is None:
+            selected_fields = [field.value for field in StringEdgeFields]
         
         logger.debug("Started processing STRING data")
         t1 = time()
@@ -383,15 +419,15 @@ class PPI_data:
         self.final_string_ints = string_df_unique
 
       
-    def merge_mall(self):
+    def merge_all(self):
         """
         Merge function for all 3 databases. Merge dataframes according to uniprot_a and uniprot_b (i.e., protein pairs) columns.
                   
         """
         
         t1 = time()
-        logger.debug("started merging interactions from all 3 databases (IntAct, BioGRID, STRING)")
-                         
+        logger.debug("started merging interactions from all 3 databases (IntAct, BioGRID, STRING)")        
+        
         # reorder columns of intact dataframe
         intact_refined_df_selected_features = self.final_intact_ints
         intact_refined_df_selected_features = intact_refined_df_selected_features.reindex(columns=["source", "uniprot_a", "uniprot_b", "pubmed_id", "method", "interaction_type", "intact_score"])
