@@ -17,6 +17,7 @@ from pypath.inputs import uniprot
 from tqdm import tqdm # progress bar
 
 from biocypher._logger import logger
+from pypath.resources import urls
 from contextlib import ExitStack
 
 from bioregistry import normalize_curie
@@ -75,7 +76,9 @@ class PPI_data:
         """
                      
         logger.debug("Started downloading IntAct data")
+        logger.info(f'This is the link of IntAct data we downloaded:{urls.urls['intact']['mitab']}. Please check if it is up to date')
         t0 = time()
+        
         with ExitStack() as stack:                         
             stack.enter_context(settings.context(retries=self.retries))
             
@@ -154,7 +157,7 @@ class PPI_data:
         To do: Make arguments of biogrid.biogrid_all_interactions selectable for user. 
         """
         
-             
+        logger.info(f'This is the link of BioGRID data we downloaded:{urls.urls['biogrid']['all']}. Please check if it is up to date')    
         logger.debug("Started downloading BioGRID data")
         t0 = time()
 
@@ -295,6 +298,7 @@ class PPI_data:
             self.string_ints = []
             
             logger.debug("Started downloading STRING data")
+            logger.info(f'This is the link of STRING data we downloaded:{urls.urls['string']['links']}. Please check if it is up to date')
             
             # this tax id give an error
             tax_ids_to_be_skipped = ['4565', ]
