@@ -48,7 +48,7 @@ class StringEdgeFields(Enum):
     PHYSICAL_COMBINED_SCORE = "physical_combined_score"
     
 
-class PPI_data:
+class PPI:
     def __init__(self, output_dir = None, export_csvs = False, split_output = False, cache=False, debug=False, retries=6,
                 organism=9606, intact_fields=None, biogrid_fields=None, string_fields=None):
         """
