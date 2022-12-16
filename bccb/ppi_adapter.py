@@ -427,18 +427,11 @@ class PPI:
         logger.debug("started merging interactions from all 3 databases (IntAct, BioGRID, STRING)")
         
         
-        # reorder columns of intact dataframe
-        intact_refined_df_selected_features = self.final_intact_ints
-        intact_refined_df_selected_features = intact_refined_df_selected_features.reindex(columns=["source", "uniprot_a", "uniprot_b", "pubmed_id", "method", "interaction_type", "intact_score"])
-        
-        # reorder columns of biogrid dataframe
-        biogrid_refined_df_selected_features = self.final_biogrid_ints
-        biogrid_refined_df_selected_features = biogrid_refined_df_selected_features.reindex(columns=["source", "uniprot_a", "uniprot_b", "pubmed_id", "method"])
-        
-        # reorder columns of string dataframe
+        intact_refined_df_selected_features = self.final_intact_ints        
+
+        biogrid_refined_df_selected_features = self.final_biogrid_ints        
+
         string_refined_df_selected_features = self.final_string_ints
-        string_refined_df_selected_features = string_refined_df_selected_features.reindex(columns=["source", "uniprot_a", "uniprot_b",
-        "string_combined_score", "string_physical_combined_score"])
         
         # merge intact and biogrid
         intact_plus_biogrid_selected_features_df = pd.merge(intact_refined_df_selected_features, biogrid_refined_df_selected_features,
@@ -475,10 +468,6 @@ class PPI:
         # drop redundant columns
         intact_plus_biogrid_selected_features_df.drop(columns=["method_x", "method_y"], inplace=True)
         
-        # reorder columns      
-        intact_plus_biogrid_selected_features_df = intact_plus_biogrid_selected_features_df.reindex(columns=['source', 'uniprot_a', 'uniprot_b', 'pubmed_id', 
-                                                          'method', 'interaction_type', 'intact_score'])
-        
         logger.debug("merged intact and biogrid interactions")
                          
         # merge intact+biogrid with string
@@ -491,7 +480,7 @@ class PPI:
         self.all_selected_features_df.drop(columns=["source_x", "source_y"], inplace=True)       
         
         # reorder columns
-        self.all_selected_features_df = self.all_selected_features_df.reindex(columns=['source', 'uniprot_a', 'uniprot_b', 'pubmed_id', 
+        #self.all_selected_features_df = self.all_selected_features_df.reindex(columns=['source', 'uniprot_a', 'uniprot_b', 'pubmed_id', 
                                                           'method', 'interaction_type', 'intact_score', 
                                                           'string_combined_score', 'string_physical_combined_score'])
         
