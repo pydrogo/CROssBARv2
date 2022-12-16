@@ -3,6 +3,8 @@ CROssBAR generation through BioCypher script
 """
 
 from bccb.uniprot_adapter import Uniprot, UniprotNodeFields, UniprotEdgeFields
+from bccb.ppi_adapter import PPI, IntactEdgeFields, BiogridEdgeFields, StringEdgeFields
+
 import biocypher
 
 driver = biocypher.Driver(
@@ -39,6 +41,28 @@ uniprot_edge_fields = [
     UniprotEdgeFields.GENE_TO_PROTEIN,
 ]
 
+intact_edge_fields = [IntactEdgeFields.SOURCE,
+                      IntactEdgeFields.UNIPROT_A,
+                      IntactEdgeFields.UNIPROT_B,
+                      IntactEdgeFields.PUBMED_IDS,
+                      IntactEdgeFields.METHODS,
+                      IntactEdgeFields.INTERACTION_TYPES,
+                     ]
+biogrid_edge_fields = [BiogridEdgeFields.SOURCE,
+                      BiogridEdgeFields.UNIPROT_A,
+                      BiogridEdgeFields.UNIPROT_B,
+                      BiogridEdgeFields.PUBMED_IDS,
+                      BiogridEdgeFields.EXPERIMENTAL_SYSTEM,
+                      ]
+
+string_edge_fields = [StringEdgeFields.SOURCE,
+                      StringEdgeFields.UNIPROT_A,
+                      StringEdgeFields.UNIPROT_B,
+                      StringEdgeFields.COMBINED_SCORE,
+                      StringEdgeFields.PHYSICAL_COMBINED_SCORE,
+                     ]
+
+
 uniprot_adapter = Uniprot(
     organism="9606",
     node_fields=uniprot_node_fields,
@@ -50,8 +74,26 @@ uniprot_adapter.download_uniprot_data(
     retries=5,
 )
 
+ppi_adapter = PPI(organism=9606, 
+                  intact_fields=intact_edge_fields,
+                  biogrid_fields=biogrid_edge_fields, 
+                  string_fields=string_edge_fields,
+)
+
+ppi_adapter.download_intact_data()
+ppi_adapter.intact_process()
+
+ppi_adapter.download_biogrid_data()
+ppi_adapter.biogrid_process()
+
+ppi_adapter.download_string_data()
+ppi_adapter.string_process()
+
+ppi_adapter.merge_all()
+
 driver.write_nodes(uniprot_adapter.get_uniprot_nodes())
 driver.write_edges(uniprot_adapter.get_uniprot_edges())
+driver.write_edges(ppi_adapter.get_ppi_edges())
 
 driver.write_import_call()
 driver.log_missing_bl_types()
