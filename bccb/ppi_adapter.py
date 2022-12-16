@@ -50,21 +50,22 @@ class StringEdgeFields(Enum):
 
 class PPI_data:
     def __init__(self, output_dir = None, export_csvs = False, split_output = False, cache=False, debug=False, retries=6,
-                organism=9606):
+                organism=9606, intact_fields=None, biogrid_fields=None, string_fields=None):
         """
-            WARNING: STRING database download urls contain version number/date.
-                Please update this urls (or request an update) in 
-                resources.urls module of the pypath library before using this script
-                in order to access the latest versions of data.
+        Downloads and processes PPI data
 
             Args:
-                export_csvs: Flag for whether or not create csvs of outputs
+                export_csvs: Flag for whether or not create csvs of outputs of databases
                 split_csvs: whether or not to split output csv files to multiple parts
-                TODO: add n_rows_in_file setting to config file
                 cache: if True, it uses the cached version of the data, otherwise
                 forces download.
                 debug: if True, turns on debug mode in pypath.
                 retries: number of retries in case of download error.
+                organism: taxonomy id number of selected organism, if it is None, downloads all organism data
+                intact_fields: intact fields to be used in the data.
+                biogrid_fields: biogrid fields to be used in the data.
+                string_fields: string fields to be used in the data.
+                
         """
         
         self.export_csvs = export_csvs
@@ -74,6 +75,9 @@ class PPI_data:
         self.debug = debug
         self.retries = retries        
         self.organism = organism
+        self.intact_fields = intact_fields
+        self.biogrid_fields = biogrid_fields
+        self.string_fields = string_fields        
 
         
         if export_csvs:
@@ -122,16 +126,14 @@ class PPI_data:
         logger.info(f'IntAct data is downloaded in {round((t1-t0) / 60, 2)} mins')
 
 
-    def intact_process(self, selected_fields=None):
+    def intact_process(self):
         """
         Processor function for IntAct data. It drops duplicate and reciprocal duplicate protein pairs and collects pubmed ids of duplicated pairs. Also, it filters
         protein pairs found in swissprot.
-        
-        Args:
-            selected_fields: fields to be used in the data.
+
             
         """
-        if selected_fields is None:
+        if self.intact_fields is None:
             selected_fields = [field.value for field in IntactEdgeFields]
             
         logger.debug("Started processing IntAct data")
@@ -212,16 +214,14 @@ class PPI_data:
         logger.info(f'BioGRID data is downloaded in {round((t1-t0) / 60, 2)} mins')
                          
 
-    def biogrid_process(self, selected_fields=None):
+    def biogrid_process(self):
         """
         Processor function for BioGRID data. It drops duplicate and reciprocal duplicate protein pairs and collects pubmed ids of duplicated pairs. In addition, it
         maps entries to uniprot ids using gene name and tax id information in the BioGRID data. Also, it filters protein pairs found in swissprot.
-        
-        Args:
-            selected_fields: fields to be used in the data.            
+                    
         """
         
-        if selected_fields is None:            
+        if self.biogrid_fields is None:            
             selected_fields = [field.value for field in BiogridEdgeFields]
         
         logger.debug("Started processing BioGRID data")
@@ -354,15 +354,13 @@ class PPI_data:
         logger.info(f'STRING data is downloaded in {round((t1-t0) / 60, 2)} mins')
                          
 
-    def string_process(self, selected_fields=None):
+    def string_process(self):
         """
         Processor function for STRING data. It drops duplicate and reciprocal duplicate protein pairs. In addition, it maps entries to uniprot ids 
         using crossreferences to STRING in the Uniprot data. Also, it filters protein pairs found in swissprot.
-        
-        Args:
-            selected_fields: fields to be used in the data.            
+                    
         """
-        if selected_fields is None:
+        if self.string_fields is None:
             selected_fields = [field.value for field in StringEdgeFields]
         
         logger.debug("Started processing STRING data")
@@ -426,7 +424,8 @@ class PPI_data:
         """
         
         t1 = time()
-        logger.debug("started merging interactions from all 3 databases (IntAct, BioGRID, STRING)")        
+        logger.debug("started merging interactions from all 3 databases (IntAct, BioGRID, STRING)")
+        
         
         # reorder columns of intact dataframe
         intact_refined_df_selected_features = self.final_intact_ints
