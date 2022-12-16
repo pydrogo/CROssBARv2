@@ -62,9 +62,9 @@ class PPI:
                 debug: if True, turns on debug mode in pypath.
                 retries: number of retries in case of download error.
                 organism: taxonomy id number of selected organism, if it is None, downloads all organism data
-                intact_fields: intact fields to be used in the data.
-                biogrid_fields: biogrid fields to be used in the data.
-                string_fields: string fields to be used in the data.
+                intact_fields: intact fields to be used in the graph.
+                biogrid_fields: biogrid fields to be used in the graph.
+                string_fields: string fields to be used in the graph.
                 
         """
         
