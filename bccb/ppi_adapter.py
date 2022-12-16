@@ -523,7 +523,7 @@ class PPI:
             logger.info(f'Final data is written: {all_df_path}')
             
     
-    def gen_edges(self):
+    def get_ppi_edges(self):
         """
         Get PPI edges from merged data 
         """
