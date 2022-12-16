@@ -18,7 +18,7 @@ driver = biocypher.Driver(
         )
 
 
-node_fields = [
+uniprot_node_fields = [
     UniprotNodeFields.PROTEIN_SECONDARY_IDS,
     UniprotNodeFields.PROTEIN_LENGTH,
     UniprotNodeFields.PROTEIN_MASS,
@@ -34,15 +34,15 @@ node_fields = [
     UniprotNodeFields.KEGG_IDS,
 ]
 
-edge_fields = [
+uniprot_edge_fields = [
     UniprotEdgeFields.PROTEIN_TO_ORGANISM,
     UniprotEdgeFields.GENE_TO_PROTEIN,
 ]
 
 uniprot_adapter = Uniprot(
     organism="9606",
-    node_fields=node_fields,
-    edge_fields=edge_fields,
+    node_fields=uniprot_node_fields,
+    edge_fields=uniprot_edge_fields,
 )
 
 uniprot_adapter.download_uniprot_data(
