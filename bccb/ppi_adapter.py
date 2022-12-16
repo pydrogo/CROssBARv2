@@ -481,8 +481,8 @@ class PPI:
         
         # reorder columns
         #self.all_selected_features_df = self.all_selected_features_df.reindex(columns=['source', 'uniprot_a', 'uniprot_b', 'pubmed_id', 
-                                                          'method', 'interaction_type', 'intact_score', 
-                                                          'string_combined_score', 'string_physical_combined_score'])
+                                                          #'method', 'interaction_type', 'intact_score', 
+                                                          #'string_combined_score', 'string_physical_combined_score'])
         
         
         # during the merging, it changes datatypes of some columns from int to float. So it needs to be reverted
