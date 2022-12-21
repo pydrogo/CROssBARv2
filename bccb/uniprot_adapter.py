@@ -523,7 +523,7 @@ class Uniprot:
                 if gene_id:
 
                     gene_id = normalize_curie("ncbigene:" + gene_id)
-                    edge_list.append((None, protein_id, gene_id, "Encodes", {}))
+                    edge_list.append((None, gene_id, protein_id, "Encodes", {}))
 
             if "PROTEIN_TO_ORGANISM" in self.edge_types:
 
