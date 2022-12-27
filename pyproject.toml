@@ -32,7 +32,8 @@ toml = "*"
 numpy = "^1.23.1"
 tqdm = "^4.64.0"
 pandas = "^1.4.3"
-biocypher = {path = "../BioCypher", develop = true}
+biocypher = { git = "https://github.com/saezlab/BioCypher.git", branch = "main" }
+# biocypher = {path = "../BioCypher", develop = true}
 pypath-omnipath = "^0.14.16"
 bioregistry = "^0.6.9"
 

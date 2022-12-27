@@ -45,6 +45,7 @@ intact_edge_fields = [IntactEdgeFields.SOURCE,
                       IntactEdgeFields.UNIPROT_A,
                       IntactEdgeFields.UNIPROT_B,
                       IntactEdgeFields.PUBMED_IDS,
+                      IntactEdgeFields.INTACT_SCORE,
                       IntactEdgeFields.METHODS,
                       IntactEdgeFields.INTERACTION_TYPES,
                      ]

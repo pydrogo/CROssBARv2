@@ -135,6 +135,8 @@ class PPI:
         """
         if self.intact_fields is None:
             selected_fields = [field.value for field in IntactEdgeFields]
+        else:
+            selected_fields = [field.value for field in self.intact_fields]
             
         logger.debug("Started processing IntAct data")
         t1 = time()
@@ -223,6 +225,8 @@ class PPI:
         
         if self.biogrid_fields is None:            
             selected_fields = [field.value for field in BiogridEdgeFields]
+        else:
+            selected_fields = [field.value for field in self.biogrid_fields]
         
         logger.debug("Started processing BioGRID data")
         t1 = time()
@@ -362,6 +366,8 @@ class PPI:
         """
         if self.string_fields is None:
             selected_fields = [field.value for field in StringEdgeFields]
+        else:
+            selected_fields = [field.value for field in self.string_fields]
         
         logger.debug("Started processing STRING data")
         t1 = time()
