@@ -7,19 +7,7 @@ from bccb.ppi_adapter import PPI, IntactEdgeFields, BiogridEdgeFields, StringEdg
 
 import biocypher
 
-driver = biocypher.Driver(
-            offline=True,
-            db_name="neo4j",
-            wipe=True,
-            quote_char="'",
-            delimiter="\t",
-            array_delimiter="|",
-            user_schema_config_path="config/schema_config.yaml",
-            skip_bad_relationships=True,
-            skip_duplicate_nodes=True
-        )
-
-
+# Source configuration
 uniprot_node_fields = [
     UniprotNodeFields.PROTEIN_SECONDARY_IDS,
     UniprotNodeFields.PROTEIN_LENGTH,
@@ -63,40 +51,61 @@ string_edge_fields = [StringEdgeFields.SOURCE,
                       StringEdgeFields.PHYSICAL_COMBINED_SCORE,
                      ]
 
+# Run build
+def main():
+    """
+    Main function. Call individual adapters to download and process data. Build
+    via BioCypher from node and edge data.
+    """
 
-uniprot_adapter = Uniprot(
-    organism="9606",
-    node_fields=uniprot_node_fields,
-    edge_fields=uniprot_edge_fields,
-)
+    driver = biocypher.Driver(
+            offline=True,
+            db_name="neo4j",
+            wipe=True,
+            quote_char="'",
+            delimiter="\t",
+            array_delimiter="|",
+            user_schema_config_path="config/schema_config.yaml",
+            skip_bad_relationships=True,
+            skip_duplicate_nodes=True
+        )
 
-uniprot_adapter.download_uniprot_data(
-    cache=True, 
-    retries=5,
-)
+    uniprot_adapter = Uniprot(
+        organism="9606",
+        node_fields=uniprot_node_fields,
+        edge_fields=uniprot_edge_fields,
+    )
 
-ppi_adapter = PPI(organism=9606, 
-                  intact_fields=intact_edge_fields,
-                  biogrid_fields=biogrid_edge_fields, 
-                  string_fields=string_edge_fields,
-)
+    uniprot_adapter.download_uniprot_data(
+        cache=True, 
+        retries=5,
+    )
 
-ppi_adapter.download_intact_data()
-ppi_adapter.intact_process()
+    ppi_adapter = PPI(organism=9606, 
+                    intact_fields=intact_edge_fields,
+                    biogrid_fields=biogrid_edge_fields, 
+                    string_fields=string_edge_fields,
+    )
 
-ppi_adapter.download_biogrid_data()
-ppi_adapter.biogrid_process()
+    ppi_adapter.download_intact_data()
+    ppi_adapter.intact_process()
 
-ppi_adapter.download_string_data()
-ppi_adapter.string_process()
+    ppi_adapter.download_biogrid_data()
+    ppi_adapter.biogrid_process()
 
-ppi_adapter.merge_all()
+    ppi_adapter.download_string_data()
+    ppi_adapter.string_process()
 
-driver.write_nodes(uniprot_adapter.get_uniprot_nodes())
-driver.write_edges(uniprot_adapter.get_uniprot_edges())
-driver.write_edges(ppi_adapter.get_ppi_edges())
+    ppi_adapter.merge_all()
 
-driver.write_import_call()
-driver.log_missing_bl_types()
-driver.log_duplicates()
-driver.show_ontology_structure()
+    driver.write_nodes(uniprot_adapter.get_uniprot_nodes())
+    driver.write_edges(uniprot_adapter.get_uniprot_edges())
+    driver.write_edges(ppi_adapter.get_ppi_edges())
+
+    driver.write_import_call()
+    driver.log_missing_bl_types()
+    driver.log_duplicates()
+    driver.show_ontology_structure()
+
+if __name__ == "__main__":
+    main()
