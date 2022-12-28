@@ -26,8 +26,6 @@ from enum import Enum
 
 class IntactEdgeFields(Enum):
     SOURCE = "source"
-    UNIPROT_A = "id_a"
-    UNIPROT_B = "id_b"
     PUBMED_IDS = "pubmeds"
     INTACT_SCORE = "mi_score"
     METHODS = "methods"
@@ -35,15 +33,11 @@ class IntactEdgeFields(Enum):
     
 class BiogridEdgeFields(Enum):
     SOURCE = "source"
-    UNIPROT_A = "uniprot_a"
-    UNIPROT_B = "uniprot_b"
     PUBMED_IDS = "pmid"
     EXPERIMENTAL_SYSTEM = "experimental_system"
     
 class StringEdgeFields(Enum):
     SOURCE = "source"
-    UNIPROT_A = "uniprot_a"
-    UNIPROT_B = "uniprot_b"
     COMBINED_SCORE = "combined_score"
     PHYSICAL_COMBINED_SCORE = "physical_combined_score"
     
@@ -126,7 +120,7 @@ class PPI:
         logger.info(f'IntAct data is downloaded in {round((t1-t0) / 60, 2)} mins')
 
 
-    def intact_process(self):
+    def intact_process(self, rename_selected_fields=None):
         """
         Processor function for IntAct data. It drops duplicate and reciprocal duplicate protein pairs and collects pubmed ids of duplicated pairs. Also, it filters
         protein pairs found in swissprot.
@@ -137,6 +131,31 @@ class PPI:
             selected_fields = [field.value for field in IntactEdgeFields]
         else:
             selected_fields = [field.value for field in self.intact_fields]
+            
+        # if rename_selected_fields is not defined create column names from this dictionary
+        default_field_names = {"source":"source", "id_a":"uniprot_a", "id_b":"uniprot_b", "pubmeds":"pubmed_id",
+                              "mi_score":"intact_score", "methods":"method", "interaction_types":"interaction_type"}
+        
+        self.intact_field_new_names = {}
+        
+        if rename_selected_fields:
+            if len(selected_fields) != len(rename_selected_fields):
+                raise Exception("Length of selected_fields variable should be equal to length of rename_selected_fields variable")
+            
+                
+            for field_old_name, field_new_name in list(zip(selected_fields, rename_selected_fields)):                    
+                self.intact_field_new_names[field_old_name] = field_new_name
+            
+            self.intact_field_new_names["id_a"] = "uniprot_a"
+            self.intact_field_new_names["id_b"] = "uniprot_b"
+        
+        else:            
+            for field_old_name in selected_fields:
+                self.intact_field_new_names[field_old_name] = default_field_names[field_old_name]
+                
+            self.intact_field_new_names["id_a"] = "uniprot_a"
+            self.intact_field_new_names["id_b"] = "uniprot_b"        
+       
             
         logger.debug("Started processing IntAct data")
         t1 = time()
@@ -152,29 +171,53 @@ class PPI:
         
         # add source database info
         intact_df["source"] = "IntAct"
+        
         # filter selected fields
-        intact_df = intact_df[selected_fields]
+        intact_df = intact_df[list(self.intact_field_new_names.keys())]
+        
         # rename columns
-        intact_df.columns = ['source', 'uniprot_a', 'uniprot_b', 'pubmed_id', 'intact_score', 'method', 'interaction_type']
+        intact_df.rename(columns=self.intact_field_new_names, inplace=True)
         
         # drop rows if uniprot_a or uniprot_b is not a swiss-prot protein
         intact_df = intact_df[(intact_df["uniprot_a"].isin(self.swissprots)) & (intact_df["uniprot_b"].isin(self.swissprots))]
         intact_df.reset_index(drop=True, inplace=True)
         
-        # assing pubmed ids that contain unassigned to NaN value 
-        intact_df["pubmed_id"].loc[intact_df["pubmed_id"].astype(str).str.contains("unassigned", na=False)] = np.nan
+        if "pubmeds" in self.intact_field_new_names.keys():            
+            # assing pubmed ids that contain unassigned to NaN value 
+            intact_df[self.intact_field_new_names["pubmeds"]].loc[intact_df[self.intact_field_new_names["pubmeds"]].astype(str).str.contains("unassigned", na=False)] = np.nan
         
         # drop duplicates if same a x b pair exists multiple times 
         # keep the pair with the highest score and collect pubmed ids of duplicated a x b pairs in that pair's pubmed id column
         # if a x b pair has same interaction type with b x a pair, drop b x a pair
-        intact_df.sort_values(by=['intact_score'], ascending=False, inplace=True)
+        if "mi_score" in self.intact_field_new_names.keys():            
+            intact_df.sort_values(by=self.intact_field_new_names["mi_score"], ascending=False, inplace=True)
+        
         intact_df_unique = intact_df.dropna(subset=["uniprot_a", "uniprot_b"]).reset_index(drop=True)
-        intact_df_unique = intact_df_unique.groupby(["uniprot_a", "uniprot_b"], sort=False, as_index=False).aggregate({"source":"first", "uniprot_a":"first", "uniprot_b":"first", 
-                                                    "pubmed_id": lambda x: "|".join([str(e) for e in set(x.dropna())]),
-                                                   "intact_score":"first", "method":"first", 
-                                                    "interaction_type":"first"})
-        intact_df_unique["pubmed_id"].replace("", np.nan, inplace=True) # replace empty string with NaN
-        intact_df_unique = intact_df_unique[~intact_df_unique[["uniprot_a", "uniprot_b", "interaction_type"]].apply(frozenset, axis=1).duplicated()].reset_index(drop=True)
+        
+        
+        def aggregate_pubmeds(element):
+            element = "|".join([str(e) for e in set(element.dropna())])
+            if element == "":
+                return np.nan
+            else:
+                return element
+        
+        agg_dict = {}
+        for e in self.intact_field_new_names.values():
+            if e == self.intact_field_new_names["pubmeds"]:
+                agg_dict[e] = aggregate_pubmeds
+            else:                
+                agg_dict[e] = "first"
+            
+        intact_df_unique = intact_df_unique.groupby(["uniprot_a", "uniprot_b"], sort=False, as_index=False).aggregate(agg_dict)
+        
+        #intact_df_unique["pubmed_id"].replace("", np.nan, inplace=True) # replace empty string with NaN
+        
+        if "interaction_types" in self.intact_field_new_names.keys():
+            intact_df_unique = intact_df_unique[~intact_df_unique[["uniprot_a", "uniprot_b", self.intact_field_new_names["interaction_types"]]].apply(frozenset, axis=1).duplicated()].reset_index(drop=True)
+        else:
+            intact_df_unique = intact_df_unique[~intact_df_unique[["uniprot_a", "uniprot_b"]].apply(frozenset, axis=1).duplicated()].reset_index(drop=True)
+
         
         if self.export_csvs:
             intact_output_path = self.export_dataframe(intact_df_unique, "intact")
@@ -216,7 +259,7 @@ class PPI:
         logger.info(f'BioGRID data is downloaded in {round((t1-t0) / 60, 2)} mins')
                          
 
-    def biogrid_process(self):
+    def biogrid_process(self, rename_selected_fields=None):
         """
         Processor function for BioGRID data. It drops duplicate and reciprocal duplicate protein pairs and collects pubmed ids of duplicated pairs. In addition, it
         maps entries to uniprot ids using gene name and tax id information in the BioGRID data. Also, it filters protein pairs found in swissprot.
@@ -227,6 +270,28 @@ class PPI:
             selected_fields = [field.value for field in BiogridEdgeFields]
         else:
             selected_fields = [field.value for field in self.biogrid_fields]
+        
+        # if rename_selected_fields is not defined create column names from this dictionary
+        default_field_names = {"source":"source", "pmid":"pubmed_id", "experimental_system":"method"}
+        
+        self.biogrid_field_new_names = {}
+        
+        if rename_selected_fields:
+            if len(selected_fields) != len(rename_selected_fields):
+                raise Exception("Length of selected_fields variable should be equal to length of rename_selected_fields variable")
+            
+            for field_old_name, field_new_name in list(zip(selected_fields, rename_selected_fields)):
+                self.biogrid_field_new_names[field_old_name] = field_new_name
+            
+            self.biogrid_field_new_names["uniprot_a"] = "uniprot_a"
+            self.biogrid_field_new_names["uniprot_b"] = "uniprot_b"
+        else:
+            for field_old_name in selected_fields:
+                self.biogrid_field_new_names[field_old_name] = default_field_names[field_old_name]
+            
+            self.biogrid_field_new_names["uniprot_a"] = "uniprot_a"
+            self.biogrid_field_new_names["uniprot_b"] = "uniprot_b"
+        
         
         logger.debug("Started processing BioGRID data")
         t1 = time()
@@ -267,9 +332,9 @@ class PPI:
         # add source database info
         biogrid_df["source"] = "BioGRID"
         # filter selected fields
-        biogrid_df = biogrid_df[selected_fields]
+        biogrid_df = biogrid_df[list(self.biogrid_field_new_names.keys())]
         # rename columns
-        biogrid_df.columns = ['source', 'uniprot_a', 'uniprot_b', 'pubmed_id', 'method']
+        biogrid_df.rename(columns=self.biogrid_field_new_names, inplace=True)
         
         # drop rows that have semicolon (";")
         biogrid_df.drop(biogrid_df[(biogrid_df["uniprot_a"].str.contains(";")) | (biogrid_df["uniprot_b"].str.contains(";"))].index, axis=0, inplace=True)
@@ -283,13 +348,31 @@ class PPI:
         # keep the first pair and collect pubmed ids of duplicated a x b pairs in that pair's pubmed id column
         # if a x b pair has same experimental system type with b x a pair, drop b x a pair
         biogrid_df_unique = biogrid_df.dropna(subset=["uniprot_a", "uniprot_b"]).reset_index(drop=True)
-        biogrid_df_unique = biogrid_df_unique.groupby(["uniprot_a", "uniprot_b"], sort=False, as_index=False).aggregate({"source":"first", "uniprot_a":"first",
-                                                                                             "uniprot_b":"first", 
-                                                                                             "pubmed_id":lambda x: "|".join([str(e) for e in set(x.dropna())]),
-                                                                                             "method":"first"})
-        biogrid_df_unique["pubmed_id"].replace("", np.nan, inplace=True)
-        biogrid_df_unique = biogrid_df_unique[~biogrid_df_unique[["uniprot_a", "uniprot_b", "method"]].apply(frozenset, axis=1).duplicated()].reset_index(drop=True)
         
+        
+        
+        def aggregate_pubmeds(element):
+            element = "|".join([str(e) for e in set(element.dropna())])
+            if element == "":
+                return np.nan
+            else:
+                return element
+            
+        agg_dict = {}
+        for e in self.biogrid_field_new_names.values():
+            if e == self.biogrid_field_new_names["pmid"]:
+                agg_dict[e] = aggregate_pubmeds
+            else:                
+                agg_dict[e] = "first"
+        
+        biogrid_df_unique = biogrid_df_unique.groupby(["uniprot_a", "uniprot_b"], sort=False, as_index=False).aggregate(agg_dict)
+        #biogrid_df_unique["pubmed_id"].replace("", np.nan, inplace=True)
+        
+        if "experimental_system" in self.biogrid_field_new_names.keys():            
+            biogrid_df_unique = biogrid_df_unique[~biogrid_df_unique[["uniprot_a", "uniprot_b", self.biogrid_field_new_names["experimental_system"]]].apply(frozenset, axis=1).duplicated()].reset_index(drop=True)
+        else:
+            biogrid_df_unique = biogrid_df_unique[~biogrid_df_unique[["uniprot_a", "uniprot_b"]].apply(frozenset, axis=1).duplicated()].reset_index(drop=True)
+
         if self.export_csvs:
             biogrid_output_path = self.export_dataframe(biogrid_df_unique, "biogrid")
             logger.info(f'Final BioGRID data is written: {biogrid_output_path}')
@@ -358,7 +441,7 @@ class PPI:
         logger.info(f'STRING data is downloaded in {round((t1-t0) / 60, 2)} mins')
                          
 
-    def string_process(self):
+    def string_process(self, rename_selected_fields=None):
         """
         Processor function for STRING data. It drops duplicate and reciprocal duplicate protein pairs. In addition, it maps entries to uniprot ids 
         using crossreferences to STRING in the Uniprot data. Also, it filters protein pairs found in swissprot.
@@ -369,6 +452,28 @@ class PPI:
         else:
             selected_fields = [field.value for field in self.string_fields]
         
+        # if rename_selected_fields is not defined create column names from this dictionary
+        default_field_names = {"source":"source", "combined_score":"string_combined_score", 
+                               "physical_combined_score":"string_physical_combined_score"}
+        
+        self.string_field_new_names = {}
+        
+        if rename_selected_fields:
+            if len(selected_fields) != len(rename_selected_fields):
+                raise Exception("Length of selected_fields variable should be equal to length of rename_selected_fields variable")
+            
+            for field_old_name, field_new_name in list(zip(selected_fields, rename_selected_fields)):
+                self.string_field_new_names[field_old_name] = field_new_name
+            
+            self.string_field_new_names["uniprot_a"] = "uniprot_a"
+            self.string_field_new_names["uniprot_b"] = "uniprot_b"
+        else:
+            for field_old_name in selected_fields:
+                self.string_field_new_names[field_old_name] = default_field_names[field_old_name]
+                
+            self.string_field_new_names["uniprot_a"] = "uniprot_a"
+            self.string_field_new_names["uniprot_b"] = "uniprot_b"
+            
         logger.debug("Started processing STRING data")
         t1 = time()
                                                   
@@ -398,9 +503,9 @@ class PPI:
         # add source database info
         string_df["source"] = "STRING"
         # filter selected fields
-        string_df = string_df[selected_fields]
+        string_df = string_df[list(self.string_field_new_names.keys())]
         # rename columns
-        string_df.columns = ['source', 'uniprot_a', 'uniprot_b', 'string_combined_score', 'string_physical_combined_score']
+        string_df.rename(columns=self.string_field_new_names, inplace=True)
         
         # filter with swissprot ids
         # we already filtered interactions in line 307, we can remove this part or keep it for a double check
@@ -409,10 +514,14 @@ class PPI:
                          
         # drop duplicates if same a x b pair exists in b x a format
         # keep the one with the highest combined score
-        string_df.sort_values(by=['string_combined_score'], ascending=False, inplace=True)
-        string_df_unique = string_df.dropna(subset=["uniprot_a", "uniprot_b"]).drop_duplicates(subset=["uniprot_a", "uniprot_b"], keep="first").reset_index(drop=True)
-        string_df_unique = string_df_unique[~string_df_unique[["uniprot_a", "uniprot_b", "string_combined_score"]].apply(frozenset, axis=1).duplicated()].reset_index(drop=True)
-        
+        if "combined_score" in self.string_field_new_names.keys():            
+            string_df.sort_values(by=self.string_field_new_names["combined_score"], ascending=False, inplace=True)        
+            string_df_unique = string_df.dropna(subset=["uniprot_a", "uniprot_b"]).drop_duplicates(subset=["uniprot_a", "uniprot_b"], keep="first").reset_index(drop=True)
+            string_df_unique = string_df_unique[~string_df_unique[["uniprot_a", "uniprot_b", self.string_field_new_names["combined_score"]]].apply(frozenset, axis=1).duplicated()].reset_index(drop=True)
+        else:
+            string_df_unique = string_df_unique[~string_df_unique[["uniprot_a", "uniprot_b"]].apply(frozenset, axis=1).duplicated()].reset_index(drop=True)
+
+            
         t2 = time()
         logger.info(f'STRING data is processed in {round((t2-t1) / 60, 2)} mins')
         
