@@ -124,8 +124,9 @@ class PPI:
         """
         Processor function for IntAct data. It drops duplicate and reciprocal duplicate protein pairs and collects pubmed ids of duplicated pairs. Also, it filters
         protein pairs found in swissprot.
-
-            
+        
+        Args:
+            rename_selected_fields : List of new field names for selected fields. If not defined, default field names will be used.
         """
         if self.intact_fields is None:
             selected_fields = [field.value for field in IntactEdgeFields]
@@ -263,15 +264,16 @@ class PPI:
         """
         Processor function for BioGRID data. It drops duplicate and reciprocal duplicate protein pairs and collects pubmed ids of duplicated pairs. In addition, it
         maps entries to uniprot ids using gene name and tax id information in the BioGRID data. Also, it filters protein pairs found in swissprot.
-                    
+        
+         Args:
+            rename_selected_fields : List of new field names for selected fields. If not defined, default field names will be used.
         """
         
         if self.biogrid_fields is None:            
             selected_fields = [field.value for field in BiogridEdgeFields]
         else:
             selected_fields = [field.value for field in self.biogrid_fields]
-        
-        # if rename_selected_fields is not defined create column names from this dictionary
+            
         default_field_names = {"source":"source", "pmid":"pubmed_id", "experimental_system":"method"}
         
         self.biogrid_field_new_names = {}
@@ -445,14 +447,15 @@ class PPI:
         """
         Processor function for STRING data. It drops duplicate and reciprocal duplicate protein pairs. In addition, it maps entries to uniprot ids 
         using crossreferences to STRING in the Uniprot data. Also, it filters protein pairs found in swissprot.
-                    
+        
+         Args:
+            rename_selected_fields : List of new field names for selected fields. If not defined, default field names will be used.
         """
         if self.string_fields is None:
             selected_fields = [field.value for field in StringEdgeFields]
         else:
             selected_fields = [field.value for field in self.string_fields]
         
-        # if rename_selected_fields is not defined create column names from this dictionary
         default_field_names = {"source":"source", "combined_score":"string_combined_score", 
                                "physical_combined_score":"string_physical_combined_score"}
         
