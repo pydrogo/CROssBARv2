@@ -2,31 +2,31 @@
 CROssBAR generation through BioCypher script
 """
 
-from bccb.uniprot_adapter import Uniprot, UniprotNodeFields, UniprotEdgeFields
+from bccb.uniprot_adapter import Uniprot, UniprotNodeField, UniprotEdgeField
 from bccb.ppi_adapter import PPI, IntactEdgeFields, BiogridEdgeFields, StringEdgeFields
 
 import biocypher
 
 # Source configuration
 uniprot_node_fields = [
-    UniprotNodeFields.PROTEIN_SECONDARY_IDS,
-    UniprotNodeFields.PROTEIN_LENGTH,
-    UniprotNodeFields.PROTEIN_MASS,
-    UniprotNodeFields.PROTEIN_ORGANISM,
-    UniprotNodeFields.PROTEIN_ORGANISM_ID,
-    UniprotNodeFields.PROTEIN_NAMES,
-    UniprotNodeFields.PROTEOME,
-    UniprotNodeFields.EC,
-    UniprotNodeFields.GENE_NAMES,
-    UniprotNodeFields.ENSEMBL_GENE_IDS,
-    UniprotNodeFields.ENTREZ_GENE_IDS,
-    UniprotNodeFields.VIRUS_HOSTS,
-    UniprotNodeFields.KEGG_IDS,
+    UniprotNodeField.PROTEIN_SECONDARY_IDS,
+    UniprotNodeField.PROTEIN_LENGTH,
+    UniprotNodeField.PROTEIN_MASS,
+    UniprotNodeField.PROTEIN_ORGANISM,
+    UniprotNodeField.PROTEIN_ORGANISM_ID,
+    UniprotNodeField.PROTEIN_NAMES,
+    UniprotNodeField.PROTEIN_PROTEOME,
+    UniprotNodeField.PROTEIN_EC,
+    UniprotNodeField.PROTEIN_GENE_NAMES,
+    UniprotNodeField.PROTEIN_ENSEMBL_GENE_IDS,
+    UniprotNodeField.PROTEIN_ENTREZ_GENE_IDS,
+    UniprotNodeField.PROTEIN_VIRUS_HOSTS,
+    UniprotNodeField.PROTEIN_KEGG_IDS,
 ]
 
 uniprot_edge_fields = [
-    UniprotEdgeFields.PROTEIN_TO_ORGANISM,
-    UniprotEdgeFields.GENE_TO_PROTEIN,
+    UniprotEdgeField.PROTEIN_TO_ORGANISM,
+    UniprotEdgeField.GENE_TO_PROTEIN,
 ]
 
 intact_edge_fields = [IntactEdgeFields.SOURCE,

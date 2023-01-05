@@ -14,7 +14,7 @@ from bioregistry import normalize_curie
 logger.debug(f"Loading module {__name__}.")
 
 
-class UniprotNodeFields(Enum):
+class UniprotNodeField(Enum):
     """
     Fields of the UniProt API represented in this adapter.
     """
@@ -27,17 +27,17 @@ class UniprotNodeFields(Enum):
     PROTEIN_ORGANISM = "organism"
     PROTEIN_ORGANISM_ID = "organism-id"
     PROTEIN_NAMES = "protein names"
-    PROTEOME = "proteome"
-    EC = "ec"
-    GENE_NAMES = "genes"
-    ENSEMBL_GENE_IDS = "database(Ensembl)"
+    PROTEIN_PROTEOME = "proteome"
+    PROTEIN_EC = "ec"
+    PROTEIN_GENE_NAMES = "genes"
+    PROTEIN_ENSEMBL_GENE_IDS = "database(Ensembl)"
     # xref attributes
-    ENTREZ_GENE_IDS = "database(GeneID)"
-    VIRUS_HOSTS = "virus hosts"
-    KEGG_IDS = "database(KEGG)"
+    PROTEIN_ENTREZ_GENE_IDS = "database(GeneID)"
+    PROTEIN_VIRUS_HOSTS = "virus hosts"
+    PROTEIN_KEGG_IDS = "database(KEGG)"
 
 
-class UniprotEdgeFields(Enum):
+class UniprotEdgeField(Enum):
     """
     Fields of the UniProt API represented in this adapter.
     """
@@ -113,8 +113,8 @@ class Uniprot:
         else:
 
             # get all values from Fields enum
-            self.node_attributes = [field.value for field in UniprotNodeFields]
-            self.node_types = [field.name for field in UniprotNodeFields]
+            self.node_attributes = [field.value for field in UniprotNodeField]
+            self.node_types = [field.name for field in UniprotNodeField]
 
         # check which edge fields to include
         if edge_fields:
@@ -125,8 +125,8 @@ class Uniprot:
         else:
                 
             # get all values from Fields enum
-            self.edge_attributes = [field.value for field in UniprotEdgeFields]
-            self.edge_types = [field.name for field in UniprotEdgeFields]
+            self.edge_attributes = [field.value for field in UniprotEdgeField]
+            self.edge_types = [field.name for field in UniprotEdgeField]
 
     def download_uniprot_data(
         self,
