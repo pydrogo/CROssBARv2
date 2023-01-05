@@ -24,19 +24,19 @@ from bioregistry import normalize_curie
 
 from enum import Enum
 
-class IntactEdgeFields(Enum):
+class IntactEdgeField(Enum):
     SOURCE = "source"
     PUBMED_IDS = "pubmeds"
     INTACT_SCORE = "mi_score"
     METHODS = "methods"
     INTERACTION_TYPES = "interaction_types"
     
-class BiogridEdgeFields(Enum):
+class BiogridEdgeField(Enum):
     SOURCE = "source"
     PUBMED_IDS = "pmid"
     EXPERIMENTAL_SYSTEM = "experimental_system"
     
-class StringEdgeFields(Enum):
+class StringEdgeField(Enum):
     SOURCE = "source"
     COMBINED_SCORE = "combined_score"
     PHYSICAL_COMBINED_SCORE = "physical_combined_score"
@@ -129,7 +129,7 @@ class PPI:
             rename_selected_fields : List of new field names for selected fields. If not defined, default field names will be used.
         """
         if self.intact_fields is None:
-            selected_fields = [field.value for field in IntactEdgeFields]
+            selected_fields = [field.value for field in IntactEdgeField]
         else:
             selected_fields = [field.value for field in self.intact_fields]
             
@@ -269,7 +269,7 @@ class PPI:
         """
         
         if self.biogrid_fields is None:            
-            selected_fields = [field.value for field in BiogridEdgeFields]
+            selected_fields = [field.value for field in BiogridEdgeField]
         else:
             selected_fields = [field.value for field in self.biogrid_fields]
             
@@ -451,7 +451,7 @@ class PPI:
             rename_selected_fields : List of new field names for selected fields. If not defined, default field names will be used.
         """
         if self.string_fields is None:
-            selected_fields = [field.value for field in StringEdgeFields]
+            selected_fields = [field.value for field in StringEdgeField]
         else:
             selected_fields = [field.value for field in self.string_fields]
         

@@ -3,7 +3,12 @@ CROssBAR generation through BioCypher script
 """
 
 from bccb.uniprot_adapter import Uniprot, UniprotNodeField, UniprotEdgeField
-from bccb.ppi_adapter import PPI, IntactEdgeFields, BiogridEdgeFields, StringEdgeFields
+from bccb.ppi_adapter import (
+    PPI,
+    IntactEdgeField,
+    BiogridEdgeField,
+    StringEdgeField,
+)
 
 import biocypher
 
@@ -29,21 +34,24 @@ uniprot_edge_fields = [
     UniprotEdgeField.GENE_TO_PROTEIN,
 ]
 
-intact_edge_fields = [IntactEdgeFields.SOURCE,
-                      IntactEdgeFields.PUBMED_IDS,
-                      IntactEdgeFields.INTACT_SCORE,
-                      IntactEdgeFields.METHODS,
-                      IntactEdgeFields.INTERACTION_TYPES,
-                     ]
-biogrid_edge_fields = [BiogridEdgeFields.SOURCE,
-                      BiogridEdgeFields.PUBMED_IDS,
-                      BiogridEdgeFields.EXPERIMENTAL_SYSTEM,
-                      ]
+intact_edge_fields = [
+    IntactEdgeField.SOURCE,
+    IntactEdgeField.PUBMED_IDS,
+    IntactEdgeField.INTACT_SCORE,
+    IntactEdgeField.METHODS,
+    IntactEdgeField.INTERACTION_TYPES,
+]
+biogrid_edge_fields = [
+    BiogridEdgeField.SOURCE,
+    BiogridEdgeField.PUBMED_IDS,
+    BiogridEdgeField.EXPERIMENTAL_SYSTEM,
+]
 
-string_edge_fields = [StringEdgeFields.SOURCE,
-                      StringEdgeFields.COMBINED_SCORE,
-                      StringEdgeFields.PHYSICAL_COMBINED_SCORE,
-                     ]
+string_edge_fields = [
+    StringEdgeField.SOURCE,
+    StringEdgeField.COMBINED_SCORE,
+    StringEdgeField.PHYSICAL_COMBINED_SCORE,
+]
 
 # Run build
 def main():
@@ -53,16 +61,16 @@ def main():
     """
 
     driver = biocypher.Driver(
-            offline=True,
-            db_name="neo4j",
-            wipe=True,
-            quote_char="'",
-            delimiter="\t",
-            array_delimiter="|",
-            user_schema_config_path="config/schema_config.yaml",
-            skip_bad_relationships=True,
-            skip_duplicate_nodes=True
-        )
+        offline=True,
+        db_name="neo4j",
+        wipe=True,
+        quote_char="'",
+        delimiter="\t",
+        array_delimiter="|",
+        user_schema_config_path="config/schema_config.yaml",
+        skip_bad_relationships=True,
+        skip_duplicate_nodes=True,
+    )
 
     uniprot_adapter = Uniprot(
         organism="9606",
@@ -72,16 +80,16 @@ def main():
     )
 
     uniprot_adapter.download_uniprot_data(
-        cache=True, 
+        cache=True,
         retries=5,
     )
 
     driver.write_nodes(uniprot_adapter.get_nodes())
     driver.write_edges(uniprot_adapter.get_edges())
 
-    # ppi_adapter = PPI(organism=9606, 
+    # ppi_adapter = PPI(organism=9606,
     #                 intact_fields=intact_edge_fields,
-    #                 biogrid_fields=biogrid_edge_fields, 
+    #                 biogrid_fields=biogrid_edge_fields,
     #                 string_fields=string_edge_fields,
     # )
 
@@ -102,6 +110,7 @@ def main():
     driver.log_missing_bl_types()
     driver.log_duplicates()
     driver.show_ontology_structure()
+
 
 if __name__ == "__main__":
     main()
