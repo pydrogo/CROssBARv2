@@ -390,7 +390,7 @@ class Uniprot:
 
         return listed_enst, ensg_ids
 
-    def get_uniprot_nodes(self) -> List[Dict]:
+    def get_nodes(self) -> List[Dict]:
         """
         Get nodes from UniProt data.
         """
@@ -499,7 +499,7 @@ class Uniprot:
 
         return node_list
 
-    def get_uniprot_edges(self):
+    def get_edges(self):
         """
         Get nodes and edges from UniProt data.
         """

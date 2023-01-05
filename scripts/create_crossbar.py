@@ -98,9 +98,9 @@ def main():
 
     ppi_adapter.merge_all()
 
-    driver.write_nodes(uniprot_adapter.get_uniprot_nodes())
-    driver.write_edges(uniprot_adapter.get_uniprot_edges())
-    driver.write_edges(ppi_adapter.get_ppi_edges())
+    driver.write_nodes(uniprot_adapter.get_nodes())
+    driver.write_edges(uniprot_adapter.get_edges())
+    driver.write_edges(ppi_adapter.get_edges())
 
     driver.write_import_call()
     driver.log_missing_bl_types()
