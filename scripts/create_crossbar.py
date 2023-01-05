@@ -2,7 +2,7 @@
 CROssBAR generation through BioCypher script
 """
 
-from bccb.uniprot_adapter import Uniprot, UniprotNodeField, UniprotEdgeField
+from bccb.uniprot_adapter import Uniprot, UniprotNode, UniprotNodeField, UniprotEdge
 from bccb.ppi_adapter import (
     PPI,
     IntactEdgeField,
@@ -13,6 +13,12 @@ from bccb.ppi_adapter import (
 import biocypher
 
 # Source configuration
+uniprot_node_types = [
+    UniprotNode.PROTEIN,
+    UniprotNode.GENE,
+    UniprotNode.ORGANISM,
+]
+
 uniprot_node_fields = [
     UniprotNodeField.PROTEIN_SECONDARY_IDS,
     UniprotNodeField.PROTEIN_LENGTH,
@@ -29,9 +35,9 @@ uniprot_node_fields = [
     UniprotNodeField.PROTEIN_KEGG_IDS,
 ]
 
-uniprot_edge_fields = [
-    UniprotEdgeField.PROTEIN_TO_ORGANISM,
-    UniprotEdgeField.GENE_TO_PROTEIN,
+uniprot_edge_types = [
+    UniprotEdge.PROTEIN_TO_ORGANISM,
+    UniprotEdge.GENE_TO_PROTEIN,
 ]
 
 intact_edge_fields = [
@@ -41,6 +47,7 @@ intact_edge_fields = [
     IntactEdgeField.METHODS,
     IntactEdgeField.INTERACTION_TYPES,
 ]
+
 biogrid_edge_fields = [
     BiogridEdgeField.SOURCE,
     BiogridEdgeField.PUBMED_IDS,
@@ -74,8 +81,9 @@ def main():
 
     uniprot_adapter = Uniprot(
         organism="9606",
+        node_types=uniprot_node_types,
         node_fields=uniprot_node_fields,
-        edge_fields=uniprot_edge_fields,
+        edge_types=uniprot_edge_types,
         test_mode=True,
     )
 

@@ -13,6 +13,14 @@ from bioregistry import normalize_curie
 
 logger.debug(f"Loading module {__name__}.")
 
+class UniprotNode(Enum):
+    """
+    Node types of the UniProt API represented in this adapter.
+    """
+
+    PROTEIN = "protein"
+    GENE = "gene"
+    ORGANISM = "organism"
 
 class UniprotNodeField(Enum):
     """
@@ -37,7 +45,7 @@ class UniprotNodeField(Enum):
     PROTEIN_KEGG_IDS = "database(KEGG)"
 
 
-class UniprotEdgeField(Enum):
+class UniprotEdge(Enum):
     """
     Fields of the UniProt API represented in this adapter.
     """
@@ -64,8 +72,9 @@ class Uniprot:
         self,
         organism="*",
         rev=True,
+        node_types: Optional[list] = None,
         node_fields: Optional[list] = None,
-        edge_fields: Optional[list] = None,
+        edge_types: Optional[list] = None,
         test_mode=False,
     ):
 
@@ -115,29 +124,36 @@ class Uniprot:
 
         self.organism_properties = ["organism"]
 
+        if node_types:
+                
+                self.node_types = node_types
+
+        else:
+                
+                # get all values from Fields enum
+                self.node_types = [field for field in UniprotNode]
+
         # check which node fields to include
         if node_fields:
 
             self.node_attributes = [field.value for field in node_fields]
-            self.node_types = [field.name for field in node_fields]
 
         else:
 
             # get all values from Fields enum
             self.node_attributes = [field.value for field in UniprotNodeField]
-            self.node_types = [field.name for field in UniprotNodeField]
 
         # check which edge fields to include
-        if edge_fields:
+        if edge_types:
 
-            self.edge_attributes = [field.value for field in edge_fields]
-            self.edge_types = [field.name for field in edge_fields]
+            self.edge_attributes = [field.value for field in edge_types]
+            self.edge_types = edge_types
 
         else:
 
             # get all values from Fields enum
-            self.edge_attributes = [field.value for field in UniprotEdgeField]
-            self.edge_types = [field.name for field in UniprotEdgeField]
+            self.edge_attributes = [field.value for field in UniprotEdge]
+            self.edge_types = [field for field in UniprotEdge]
 
     def download_uniprot_data(
         self,
@@ -169,9 +185,9 @@ class Uniprot:
             if not cache:
                 stack.enter_context(curl.cache_off())
 
-            self.uniprot_data_downloader()
+            self._download_uniprot_data()
 
-    def uniprot_data_downloader(self):
+    def _download_uniprot_data(self):
         """
         Download uniprot data from uniprot.org through pypath.
 
@@ -207,7 +223,7 @@ class Uniprot:
         msg = f"Acquired UniProt data in {round((t1-t0) / 60, 2)} mins."
         logger.info(msg)
 
-    def fields_splitter(self, field_key, field_value):
+    def _split_fields(self, field_key, field_value):
         """
         Split fields with multiple entries in uniprot
         Args:
@@ -254,7 +270,7 @@ class Uniprot:
         else:
             return None
 
-    def split_protein_names_field(self, field_value):
+    def _split_protein_names_field(self, field_value):
         """
         Split protein names field in uniprot
         Args:
@@ -336,7 +352,7 @@ class Uniprot:
 
         return protein_names
 
-    def split_virus_hosts_field(self, field_value):
+    def _split_virus_hosts_field(self, field_value):
         """
         Split virus hosts fields in uniprot
 
@@ -367,7 +383,7 @@ class Uniprot:
         else:
             return None
 
-    def ensembl_process(self, ens_list):
+    def _find_ensg_from_enst(self, ens_list):
         """
         take ensembl transcript ids, return ensembl gene ids by using pypath mapping tool
 
@@ -407,123 +423,40 @@ class Uniprot:
 
     def get_nodes(self) -> List[Dict]:
         """
-        Get nodes from UniProt data.
+        Yield nodes (protein, gene, organism) from UniProt data.
         """
 
         logger.info("Preparing nodes.")
 
-        # create list of nodes
-        node_list = []
+        for node in self._reformat_and_filter_proteins():
 
-        for protein in tqdm(self.uniprot_ids):
-            protein_id = normalize_curie("uniprot:" + protein)
-            _props = {}
-            gene_id = ""
-            organism_id = ""
+            protein_id, all_props = node
 
-            for arg in self.node_attributes:
+            protein_props = self._get_protein_properties(all_props)
 
-                # split fields
-                if arg in self.split_fields:
-                    attribute_value = self.data.get(arg).get(protein)
-                    if attribute_value:
-                        _props[arg] = self.fields_splitter(arg, attribute_value)
+            # append protein node to output
+            yield (protein_id, "protein", protein_props)
 
-                else:
-                    attribute_value = self.data.get(arg).get(protein)
-                    if attribute_value:
-                        _props[arg] = (
-                            attribute_value.replace("|", ",")
-                            .replace("'", "^")
-                            .strip()
-                        )
+            # append gene node to output if desired
+            if UniprotNode.GENE in self.node_types:
 
-                if arg == "database(Ensembl)" and arg in _props:
-                    _props[arg], ensg_ids = self.ensembl_process(_props[arg])
-                    if ensg_ids:
-                        _props["ensembl_gene_ids"] = ensg_ids
+                # get gene_id and gene_props if desired
+                gene_id, gene_props = self._get_gene(all_props)
 
-                elif arg == "protein names":
-                    _props[arg] = self.split_protein_names_field(
-                        self.data.get(arg).get(protein)
-                    )
+                if gene_id:
 
-                elif arg == "virus hosts":
-                    attribute_value = self.split_virus_hosts_field(
-                        self.data.get(arg).get(protein)
-                    )
-                    if attribute_value:
-                        _props[arg] = attribute_value
+                    yield (gene_id, "gene", gene_props)
 
-            protein_props = dict()
-            gene_props = dict()
-            organism_props = dict()
+            # append organism node to output if desired
+            if UniprotNode.ORGANISM in self.node_types:
 
-            for k in _props.keys():
-                # define protein_properties
-                if k in self.protein_properties:
-                    # make length, mass and organism-id fields integer and replace hyphen in keys
-                    if k in ["length", "mass", "organism-id"]:
-                        protein_props[k.replace("-", "_")] = int(
-                            _props[k].replace(",", "")
-                        )
-                        if k == "organism-id":
-                            organism_id = normalize_curie(
-                                "ncbitaxon:" + _props[k]
-                            )
+                # get organism_id and organism_props if desired
+                organism_id, organism_props = self._get_organism(all_props)
 
-                    # replace hyphens and spaces with underscore
-                    else:
-                        protein_props[
-                            k.replace(" ", "_").replace("-", "_")
-                        ] = _props[k]
+                if organism_id:
 
-                # if genes and database(GeneID) fields exist, define gene_properties
-                elif (
-                    k in self.gene_properties
-                    and "genes" in _props.keys()
-                    and "database(GeneID)" in _props.keys()
-                ):
-                    if "database" in k:
-                        # make ncbi gene id as gene_id
-                        if "GeneID" in k:
-                            gene_id = normalize_curie("ncbigene:" + _props[k])
-                        # replace parantheses in field names and make their name lowercase
-                        else:
-                            gene_props[
-                                k.split("(")[1].split(")")[0].lower()
-                            ] = _props[k]
+                    yield (organism_id, "organism", organism_props)
 
-                    else:
-                        gene_props[k] = _props[k]
-
-                # define organism_properties
-                elif k in self.organism_properties:
-                    organism_props[k] = _props[k]
-
-            # source, licence, and version fields for all nodes
-            protein_props["source"] = gene_props["source"] = organism_props[
-                "source"
-            ] = self.data_source
-            protein_props["licence"] = gene_props["licence"] = organism_props[
-                "licence"
-            ] = self.data_licence
-            protein_props["version"] = gene_props["version"] = organism_props[
-                "version"
-            ] = self.data_version
-
-            # append related fields to protein_nodes
-            node_list.append((protein_id, "protein", protein_props))
-
-            # append related fields to gene_nodes and gene_to_protein_edges
-            if gene_id:
-                node_list.append((gene_id, "gene", gene_props))
-
-            # append related fields to organism_nodes
-            if organism_id:
-                node_list.append((organism_id, "organism", organism_props))
-
-        return node_list
 
     def get_edges(self):
         """
@@ -539,9 +472,9 @@ class Uniprot:
 
             protein_id = normalize_curie("uniprot:" + protein)
 
-            if "GENE_TO_PROTEIN" in self.edge_types:
+            if UniprotEdge.GENE_TO_PROTEIN in self.edge_types:
 
-                gene_id = self.fields_splitter(
+                gene_id = self._split_fields(
                     "database(GeneID)",
                     self.data.get("database(GeneID)").get(protein),
                 )
@@ -551,7 +484,7 @@ class Uniprot:
                     gene_id = normalize_curie("ncbigene:" + gene_id)
                     edge_list.append((None, gene_id, protein_id, "Encodes", {}))
 
-            if "PROTEIN_TO_ORGANISM" in self.edge_types:
+            if UniprotEdge.PROTEIN_TO_ORGANISM in self.edge_types:
 
                 organism_id = (
                     self.data.get("organism-id")
@@ -571,3 +504,129 @@ class Uniprot:
         if edge_list:
 
             return edge_list
+
+    def _reformat_and_filter_proteins(self):
+        """
+        For each uniprot id, select desired fields and reformat to give a tuple
+        containing id and properties.
+        """
+
+        for protein in tqdm(self.uniprot_ids):
+            protein_id = normalize_curie("uniprot:" + protein)
+            _props = {}
+
+            for arg in self.node_attributes:
+
+                # split fields
+                if arg in self.split_fields:
+                    attribute_value = self.data.get(arg).get(protein)
+                    if attribute_value:
+                        _props[arg] = self._split_fields(arg, attribute_value)
+
+                else:
+                    attribute_value = self.data.get(arg).get(protein)
+                    if attribute_value:
+                        _props[arg] = (
+                            attribute_value.replace("|", ",")
+                            .replace("'", "^")
+                            .strip()
+                        )
+
+                if arg == "database(Ensembl)" and arg in _props:
+                    _props[arg], ensg_ids = self._find_ensg_from_enst(_props[arg])
+                    if ensg_ids:
+                        _props["ensembl_gene_ids"] = ensg_ids
+
+                elif arg == "protein names":
+                    _props[arg] = self._split_protein_names_field(
+                        self.data.get(arg).get(protein)
+                    )
+
+                elif arg == "virus hosts":
+                    attribute_value = self._split_virus_hosts_field(
+                        self.data.get(arg).get(protein)
+                    )
+                    if attribute_value:
+                        _props[arg] = attribute_value
+
+            yield protein_id, _props
+
+    def _get_gene(self, all_props: dict):
+        
+        # if genes and database(GeneID) fields exist, define gene_properties
+        if not ("genes" in all_props.keys()
+            and "database(GeneID)" in all_props.keys()):
+            return (None, None)
+
+        gene_props = dict()
+
+        # pop database(GeneID) from _props and make it gene_id
+        gene_id = all_props.pop("database(GeneID)")
+
+        for k in all_props.keys():
+            
+            if k not in self.gene_properties:
+                continue
+            
+            if "(" in k:
+                k_new = k.split("(")[1].split(")")[0].lower()
+            else:
+                k_new = k.lower()
+
+            # select parenthesis content in field names and make lowercase
+            gene_props[k_new] = all_props[k]
+
+        # source, licence, and version fields
+        gene_props["source"] = self.data_source
+        gene_props["licence"] = self.data_licence
+        gene_props["version"] = self.data_version
+
+        return gene_id, gene_props
+
+    def _get_organism(self, all_props: dict):
+
+        organism_props = dict()
+
+        organism_id = normalize_curie("ncbitaxon:" + all_props.pop("organism-id"))
+
+        for k in all_props.keys():
+
+            if k in self.organism_properties:
+                organism_props[k] = all_props[k]
+
+        # source, licence, and version fields
+        organism_props["source"] = self.data_source
+        organism_props["licence"] = self.data_licence
+        organism_props["version"] = self.data_version
+
+        return organism_id, organism_props
+
+    def _get_protein_properties(self, all_props: dict) -> dict:
+
+        protein_props = dict()
+
+        for k in all_props.keys():
+
+            # define protein_properties
+            if k not in self.protein_properties:
+                continue
+
+            # make length, mass and organism-id fields integer and 
+            # replace hyphen in keys
+            if k in ["length", "mass", "organism-id"]:
+                protein_props[k.replace("-", "_")] = int(
+                    all_props[k].replace(",", "")
+                )
+
+            # replace hyphens and spaces with underscore
+            else:
+                protein_props[
+                    k.replace(" ", "_").replace("-", "_")
+                ] = all_props[k]
+
+        # source, licence, and version fields
+        protein_props["source"] = self.data_source
+        protein_props["licence"] = self.data_licence
+        protein_props["version"] = self.data_version
+
+        return protein_props
