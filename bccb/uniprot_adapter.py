@@ -100,6 +100,7 @@ class Uniprot:
             "ec",
             "virus hosts",
             "organism-id",
+            "ensembl_gene_ids",
         ]
 
         self.gene_properties = [
