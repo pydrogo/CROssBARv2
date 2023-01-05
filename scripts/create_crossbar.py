@@ -2,7 +2,12 @@
 CROssBAR generation through BioCypher script
 """
 
-from bccb.uniprot_adapter import Uniprot, UniprotNode, UniprotNodeField, UniprotEdge
+from bccb.uniprot_adapter import (
+    Uniprot,
+    UniprotNode,
+    UniprotNodeField,
+    UniprotEdge,
+)
 from bccb.ppi_adapter import (
     PPI,
     IntactEdgeField,

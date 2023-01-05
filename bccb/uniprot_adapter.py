@@ -13,6 +13,7 @@ from bioregistry import normalize_curie
 
 logger.debug(f"Loading module {__name__}.")
 
+
 class UniprotNode(Enum):
     """
     Node types of the UniProt API represented in this adapter.
@@ -21,6 +22,7 @@ class UniprotNode(Enum):
     PROTEIN = "protein"
     GENE = "gene"
     ORGANISM = "organism"
+
 
 class UniprotNodeField(Enum):
     """
@@ -125,13 +127,13 @@ class Uniprot:
         self.organism_properties = ["organism"]
 
         if node_types:
-                
-                self.node_types = node_types
+
+            self.node_types = node_types
 
         else:
-                
-                # get all values from Fields enum
-                self.node_types = [field for field in UniprotNode]
+
+            # get all values from Fields enum
+            self.node_types = [field for field in UniprotNode]
 
         # check which node fields to include
         if node_fields:
@@ -457,7 +459,6 @@ class Uniprot:
 
                     yield (organism_id, "organism", organism_props)
 
-
     def get_edges(self):
         """
         Get nodes and edges from UniProt data.
@@ -533,7 +534,9 @@ class Uniprot:
                         )
 
                 if arg == "database(Ensembl)" and arg in _props:
-                    _props[arg], ensg_ids = self._find_ensg_from_enst(_props[arg])
+                    _props[arg], ensg_ids = self._find_ensg_from_enst(
+                        _props[arg]
+                    )
                     if ensg_ids:
                         _props["ensembl_gene_ids"] = ensg_ids
 
@@ -552,10 +555,12 @@ class Uniprot:
             yield protein_id, _props
 
     def _get_gene(self, all_props: dict):
-        
+
         # if genes and database(GeneID) fields exist, define gene_properties
-        if not ("genes" in all_props.keys()
-            and "database(GeneID)" in all_props.keys()):
+        if not (
+            "genes" in all_props.keys()
+            and "database(GeneID)" in all_props.keys()
+        ):
             return (None, None)
 
         gene_props = dict()
@@ -564,10 +569,10 @@ class Uniprot:
         gene_id = all_props.pop("database(GeneID)")
 
         for k in all_props.keys():
-            
+
             if k not in self.gene_properties:
                 continue
-            
+
             if "(" in k:
                 k_new = k.split("(")[1].split(")")[0].lower()
             else:
@@ -587,7 +592,9 @@ class Uniprot:
 
         organism_props = dict()
 
-        organism_id = normalize_curie("ncbitaxon:" + all_props.pop("organism-id"))
+        organism_id = normalize_curie(
+            "ncbitaxon:" + all_props.pop("organism-id")
+        )
 
         for k in all_props.keys():
 
@@ -611,7 +618,7 @@ class Uniprot:
             if k not in self.protein_properties:
                 continue
 
-            # make length, mass and organism-id fields integer and 
+            # make length, mass and organism-id fields integer and
             # replace hyphen in keys
             if k in ["length", "mass", "organism-id"]:
                 protein_props[k.replace("-", "_")] = int(
