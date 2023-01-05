@@ -71,9 +71,9 @@ class Uniprot:
         # instance variables
         # provenance
         self.data_source = "uniprot"
-        self.data_version = "2022_04" # TODO get version from pypath
+        self.data_version = "2022_04"  # TODO get version from pypath
         self.data_licence = "CC BY 4.0"
-        
+
         # params
         self.organism = organism
         self.rev = rev
@@ -126,12 +126,12 @@ class Uniprot:
 
         # check which edge fields to include
         if edge_fields:
-                
+
             self.edge_attributes = [field.value for field in edge_fields]
             self.edge_types = [field.name for field in edge_fields]
 
         else:
-                
+
             # get all values from Fields enum
             self.edge_attributes = [field.value for field in UniprotEdgeField]
             self.edge_types = [field.name for field in UniprotEdgeField]
@@ -495,9 +495,15 @@ class Uniprot:
                     organism_props[k] = _props[k]
 
             # source, licence, and version fields for all nodes
-            protein_props["source"] = gene_props["source"] = organism_props["source"] = self.data_source
-            protein_props["licence"] = gene_props["licence"] = organism_props["licence"] = self.data_licence
-            protein_props["version"] = gene_props["version"] = organism_props["version"] = self.data_version
+            protein_props["source"] = gene_props["source"] = organism_props[
+                "source"
+            ] = self.data_source
+            protein_props["licence"] = gene_props["licence"] = organism_props[
+                "licence"
+            ] = self.data_licence
+            protein_props["version"] = gene_props["version"] = organism_props[
+                "version"
+            ] = self.data_version
 
             # append related fields to protein_nodes
             node_list.append((protein_id, "protein", protein_props))
