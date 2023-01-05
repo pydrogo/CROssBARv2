@@ -30,23 +30,17 @@ uniprot_edge_fields = [
 ]
 
 intact_edge_fields = [IntactEdgeFields.SOURCE,
-                      IntactEdgeFields.UNIPROT_A,
-                      IntactEdgeFields.UNIPROT_B,
                       IntactEdgeFields.PUBMED_IDS,
                       IntactEdgeFields.INTACT_SCORE,
                       IntactEdgeFields.METHODS,
                       IntactEdgeFields.INTERACTION_TYPES,
                      ]
 biogrid_edge_fields = [BiogridEdgeFields.SOURCE,
-                      BiogridEdgeFields.UNIPROT_A,
-                      BiogridEdgeFields.UNIPROT_B,
                       BiogridEdgeFields.PUBMED_IDS,
                       BiogridEdgeFields.EXPERIMENTAL_SYSTEM,
                       ]
 
 string_edge_fields = [StringEdgeFields.SOURCE,
-                      StringEdgeFields.UNIPROT_A,
-                      StringEdgeFields.UNIPROT_B,
                       StringEdgeFields.COMBINED_SCORE,
                       StringEdgeFields.PHYSICAL_COMBINED_SCORE,
                      ]
@@ -74,6 +68,7 @@ def main():
         organism="9606",
         node_fields=uniprot_node_fields,
         edge_fields=uniprot_edge_fields,
+        test_mode=True,
     )
 
     uniprot_adapter.download_uniprot_data(
@@ -81,26 +76,27 @@ def main():
         retries=5,
     )
 
-    ppi_adapter = PPI(organism=9606, 
-                    intact_fields=intact_edge_fields,
-                    biogrid_fields=biogrid_edge_fields, 
-                    string_fields=string_edge_fields,
-    )
-
-    ppi_adapter.download_intact_data()
-    ppi_adapter.intact_process()
-
-    ppi_adapter.download_biogrid_data()
-    ppi_adapter.biogrid_process()
-
-    ppi_adapter.download_string_data()
-    ppi_adapter.string_process()
-
-    ppi_adapter.merge_all()
-
     driver.write_nodes(uniprot_adapter.get_nodes())
     driver.write_edges(uniprot_adapter.get_edges())
-    driver.write_edges(ppi_adapter.get_edges())
+
+    # ppi_adapter = PPI(organism=9606, 
+    #                 intact_fields=intact_edge_fields,
+    #                 biogrid_fields=biogrid_edge_fields, 
+    #                 string_fields=string_edge_fields,
+    # )
+
+    # ppi_adapter.download_intact_data()
+    # ppi_adapter.intact_process()
+
+    # ppi_adapter.download_biogrid_data()
+    # ppi_adapter.biogrid_process()
+
+    # ppi_adapter.download_string_data()
+    # ppi_adapter.string_process()
+
+    # ppi_adapter.merge_all()
+
+    # driver.write_edges(ppi_adapter.get_edges())
 
     driver.write_import_call()
     driver.log_missing_bl_types()

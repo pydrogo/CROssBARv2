@@ -66,6 +66,7 @@ class Uniprot:
         rev=True,
         node_fields: Optional[list] = None,
         edge_fields: Optional[list] = None,
+        test_mode=False,
     ):
 
         # instance variables
@@ -77,6 +78,7 @@ class Uniprot:
         # params
         self.organism = organism
         self.rev = rev
+        self.test_mode = test_mode
 
         # class variables:
         # fields that need splitting
@@ -180,6 +182,10 @@ class Uniprot:
 
         # download all swissprot ids
         self.uniprot_ids = list(uniprot._all_uniprots(self.organism, self.rev))
+
+        # limit to 100 for testing
+        if self.test_mode:
+            self.uniprot_ids = self.uniprot_ids[:100]
 
         # download attribute dicts
         self.data = {}
