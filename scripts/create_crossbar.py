@@ -72,6 +72,7 @@ def main():
     via BioCypher from node and edge data.
     """
 
+    # Start biocypher
     driver = biocypher.Driver(
         offline=True,
         db_name="neo4j",
@@ -84,6 +85,7 @@ def main():
         skip_duplicate_nodes=True,
     )
 
+    # Start uniprot adapter and load data
     uniprot_adapter = Uniprot(
         organism="9606",
         node_types=uniprot_node_types,
@@ -97,28 +99,32 @@ def main():
         retries=5,
     )
 
+    # Write uniprot nodes and edges
     driver.write_nodes(uniprot_adapter.get_nodes())
     driver.write_edges(uniprot_adapter.get_edges())
 
-    # ppi_adapter = PPI(organism=9606,
-    #                 intact_fields=intact_edge_fields,
-    #                 biogrid_fields=biogrid_edge_fields,
-    #                 string_fields=string_edge_fields,
-    # )
+    # Start ppi adapter and load data
+    ppi_adapter = PPI(organism=9606,
+                    intact_fields=intact_edge_fields,
+                    biogrid_fields=biogrid_edge_fields,
+                    string_fields=string_edge_fields,
+    )
 
-    # ppi_adapter.download_intact_data()
-    # ppi_adapter.intact_process()
+    ppi_adapter.download_intact_data()
+    ppi_adapter.intact_process()
 
-    # ppi_adapter.download_biogrid_data()
-    # ppi_adapter.biogrid_process()
+    ppi_adapter.download_biogrid_data()
+    ppi_adapter.biogrid_process()
 
-    # ppi_adapter.download_string_data()
-    # ppi_adapter.string_process()
+    ppi_adapter.download_string_data()
+    ppi_adapter.string_process()
 
-    # ppi_adapter.merge_all()
+    ppi_adapter.merge_all()
 
-    # driver.write_edges(ppi_adapter.get_edges())
+    # Write ppi edges
+    driver.write_edges(ppi_adapter.get_edges())
 
+    # Write import call and other post-processing
     driver.write_import_call()
     driver.log_missing_bl_types()
     driver.log_duplicates()
