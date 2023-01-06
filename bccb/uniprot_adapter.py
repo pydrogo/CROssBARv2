@@ -211,23 +211,45 @@ class Uniprot:
 
         for arg in tqdm(self.node_fields):
 
-            # Field splitting
-            if arg in self.split_fields:
+            # Simple replace
+            if arg not in self.split_fields:
 
-                attribute_values = self.data.get(arg)
+                for protein, attribute_value in self.data.get(arg).items():
 
-                for protein, attribute_value in attribute_values.items():
+                    self.data[arg][protein] = (
+                        attribute_value.replace("|", ",")
+                        .replace("'", "^")
+                        .strip()
+                    )
 
+            # Split fields
+            else:
+
+                for protein, attribute_value in self.data.get(arg).items():
+                    # Field splitting
                     self.data[arg][protein] = self._split_fields(
                         arg, attribute_value
                     )
 
-            # Else just replace
-            else:
+            # ENST ids
+            if arg == UniprotNodeField.PROTEIN_ENSEMBL_TRANSCRIPT_IDS.value:
 
-                self.data[arg][protein] = (
-                    attribute_value.replace("|", ",").replace("'", "^").strip()
-                )
+                for protein, attribute_value in self.data.get(arg).items():
+
+                    attribute_value, ensg_ids = self._find_ensg_from_enst(
+                        attribute_value
+                    )
+
+                    # update enst in data dict
+                    self.data[
+                        UniprotNodeField.PROTEIN_ENSEMBL_TRANSCRIPT_IDS.value
+                    ][protein] = attribute_value
+
+                    if ensg_ids:
+                        # add ensgs to data dict
+                        self.data[
+                            UniprotNodeField.PROTEIN_ENSEMBL_GENE_IDS.value
+                        ][protein] = ensg_ids
 
     def get_nodes(self):
         """
@@ -303,14 +325,10 @@ class Uniprot:
 
                     for gene in genes:
 
-                        gene_id = self._split_fields(
-                            id_type,
-                            gene,
-                        )
+                        if not gene:
+                            continue
 
-                        gene_id = self._normalise_curie_cached(
-                            "ncbigene", gene_id
-                        )
+                        gene_id = self._normalise_curie_cached("ncbigene", gene)
                         edge_list.append(
                             (None, gene_id, protein_id, "Encodes", {})
                         )
@@ -326,6 +344,9 @@ class Uniprot:
                         genes = [genes]
 
                     for gene in genes:
+
+                        if not gene:
+                            continue
 
                         gene_id = self._normalise_curie_cached("ensembl", gene)
                         edge_list.append(
@@ -376,31 +397,7 @@ class Uniprot:
                 if not attribute_value:
                     continue
 
-                if (
-                    arg == UniprotNodeField.PROTEIN_ENSEMBL_TRANSCRIPT_IDS.value
-                    and arg in _props
-                ):
-
-                    _props[arg], ensg_ids = self._find_ensg_from_enst(
-                        _props[arg]
-                    )
-
-                    # update enst in data dict
-                    self.data[
-                        UniprotNodeField.PROTEIN_ENSEMBL_TRANSCRIPT_IDS.value
-                    ][protein] = _props[arg]
-
-                    if ensg_ids:
-                        _props[
-                            UniprotNodeField.PROTEIN_ENSEMBL_GENE_IDS.value
-                        ] = ensg_ids
-
-                        # add ensgs to data dict
-                        self.data[
-                            UniprotNodeField.PROTEIN_ENSEMBL_GENE_IDS.value
-                        ][protein] = ensg_ids
-
-                elif arg == UniprotNodeField.PROTEIN_NAMES.value:
+                if arg == UniprotNodeField.PROTEIN_NAMES.value:
 
                     _props[arg] = self._split_protein_names_field(
                         self.data.get(arg).get(protein)

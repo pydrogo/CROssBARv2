@@ -96,7 +96,7 @@ def main():
         node_types=uniprot_node_types,
         node_fields=uniprot_node_fields,
         edge_types=uniprot_edge_types,
-        # edge_fields=uniprot_edge_fields,
+        edge_fields=uniprot_edge_fields,
         test_mode=True,
     )
 
