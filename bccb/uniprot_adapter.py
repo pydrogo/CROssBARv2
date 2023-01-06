@@ -62,10 +62,13 @@ class UniprotEdgeField(Enum):
     assign source and target identifiers in `get_edges()`.
     """
 
+    # default
     PROTEIN_UNIPROT_ACCESSION = auto()
     GENE_ENTREZ_ID = auto()
-    GENE_ENSEMBL_GENE_ID = auto()
     ORGANISM_NCBI_TAXONOMY_ID = auto()
+
+    # optional
+    GENE_ENSEMBL_GENE_ID = auto()
 
 
 class Uniprot:
@@ -88,6 +91,7 @@ class Uniprot:
         node_types: Optional[list] = None,
         node_fields: Optional[list] = None,
         edge_types: Optional[list] = None,
+        edge_fields: Optional[list] = None,
         test_mode=False,
     ):
 
@@ -101,71 +105,14 @@ class Uniprot:
         self.data_version = "2022_04"  # TODO get version from pypath
         self.data_licence = "CC BY 4.0"
 
-        # fields that need splitting
-        self.split_fields = [
-            UniprotNodeField.PROTEIN_SECONDARY_IDS.value,
-            UniprotNodeField.PROTEIN_PROTEOME.value,
-            UniprotNodeField.PROTEIN_GENE_NAMES.value,
-            UniprotNodeField.PROTEIN_EC.value,
-            UniprotNodeField.PROTEIN_ENTREZ_GENE_IDS.value,
-            UniprotNodeField.PROTEIN_ENSEMBL_TRANSCRIPT_IDS.value,
-            UniprotNodeField.PROTEIN_KEGG_IDS.value,
-        ]
+        self._configure_fields()
 
-        # properties of nodes
-        self.protein_properties = [
-            UniprotNodeField.PROTEIN_SECONDARY_IDS.value,
-            UniprotNodeField.PROTEIN_LENGTH.value,
-            UniprotNodeField.PROTEIN_MASS.value,
-            UniprotNodeField.PROTEIN_NAMES.value,
-            UniprotNodeField.PROTEIN_PROTEOME.value,
-            UniprotNodeField.PROTEIN_EC.value,
-            UniprotNodeField.PROTEIN_VIRUS_HOSTS.value,
-            UniprotNodeField.PROTEIN_ORGANISM_ID.value,
-            "ensembl_gene_ids",
-        ]
-
-        self.gene_properties = [
-            UniprotNodeField.PROTEIN_GENE_NAMES.value,
-            UniprotNodeField.PROTEIN_ENTREZ_GENE_IDS.value,
-            UniprotNodeField.PROTEIN_KEGG_IDS.value,
-            UniprotNodeField.PROTEIN_ENSEMBL_TRANSCRIPT_IDS.value,
-            "ensembl_gene_ids",
-        ]
-
-        self.organism_properties = [UniprotNodeField.PROTEIN_ORGANISM.value]
-
-        # check which node types to include
-        if node_types:
-
-            self.node_types = node_types
-
-        else:
-
-            # get all values from Fields enum
-            self.node_types = [field for field in UniprotNodeType]
-
-        # check which node fields to include
-        if node_fields:
-
-            self.node_attributes = [field.value for field in node_fields]
-
-        else:
-
-            # get all values from Fields enum
-            self.node_attributes = [field.value for field in UniprotNodeField]
-
-        # check which edge fields to include
-        if edge_types:
-
-            self.edge_attributes = [field.value for field in edge_types]
-            self.edge_types = edge_types
-
-        else:
-
-            # get all values from Fields enum
-            self.edge_attributes = [field.value for field in UniprotEdgeType]
-            self.edge_types = [field for field in UniprotEdgeType]
+        self._set_node_and_edge_fields(
+            node_types=node_types,
+            node_fields=node_fields,
+            edge_types=edge_types,
+            edge_fields=edge_fields,
+        )
 
     def download_uniprot_data(
         self,
@@ -687,3 +634,75 @@ class Uniprot:
         """
 
         return normalize_curie(f"{prefix}{sep}{identifier}", sep=sep)
+
+    def _configure_fields(self):
+        # fields that need splitting
+        self.split_fields = [
+            UniprotNodeField.PROTEIN_SECONDARY_IDS.value,
+            UniprotNodeField.PROTEIN_PROTEOME.value,
+            UniprotNodeField.PROTEIN_GENE_NAMES.value,
+            UniprotNodeField.PROTEIN_EC.value,
+            UniprotNodeField.PROTEIN_ENTREZ_GENE_IDS.value,
+            UniprotNodeField.PROTEIN_ENSEMBL_TRANSCRIPT_IDS.value,
+            UniprotNodeField.PROTEIN_KEGG_IDS.value,
+        ]
+
+        # properties of nodes
+        self.protein_properties = [
+            UniprotNodeField.PROTEIN_SECONDARY_IDS.value,
+            UniprotNodeField.PROTEIN_LENGTH.value,
+            UniprotNodeField.PROTEIN_MASS.value,
+            UniprotNodeField.PROTEIN_NAMES.value,
+            UniprotNodeField.PROTEIN_PROTEOME.value,
+            UniprotNodeField.PROTEIN_EC.value,
+            UniprotNodeField.PROTEIN_VIRUS_HOSTS.value,
+            UniprotNodeField.PROTEIN_ORGANISM_ID.value,
+            "ensembl_gene_ids",
+        ]
+
+        self.gene_properties = [
+            UniprotNodeField.PROTEIN_GENE_NAMES.value,
+            UniprotNodeField.PROTEIN_ENTREZ_GENE_IDS.value,
+            UniprotNodeField.PROTEIN_KEGG_IDS.value,
+            UniprotNodeField.PROTEIN_ENSEMBL_TRANSCRIPT_IDS.value,
+            "ensembl_gene_ids",
+        ]
+
+        self.organism_properties = [UniprotNodeField.PROTEIN_ORGANISM.value]
+
+    def _set_node_and_edge_fields(
+        self, node_types, node_fields, edge_types, edge_fields
+    ):
+        # check which node types and fields to include
+        if node_types:
+
+            self.node_types = node_types
+
+        else:
+
+            self.node_types = [field for field in UniprotNodeType]
+
+        if node_fields:
+
+            self.node_attributes = [field.value for field in node_fields]
+
+        else:
+
+            self.node_attributes = [field.value for field in UniprotNodeField]
+
+        # check which edge types and fields to include
+        if edge_types:
+
+            self.edge_types = edge_types
+
+        else:
+
+            self.edge_types = [field for field in UniprotEdgeType]
+
+        if edge_fields:
+
+            self.edge_fields = edge_fields
+
+        else:
+
+            self.edge_fields = [field for field in UniprotEdgeField][:3]
