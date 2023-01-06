@@ -94,12 +94,14 @@ class Uniprot:
         node_fields: Optional[list] = None,
         edge_types: Optional[list] = None,
         edge_fields: Optional[list] = None,
+        normalise_curies: bool = True,
         test_mode=False,
     ):
 
         # params
         self.organism = organism
         self.rev = rev
+        self.normalise_curies = normalise_curies
         self.test_mode = test_mode
 
         # provenance
@@ -359,8 +361,6 @@ class Uniprot:
         """
         For each uniprot id, select desired fields and reformat to give a tuple
         containing id and properties.
-
-        TODO refactor
         """
 
         for protein in tqdm(self.uniprot_ids):
@@ -720,6 +720,9 @@ class Uniprot:
         """
         Wrapper to call and cache `normalize_curie()` from Bioregistry.
         """
+
+        if not self.normalise_curies:
+            return identifier
 
         return normalize_curie(f"{prefix}{sep}{identifier}", sep=sep)
 
