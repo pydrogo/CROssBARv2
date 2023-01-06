@@ -231,6 +231,7 @@ class Uniprot:
                         arg, attribute_value
                     )
 
+            # Special treatment
             # ENST ids
             if arg == UniprotNodeField.PROTEIN_ENSEMBL_TRANSCRIPT_IDS.value:
 
@@ -250,6 +251,23 @@ class Uniprot:
                         self.data[
                             UniprotNodeField.PROTEIN_ENSEMBL_GENE_IDS.value
                         ][protein] = ensg_ids
+
+            # Protein names
+            elif arg == UniprotNodeField.PROTEIN_NAMES.value:
+
+                for protein, attribute_value in self.data.get(arg).items():
+
+                    self.data[arg][protein] = self._split_protein_names_field(
+                        attribute_value
+                    )
+
+            elif arg == UniprotNodeField.PROTEIN_VIRUS_HOSTS.value:
+
+                for protein, attribute_value in self.data.get(arg).items():
+
+                    self.data[arg][protein] = self._split_virus_hosts_field(
+                        attribute_value
+                    )
 
     def get_nodes(self):
         """
@@ -397,25 +415,7 @@ class Uniprot:
                 if not attribute_value:
                     continue
 
-                if arg == UniprotNodeField.PROTEIN_NAMES.value:
-
-                    _props[arg] = self._split_protein_names_field(
-                        self.data.get(arg).get(protein)
-                    )
-
-                elif arg == UniprotNodeField.PROTEIN_VIRUS_HOSTS.value:
-
-                    attribute_value = self._split_virus_hosts_field(
-                        self.data.get(arg).get(protein)
-                    )
-
-                    if attribute_value:
-
-                        _props[arg] = attribute_value
-
-                else:
-
-                    _props[arg] = attribute_value
+                _props[arg] = attribute_value
 
             yield protein_id, _props
 
