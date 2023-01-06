@@ -337,51 +337,42 @@ class Uniprot:
 
             if UniprotEdgeType.GENE_TO_PROTEIN in self.edge_types:
 
+                type_dict = {
+                    UniprotNodeField.PROTEIN_ENTREZ_GENE_IDS.value: "ncbigene",
+                    UniprotNodeField.PROTEIN_ENSEMBL_GENE_IDS.value: "ensembl",
+                }
+
                 # find preferred identifier for gene
-                # TODO refactor ifelse
                 if UniprotEdgeField.GENE_ENTREZ_ID in self.edge_fields:
 
                     id_type = UniprotNodeField.PROTEIN_ENTREZ_GENE_IDS.value
-
-                    genes = self.data.get(id_type).get(protein)
-
-                    if not isinstance(genes, list):
-
-                        genes = [genes]
-
-                    for gene in genes:
-
-                        if not gene:
-                            continue
-
-                        gene_id = self._normalise_curie_cached("ncbigene", gene)
-                        edge_list.append(
-                            (None, gene_id, protein_id, "Encodes", {})
-                        )
 
                 elif UniprotEdgeField.GENE_ENSEMBL_GENE_ID in self.edge_fields:
 
                     id_type = UniprotNodeField.PROTEIN_ENSEMBL_GENE_IDS.value
 
-                    genes = self.data.get(id_type).get(protein)
+                genes = self.data.get(id_type).get(protein)
 
-                    if not isinstance(genes, list):
+                if not genes:
+                    continue
 
-                        genes = [genes]
+                genes = self._ensure_iterable(genes)
 
-                    for gene in genes:
+                for gene in genes:
 
-                        if not gene:
-                            continue
+                    if not gene:
+                        continue
 
-                        gene_id = self._normalise_curie_cached("ensembl", gene)
-                        edge_list.append(
-                            (None, gene_id, protein_id, "Encodes", {})
-                        )
+                    gene_id = self._normalise_curie_cached(
+                        type_dict[id_type],
+                        gene,
+                    )
+                    edge_list.append((None, gene_id, protein_id, "Encodes", {}))
 
             if UniprotEdgeType.PROTEIN_TO_ORGANISM in self.edge_types:
 
                 # TODO all of this processing in separate function
+                # is it even still necessary?
 
                 organism_id = (
                     self.data.get(UniprotNodeField.PROTEIN_ORGANISM_ID.value)
@@ -717,16 +708,12 @@ class Uniprot:
 
         """
 
-        listed_enst = []
-        if isinstance(enst_list, str):
-            listed_enst.append(enst_list)
-        else:
-            listed_enst = enst_list
+        enst_list = self._ensure_iterable(enst_list)
 
-        listed_enst = [enst.split(" [")[0] for enst in listed_enst]
+        enst_list = [enst.split(" [")[0] for enst in enst_list]
 
         ensg_ids = set()
-        for enst_id in listed_enst:
+        for enst_id in enst_list:
             ensg_id = list(
                 mapping.map_name(
                     enst_id.split(".")[0], "enst_biomart", "ensg_biomart"
@@ -741,10 +728,10 @@ class Uniprot:
         if len(ensg_ids) == 1:
             ensg_ids = ensg_ids[0]
 
-        if len(listed_enst) == 1:
-            listed_enst = listed_enst[0]
+        if len(enst_list) == 1:
+            enst_list = enst_list[0]
 
-        return listed_enst, ensg_ids
+        return enst_list, ensg_ids
 
     @lru_cache
     def _normalise_curie_cached(
