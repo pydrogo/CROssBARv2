@@ -41,6 +41,8 @@ class UniprotNodeField(Enum):
     PROTEIN_EC = "ec"
     PROTEIN_GENE_NAMES = "genes"
     PROTEIN_ENSEMBL_TRANSCRIPT_IDS = "database(Ensembl)"
+    # we provide these by mapping ENSTs via pypath
+    PROTEIN_ENSEMBL_GENE_IDS = "ensembl_gene_ids"
     # xref attributes
     PROTEIN_ENTREZ_GENE_IDS = "database(GeneID)"
     PROTEIN_VIRUS_HOSTS = "virus hosts"
@@ -188,6 +190,9 @@ class Uniprot:
                 k
             ] = ";".join(v)
 
+        # add ensembl gene ids
+        self.data[UniprotNodeField.PROTEIN_ENSEMBL_GENE_IDS.value] = {}
+
         t1 = time()
         msg = f"Acquired UniProt data in {round((t1-t0) / 60, 2)} mins."
         logger.info(msg)
@@ -197,7 +202,10 @@ class Uniprot:
         Yield nodes (protein, gene, organism) from UniProt data.
         """
 
-        logger.info("Preparing UniProt nodes.")
+        logger.info(
+            "Preparing UniProt edges of the types "
+            f"{[type.name for type in self.node_types]}."
+        )
 
         for uniprot_entity in self._reformat_and_filter_proteins():
 
@@ -211,7 +219,6 @@ class Uniprot:
             # append gene node to output if desired
             if UniprotNodeType.GENE in self.node_types:
 
-                # get gene_id and gene_props if desired
                 gene_id, gene_props = self._get_gene(all_props)
 
                 if gene_id:
@@ -221,7 +228,6 @@ class Uniprot:
             # append organism node to output if desired
             if UniprotNodeType.ORGANISM in self.node_types:
 
-                # get organism_id and organism_props if desired
                 organism_id, organism_props = self._get_organism(all_props)
 
                 if organism_id:
@@ -237,7 +243,10 @@ class Uniprot:
         Get nodes and edges from UniProt data.
         """
 
-        logger.info("Preparing edges.")
+        logger.info(
+            "Preparing UniProt edges of the types "
+            f"{[type.name for type in self.edge_types]}."
+        )
 
         # create lists of edges
         edge_list = []
@@ -248,19 +257,52 @@ class Uniprot:
 
             if UniprotEdgeType.GENE_TO_PROTEIN in self.edge_types:
 
-                gene_id = self._split_fields(
-                    UniprotNodeField.PROTEIN_ENTREZ_GENE_IDS.value,
-                    self.data.get(
-                        UniprotNodeField.PROTEIN_ENTREZ_GENE_IDS.value
-                    ).get(protein),
-                )
+                # find preferred identifier for gene
+                # TODO refactor ifelse
+                if UniprotEdgeField.GENE_ENTREZ_ID in self.edge_fields:
 
-                if gene_id:
+                    id_type = UniprotNodeField.PROTEIN_ENTREZ_GENE_IDS.value
 
-                    gene_id = self._normalise_curie_cached("ncbigene", gene_id)
-                    edge_list.append((None, gene_id, protein_id, "Encodes", {}))
+                    genes = self.data.get(id_type).get(protein)
+
+                    if not isinstance(genes, list):
+
+                        genes = [genes]
+
+                    for gene in genes:
+
+                        gene_id = self._split_fields(
+                            id_type,
+                            gene,
+                        )
+
+                        gene_id = self._normalise_curie_cached(
+                            "ncbigene", gene_id
+                        )
+                        edge_list.append(
+                            (None, gene_id, protein_id, "Encodes", {})
+                        )
+
+                elif UniprotEdgeField.GENE_ENSEMBL_GENE_ID in self.edge_fields:
+
+                    id_type = UniprotNodeField.PROTEIN_ENSEMBL_GENE_IDS.value
+
+                    genes = self.data.get(id_type).get(protein)
+
+                    if not isinstance(genes, list):
+
+                        genes = [genes]
+
+                    for gene in genes:
+
+                        gene_id = self._normalise_curie_cached("ensembl", gene)
+                        edge_list.append(
+                            (None, gene_id, protein_id, "Encodes", {})
+                        )
 
             if UniprotEdgeType.PROTEIN_TO_ORGANISM in self.edge_types:
+
+                # TODO all of this processing in separate function
 
                 organism_id = (
                     self.data.get(UniprotNodeField.PROTEIN_ORGANISM_ID.value)
@@ -287,6 +329,8 @@ class Uniprot:
         """
         For each uniprot id, select desired fields and reformat to give a tuple
         containing id and properties.
+
+        TODO refactor
         """
 
         for protein in tqdm(self.uniprot_ids):
@@ -297,13 +341,19 @@ class Uniprot:
 
                 # split fields
                 if arg in self.split_fields:
+
                     attribute_value = self.data.get(arg).get(protein)
+
                     if attribute_value:
+
                         _props[arg] = self._split_fields(arg, attribute_value)
 
                 else:
+
                     attribute_value = self.data.get(arg).get(protein)
+
                     if attribute_value:
+
                         _props[arg] = (
                             attribute_value.replace("|", ",")
                             .replace("'", "^")
@@ -314,22 +364,40 @@ class Uniprot:
                     arg == UniprotNodeField.PROTEIN_ENSEMBL_TRANSCRIPT_IDS.value
                     and arg in _props
                 ):
+
                     _props[arg], ensg_ids = self._find_ensg_from_enst(
                         _props[arg]
                     )
+
+                    # update enst in data dict
+                    self.data[
+                        UniprotNodeField.PROTEIN_ENSEMBL_TRANSCRIPT_IDS.value
+                    ][protein] = _props[arg]
+
                     if ensg_ids:
-                        _props["ensembl_gene_ids"] = ensg_ids
+                        _props[
+                            UniprotNodeField.PROTEIN_ENSEMBL_GENE_IDS.value
+                        ] = ensg_ids
+
+                        # add ensgs to data dict
+                        self.data[
+                            UniprotNodeField.PROTEIN_ENSEMBL_GENE_IDS.value
+                        ][protein] = ensg_ids
 
                 elif arg == UniprotNodeField.PROTEIN_NAMES.value:
+
                     _props[arg] = self._split_protein_names_field(
                         self.data.get(arg).get(protein)
                     )
 
                 elif arg == UniprotNodeField.PROTEIN_VIRUS_HOSTS.value:
+
                     attribute_value = self._split_virus_hosts_field(
                         self.data.get(arg).get(protein)
                     )
+
                     if attribute_value:
+
                         _props[arg] = attribute_value
 
             yield protein_id, _props
@@ -587,7 +655,7 @@ class Uniprot:
         else:
             return None
 
-    def _find_ensg_from_enst(self, ens_list):
+    def _find_ensg_from_enst(self, enst_list):
         """
         take ensembl transcript ids, return ensembl gene ids by using pypath mapping tool
 
@@ -597,10 +665,10 @@ class Uniprot:
         """
 
         listed_enst = []
-        if isinstance(ens_list, str):
-            listed_enst.append(ens_list)
+        if isinstance(enst_list, str):
+            listed_enst.append(enst_list)
         else:
-            listed_enst = ens_list
+            listed_enst = enst_list
 
         listed_enst = [enst.split(" [")[0] for enst in listed_enst]
 
@@ -657,7 +725,7 @@ class Uniprot:
             UniprotNodeField.PROTEIN_EC.value,
             UniprotNodeField.PROTEIN_VIRUS_HOSTS.value,
             UniprotNodeField.PROTEIN_ORGANISM_ID.value,
-            "ensembl_gene_ids",
+            UniprotNodeField.PROTEIN_ENSEMBL_GENE_IDS.value,
         ]
 
         self.gene_properties = [
@@ -665,7 +733,7 @@ class Uniprot:
             UniprotNodeField.PROTEIN_ENTREZ_GENE_IDS.value,
             UniprotNodeField.PROTEIN_KEGG_IDS.value,
             UniprotNodeField.PROTEIN_ENSEMBL_TRANSCRIPT_IDS.value,
-            "ensembl_gene_ids",
+            UniprotNodeField.PROTEIN_ENSEMBL_GENE_IDS.value,
         ]
 
         self.organism_properties = [UniprotNodeField.PROTEIN_ORGANISM.value]

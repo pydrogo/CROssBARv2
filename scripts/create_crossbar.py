@@ -46,6 +46,10 @@ uniprot_edge_types = [
     UniprotEdgeType.GENE_TO_PROTEIN,
 ]
 
+uniprot_edge_fields = [
+    UniprotEdgeField.GENE_ENSEMBL_GENE_ID,
+]
+
 intact_edge_fields = [
     IntactEdgeField.SOURCE,
     IntactEdgeField.PUBMED_IDS,
@@ -92,6 +96,7 @@ def main():
         node_types=uniprot_node_types,
         node_fields=uniprot_node_fields,
         edge_types=uniprot_edge_types,
+        # edge_fields=uniprot_edge_fields,
         test_mode=True,
     )
 
