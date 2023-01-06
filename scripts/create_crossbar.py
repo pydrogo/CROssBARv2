@@ -34,7 +34,7 @@ uniprot_node_fields = [
     UniprotNodeField.PROTEIN_PROTEOME,
     UniprotNodeField.PROTEIN_EC,
     UniprotNodeField.PROTEIN_GENE_NAMES,
-    UniprotNodeField.PROTEIN_ENSEMBL_GENE_IDS,
+    UniprotNodeField.PROTEIN_ENSEMBL_TRANSCRIPT_IDS,
     UniprotNodeField.PROTEIN_ENTREZ_GENE_IDS,
     UniprotNodeField.PROTEIN_VIRUS_HOSTS,
     UniprotNodeField.PROTEIN_KEGG_IDS,

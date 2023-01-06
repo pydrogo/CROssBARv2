@@ -1,7 +1,7 @@
 from time import time
 import collections
 from typing import Dict, List, Optional
-from enum import Enum
+from enum import Enum, auto
 
 from tqdm import tqdm  # progress bar
 from pypath.share import curl, settings
@@ -19,14 +19,14 @@ class UniprotNode(Enum):
     Node types of the UniProt API represented in this adapter.
     """
 
-    PROTEIN = "protein"
-    GENE = "gene"
-    ORGANISM = "organism"
+    PROTEIN = auto()
+    GENE = auto()
+    ORGANISM = auto()
 
 
 class UniprotNodeField(Enum):
     """
-    Fields of the UniProt API represented in this adapter.
+    Fields of nodes the UniProt API represented in this adapter.
     """
 
     # core attributes
@@ -40,7 +40,7 @@ class UniprotNodeField(Enum):
     PROTEIN_PROTEOME = "proteome"
     PROTEIN_EC = "ec"
     PROTEIN_GENE_NAMES = "genes"
-    PROTEIN_ENSEMBL_GENE_IDS = "database(Ensembl)"
+    PROTEIN_ENSEMBL_TRANSCRIPT_IDS = "database(Ensembl)"
     # xref attributes
     PROTEIN_ENTREZ_GENE_IDS = "database(GeneID)"
     PROTEIN_VIRUS_HOSTS = "virus hosts"
@@ -49,12 +49,12 @@ class UniprotNodeField(Enum):
 
 class UniprotEdge(Enum):
     """
-    Fields of the UniProt API represented in this adapter.
+    Edge types of the UniProt API represented in this adapter.
     """
 
     # core attributes
-    PROTEIN_TO_ORGANISM = "organism-id"
-    GENE_TO_PROTEIN = "database(GeneID)"
+    PROTEIN_TO_ORGANISM = auto()
+    GENE_TO_PROTEIN = auto()
 
 
 class Uniprot:
@@ -94,37 +94,37 @@ class Uniprot:
 
         # fields that need splitting
         self.split_fields = [
-            "secondary_ids",
-            "proteome",
-            "genes",
-            "ec",
-            "database(GeneID)",
-            "database(Ensembl)",
-            "database(KEGG)",
+            UniprotNodeField.PROTEIN_SECONDARY_IDS.value,
+            UniprotNodeField.PROTEIN_PROTEOME.value,
+            UniprotNodeField.PROTEIN_GENE_NAMES.value,
+            UniprotNodeField.PROTEIN_EC.value,
+            UniprotNodeField.PROTEIN_ENTREZ_GENE_IDS.value,
+            UniprotNodeField.PROTEIN_ENSEMBL_TRANSCRIPT_IDS.value,
+            UniprotNodeField.PROTEIN_KEGG_IDS.value,
         ]
 
         # properties of nodes
         self.protein_properties = [
-            "secondary_ids",
-            "length",
-            "mass",
-            "protein names",
-            "proteome",
-            "ec",
-            "virus hosts",
-            "organism-id",
+            UniprotNodeField.PROTEIN_SECONDARY_IDS.value,
+            UniprotNodeField.PROTEIN_LENGTH.value,
+            UniprotNodeField.PROTEIN_MASS.value,
+            UniprotNodeField.PROTEIN_NAMES.value,
+            UniprotNodeField.PROTEIN_PROTEOME.value,
+            UniprotNodeField.PROTEIN_EC.value,
+            UniprotNodeField.PROTEIN_VIRUS_HOSTS.value,
+            UniprotNodeField.PROTEIN_ORGANISM_ID.value,
             "ensembl_gene_ids",
         ]
 
         self.gene_properties = [
-            "genes",
-            "database(GeneID)",
-            "database(KEGG)",
-            "database(Ensembl)",
+            UniprotNodeField.PROTEIN_GENE_NAMES.value,
+            UniprotNodeField.PROTEIN_ENTREZ_GENE_IDS.value,
+            UniprotNodeField.PROTEIN_KEGG_IDS.value,
+            UniprotNodeField.PROTEIN_ENSEMBL_TRANSCRIPT_IDS.value,
             "ensembl_gene_ids",
         ]
 
-        self.organism_properties = ["organism"]
+        self.organism_properties = [UniprotNodeField.PROTEIN_ORGANISM.value]
 
         if node_types:
 
@@ -215,13 +215,21 @@ class Uniprot:
             logger.debug(f"{query_key} field is downloaded")
 
         secondary_ids = uniprot.get_uniprot_sec(None)
-        self.data["secondary_ids"] = collections.defaultdict(list)
+        self.data[
+            UniprotNodeField.PROTEIN_SECONDARY_IDS.value
+        ] = collections.defaultdict(list)
 
         # TODO why loop twice?
         for sec_id in secondary_ids:
-            self.data["secondary_ids"][sec_id[1]].append(sec_id[0])
-        for k, v in self.data["secondary_ids"].items():
-            self.data["secondary_ids"][k] = ";".join(v)
+            self.data[UniprotNodeField.PROTEIN_SECONDARY_IDS.value][
+                sec_id[1]
+            ].append(sec_id[0])
+        for k, v in self.data[
+            UniprotNodeField.PROTEIN_SECONDARY_IDS.value
+        ].items():
+            self.data[UniprotNodeField.PROTEIN_SECONDARY_IDS.value][
+                k
+            ] = ";".join(v)
 
         t1 = time()
         msg = f"Acquired UniProt data in {round((t1-t0) / 60, 2)} mins."
@@ -234,9 +242,9 @@ class Uniprot:
 
         logger.info("Preparing UniProt nodes.")
 
-        for node in self._reformat_and_filter_proteins():
+        for uniprot_entity in self._reformat_and_filter_proteins():
 
-            protein_id, all_props = node
+            protein_id, all_props = uniprot_entity
 
             protein_props = self._get_protein_properties(all_props)
 
@@ -261,7 +269,11 @@ class Uniprot:
 
                 if organism_id:
 
-                    yield (organism_id, "organism", organism_props)
+                    yield (
+                        organism_id,
+                        UniprotNodeField.PROTEIN_ORGANISM.value,
+                        organism_props,
+                    )
 
     def get_edges(self):
         """
@@ -280,8 +292,10 @@ class Uniprot:
             if UniprotEdge.GENE_TO_PROTEIN in self.edge_types:
 
                 gene_id = self._split_fields(
-                    "database(GeneID)",
-                    self.data.get("database(GeneID)").get(protein),
+                    UniprotNodeField.PROTEIN_ENTREZ_GENE_IDS.value,
+                    self.data.get(
+                        UniprotNodeField.PROTEIN_ENTREZ_GENE_IDS.value
+                    ).get(protein),
                 )
 
                 if gene_id:
@@ -292,7 +306,7 @@ class Uniprot:
             if UniprotEdge.PROTEIN_TO_ORGANISM in self.edge_types:
 
                 organism_id = (
-                    self.data.get("organism-id")
+                    self.data.get(UniprotNodeField.PROTEIN_ORGANISM_ID.value)
                     .get(protein)
                     .replace("|", ",")
                     .replace("'", "^")
@@ -337,19 +351,22 @@ class Uniprot:
                             .strip()
                         )
 
-                if arg == "database(Ensembl)" and arg in _props:
+                if (
+                    arg == UniprotNodeField.PROTEIN_ENSEMBL_TRANSCRIPT_IDS.value
+                    and arg in _props
+                ):
                     _props[arg], ensg_ids = self._find_ensg_from_enst(
                         _props[arg]
                     )
                     if ensg_ids:
                         _props["ensembl_gene_ids"] = ensg_ids
 
-                elif arg == "protein names":
+                elif arg == UniprotNodeField.PROTEIN_NAMES.value:
                     _props[arg] = self._split_protein_names_field(
                         self.data.get(arg).get(protein)
                     )
 
-                elif arg == "virus hosts":
+                elif arg == UniprotNodeField.PROTEIN_VIRUS_HOSTS.value:
                     attribute_value = self._split_virus_hosts_field(
                         self.data.get(arg).get(protein)
                     )
@@ -362,15 +379,16 @@ class Uniprot:
 
         # if genes and database(GeneID) fields exist, define gene_properties
         if not (
-            "genes" in all_props.keys()
-            and "database(GeneID)" in all_props.keys()
+            UniprotNodeField.PROTEIN_GENE_NAMES.value in all_props.keys()
+            and UniprotNodeField.PROTEIN_ENTREZ_GENE_IDS.value
+            in all_props.keys()
         ):
             return (None, None)
 
         gene_props = dict()
 
         # pop database(GeneID) from _props and make it gene_id
-        gene_id = all_props.pop("database(GeneID)")
+        gene_id = all_props.pop(UniprotNodeField.PROTEIN_ENTREZ_GENE_IDS.value)
 
         for k in all_props.keys():
 
@@ -397,7 +415,8 @@ class Uniprot:
         organism_props = dict()
 
         organism_id = normalize_curie(
-            "ncbitaxon:" + all_props.pop("organism-id")
+            "ncbitaxon:"
+            + all_props.pop(UniprotNodeField.PROTEIN_ORGANISM_ID.value)
         )
 
         for k in all_props.keys():
@@ -424,7 +443,11 @@ class Uniprot:
 
             # make length, mass and organism-id fields integer and
             # replace hyphen in keys
-            if k in ["length", "mass", "organism-id"]:
+            if k in [
+                UniprotNodeField.PROTEIN_LENGTH.value,
+                UniprotNodeField.PROTEIN_MASS.value,
+                UniprotNodeField.PROTEIN_ORGANISM_ID.value,
+            ]:
                 protein_props[k.replace("-", "_")] = int(
                     all_props[k].replace(",", "")
                 )
@@ -456,7 +479,10 @@ class Uniprot:
             )
 
             # define fields that will not be splitted by semicolon
-            split_dict = {"proteome": ",", "genes": " "}
+            split_dict = {
+                UniprotNodeField.PROTEIN_PROTEOME.value: ",",
+                UniprotNodeField.PROTEIN_GENE_NAMES.value: " ",
+            }
 
             # if field in split_dict split accordingly
             if field_key in split_dict.keys():
@@ -470,14 +496,14 @@ class Uniprot:
                 field_value = field_value.strip().strip(";").split(";")
 
                 # split colons (":") in kegg field
-                if field_key == "database(KEGG)":
+                if field_key == UniprotNodeField.PROTEIN_KEGG_IDS.value:
                     _list = []
                     for e in field_value:
                         _list.append(e.split(":")[1].strip())
                     field_value = _list
 
                 # take first element in database(GeneID) field
-                if field_key == "database(GeneID)":
+                if field_key == UniprotNodeField.PROTEIN_ENTREZ_GENE_IDS.value:
                     field_value = field_value[0]
 
                 # if field has just one element in the list make it string
