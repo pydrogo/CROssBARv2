@@ -80,18 +80,18 @@ class Uniprot:
         test_mode=False,
     ):
 
-        # instance variables
-        # provenance
-        self.data_source = "uniprot"
-        self.data_version = "2022_04"  # TODO get version from pypath
-        self.data_licence = "CC BY 4.0"
-
+        # instance variables:
         # params
         self.organism = organism
         self.rev = rev
         self.test_mode = test_mode
 
         # class variables:
+        # provenance
+        self.data_source = "uniprot"
+        self.data_version = "2022_04"  # TODO get version from pypath
+        self.data_licence = "CC BY 4.0"
+
         # fields that need splitting
         self.split_fields = [
             "secondary_ids",
@@ -216,6 +216,8 @@ class Uniprot:
 
         secondary_ids = uniprot.get_uniprot_sec(None)
         self.data["secondary_ids"] = collections.defaultdict(list)
+
+        # TODO why loop twice?
         for sec_id in secondary_ids:
             self.data["secondary_ids"][sec_id[1]].append(sec_id[0])
         for k, v in self.data["secondary_ids"].items():
@@ -225,210 +227,12 @@ class Uniprot:
         msg = f"Acquired UniProt data in {round((t1-t0) / 60, 2)} mins."
         logger.info(msg)
 
-    def _split_fields(self, field_key, field_value):
-        """
-        Split fields with multiple entries in uniprot
-        Args:
-            field_key: field name
-            field_value: entry of the field
-        """
-        if field_value:
-            # replace sensitive elements for admin-import
-            field_value = (
-                field_value.replace("|", ",").replace("'", "^").strip()
-            )
-
-            # define fields that will not be splitted by semicolon
-            split_dict = {"proteome": ",", "genes": " "}
-
-            # if field in split_dict split accordingly
-            if field_key in split_dict.keys():
-                field_value = field_value.split(split_dict[field_key])
-                # if field has just one element in the list make it string
-                if len(field_value) == 1:
-                    field_value = field_value[0]
-
-            # split semicolons (;)
-            else:
-                field_value = field_value.strip().strip(";").split(";")
-
-                # split colons (":") in kegg field
-                if field_key == "database(KEGG)":
-                    _list = []
-                    for e in field_value:
-                        _list.append(e.split(":")[1].strip())
-                    field_value = _list
-
-                # take first element in database(GeneID) field
-                if field_key == "database(GeneID)":
-                    field_value = field_value[0]
-
-                # if field has just one element in the list make it string
-                if isinstance(field_value, list) and len(field_value) == 1:
-                    field_value = field_value[0]
-
-            return field_value
-
-        else:
-            return None
-
-    def _split_protein_names_field(self, field_value):
-        """
-        Split protein names field in uniprot
-        Args:
-            field_value: entry of the protein names field
-        Example:
-            "Acetate kinase (EC 2.7.2.1) (Acetokinase)" -> ["Acetate kinase", "Acetokinase"]
-        """
-        field_value = field_value.replace("|", ",").replace(
-            "'", "^"
-        )  # replace sensitive elements
-
-        if "[Cleaved" in field_value:
-            # discarding part after the "[Cleaved"
-            clip_index = field_value.index("[Cleaved")
-            protein_names = (
-                field_value[:clip_index].replace("(Fragment)", "").strip()
-            )
-
-            # handling multiple protein names
-            if "(EC" in protein_names[0]:
-                splitted = protein_names[0].split(" (")
-                protein_names = []
-
-                for name in splitted:
-                    if not name.strip().startswith("EC"):
-                        if not name.strip().startswith("Fragm"):
-                            protein_names.append(name.rstrip(")").strip())
-
-            elif " (" in protein_names[0]:
-                splitted = protein_names[0].split(" (")
-                protein_names = []
-                for name in splitted:
-                    if not name.strip().startswith("Fragm"):
-                        protein_names.append(name.rstrip(")").strip())
-
-        elif "[Includes" in field_value:
-            # discarding part after the "[Includes"
-            clip_index = field_value.index("[Includes")
-            protein_names = (
-                field_value[:clip_index].replace("(Fragment)", "").strip()
-            )
-            # handling multiple protein names
-            if "(EC" in protein_names[0]:
-
-                splitted = protein_names[0].split(" (")
-                protein_names = []
-
-                for name in splitted:
-                    if not name.strip().startswith("EC"):
-                        if not name.strip().startswith("Fragm"):
-                            protein_names.append(name.rstrip(")").strip())
-
-            elif " (" in protein_names[0]:
-                splitted = protein_names[0].split(" (")
-                protein_names = []
-                for name in splitted:
-                    if not name.strip().startswith("Fragm"):
-                        protein_names.append(name.rstrip(")").strip())
-
-        # handling multiple protein names
-        elif "(EC" in field_value.replace("(Fragment)", ""):
-            splitted = field_value.split(" (")
-            protein_names = []
-
-            for name in splitted:
-                if not name.strip().startswith("EC"):
-                    if not name.strip().startswith("Fragm"):
-                        protein_names.append(name.rstrip(")").strip())
-
-        elif " (" in field_value.replace("(Fragment)", ""):
-            splitted = field_value.split(" (")
-            protein_names = []
-            for name in splitted:
-                if not name.strip().startswith("Fragm"):
-                    protein_names.append(name.rstrip(")").strip())
-
-        else:
-            protein_names = field_value.replace("(Fragment)", "").strip()
-
-        return protein_names
-
-    def _split_virus_hosts_field(self, field_value):
-        """
-        Split virus hosts fields in uniprot
-
-        Args:
-            field_value: entry of the virus hosts field
-
-        Example:
-            "Pyrobaculum arsenaticum [TaxID: 121277]; Pyrobaculum oguniense [TaxID: 99007]" -> ['121277', '99007']
-        """
-        if field_value:
-            if ";" in field_value:
-                splitted = field_value.split(";")
-                virus_hosts_tax_ids = []
-                for v in splitted:
-                    virus_hosts_tax_ids.append(
-                        v[v.index("[") + 1 : v.index("]")].split(":")[1].strip()
-                    )
-            else:
-                virus_hosts_tax_ids = (
-                    field_value[
-                        field_value.index("[") + 1 : field_value.index("]")
-                    ]
-                    .split(":")[1]
-                    .strip()
-                )
-
-            return virus_hosts_tax_ids
-        else:
-            return None
-
-    def _find_ensg_from_enst(self, ens_list):
-        """
-        take ensembl transcript ids, return ensembl gene ids by using pypath mapping tool
-
-        Args:
-            field_value: ensembl transcript list
-
-        """
-
-        listed_enst = []
-        if isinstance(ens_list, str):
-            listed_enst.append(ens_list)
-        else:
-            listed_enst = ens_list
-
-        listed_enst = [enst.split(" [")[0] for enst in listed_enst]
-
-        ensg_ids = set()
-        for enst_id in listed_enst:
-            ensg_id = list(
-                mapping.map_name(
-                    enst_id.split(".")[0], "enst_biomart", "ensg_biomart"
-                )
-            )
-            ensg_id = ensg_id[0] if ensg_id else None
-            if ensg_id:
-                ensg_ids.add(ensg_id)
-
-        ensg_ids = list(ensg_ids)
-
-        if len(ensg_ids) == 1:
-            ensg_ids = ensg_ids[0]
-
-        if len(listed_enst) == 1:
-            listed_enst = listed_enst[0]
-
-        return listed_enst, ensg_ids
-
-    def get_nodes(self) -> List[Dict]:
+    def get_nodes(self):
         """
         Yield nodes (protein, gene, organism) from UniProt data.
         """
 
-        logger.info("Preparing nodes.")
+        logger.info("Preparing UniProt nodes.")
 
         for node in self._reformat_and_filter_proteins():
 
@@ -637,3 +441,201 @@ class Uniprot:
         protein_props["version"] = self.data_version
 
         return protein_props
+
+    def _split_fields(self, field_key, field_value):
+        """
+        Split fields with multiple entries in uniprot
+        Args:
+            field_key: field name
+            field_value: entry of the field
+        """
+        if field_value:
+            # replace sensitive elements for admin-import
+            field_value = (
+                field_value.replace("|", ",").replace("'", "^").strip()
+            )
+
+            # define fields that will not be splitted by semicolon
+            split_dict = {"proteome": ",", "genes": " "}
+
+            # if field in split_dict split accordingly
+            if field_key in split_dict.keys():
+                field_value = field_value.split(split_dict[field_key])
+                # if field has just one element in the list make it string
+                if len(field_value) == 1:
+                    field_value = field_value[0]
+
+            # split semicolons (;)
+            else:
+                field_value = field_value.strip().strip(";").split(";")
+
+                # split colons (":") in kegg field
+                if field_key == "database(KEGG)":
+                    _list = []
+                    for e in field_value:
+                        _list.append(e.split(":")[1].strip())
+                    field_value = _list
+
+                # take first element in database(GeneID) field
+                if field_key == "database(GeneID)":
+                    field_value = field_value[0]
+
+                # if field has just one element in the list make it string
+                if isinstance(field_value, list) and len(field_value) == 1:
+                    field_value = field_value[0]
+
+            return field_value
+
+        else:
+            return None
+
+    def _split_protein_names_field(self, field_value):
+        """
+        Split protein names field in uniprot
+        Args:
+            field_value: entry of the protein names field
+        Example:
+            "Acetate kinase (EC 2.7.2.1) (Acetokinase)" -> ["Acetate kinase", "Acetokinase"]
+        """
+        field_value = field_value.replace("|", ",").replace(
+            "'", "^"
+        )  # replace sensitive elements
+
+        if "[Cleaved" in field_value:
+            # discarding part after the "[Cleaved"
+            clip_index = field_value.index("[Cleaved")
+            protein_names = (
+                field_value[:clip_index].replace("(Fragment)", "").strip()
+            )
+
+            # handling multiple protein names
+            if "(EC" in protein_names[0]:
+                splitted = protein_names[0].split(" (")
+                protein_names = []
+
+                for name in splitted:
+                    if not name.strip().startswith("EC"):
+                        if not name.strip().startswith("Fragm"):
+                            protein_names.append(name.rstrip(")").strip())
+
+            elif " (" in protein_names[0]:
+                splitted = protein_names[0].split(" (")
+                protein_names = []
+                for name in splitted:
+                    if not name.strip().startswith("Fragm"):
+                        protein_names.append(name.rstrip(")").strip())
+
+        elif "[Includes" in field_value:
+            # discarding part after the "[Includes"
+            clip_index = field_value.index("[Includes")
+            protein_names = (
+                field_value[:clip_index].replace("(Fragment)", "").strip()
+            )
+            # handling multiple protein names
+            if "(EC" in protein_names[0]:
+
+                splitted = protein_names[0].split(" (")
+                protein_names = []
+
+                for name in splitted:
+                    if not name.strip().startswith("EC"):
+                        if not name.strip().startswith("Fragm"):
+                            protein_names.append(name.rstrip(")").strip())
+
+            elif " (" in protein_names[0]:
+                splitted = protein_names[0].split(" (")
+                protein_names = []
+                for name in splitted:
+                    if not name.strip().startswith("Fragm"):
+                        protein_names.append(name.rstrip(")").strip())
+
+        # handling multiple protein names
+        elif "(EC" in field_value.replace("(Fragment)", ""):
+            splitted = field_value.split(" (")
+            protein_names = []
+
+            for name in splitted:
+                if not name.strip().startswith("EC"):
+                    if not name.strip().startswith("Fragm"):
+                        protein_names.append(name.rstrip(")").strip())
+
+        elif " (" in field_value.replace("(Fragment)", ""):
+            splitted = field_value.split(" (")
+            protein_names = []
+            for name in splitted:
+                if not name.strip().startswith("Fragm"):
+                    protein_names.append(name.rstrip(")").strip())
+
+        else:
+            protein_names = field_value.replace("(Fragment)", "").strip()
+
+        return protein_names
+
+    def _split_virus_hosts_field(self, field_value):
+        """
+        Split virus hosts fields in uniprot
+
+        Args:
+            field_value: entry of the virus hosts field
+
+        Example:
+            "Pyrobaculum arsenaticum [TaxID: 121277]; Pyrobaculum oguniense [TaxID: 99007]" -> ['121277', '99007']
+        """
+        if field_value:
+            if ";" in field_value:
+                splitted = field_value.split(";")
+                virus_hosts_tax_ids = []
+                for v in splitted:
+                    virus_hosts_tax_ids.append(
+                        v[v.index("[") + 1 : v.index("]")].split(":")[1].strip()
+                    )
+            else:
+                virus_hosts_tax_ids = (
+                    field_value[
+                        field_value.index("[") + 1 : field_value.index("]")
+                    ]
+                    .split(":")[1]
+                    .strip()
+                )
+
+            return virus_hosts_tax_ids
+        else:
+            return None
+
+    def _find_ensg_from_enst(self, ens_list):
+        """
+        take ensembl transcript ids, return ensembl gene ids by using pypath mapping tool
+
+        Args:
+            field_value: ensembl transcript list
+
+        """
+
+        listed_enst = []
+        if isinstance(ens_list, str):
+            listed_enst.append(ens_list)
+        else:
+            listed_enst = ens_list
+
+        listed_enst = [enst.split(" [")[0] for enst in listed_enst]
+
+        ensg_ids = set()
+        for enst_id in listed_enst:
+            ensg_id = list(
+                mapping.map_name(
+                    enst_id.split(".")[0], "enst_biomart", "ensg_biomart"
+                )
+            )
+            ensg_id = ensg_id[0] if ensg_id else None
+            if ensg_id:
+                ensg_ids.add(ensg_id)
+
+        ensg_ids = list(ensg_ids)
+
+        if len(ensg_ids) == 1:
+            ensg_ids = ensg_ids[0]
+
+        if len(listed_enst) == 1:
+            listed_enst = listed_enst[0]
+
+        return listed_enst, ensg_ids
