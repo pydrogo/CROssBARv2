@@ -4,9 +4,10 @@ CROssBAR generation through BioCypher script
 
 from bccb.uniprot_adapter import (
     Uniprot,
-    UniprotNode,
+    UniprotNodeType,
     UniprotNodeField,
-    UniprotEdge,
+    UniprotEdgeType,
+    UniprotEdgeField,
 )
 from bccb.ppi_adapter import (
     PPI,
@@ -19,9 +20,9 @@ import biocypher
 
 # Source configuration
 uniprot_node_types = [
-    UniprotNode.PROTEIN,
-    UniprotNode.GENE,
-    UniprotNode.ORGANISM,
+    UniprotNodeType.PROTEIN,
+    UniprotNodeType.GENE,
+    UniprotNodeType.ORGANISM,
 ]
 
 uniprot_node_fields = [
@@ -41,8 +42,8 @@ uniprot_node_fields = [
 ]
 
 uniprot_edge_types = [
-    UniprotEdge.PROTEIN_TO_ORGANISM,
-    UniprotEdge.GENE_TO_PROTEIN,
+    UniprotEdgeType.PROTEIN_TO_ORGANISM,
+    UniprotEdgeType.GENE_TO_PROTEIN,
 ]
 
 intact_edge_fields = [
@@ -103,26 +104,26 @@ def main():
     driver.write_nodes(uniprot_adapter.get_nodes())
     driver.write_edges(uniprot_adapter.get_edges())
 
-    # Start ppi adapter and load data
-    ppi_adapter = PPI(organism=9606,
-                    intact_fields=intact_edge_fields,
-                    biogrid_fields=biogrid_edge_fields,
-                    string_fields=string_edge_fields,
-    )
+    # # Start ppi adapter and load data
+    # ppi_adapter = PPI(organism=9606,
+    #                 intact_fields=intact_edge_fields,
+    #                 biogrid_fields=biogrid_edge_fields,
+    #                 string_fields=string_edge_fields,
+    # )
 
-    ppi_adapter.download_intact_data()
-    ppi_adapter.intact_process()
+    # ppi_adapter.download_intact_data()
+    # ppi_adapter.intact_process()
 
-    ppi_adapter.download_biogrid_data()
-    ppi_adapter.biogrid_process()
+    # ppi_adapter.download_biogrid_data()
+    # ppi_adapter.biogrid_process()
 
-    ppi_adapter.download_string_data()
-    ppi_adapter.string_process()
+    # ppi_adapter.download_string_data()
+    # ppi_adapter.string_process()
 
-    ppi_adapter.merge_all()
+    # ppi_adapter.merge_all()
 
-    # Write ppi edges
-    driver.write_edges(ppi_adapter.get_edges())
+    # # Write ppi edges
+    # driver.write_edges(ppi_adapter.get_edges())
 
     # Write import call and other post-processing
     driver.write_import_call()

@@ -2,6 +2,7 @@ from time import time
 import collections
 from typing import Dict, List, Optional
 from enum import Enum, auto
+from functools import lru_cache
 
 from tqdm import tqdm  # progress bar
 from pypath.share import curl, settings
@@ -14,7 +15,7 @@ from bioregistry import normalize_curie
 logger.debug(f"Loading module {__name__}.")
 
 
-class UniprotNode(Enum):
+class UniprotNodeType(Enum):
     """
     Node types of the UniProt API represented in this adapter.
     """
@@ -30,7 +31,6 @@ class UniprotNodeField(Enum):
     """
 
     # core attributes
-    PROTEIN_ID = "id"
     PROTEIN_SECONDARY_IDS = "secondary_ids"
     PROTEIN_LENGTH = "length"
     PROTEIN_MASS = "mass"
@@ -47,14 +47,25 @@ class UniprotNodeField(Enum):
     PROTEIN_KEGG_IDS = "database(KEGG)"
 
 
-class UniprotEdge(Enum):
+class UniprotEdgeType(Enum):
     """
     Edge types of the UniProt API represented in this adapter.
     """
 
-    # core attributes
     PROTEIN_TO_ORGANISM = auto()
     GENE_TO_PROTEIN = auto()
+
+
+class UniprotEdgeField(Enum):
+    """
+    Fields of edges of the UniProt API represented in this adapter. Used to
+    assign source and target identifiers in `get_edges()`.
+    """
+
+    PROTEIN_UNIPROT_ACCESSION = auto()
+    GENE_ENTREZ_ID = auto()
+    GENE_ENSEMBL_GENE_ID = auto()
+    ORGANISM_NCBI_TAXONOMY_ID = auto()
 
 
 class Uniprot:
@@ -80,13 +91,11 @@ class Uniprot:
         test_mode=False,
     ):
 
-        # instance variables:
         # params
         self.organism = organism
         self.rev = rev
         self.test_mode = test_mode
 
-        # class variables:
         # provenance
         self.data_source = "uniprot"
         self.data_version = "2022_04"  # TODO get version from pypath
@@ -126,6 +135,7 @@ class Uniprot:
 
         self.organism_properties = [UniprotNodeField.PROTEIN_ORGANISM.value]
 
+        # check which node types to include
         if node_types:
 
             self.node_types = node_types
@@ -133,7 +143,7 @@ class Uniprot:
         else:
 
             # get all values from Fields enum
-            self.node_types = [field for field in UniprotNode]
+            self.node_types = [field for field in UniprotNodeType]
 
         # check which node fields to include
         if node_fields:
@@ -154,8 +164,8 @@ class Uniprot:
         else:
 
             # get all values from Fields enum
-            self.edge_attributes = [field.value for field in UniprotEdge]
-            self.edge_types = [field for field in UniprotEdge]
+            self.edge_attributes = [field.value for field in UniprotEdgeType]
+            self.edge_types = [field for field in UniprotEdgeType]
 
     def download_uniprot_data(
         self,
@@ -252,7 +262,7 @@ class Uniprot:
             yield (protein_id, "protein", protein_props)
 
             # append gene node to output if desired
-            if UniprotNode.GENE in self.node_types:
+            if UniprotNodeType.GENE in self.node_types:
 
                 # get gene_id and gene_props if desired
                 gene_id, gene_props = self._get_gene(all_props)
@@ -262,7 +272,7 @@ class Uniprot:
                     yield (gene_id, "gene", gene_props)
 
             # append organism node to output if desired
-            if UniprotNode.ORGANISM in self.node_types:
+            if UniprotNodeType.ORGANISM in self.node_types:
 
                 # get organism_id and organism_props if desired
                 organism_id, organism_props = self._get_organism(all_props)
@@ -287,9 +297,9 @@ class Uniprot:
 
         for protein in tqdm(self.uniprot_ids):
 
-            protein_id = normalize_curie("uniprot:" + protein)
+            protein_id = self._normalise_curie_cached("uniprot", protein)
 
-            if UniprotEdge.GENE_TO_PROTEIN in self.edge_types:
+            if UniprotEdgeType.GENE_TO_PROTEIN in self.edge_types:
 
                 gene_id = self._split_fields(
                     UniprotNodeField.PROTEIN_ENTREZ_GENE_IDS.value,
@@ -300,10 +310,10 @@ class Uniprot:
 
                 if gene_id:
 
-                    gene_id = normalize_curie("ncbigene:" + gene_id)
+                    gene_id = self._normalise_curie_cached("ncbigene", gene_id)
                     edge_list.append((None, gene_id, protein_id, "Encodes", {}))
 
-            if UniprotEdge.PROTEIN_TO_ORGANISM in self.edge_types:
+            if UniprotEdgeType.PROTEIN_TO_ORGANISM in self.edge_types:
 
                 organism_id = (
                     self.data.get(UniprotNodeField.PROTEIN_ORGANISM_ID.value)
@@ -315,7 +325,9 @@ class Uniprot:
 
                 if organism_id:
 
-                    organism_id = normalize_curie("ncbitaxon:" + organism_id)
+                    organism_id = self._normalise_curie_cached(
+                        "ncbitaxon", organism_id
+                    )
                     edge_list.append(
                         (None, protein_id, organism_id, "Belongs_To", dict())
                     )
@@ -331,7 +343,7 @@ class Uniprot:
         """
 
         for protein in tqdm(self.uniprot_ids):
-            protein_id = normalize_curie("uniprot:" + protein)
+            protein_id = self._normalise_curie_cached("uniprot", protein)
             _props = {}
 
             for arg in self.node_attributes:
@@ -414,9 +426,9 @@ class Uniprot:
 
         organism_props = dict()
 
-        organism_id = normalize_curie(
-            "ncbitaxon:"
-            + all_props.pop(UniprotNodeField.PROTEIN_ORGANISM_ID.value)
+        organism_id = self._normalise_curie_cached(
+            "ncbitaxon",
+            all_props.pop(UniprotNodeField.PROTEIN_ORGANISM_ID.value),
         )
 
         for k in all_props.keys():
@@ -665,3 +677,13 @@ class Uniprot:
             listed_enst = listed_enst[0]
 
         return listed_enst, ensg_ids
+
+    @lru_cache
+    def _normalise_curie_cached(
+        self, prefix: str, identifier: str, sep: str = ":"
+    ) -> Optional[str]:
+        """
+        Wrapper to call and cache `normalize_curie()` from Bioregistry.
+        """
+
+        return normalize_curie(f"{prefix}{sep}{identifier}", sep=sep)
