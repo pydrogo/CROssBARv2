@@ -148,6 +148,9 @@ class Uniprot:
 
             self._download_uniprot_data()
 
+            # preprocess data
+            self._preprocess_uniprot_data()
+
     def _download_uniprot_data(self):
         """
         Download uniprot data from uniprot.org through pypath.
@@ -166,7 +169,7 @@ class Uniprot:
 
         # download attribute dicts
         self.data = {}
-        for query_key in tqdm(self.node_attributes):
+        for query_key in tqdm(self.node_fields):
             self.data[query_key] = uniprot.uniprot_data(
                 query_key, self.organism, self.rev
             )
@@ -196,6 +199,33 @@ class Uniprot:
         t1 = time()
         msg = f"Acquired UniProt data in {round((t1-t0) / 60, 2)} mins."
         logger.info(msg)
+
+    def _preprocess_uniprot_data(self):
+        """
+        Preprocess uniprot data to make it ready for import.
+        """
+
+        logger.info("Preprocessing UniProt data.")
+
+        for arg in tqdm(self.node_fields):
+
+            # Field splitting
+            if arg in self.split_fields:
+
+                attribute_values = self.data.get(arg)
+
+                for protein, attribute_value in attribute_values.items():
+
+                    self.data[arg][protein] = self._split_fields(
+                        arg, attribute_value
+                    )
+
+            # Else just replace
+            else:
+
+                self.data[arg][protein] = (
+                    attribute_value.replace("|", ",").replace("'", "^").strip()
+                )
 
     def get_nodes(self):
         """
@@ -334,31 +364,17 @@ class Uniprot:
         """
 
         for protein in tqdm(self.uniprot_ids):
+
             protein_id = self._normalise_curie_cached("uniprot", protein)
+
             _props = {}
 
-            for arg in self.node_attributes:
+            for arg in self.node_fields:
 
-                # split fields
-                if arg in self.split_fields:
+                attribute_value = self.data.get(arg).get(protein)
 
-                    attribute_value = self.data.get(arg).get(protein)
-
-                    if attribute_value:
-
-                        _props[arg] = self._split_fields(arg, attribute_value)
-
-                else:
-
-                    attribute_value = self.data.get(arg).get(protein)
-
-                    if attribute_value:
-
-                        _props[arg] = (
-                            attribute_value.replace("|", ",")
-                            .replace("'", "^")
-                            .strip()
-                        )
+                if not attribute_value:
+                    continue
 
                 if (
                     arg == UniprotNodeField.PROTEIN_ENSEMBL_TRANSCRIPT_IDS.value
@@ -399,6 +415,10 @@ class Uniprot:
                     if attribute_value:
 
                         _props[arg] = attribute_value
+
+                else:
+
+                    _props[arg] = attribute_value
 
             yield protein_id, _props
 
@@ -752,11 +772,11 @@ class Uniprot:
 
         if node_fields:
 
-            self.node_attributes = [field.value for field in node_fields]
+            self.node_fields = [field.value for field in node_fields]
 
         else:
 
-            self.node_attributes = [field.value for field in UniprotNodeField]
+            self.node_fields = [field.value for field in UniprotNodeField]
 
         # check which edge types and fields to include
         if edge_types:
