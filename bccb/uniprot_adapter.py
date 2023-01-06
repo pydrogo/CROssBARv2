@@ -160,6 +160,8 @@ class Uniprot:
         TODO make use of multi-field query
         """
 
+        logger.info("Downloading uniprot data...")
+
         t0 = time()
 
         # download all swissprot ids
@@ -210,6 +212,10 @@ class Uniprot:
         logger.info("Preprocessing UniProt data.")
 
         for arg in tqdm(self.node_fields):
+
+            # do not process ensembl gene ids (we will get them from pypath)
+            if arg == UniprotNodeField.PROTEIN_ENSEMBL_GENE_IDS.value:
+                continue
 
             # Simple replace
             if arg not in self.split_fields:
@@ -291,11 +297,13 @@ class Uniprot:
             # append gene node to output if desired
             if UniprotNodeType.GENE in self.node_types:
 
-                gene_id, gene_props = self._get_gene(all_props)
+                gene_list = self._get_gene(all_props)
 
-                if gene_id:
+                for gene_id, gene_props in gene_list:
 
-                    yield (gene_id, "gene", gene_props)
+                    if gene_id:
+
+                        yield (gene_id, "gene", gene_props)
 
             # append organism node to output if desired
             if UniprotNodeType.ORGANISM in self.node_types:
@@ -399,7 +407,7 @@ class Uniprot:
     def _reformat_and_filter_proteins(self):
         """
         For each uniprot id, select desired fields and reformat to give a tuple
-        containing id and properties.
+        containing id and properties. Yield a tuple for each protein.
         """
 
         for protein in tqdm(self.uniprot_ids):
@@ -410,16 +418,15 @@ class Uniprot:
 
             for arg in self.node_fields:
 
-                attribute_value = self.data.get(arg).get(protein)
-
-                if not attribute_value:
-                    continue
-
-                _props[arg] = attribute_value
+                _props[arg] = self.data.get(arg).get(protein)
 
             yield protein_id, _props
 
-    def _get_gene(self, all_props: dict):
+    def _get_gene(self, all_props: dict) -> list:
+        """
+        Get gene node representation from UniProt data per protein. Since one
+        protein can have multiple genes, return a list of tuples.
+        """
 
         # if genes and database(GeneID) fields exist, define gene_properties
         if not (
@@ -427,12 +434,28 @@ class Uniprot:
             and UniprotNodeField.PROTEIN_ENTREZ_GENE_IDS.value
             in all_props.keys()
         ):
-            return (None, None)
+            return []
+
+        # Find preferred identifier for gene and check if it exists
+        if UniprotEdgeField.GENE_ENTREZ_ID in self.edge_fields:
+
+            id_type = UniprotNodeField.PROTEIN_ENTREZ_GENE_IDS.value
+
+        elif UniprotEdgeField.GENE_ENSEMBL_GENE_ID in self.edge_fields:
+
+            id_type = UniprotNodeField.PROTEIN_ENSEMBL_GENE_IDS.value
+
+        gene_raw = all_props.pop(id_type)
+
+        if not gene_raw:
+            return []
+
+        type_dict = {
+            UniprotNodeField.PROTEIN_ENTREZ_GENE_IDS.value: "ncbigene",
+            UniprotNodeField.PROTEIN_ENSEMBL_GENE_IDS.value: "ensembl",
+        }
 
         gene_props = dict()
-
-        # pop database(GeneID) from _props and make it gene_id
-        gene_id = all_props.pop(UniprotNodeField.PROTEIN_ENTREZ_GENE_IDS.value)
 
         for k in all_props.keys():
 
@@ -452,7 +475,20 @@ class Uniprot:
         gene_props["licence"] = self.data_licence
         gene_props["version"] = self.data_version
 
-        return gene_id, gene_props
+        gene_list = []
+
+        genes = self._ensure_iterable(gene_raw)
+
+        for gene in genes:
+
+            gene_id = self._normalise_curie_cached(
+                type_dict[id_type],
+                gene,
+            )
+
+            gene_list.append((gene_id, gene_props))
+
+        return gene_list
 
     def _get_organism(self, all_props: dict):
 
@@ -794,3 +830,9 @@ class Uniprot:
         else:
 
             self.edge_fields = [field for field in UniprotEdgeField][:3]
+
+    def _ensure_iterable(self, value):
+        if isinstance(value, str):
+            return [value]
+        else:
+            return value
