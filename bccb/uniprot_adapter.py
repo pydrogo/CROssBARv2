@@ -206,7 +206,15 @@ class Uniprot:
 
     def _preprocess_uniprot_data(self):
         """
-        Preprocess uniprot data to make it ready for import.
+        Preprocess uniprot data to make it ready for import. First, three types
+        of processing are applied:
+        - nothing is done (for ensembl gene ids, which come from pypath)
+        - simple string replacement
+        - field splitting
+
+        Then, special treatment is applied to some fields:
+        - ensg ids are extracted from the ensembl transcript ids
+        - protein names and virus hosts have dedicated normalisation functions
         """
 
         logger.info("Preprocessing UniProt data.")
@@ -215,10 +223,10 @@ class Uniprot:
 
             # do not process ensembl gene ids (we will get them from pypath)
             if arg == UniprotNodeField.PROTEIN_ENSEMBL_GENE_IDS.value:
-                continue
+                pass
 
             # Simple replace
-            if arg not in self.split_fields:
+            elif arg not in self.split_fields:
 
                 for protein, attribute_value in self.data.get(arg).items():
 
@@ -238,8 +246,11 @@ class Uniprot:
                     )
 
             # Special treatment
-            # ENST ids
-            if arg == UniprotNodeField.PROTEIN_ENSEMBL_TRANSCRIPT_IDS.value:
+            # ENST and ENSG ids
+            if arg in [
+                UniprotNodeField.PROTEIN_ENSEMBL_TRANSCRIPT_IDS.value,
+                UniprotNodeField.PROTEIN_ENSEMBL_GENE_IDS.value,
+            ]:
 
                 for protein, attribute_value in self.data.get(arg).items():
 
@@ -331,6 +342,13 @@ class Uniprot:
         # create lists of edges
         edge_list = []
 
+        # generic properties for all edges for now
+        properties = {
+            "source": self.data_source,
+            "licence": self.data_licence,
+            "version": self.data_version,
+        }
+
         for protein in tqdm(self.uniprot_ids):
 
             protein_id = self._normalise_curie_cached("uniprot", protein)
@@ -367,7 +385,9 @@ class Uniprot:
                         type_dict[id_type],
                         gene,
                     )
-                    edge_list.append((None, gene_id, protein_id, "Encodes", {}))
+                    edge_list.append(
+                        (None, gene_id, protein_id, "Encodes", properties)
+                    )
 
             if UniprotEdgeType.PROTEIN_TO_ORGANISM in self.edge_types:
 
@@ -388,7 +408,13 @@ class Uniprot:
                         "ncbitaxon", organism_id
                     )
                     edge_list.append(
-                        (None, protein_id, organism_id, "Belongs_To", dict())
+                        (
+                            None,
+                            protein_id,
+                            organism_id,
+                            "Belongs_To",
+                            properties,
+                        )
                     )
 
         if edge_list:
