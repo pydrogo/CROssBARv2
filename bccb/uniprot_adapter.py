@@ -210,6 +210,7 @@ class Uniprot:
         of processing are applied:
         - nothing is done (for ensembl gene ids, which come from pypath)
         - simple string replacement
+        - replace separators in integers and convert to int
         - field splitting
 
         Then, special treatment is applied to some fields:
@@ -236,6 +237,17 @@ class Uniprot:
                         .strip()
                     )
 
+            # Integers
+            elif arg in [
+                UniprotNodeField.PROTEIN_LENGTH.value,
+                UniprotNodeField.PROTEIN_MASS.value,
+                UniprotNodeField.PROTEIN_ORGANISM_ID.value,
+            ]:
+                for protein, attribute_value in self.data.get(arg).items():
+                    self.data[arg][protein] = int(
+                        attribute_value.replace(",", "")
+                    )
+
             # Split fields
             else:
 
@@ -252,7 +264,9 @@ class Uniprot:
                 UniprotNodeField.PROTEIN_ENSEMBL_GENE_IDS.value,
             ]:
 
-                for protein, attribute_value in self.data.get(arg).items():
+                for protein, attribute_value in self.data.get(
+                    UniprotNodeField.PROTEIN_ENSEMBL_TRANSCRIPT_IDS.value
+                ).items():
 
                     attribute_value, ensg_ids = self._find_ensg_from_enst(
                         attribute_value
@@ -538,22 +552,8 @@ class Uniprot:
             if k not in self.protein_properties:
                 continue
 
-            # make length, mass and organism-id fields integer and
-            # replace hyphen in keys
-            if k in [
-                UniprotNodeField.PROTEIN_LENGTH.value,
-                UniprotNodeField.PROTEIN_MASS.value,
-                UniprotNodeField.PROTEIN_ORGANISM_ID.value,
-            ]:
-                protein_props[k.replace("-", "_")] = int(
-                    all_props[k].replace(",", "")
-                )
-
             # replace hyphens and spaces with underscore
-            else:
-                protein_props[
-                    k.replace(" ", "_").replace("-", "_")
-                ] = all_props[k]
+            protein_props[k.replace(" ", "_").replace("-", "_")] = all_props[k]
 
         # source, licence, and version fields
         protein_props["source"] = self.data_source
