@@ -259,14 +259,9 @@ class Uniprot:
 
             # Special treatment
             # ENST and ENSG ids
-            if arg in [
-                UniprotNodeField.PROTEIN_ENSEMBL_TRANSCRIPT_IDS.value,
-                UniprotNodeField.PROTEIN_ENSEMBL_GENE_IDS.value,
-            ]:
+            if arg == UniprotNodeField.PROTEIN_ENSEMBL_TRANSCRIPT_IDS.value:
 
-                for protein, attribute_value in self.data.get(
-                    UniprotNodeField.PROTEIN_ENSEMBL_TRANSCRIPT_IDS.value
-                ).items():
+                for protein, attribute_value in self.data.get(arg).items():
 
                     attribute_value, ensg_ids = self._find_ensg_from_enst(
                         attribute_value
@@ -810,6 +805,13 @@ class Uniprot:
     def _set_node_and_edge_fields(
         self, node_types, node_fields, edge_types, edge_fields
     ):
+
+        # ensure computation of ENSGs
+        if UniprotNodeField.PROTEIN_ENSEMBL_GENE_IDS in node_fields and not (
+            UniprotNodeField.PROTEIN_ENSEMBL_TRANSCRIPT_IDS in node_fields
+        ):
+            node_fields.append(UniprotNodeField.PROTEIN_ENSEMBL_TRANSCRIPT_IDS)
+
         # check which node types and fields to include
         if node_types:
 
