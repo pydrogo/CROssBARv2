@@ -226,6 +226,17 @@ class Uniprot:
             if arg == UniprotNodeField.PROTEIN_ENSEMBL_GENE_IDS.value:
                 pass
 
+            # Integers
+            elif arg in [
+                UniprotNodeField.PROTEIN_LENGTH.value,
+                UniprotNodeField.PROTEIN_MASS.value,
+                UniprotNodeField.PROTEIN_ORGANISM_ID.value,
+            ]:
+                for protein, attribute_value in self.data.get(arg).items():
+                    self.data[arg][protein] = int(
+                        str(attribute_value).replace(",", "")
+                    )
+            
             # Simple replace
             elif arg not in self.split_fields:
 
@@ -235,17 +246,6 @@ class Uniprot:
                         attribute_value.replace("|", ",")
                         .replace("'", "^")
                         .strip()
-                    )
-
-            # Integers
-            elif arg in [
-                UniprotNodeField.PROTEIN_LENGTH.value,
-                UniprotNodeField.PROTEIN_MASS.value,
-                UniprotNodeField.PROTEIN_ORGANISM_ID.value,
-            ]:
-                for protein, attribute_value in self.data.get(arg).items():
-                    self.data[arg][protein] = int(
-                        attribute_value.replace(",", "")
                     )
 
             # Split fields
@@ -406,9 +406,6 @@ class Uniprot:
                 organism_id = (
                     self.data.get(UniprotNodeField.PROTEIN_ORGANISM_ID.value)
                     .get(protein)
-                    .replace("|", ",")
-                    .replace("'", "^")
-                    .strip()
                 )
 
                 if organism_id:
