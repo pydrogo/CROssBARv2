@@ -8,7 +8,6 @@ import collections
 from pathlib import Path
 from time import time
 
-
 from pypath.inputs import biogrid, uniprot
 from pypath.share import curl, settings
 
@@ -34,7 +33,7 @@ class BiogridEdgeFields(Enum):
 
 class BioGRID:
     def __init__(self, output_dir = None, export_csvs = False, split_output = False, cache=False, debug=False, retries=6,
-                organism=9606, intact_fields=None, biogrid_fields=None, string_fields=None):
+                organism=9606, biogrid_fields=None,):
         """
         Downloads and processes BioGRID data
 
