@@ -1,6 +1,6 @@
 from pypath.share import curl, settings
 from pypath.inputs import interpro
-from pypath.utils import go
+
 from contextlib import ExitStack
 from bioregistry import normalize_curie
 from tqdm import tqdm
