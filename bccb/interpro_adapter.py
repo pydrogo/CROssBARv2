@@ -67,7 +67,7 @@ class InterProNodeField(Enum):
     
 class InterProEdgeField(Enum):
     """
-    Domain edge fields in InterPro 
+    Protein-Domain edge fields in InterPro 
     """
     LOCATIONS = "locations"
     
