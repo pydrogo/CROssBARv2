@@ -3,7 +3,7 @@ from pypath.inputs import interpro
 from pypath.utils import go
 from contextlib import ExitStack
 from bioregistry import normalize_curie
-from tqdm.notebook import tqdm
+from tqdm import tqdm
 
 from time import time
 from biocypher._logger import logger
@@ -246,7 +246,7 @@ class InterPro:
         # set counter for early stopping
         counter = 0
 
-        # DOMAIN-PROTEIN EDGES
+        # PROTEIN-DOMAIN EDGES
         for k, v in tqdm(self.interpro_annotations.items()):            
             # k -> uniprot id
             for annotation in v:
