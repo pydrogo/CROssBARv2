@@ -6,7 +6,7 @@ build-backend = "poetry.core.masonry.api"
 name = "bccb"
 version = "0.0.2"
 description = "Project description"
-license = "GPL-3.0-only"
+license = "MIT"
 authors = [
     "Authors <author_email>"
 ]
@@ -17,7 +17,7 @@ classifiers = [
     "Development Status :: 2 - Pre-Alpha",
     "Intended Audience :: Developers",
     "Intended Audience :: Science/Research",
-    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "License :: OSI Approved :: The MIT License (MIT)",
     "Operating System :: OS Independent",
     "Programming Language :: Python",
     "Natural Language :: English",
@@ -32,7 +32,7 @@ toml = "*"
 numpy = "^1.23.1"
 tqdm = "^4.64.0"
 pandas = "^1.4.3"
-biocypher = { git = "https://github.com/saezlab/BioCypher.git", branch = "main" }
+biocypher = { git = "https://github.com/saezlab/BioCypher.git", branch = "main", tag = "v0.4.3" }
 # biocypher = {path = "../BioCypher", develop = true}
 pypath-omnipath = "^0.14.16"
 bioregistry = "^0.6.9"
