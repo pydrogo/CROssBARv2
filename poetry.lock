@@ -82,7 +82,7 @@ lxml = ["lxml"]
 
 [[package]]
 name = "biocypher"
-version = "0.4.3"
+version = "0.4.4"
 description = "Graph database standard for molecular biology"
 category = "main"
 optional = false
@@ -101,6 +101,7 @@ neo4j-utils = {git = "https://github.com/saezlab/neo4j-utils.git", tag = "v0.0.6
 obonet = "^0.3.1"
 pre-commit = "^2.20.0"
 PyYAML = ">=5.0"
+rdflib = "^6.2.0"
 toml = "*"
 treelib = "^1.6.1"
 yapf = "^0.32.0"
@@ -108,8 +109,8 @@ yapf = "^0.32.0"
 [package.source]
 type = "git"
 url = "https://github.com/saezlab/BioCypher.git"
-reference = "v0.4.3"
-resolved_reference = "84a5995966edf7c4003e37dfc05e3aa5d99185da"
+reference = "v0.4.4"
+resolved_reference = "0ab40b85a45705cf61149168889204bf2902f070"
 
 [[package]]
 name = "bioregistry"
@@ -2168,7 +2169,7 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "4d2aab6f065891cd9eba3013f78225e3b80c1de2610af181bb39d68c02d37013"
+content-hash = "4ea769b25a40fbb6a8b6066ea719cf2018692a726ecbaba00f75db322cbe95ae"
 
 [metadata.files]
 alabaster = [

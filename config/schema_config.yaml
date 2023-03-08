@@ -126,6 +126,7 @@ protein to organism taxon association:
   label_in_input: Belongs_To  
   
 post translational interaction:
+  is_a: pairwise molecular interaction
   represented_as: edge
   label_as_edge: Interacts_With
   preferred_id: id
