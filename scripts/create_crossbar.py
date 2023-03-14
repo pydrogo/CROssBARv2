@@ -16,7 +16,7 @@ from bccb.ppi_adapter import (
     StringEdgeField,
 )
 
-import biocypher
+from biocypher import BioCypher
 
 # Source configuration
 uniprot_node_types = [
@@ -71,6 +71,7 @@ string_edge_fields = [
     StringEdgeField.PHYSICAL_COMBINED_SCORE,
 ]
 
+
 # Run build
 def main():
     """
@@ -79,17 +80,7 @@ def main():
     """
 
     # Start biocypher
-    driver = biocypher.Driver(
-        offline=True,
-        db_name="neo4j",
-        wipe=True,
-        quote_char="'",
-        delimiter="\t",
-        array_delimiter="|",
-        user_schema_config_path="config/schema_config.yaml",
-        skip_bad_relationships=True,
-        skip_duplicate_nodes=True,
-    )
+    driver = BioCypher()
 
     # Start uniprot adapter and load data
     uniprot_adapter = Uniprot(
