@@ -3,6 +3,7 @@ Title: BioCypher graph schema configuration file for CROssBAR v2
 # ---
 # "Named Things"
 # ---
+  
 
 gene:
   represented_as: node
@@ -34,7 +35,66 @@ organism taxon:
   label_in_input: organism
   properties:
     organism: str
+    
+biological process: 
+  represented_as: node
+  preferred_id: go
+  label_in_input: biological process
+  properties:
+    name: str
   
+cellular component:
+  represented_as: node
+  preferred_id: go
+  label_in_input: cellular component
+  properties:
+    name: str
+
+molecular function:
+  represented_as: node
+  preferred_id: go
+  label_in_input: molecular function
+  properties:
+    name: str
+  
+small molecule:
+  represented_as: node
+  preferred_id: drugbank
+  label_in_input: drug
+  properties:
+    cas_number: str
+    name: str
+    groups: str[]
+    general_references: str[]
+    atc_codes: str[]
+    kegg_drug: str
+    rxcui: str
+    pharmgkb: str
+    pdb: str
+    drugcentral: str
+    zinc: str
+    chembl: str
+    bindingdb: str
+    clinicaltrials: str
+    chebi: str
+    pubchem: str
+    inchi: str
+    inchikey: str
+
+molecular mixture:
+  represented_as: node
+  preferred_id: id
+  label_in_input: compound
+  properties:
+    type: str
+    full_mwt: float
+    species: str
+    heavy_atoms: int
+    alogp: float
+    inchi: str
+    inchikey: str
+    qed_score: float 
+
 # disease:
   # represented_as: node
   # preferred_id: mondo
@@ -44,11 +104,6 @@ organism taxon:
   # represented_as: node
   # preferred_id: [reactome, kegg]
   # label_in_input: [Pathway_Reactome, Pathway_KEGG]
-
-# small molecule:  # drug has only RXCUI, NDC, UMLS identifiers
-  # represented_as: node
-  # preferred_id: drugbank
-  # label_in_input: Drug
   
 # molecular mixture: # there is no compound in Biolink. could be molecular mixture
   # represented_as: node
@@ -140,8 +195,124 @@ post translational interaction:
     interaction_type: str
     intact_score: float
     string_combined_score: int
-    string_physical_combined_score: int    
-    
+    string_physical_combined_score: int
+
+protein to biological process association:
+  #is_a: macromolecular machine to biological process association
+  represented_as: edge
+  label_as_edge: Involved_in
+  preferred_id: go
+  source: protein
+  target: biological process
+  label_in_input: Involved_in
+  properties:
+    reference: str
+    evidence_code: str
+
+protein to cellular component association:
+  #is_a: macromolecular machine to cellular component association
+  represented_as: node
+  label_as_edge: [Located_in, Part_of, Is_active_in]
+  preferred_id: go
+  source: protein
+  target: cellular component
+  label_in_input: [Located_in, Part_of, Is_active_in]
+  properties:
+    reference: str
+    evidence_code: str
+  
+protein to molecular function association:
+  #is_a: macromolecular machine to molecular function association
+  represented_as: node
+  label_as_edge: [Enables, Contributes_to]
+  preferred_id: go
+  source: protein
+  target: cellular component
+  label_in_input: [Enables, Contributes_to]
+  properties:
+    reference: str
+    evidence_code: str
+
+
+small molecule to protein association:
+  represented_as: edge
+  label_as_edge: targets
+  preferred_id: id
+  source: small molecule
+  target: protein
+  label_in_input: drug_targets_protein
+  properties:
+    known_action: str
+    activity_value: float
+    confidence_score: float
+    direct_interaction: bool
+    disease_efficacy: bool
+    mechanism_of_action: str
+    pchembl: float
+    activity_type: str
+    dgidb_score: float
+    references: str[]
+    mechanism_of_action_type: str
+    stitch_combined_score: float
+    source: str[]
+
+small molecule to small molecule association:
+  represented_as: edge
+  label_as_edge: interacts_with
+  preferred_id: id
+  source: small molecule
+  target: small molecule
+  label_in_input: drug_interacts_with_drug
+  properties:
+    recommendation: str
+    interaction_level: str
+    interaction_type: str[]
+    source: str[]
+
+
+small molecule to gene association:
+  represented_as: edge
+  label_as_edge: [decreases_expression, increases_expression]
+  preferred_id: id
+  source: small molecule
+  target: gene
+  label_in_input: [drug_decreases_expression_gene, drug_increases_expression_gene]
+  properties:
+    source: str[]
+    references: str[]
+
+
+molecular mixture to protein association:
+  represented_as: edge
+  label_as_edge: targets
+  preferred_id: id
+  source: molecular mixture
+  target: protein
+  label_in_input: compound_targets_protein
+  properties:
+    source: str[]
+    pchembl: float
+    activity_value: float
+    activity_type: str
+    assay_chembl: str[]
+    confidence_score: float
+    stitch_combined_score: float
+
+
+gene to gene orthology association:
+  represented_as: edge
+  label_as_edge: Is_Orthologous_With
+  preferred_id: id
+  source: gene
+  target: gene
+  label_in_input: gene_is_orthologous_with_gene
+  properties:
+    source: str[]
+    relation_type: str
+    oma_orthology_score: float
+
+
+
 
 # protein to protein domain association:
   # represented_as: edge
@@ -150,24 +321,6 @@ post translational interaction:
   # source: protein
   # target: protein domain
   # label_in_input: Protein_Has_Domain
-
-# protein to biological process association:
-  # is_a: macromolecular machine to biological process association
-  # represented_as: edge
-  # label_as_edge: Enables
-  # preferred_id: id
-  # source: protein
-  # target: biological process
-  # label_in_input: Enables
-
-# protein to cellular component association:
-  # is_a: macromolecular machine to cellular component association
-  # represented_as: edge
-  # label_as_edge: Localizes_To
-  # preferred_id: id
-  # source: protein
-  # target: cellular component
-  # label_in_input: Localizes_To
 
 # protein to pathway association:
   # represented_as: edge
@@ -287,14 +440,6 @@ post translational interaction:
   # source: small molecule
   # target: small molecule
   # label_in_input: Drug_Interacts_With_Drug
-
-# small molecule to protein association:
-  # represented_as: edge
-  # label_as_edge: Targets
-  # preferred_id: id
-  # source: small molecule
-  # target: protein
-  # label_in_input: Drug_Targets_Protein
 
 # small molecule to side effect association:
   # represented_as: edge
