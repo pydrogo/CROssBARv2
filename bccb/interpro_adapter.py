@@ -67,7 +67,7 @@ class InterProNodeField(Enum):
     
 class InterProEdgeField(Enum):
     """
-    Protein-Domain edge fields in InterPro 
+    Domain edge fields in InterPro 
     """
     LOCATIONS = "locations"
     
@@ -193,34 +193,22 @@ class InterPro:
                     if element == "protein_count":
                         props[element.replace(" ", "_").lower()] = int(interpro_props.get(element))
                     else:
-                        if isinstance(interpro_props.get(element), list) and len(interpro_props.get(element)) == 1:                        
-                            props[element.replace(" ", "_").lower()] = interpro_props.get(element)[0]
-                        else:
-                            props[element.replace(" ", "_").lower()] = interpro_props.get(element)
+                        props[element.replace(" ", "_").lower()] = self.check_length(interpro_props.get(element))
             
             # get member list InterPro attributes
             for element in member_list_attributes:
                 if element in self.node_fields and interpro_props.get('member_list').get(element):
-                    if len(interpro_props.get('member_list').get(element)) == 1:
-                        props[element.replace(" ", "_").lower()] = interpro_props.get('member_list').get(element)[0]
-                    else:                        
-                        props[element.replace(" ", "_").lower()] = interpro_props.get('member_list').get(element)
+                    props[element.replace(" ", "_").lower()] = self.check_length(interpro_props.get('member_list').get(element))
                         
             # get external InterPro attributes            
             for element in external_attributes:
                 if element in self.node_fields and self.interpro_external_xrefs.get(entry.interpro_id).get(element):
-                    if len(self.interpro_external_xrefs.get(entry.interpro_id).get(element)) == 1:
-                        props[element.replace(" ", "_").lower()] = self.interpro_external_xrefs.get(entry.interpro_id).get(element)[0]
-                    else:
-                        props[element.replace(" ", "_").lower()] = self.interpro_external_xrefs.get(entry.interpro_id).get(element)
+                    props[element.replace(" ", "_").lower()] = self.check_length(self.interpro_external_xrefs.get(entry.interpro_id).get(element))
             
             # get structural InterPro attributes
             for element in structural_attributes:
                     if element in self.node_fields and self.interpro_structural_xrefs.get(entry.interpro_id).get(element):
-                        if len(self.interpro_structural_xrefs.get(entry.interpro_id).get(element)) == 1:
-                            props[element.replace(" ", "_").lower()] = self.interpro_structural_xrefs.get(entry.interpro_id).get(element)[0]
-                        else:
-                            props[element.replace(" ", "_").lower()] = self.interpro_structural_xrefs.get(entry.interpro_id).get(element)
+                        props[element.replace(" ", "_").lower()] = self.check_length(self.interpro_structural_xrefs.get(entry.interpro_id).get(element))
                 
             self.node_list.append((domain_id, node_label, props))
             
@@ -231,6 +219,16 @@ class InterPro:
         
         t1 = time()
         logger.info(f'InterPro nodes created in {round((t1-t0) / 60, 2)} mins')
+        
+        
+    def check_length(self, element):
+        """
+        If the type of given entry is a list and has just one element returns this one element
+        """
+        if isinstance(element, list) and len(element) == 1:
+            return element[0]
+        else:
+            return element
     
     def get_interpro_edges(self, edge_label="protein_has_domain"):
         """
@@ -246,7 +244,7 @@ class InterPro:
         # set counter for early stopping
         counter = 0
 
-        # PROTEIN-DOMAIN EDGES
+        # DOMAIN-PROTEIN EDGES
         for k, v in tqdm(self.interpro_annotations.items()):            
             # k -> uniprot id
             for annotation in v:
@@ -256,7 +254,7 @@ class InterPro:
                 
                 for field in self.edge_fields:
                     if interpro_props.get(field, None):
-                        props[field.replace(" ","_").lower()] = list(interpro_props[field])
+                        props[field.replace(" ","_").lower()] = self.check_length(list(interpro_props[field]))
                     
                 interpro_id = normalize_curie("interpro:" + annotation.interpro_id)
                 uniprot_id = normalize_curie("uniprot:" + k)                
