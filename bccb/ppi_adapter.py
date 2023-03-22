@@ -24,19 +24,19 @@ from bioregistry import normalize_curie
 
 from enum import Enum
 
-class IntactEdgeField(Enum):
+class IntactEdgeFields(Enum):
     SOURCE = "source"
     PUBMED_IDS = "pubmeds"
     INTACT_SCORE = "mi_score"
     METHODS = "methods"
     INTERACTION_TYPES = "interaction_types"
     
-class BiogridEdgeField(Enum):
+class BiogridEdgeFields(Enum):
     SOURCE = "source"
     PUBMED_IDS = "pmid"
     EXPERIMENTAL_SYSTEM = "experimental_system"
     
-class StringEdgeField(Enum):
+class StringEdgeFields(Enum):
     SOURCE = "source"
     COMBINED_SCORE = "combined_score"
     PHYSICAL_COMBINED_SCORE = "physical_combined_score"
@@ -55,7 +55,7 @@ class PPI:
                 forces download.
                 debug: if True, turns on debug mode in pypath.
                 retries: number of retries in case of download error.
-                organism: taxonomy id number of selected organism, if it is None, downloads all organism data
+                organism: taxonomy id number of selected organism, if it is None, downloads all organism data.
                 intact_fields: intact fields to be used in the graph.
                 biogrid_fields: biogrid fields to be used in the graph.
                 string_fields: string fields to be used in the graph.
@@ -72,7 +72,13 @@ class PPI:
         self.intact_fields = intact_fields
         self.biogrid_fields = biogrid_fields
         self.string_fields = string_fields        
-
+        
+        self.check_status_and_properties = {"intact": {"downloaded":False, "processed":False, "properties_dict":None,
+                                                      "dataframe":None},
+                                           "biogrid": {"downloaded":False, "processed":False, "properties_dict":None,
+                                                      "dataframe":None},
+                                           "string": {"downloaded":False, "processed":False, "properties_dict":None,
+                                                     "dataframe":None}}
         
         if export_csvs:
             Path(output_dir).mkdir(parents=True, exist_ok=True)
@@ -115,10 +121,11 @@ class PPI:
                 stack.enter_context(curl.cache_off())
 
             self.intact_ints = intact.intact_interactions(miscore=0, organism=self.organism, complex_expansion=True, only_proteins=True)
-        t1 = time()
         
+        t1 = time()        
         logger.info(f'IntAct data is downloaded in {round((t1-t0) / 60, 2)} mins')
-
+        
+        self.check_status_and_properties["intact"]["downloaded"] = True
 
     def intact_process(self, rename_selected_fields=None):
         """
@@ -129,7 +136,7 @@ class PPI:
             rename_selected_fields : List of new field names for selected fields. If not defined, default field names will be used.
         """
         if self.intact_fields is None:
-            selected_fields = [field.value for field in IntactEdgeField]
+            selected_fields = [field.value for field in IntactEdgeFields]
         else:
             selected_fields = [field.value for field in self.intact_fields]
             
@@ -227,6 +234,11 @@ class PPI:
         
         t2 = time()
         logger.info(f'IntAct data is processed in {round((t2-t1) / 60, 2)} mins')
+        
+        self.check_status_and_properties["intact"]["processed"] = True
+        self.check_status_and_properties["intact"]["dataframe"] = self.final_intact_ints
+        self.check_status_and_properties["intact"]["properties_dict"] = self.intact_field_new_names
+        
                          
     def download_biogrid_data(self):
         """
@@ -257,6 +269,8 @@ class PPI:
                     
         t1 = time()
         logger.info(f'BioGRID data is downloaded in {round((t1-t0) / 60, 2)} mins')
+        
+        self.check_status_and_properties["biogrid"]["downloaded"] = True
                          
 
     def biogrid_process(self, rename_selected_fields=None):
@@ -269,7 +283,7 @@ class PPI:
         """
         
         if self.biogrid_fields is None:            
-            selected_fields = [field.value for field in BiogridEdgeField]
+            selected_fields = [field.value for field in BiogridEdgeFields]
         else:
             selected_fields = [field.value for field in self.biogrid_fields]
             
@@ -348,8 +362,7 @@ class PPI:
         # drop duplicates if same a x b pair exists multiple times 
         # keep the first pair and collect pubmed ids of duplicated a x b pairs in that pair's pubmed id column
         # if a x b pair has same experimental system type with b x a pair, drop b x a pair
-        biogrid_df_unique = biogrid_df.dropna(subset=["uniprot_a", "uniprot_b"]).reset_index(drop=True)
-        
+        biogrid_df_unique = biogrid_df.dropna(subset=["uniprot_a", "uniprot_b"]).reset_index(drop=True)        
         
         
         def aggregate_pubmeds(element):
@@ -382,7 +395,10 @@ class PPI:
         
         t2 = time()
         logger.info(f'BioGRID data is processed in {round((t2-t1) / 60, 2)} mins')
-    
+        
+        self.check_status_and_properties["biogrid"]["processed"] = True   
+        self.check_status_and_properties["biogrid"]["dataframe"] = self.final_biogrid_ints
+        self.check_status_and_properties["biogrid"]["properties_dict"] = self.biogrid_field_new_names
 
     def download_string_data(self):
         """
@@ -440,6 +456,8 @@ class PPI:
             
         t1 = time()
         logger.info(f'STRING data is downloaded in {round((t1-t0) / 60, 2)} mins')
+        
+        self.check_status_and_properties["string"]["downloaded"] = True
                          
 
     def string_process(self, rename_selected_fields=None):
@@ -451,7 +469,7 @@ class PPI:
             rename_selected_fields : List of new field names for selected fields. If not defined, default field names will be used.
         """
         if self.string_fields is None:
-            selected_fields = [field.value for field in StringEdgeField]
+            selected_fields = [field.value for field in StringEdgeFields]
         else:
             selected_fields = [field.value for field in self.string_fields]
         
@@ -523,16 +541,19 @@ class PPI:
         else:
             string_df_unique = string_df_unique[~string_df_unique[["uniprot_a", "uniprot_b"]].apply(frozenset, axis=1).duplicated()].reset_index(drop=True)
 
-            
-        t2 = time()
-        logger.info(f'STRING data is processed in {round((t2-t1) / 60, 2)} mins')
         
         if self.export_csvs:
             string_output_path = self.export_dataframe(string_df_unique, "string")
             logger.info(f'Final STRING data is written: {string_output_path}')
 
         self.final_string_ints = string_df_unique
-
+        
+        t2 = time()
+        logger.info(f'STRING data is processed in {round((t2-t1) / 60, 2)} mins')
+        
+        self.check_status_and_properties["string"]["processed"] = True
+        self.check_status_and_properties["string"]["dataframe"] = self.final_string_ints
+        self.check_status_and_properties["string"]["properties_dict"] = self.string_field_new_names
       
     def merge_all(self):
         """
@@ -544,23 +565,10 @@ class PPI:
         logger.debug("started merging interactions from all 3 databases (IntAct, BioGRID, STRING)")
         
         
-        intact_refined_df_selected_features = self.final_intact_ints        
-
-        biogrid_refined_df_selected_features = self.final_biogrid_ints        
-
-        string_refined_df_selected_features = self.final_string_ints
-        
-        # merge intact and biogrid
-        intact_plus_biogrid_selected_features_df = pd.merge(intact_refined_df_selected_features, biogrid_refined_df_selected_features,
-                                                   on=["uniprot_a", "uniprot_b"], how="outer")
-        
-        # merge source_x and source_y columns
-        intact_plus_biogrid_selected_features_df["source"] = intact_plus_biogrid_selected_features_df[["source_x", "source_y"]].apply(lambda x: '|'.join(x.dropna()), axis=1)
-        
-        # drop redundant columns
-        intact_plus_biogrid_selected_features_df.drop(columns=["source_x", "source_y"], inplace=True)
-        
-        def merge_pubmed_ids(elem):            
+        def merge_pubmed_ids(elem):
+            """
+            Merges pubmed id columns
+            """
             if len(elem.dropna().tolist()) > 0:                
                 new_list = []
                 for e in elem.dropna().tolist():                    
@@ -572,54 +580,160 @@ class PPI:
                 return "|".join(list(set(new_list))) 
             else:
                 return np.nan
-        
-        # merge pubmed_id_x and pubmed_id_y columns
-        intact_plus_biogrid_selected_features_df["pubmed_id"] = intact_plus_biogrid_selected_features_df[["pubmed_id_x", "pubmed_id_y"]].apply(merge_pubmed_ids, axis=1)
-        
-        # drop redundant columns
-        intact_plus_biogrid_selected_features_df.drop(columns=["pubmed_id_x", "pubmed_id_y"], inplace=True)
-        
-        # merge method_x and method_y columns
-        intact_plus_biogrid_selected_features_df["method"] = intact_plus_biogrid_selected_features_df[["method_x", "method_y"]].apply(lambda x: x.dropna().tolist()[0] if len(x.dropna().tolist())>0 else np.nan, axis=1)
-        
-        # drop redundant columns
-        intact_plus_biogrid_selected_features_df.drop(columns=["method_x", "method_y"], inplace=True)
-        
-        logger.debug("merged intact and biogrid interactions")
-                         
-        # merge intact+biogrid with string
-        self.all_selected_features_df = pd.merge(intact_plus_biogrid_selected_features_df, string_refined_df_selected_features, on=["uniprot_a", "uniprot_b"], how="outer")
-        
-        # merge source_x and source_y columns
-        self.all_selected_features_df["source"] = self.all_selected_features_df[["source_x", "source_y"]].apply(lambda x: '|'.join(x.dropna()), axis=1)
-        
-        # drop redundant columns
-        self.all_selected_features_df.drop(columns=["source_x", "source_y"], inplace=True)       
-        
-        # reorder columns
-        #self.all_selected_features_df = self.all_selected_features_df.reindex(columns=['source', 'uniprot_a', 'uniprot_b', 'pubmed_id', 
-                                                          #'method', 'interaction_type', 'intact_score', 
-                                                          #'string_combined_score', 'string_physical_combined_score'])
-        
-        
+            
         # during the merging, it changes datatypes of some columns from int to float. So it needs to be reverted
-        # However, for future, this may not be case so we can delete this part
         def float_to_int(element):
+            """
+            Forces to change data type from float to int in dataframe
+            """
             if "." in str(element):                
                 dot_index = str(element).index(".")
                 element = str(element)[:dot_index]
                 return element
             else:
-                return element
-        
-        # first make their datatype as string
-        self.all_selected_features_df["string_physical_combined_score"] = self.all_selected_features_df["string_physical_combined_score"].astype(str, errors="ignore")
-        self.all_selected_features_df["string_combined_score"] = self.all_selected_features_df["string_combined_score"].astype(str, errors="ignore")
-        
-        # then revert back them
-        self.all_selected_features_df["string_physical_combined_score"] = self.all_selected_features_df["string_physical_combined_score"].apply(float_to_int)
-        self.all_selected_features_df["string_combined_score"] = self.all_selected_features_df["string_combined_score"].apply(float_to_int)
-        
+                return element            
+            
+        # check which databases will be merged
+        dbs_will_be_merged = list()
+        for db in self.check_status_and_properties.keys():
+            if self.check_status_and_properties[db]["downloaded"] and self.check_status_and_properties[db]["processed"]:
+                dbs_will_be_merged.append(db)
+        print(dbs_will_be_merged)
+        seen_dbs = set()       
+        for db in dbs_will_be_merged:
+            
+            if db in seen_dbs:
+                continue
+                
+                
+            if dbs_will_be_merged.index(db) == 0:
+                if db == "intact" and dbs_will_be_merged[1] == "biogrid":
+                    seen_dbs.add(db)
+                    seen_dbs.add(dbs_will_be_merged[1])
+                    
+                    df1 = self.check_status_and_properties[db]["dataframe"]
+                    df2 = self.check_status_and_properties[dbs_will_be_merged[1]]["dataframe"]
+                    
+                    merged_df = pd.merge(df1, df2, on=["uniprot_a", "uniprot_b"], how="outer")
+                    
+                    # if source column exists in both intact and biogrid merge them
+                    if self.intact_field_new_names.get("source", None) and self.biogrid_field_new_names.get("source", None):
+                        # if they have the same name
+                        if self.intact_field_new_names["source"] == self.biogrid_field_new_names["source"]:
+                            merged_df["source"] = merged_df[[self.intact_field_new_names["source"]+"_x", 
+                                                   self.biogrid_field_new_names["source"]+"_y"]].apply(lambda x: '|'.join(x.dropna()), axis=1)
+
+                            merged_df.drop(columns=[self.intact_field_new_names["source"]+"_x", self.biogrid_field_new_names["source"]+"_y"], inplace=True)
+                            
+                        # if they dont have the same name
+                        else:
+                            merged_df["source"] = merged_df[[self.intact_field_new_names["source"],
+                                                            self.biogrid_field_new_names["source"]]].apply(lambda x: '|'.join(x.dropna()), axis=1)
+
+                            merged_df.drop(columns=[self.intact_field_new_names["source"], self.biogrid_field_new_names["source"]], inplace=True)
+                    
+                    # if pubmeds and pmid column exist in intact and biogrid merge them
+                    if self.intact_field_new_names.get("pubmeds", None) and self.biogrid_field_new_names.get("pmid", None):
+                        # if they have the same name
+                        if self.intact_field_new_names["pubmeds"] == self.biogrid_field_new_names["pmid"]:
+
+                            merged_df["pubmed_id"] = merged_df[[self.intact_field_new_names["pubmeds"]+"_x",
+                                                               self.biogrid_field_new_names["pmid"]+"_y"]].apply(merge_pubmed_ids, axis=1)
+
+                            merged_df.drop(columns=[self.intact_field_new_names["pubmeds"]+"_x", self.biogrid_field_new_names["pmid"]+"_y"], inplace=True)
+
+                        # if they dont have the same name
+                        else:
+                            merged_df["pubmed_id"] = merged_df[[self.intact_field_new_names["pubmeds"], self.biogrid_field_new_names["pmid"]]].apply(merge_pubmed_ids, axis=1)
+
+                            merged_df.drop(columns=[self.intact_field_new_names["pubmeds"], self.biogrid_field_new_names["pmid"]], inplace=True)
+                    
+                    # if methods and experimental_system column exist in intact and biogrid merge them
+                    if self.intact_field_new_names.get("methods", None) and self.biogrid_field_new_names.get("experimental_system", None):
+                        # if they have the same name
+                        if self.intact_field_new_names["methods"] == self.biogrid_field_new_names["experimental_system"]:
+                            merged_df["method"] = merged_df[[self.intact_field_new_names["methods"]+"_x",
+                                                            self.biogrid_field_new_names["experimental_system"]+"_y"]].apply(lambda x: x.dropna().tolist()[0] if len(x.dropna().tolist())>0 else np.nan, axis=1)
+
+                            merged_df.drop(columns=[self.intact_field_new_names["methods"]+"_x", self.biogrid_field_new_names["experimental_system"]+"_y"], inplace=True)
+                        # if they dont have the same name
+                        else:
+                            merged_df["method"] = merged_df[[self.intact_field_new_names["methods"],
+                                                            self.biogrid_field_new_names["experimental_system"]]].apply(lambda x: x.dropna().tolist()[0] if len(x.dropna().tolist())>0 else np.nan, axis=1)
+
+                            merged_df.drop(columns=[self.intact_field_new_names["methods"], self.biogrid_field_new_names["experimental_system"]], inplace=True)
+                else:
+                    seen_dbs.add(db)
+                    seen_dbs.add(dbs_will_be_merged[1])
+                    
+                    df1 = self.check_status_and_properties[db]["dataframe"]
+                    df2 = self.check_status_and_properties[dbs_will_be_merged[1]]["dataframe"]
+                    
+                    merged_df = pd.merge(df1, df2, on=["uniprot_a", "uniprot_b"], how="outer")
+                    
+                    # if source column exists in both intact and string merge them
+                    if self.check_status_and_properties[db]["properties_dict"].get("source", None) and self.check_status_and_properties[dbs_will_be_merged[1]]["properties_dict"].get("source", None):
+                        # if they have the same name
+                        if self.check_status_and_properties[db]["properties_dict"]["source"] == self.check_status_and_properties[dbs_will_be_merged[1]]["properties_dict"]["source"]:
+                            merged_df["source"] = merged_df[[self.check_status_and_properties[db]["properties_dict"]["source"]+"_x", 
+                                                   self.check_status_and_properties[dbs_will_be_merged[1]]["properties_dict"]["source"]+"_y"]].apply(lambda x: '|'.join(x.dropna()), axis=1)
+
+                            merged_df.drop(columns=[self.check_status_and_properties[db]["properties_dict"]["source"]+"_x", self.check_status_and_properties[dbs_will_be_merged[1]]["properties_dict"]["source"]+"_y"], inplace=True)
+                        
+                        # if they dont have the same name
+                        else:
+                            merged_df["source"] = merged_df[[self.check_status_and_properties[db]["properties_dict"]["source"],
+                                                            self.check_status_and_properties[dbs_will_be_merged[1]]["properties_dict"]["source"]]].apply(lambda x: '|'.join(x.dropna()), axis=1)
+
+                            merged_df.drop(columns=[self.check_status_and_properties[db]["properties_dict"]["source"], self.check_status_and_properties[dbs_will_be_merged[1]]["properties_dict"]["source"]], inplace=True)
+                    
+                    # if combined_score field exists in dataframe force its data data type become int
+                    if self.check_status_and_properties[dbs_will_be_merged[1]]["properties_dict"].get("combined_score", None):
+                        merged_df[self.string_field_new_names["combined_score"]] = merged_df[self.string_field_new_names["combined_score"]].astype(str, errors="ignore")
+                        merged_df[self.string_field_new_names["combined_score"]] = merged_df[self.string_field_new_names["combined_score"]].apply(float_to_int)
+                    
+                    # if physical_combined_score field exists in dataframe force its data data type become int
+                    if self.check_status_and_properties[dbs_will_be_merged[1]]["properties_dict"].get("physical_combined_score", None):
+                        merged_df[self.string_field_new_names["physical_combined_score"]] = merged_df[self.string_field_new_names["physical_combined_score"]].astype(str, errors="ignore")
+                        merged_df[self.string_field_new_names["physical_combined_score"]] = merged_df[self.string_field_new_names["physical_combined_score"]].apply(float_to_int)
+            
+            
+            else:
+                seen_dbs.add(db)
+                print(db)
+                df2 = self.check_status_and_properties[db]["dataframe"]
+                
+                merged_df = pd.merge(merged_df, df2, on=["uniprot_a", "uniprot_b"], how="outer")
+                print(merged_df.columns)
+                # if source column exists in both merged_df and string merge them
+                if "source" in list(merged_df.columns) and self.string_field_new_names.get("source", None):
+                    # if they have the same name
+                    if "source" == self.string_field_new_names["source"]:
+                        merged_df["source"] = merged_df[["source_x", 
+                                               self.string_field_new_names["source"]+"_y"]].apply(lambda x: '|'.join(x.dropna()), axis=1)
+
+                        merged_df.drop(columns=["source_x", self.string_field_new_names["source"]+"_y"], inplace=True)
+                    
+                    # if they dont have the same name
+                    else:
+                        merged_df["source"] = merged_df[["source",
+                                                        self.string_field_new_names["source"]]].apply(lambda x: '|'.join(x.dropna()), axis=1)
+
+                        merged_df.drop(columns=["source", self.string_field_new_names["source"]], inplace=True)
+                
+                # if combined_score field exists in dataframe force its data data type become int
+                if self.string_field_new_names.get("combined_score", None):
+                    merged_df[self.string_field_new_names["combined_score"]] = merged_df[self.string_field_new_names["combined_score"]].astype(str, errors="ignore")
+                    merged_df[self.string_field_new_names["combined_score"]] = merged_df[self.string_field_new_names["combined_score"]].apply(float_to_int)
+                
+                # if physical_combined_score field exists in dataframe force its data data type become int
+                if self.string_field_new_names.get("physical_combined_score", None):
+                    merged_df[self.string_field_new_names["physical_combined_score"]] = merged_df[self.string_field_new_names["physical_combined_score"]].astype(str, errors="ignore")
+                    merged_df[self.string_field_new_names["physical_combined_score"]] = merged_df[self.string_field_new_names["physical_combined_score"]].apply(float_to_int)
+                  
+                
+        self.all_ppi_df = merged_df
+
         logger.debug("merged all interactions")
         t2 = time()
         logger.info(f'All data is merged and processed in {round((t2-t1) / 60, 2)} mins')
@@ -629,34 +743,28 @@ class PPI:
             logger.info(f'Final data is written: {all_df_path}')
             
     
-    def get_edges(self):
+    def get_ppi_edges(self):
         """
         Get PPI edges from merged data 
         """
         
         # create edge list
         edge_list = []
-        
-        columns_with_multiple_entries = ['source', 'pubmed_id']
-        columns = ['source', 'pubmed_id', 'method', 'interaction_type', 'intact_score', 
-        'string_combined_score', 'string_physical_combined_score']
-        for _, row in tqdm(self.all_selected_features_df.iterrows()):       
-            _props = dict()
+        for _, row in tqdm(self.all_selected_features_df.iterrows()):
+            _dict = row.to_dict()
             
-            for column in columns:
-                if str(row[column]) != "nan":
-                    if column in columns_with_multiple_entries:                      
-                        if "|" in str(row[column]):
-                            # if column has multiple entries create list
-                            _props[column] = str(row[column]).split("|")
-                        else:
-                            _props[column] = str(row[column])
-                    else:
-                        _props[column] = str(row[column])
-            
-
             _source = normalize_curie("uniprot:" + str(row["uniprot_a"]))
-            _target = normalize_curie("uniprot:" + str(row["uniprot_b"]))           
+            _target = normalize_curie("uniprot:" + str(row["uniprot_b"]))
+            
+            del _dict["uniprot_a"], _dict["uniprot_b"]
+            
+            _props = dict()
+            for k, v in _dict.items():
+                if str(v) != "nan":
+                    if isinstance(v, str) and "|" in v:
+                        _props[str(k).replace(" ","_").lower()] = v.replace("'", "^").split("|")
+                    else:
+                        _props[str(k).replace(" ","_").lower()] = str(v).replace("'", "^")                       
 
             edge_list.append((None, _source, _target, "Interacts_With", _props))
             
