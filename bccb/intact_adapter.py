@@ -3,6 +3,7 @@ import sys
 import pandas as pd
 import numpy as np
 import collections
+from typing import List, Optional, Union
 
 from pathlib import Path
 from time import time
@@ -21,7 +22,7 @@ from bioregistry import normalize_curie
 from enum import Enum
 
 global adapter_name
-adapter_name = "intact" # might be useful for future
+adapter_name = "intact" # might be useful
 
 class IntactEdgeFields(Enum):
     SOURCE = "source"
@@ -33,7 +34,8 @@ class IntactEdgeFields(Enum):
 
 class IntAct:
     def __init__(self, output_dir = None, export_csvs = False, split_output = False, cache=False, debug=False, retries=6,
-                organism=9606, intact_fields=None):
+                organism=9606, intact_fields=None, add_prefix = True, test_mode = False, aggregate_pubmed_ids: bool = True,
+                aggregate_methods: bool = True):
         """
         Downloads and processes IntAct data
 
@@ -46,7 +48,10 @@ class IntAct:
                 retries: number of retries in case of download error.
                 organism: taxonomy id number of selected organism, if it is None, downloads all organism data.
                 intact_fields: intact fields to be used in the graph.
-                
+                add_prefix: if True, add prefix to uniprot ids
+                test_mode: if True, take small sample from data for testing
+                aggregate_pubmed_ids: if True, collects all pubmed ids that belongs to same protein pair
+                aggregate_methods = if True, collects all experiemental methods that belongs to same protein pair
         """
         
         self.export_csvs = export_csvs
@@ -56,7 +61,12 @@ class IntAct:
         self.debug = debug
         self.retries = retries        
         self.organism = organism
-        self.intact_fields = intact_fields        
+        self.intact_fields = intact_fields
+        self.add_prefix = add_prefix
+        self.test_mode = test_mode
+        
+        self.aggregate_dict = {IntactEdgeFields.PUBMED_IDS.value:aggregate_pubmed_ids,
+                              IntactEdgeFields.METHODS.value:aggregate_methods}
 
         
         if export_csvs:
@@ -100,12 +110,16 @@ class IntAct:
                 stack.enter_context(curl.cache_off())
 
             self.intact_ints = intact.intact_interactions(miscore=0, organism=self.organism, complex_expansion=True, only_proteins=True)
+        
+        if self.test_mode:
+            self.intact_ints = self.intact_ints[:100]
+        
         t1 = time()
         
         logger.info(f'IntAct data is downloaded in {round((t1-t0) / 60, 2)} mins')
 
 
-    def intact_process(self, rename_selected_fields=None):
+    def intact_process(self, rename_selected_fields:Optional[Union[None, List]] = None):
         """
         Processor function for IntAct data. It drops duplicate and reciprocal duplicate protein pairs and collects pubmed ids of duplicated pairs. Also, it filters
         protein pairs found in swissprot.
@@ -113,11 +127,9 @@ class IntAct:
         Args:
             rename_selected_fields : List of new field names for selected fields. If not defined, default field names will be used.
         """
-        if self.intact_fields is None:
-            selected_fields = [field.value for field in IntactEdgeFields]
-        else:
-            selected_fields = [field.value for field in self.intact_fields]
-            
+        # 
+        selected_fields = self.set_edge_fields()
+        
         # if rename_selected_fields is not defined create column names from this dictionary
         default_field_names = {"source":"source", "pubmeds":"pubmed_id", "mi_score":"intact_score", "methods":"method", "interaction_types":"interaction_type"}
         
@@ -180,22 +192,26 @@ class IntAct:
         intact_df_unique = intact_df.dropna(subset=["uniprot_a", "uniprot_b"]).reset_index(drop=True)
         
         
-        def aggregate_pubmeds(element):
+        def aggregate_fields(element):
             element = "|".join([str(e) for e in set(element.dropna())])
-            if element == "":
+            if not element:
                 return np.nan
             else:
                 return element
         
-        agg_dict = {}
-        for e in self.intact_field_new_names.values():
-            if e == self.intact_field_new_names["pubmeds"]:
-                agg_dict[e] = aggregate_pubmeds
-            else:                
-                agg_dict[e] = "first"
+        if any(list(self.aggregate_dict.values())):
+            agg_field_list = [k for k, v in self.aggregate_dict.items() if v]
             
-        intact_df_unique = intact_df_unique.groupby(["uniprot_a", "uniprot_b"], sort=False, as_index=False).aggregate(agg_dict)
-        
+            agg_dict = {}            
+            for e in self.intact_field_new_names.values():
+                if e in agg_field_list:
+                    agg_dict[e] = aggregate_fields
+                else:                
+                    agg_dict[e] = "first"
+            
+            intact_df_unique = intact_df_unique.groupby(["uniprot_a", "uniprot_b"], sort=False, as_index=False).aggregate(agg_dict)
+
+            
         #intact_df_unique["pubmed_id"].replace("", np.nan, inplace=True) # replace empty string with NaN
         
         if "interaction_types" in self.intact_field_new_names.keys():
@@ -213,8 +229,27 @@ class IntAct:
         t2 = time()
         logger.info(f'IntAct data is processed in {round((t2-t1) / 60, 2)} mins')                        
             
-    
-    def get_intact_edges(self, early_stopping=500):
+    def set_edge_fields(self) -> list:
+        """
+        Sets intact edge fields
+        """
+        if self.intact_fields is None:
+            return [field.value for field in IntactEdgeFields]
+        else:
+            return [field.value for field in self.intact_fields]
+        
+        
+    def add_prefix_to_id(self, element) -> str:
+        """
+        Adds prefix to uniprot id
+        """
+        if self.add_prefix:
+            return normalize_curie("uniprot:"+ str(element))
+        
+        return element         
+            
+        
+    def get_intact_edges(self) -> list:
         """
         Get PPI edges from intact data 
         """
@@ -225,8 +260,8 @@ class IntAct:
         for index, row in tqdm(self.final_intact_ints.iterrows(), total=self.final_intact_ints.shape[0]):
             _dict = row.to_dict()
             
-            _source = normalize_curie("uniprot:" + str(_dict["uniprot_a"]))
-            _target = normalize_curie("uniprot:" + str(_dict["uniprot_b"]))
+            _source = self.add_prefix_to_id(_dict["uniprot_a"])
+            _target = self.add_prefix_to_id(_dict["uniprot_b"])
             
             del _dict["uniprot_a"], _dict["uniprot_b"]
             
@@ -241,8 +276,5 @@ class IntAct:
            
 
             edge_list.append((None, _source, _target, "Interacts_With", _props))
-            
-            if early_stopping and (index+1) == early_stopping:
-                break
             
         return edge_list
