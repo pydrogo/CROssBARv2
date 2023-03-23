@@ -203,11 +203,11 @@ class IntAct:
             agg_field_list = [k for k, v in self.aggregate_dict.items() if v]
             
             agg_dict = {}            
-            for e in self.intact_field_new_names.values():
-                if e in agg_field_list:
-                    agg_dict[e] = aggregate_fields
+            for k, v in self.intact_field_new_names.items():
+                if k in agg_field_list:
+                    agg_dict[v] = aggregate_fields
                 else:                
-                    agg_dict[e] = "first"
+                    agg_dict[v] = "first"
             
             intact_df_unique = intact_df_unique.groupby(["uniprot_a", "uniprot_b"], sort=False, as_index=False).aggregate(agg_dict)
 
