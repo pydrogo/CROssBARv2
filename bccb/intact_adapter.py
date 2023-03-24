@@ -241,14 +241,14 @@ class IntAct:
             return [field.value for field in self.intact_fields]
         
         
-    def add_prefix_to_id(self, element) -> str:
+    def add_prefix_to_id(self, prefix="uniprot", identifier, sep=":") -> str:
         """
         Adds prefix to uniprot id
         """
         if self.add_prefix:
-            return normalize_curie("uniprot:"+ str(element))
+            return normalize_curie( prefix + sep + str(identifier))
         
-        return element         
+        return identifier         
             
         
     def get_intact_edges(self) -> list:
