@@ -4,9 +4,11 @@ import pandas as pd
 import numpy as np
 import time
 import collections
+from typing import List, Optional, Union
 
 from pathlib import Path
 from time import time
+
 
 from pypath.inputs import biogrid, uniprot
 from pypath.share import curl, settings
@@ -33,7 +35,8 @@ class BiogridEdgeFields(Enum):
 
 class BioGRID:
     def __init__(self, output_dir = None, export_csvs = False, split_output = False, cache=False, debug=False, retries=6,
-                organism=9606, biogrid_fields=None,):
+                organism=9606, biogrid_fields=None, add_prefix = True, test_mode = False, aggregate_pubmed_ids: bool = True,
+                aggregate_methods: bool = True):
         """
         Downloads and processes BioGRID data
 
@@ -46,6 +49,10 @@ class BioGRID:
                 retries: number of retries in case of download error.
                 organism: taxonomy id number of selected organism, if it is None, downloads all organism data.
                 biogrid_fields: biogrid fields to be used in the graph.
+                add_prefix: if True, add prefix to uniprot ids
+                test_mode: if True, take small sample from data for testing
+                aggregate_pubmed_ids: if True, collects all pubmed ids that belongs to same protein pair
+                aggregate_methods = if True, collects all experiemental methods that belongs to same protein pair
                 
         """
         
@@ -56,7 +63,12 @@ class BioGRID:
         self.debug = debug
         self.retries = retries        
         self.organism = organism
-        self.biogrid_fields = biogrid_fields       
+        self.biogrid_fields = biogrid_fields
+        self.add_prefix = add_prefix
+        self.test_mode = test_mode
+        
+        self.aggregate_dict = {BiogridEdgeFields.PUBMED_IDS.value:aggregate_pubmed_ids,
+                              BiogridEdgeFields.EXPERIMENTAL_SYSTEM.value:aggregate_methods}
 
         
         if export_csvs:
@@ -106,12 +118,16 @@ class BioGRID:
             # download these fields for mapping from gene symbol to uniprot id          
             self.uniprot_to_gene = uniprot.uniprot_data("genes", "*", True)
             self.uniprot_to_tax = uniprot.uniprot_data("organism-id", "*", True)
+            
+            
+        if self.test_mode:
+            self.biogrid_ints = self.biogrid_ints[:100]            
                     
         t1 = time()
         logger.info(f'BioGRID data is downloaded in {round((t1-t0) / 60, 2)} mins')
                          
 
-    def biogrid_process(self, rename_selected_fields=None):
+    def biogrid_process(self, rename_selected_fields: Optional[Union[None, List]] = None):
         """
         Processor function for BioGRID data. It drops duplicate and reciprocal duplicate protein pairs and collects pubmed ids of duplicated pairs. In addition, it
         maps entries to uniprot ids using gene name and tax id information in the BioGRID data. Also, it filters protein pairs found in swissprot.
@@ -120,10 +136,7 @@ class BioGRID:
             rename_selected_fields : List of new field names for selected fields. If not defined, default field names will be used.
         """
         
-        if self.biogrid_fields is None:            
-            selected_fields = [field.value for field in BiogridEdgeFields]
-        else:
-            selected_fields = [field.value for field in self.biogrid_fields]
+        selected_fields = self.set_edge_fields()
             
         default_field_names = {"source":"source", "pmid":"pubmed_id", "experimental_system":"method"}
         
@@ -203,19 +216,22 @@ class BioGRID:
         biogrid_df_unique = biogrid_df.dropna(subset=["uniprot_a", "uniprot_b"]).reset_index(drop=True)        
         
         
-        def aggregate_pubmeds(element):
+        def aggregate_fields(element):
             element = "|".join([str(e) for e in set(element.dropna())])
-            if element == "":
+            if not element:
                 return np.nan
             else:
                 return element
             
-        agg_dict = {}
-        for e in self.biogrid_field_new_names.values():
-            if e == self.biogrid_field_new_names["pmid"]:
-                agg_dict[e] = aggregate_pubmeds
-            else:                
-                agg_dict[e] = "first"
+        if any(list(self.aggregate_dict.values())):
+            agg_field_list = [k for k, v in self.aggregate_dict.items() if v]
+            
+            agg_dict = {}            
+            for k, v in self.biogrid_field_new_names.items():
+                if k in agg_field_list:
+                    agg_dict[v] = aggregate_fields
+                else:                
+                    agg_dict[v] = "first"
         
         biogrid_df_unique = biogrid_df_unique.groupby(["uniprot_a", "uniprot_b"], sort=False, as_index=False).aggregate(agg_dict)
         #biogrid_df_unique["pubmed_id"].replace("", np.nan, inplace=True)
@@ -234,8 +250,28 @@ class BioGRID:
         t2 = time()
         logger.info(f'BioGRID data is processed in {round((t2-t1) / 60, 2)} mins')
             
-    
-    def get_biogrid_edges(self, early_stopping=500):
+    def set_edge_fields(self) -> list:
+        """
+        Sets biogrid edge fields
+        Returns:
+            selected field list
+        """
+        if self.biogrid_fields is None:
+            return [field.value for field in BiogridEdgeFields]
+        else:
+            return [field.value for field in self.biogrid_fields]
+        
+    def add_prefix_to_id(self, element) -> str:
+        """
+        Adds prefix to uniprot id
+        """
+        if self.add_prefix:
+            return normalize_curie("uniprot:"+ str(element))
+        
+        return element  
+        
+        
+    def get_biogrid_edges(self) -> list:
         """
         Get PPI edges from biogrid data
         """
@@ -246,8 +282,8 @@ class BioGRID:
         for index, row in tqdm(self.final_biogrid_ints.iterrows(), total=self.final_biogrid_ints.shape[0]):
             _dict = row.to_dict()
             
-            _source = normalize_curie("uniprot:" + str(_dict["uniprot_a"]))
-            _target = normalize_curie("uniprot:" + str(_dict["uniprot_b"]))
+            _source = self.add_prefix_to_id(_dict["uniprot_a"])
+            _target = self.add_prefix_to_id(_dict["uniprot_b"])
             
             del _dict["uniprot_a"], _dict["uniprot_b"]
             
@@ -263,7 +299,5 @@ class BioGRID:
 
             edge_list.append((None, _source, _target, "Interacts_With", _props))
             
-            if early_stopping and (index+1) == early_stopping:
-                break
             
         return edge_list
