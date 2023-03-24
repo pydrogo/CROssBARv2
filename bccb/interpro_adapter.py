@@ -78,7 +78,7 @@ class InterPro:
     for import into a BioCypher database.
     """
 
-    def __init__(self, cache=False, debug=False, page_size=150, retries=6, organism=None,
+    def __init__(self, cache=False, debug=False, page_size=150, retries=6, organism=None, add_prefix = True,
                 node_fields:Optional[list] = None, edge_fields:Optional[list] = None,
                 test_mode: bool = False):
         """        
@@ -89,6 +89,7 @@ class InterPro:
             retries: number of retries in case of download error.
             page_size: page size of downloaded annotation data
             organism: taxonomy id of selected organism, if None take all available organisms
+            add_prefix: if True, add prefix to database identifiers
             node_fields: fields that will be included in domain nodes
             edge_fields: fields that will be included in protein-domain edges
             test_mode: limits amount of data for testing
@@ -98,14 +99,15 @@ class InterPro:
         self.retries = retries
         self.page_size = page_size
         self.organism = organism
-        self.test_mode = test_mode
+        self.add_prefix = add_prefix
+        
         
         # set node and edge fields
         self.set_node_and_edge_fields(node_fields=node_fields, edge_fields=edge_fields)
         
         self.early_stopping = None
         if test_mode:
-            self.early_stopping = 100            
+            self.early_stopping = 100        
 
 
     def download_domain_node_data(self):
@@ -162,9 +164,12 @@ class InterPro:
             t1 = time()
             logger.info(f'InterPro annotation data is downloaded in {round((t1-t0) / 60, 2)} mins')
 
+    
     def get_interpro_nodes(self, node_label="domain"):
         """
         Prepares InterPro domain nodes for BioCypher
+        Args:
+            node_label : label of interpro nodes
         """
 
         # create list of nodes
@@ -185,7 +190,8 @@ class InterPro:
         for entry in tqdm(self.interpro_entries):
             props = dict()
             interpro_props = entry._asdict()
-            domain_id = normalize_curie("interpro:" + entry.interpro_id)
+            
+            domain_id = self.add_prefix_to_id("interpro", entry.interpro_id)
             
             # get primary InterPro attributes
             for element in primary_attributes:
@@ -229,10 +235,21 @@ class InterPro:
             return element[0]
         else:
             return element
+        
+    def add_prefix_to_id(self, prefix, identifier, sep=":") -> str:
+        """
+        Adds prefix to ids
+        """
+        if self.add_prefix:
+            return normalize_curie(prefix + sep + str(identifier))
+        
+        return identifier
     
     def get_interpro_edges(self, edge_label="protein_has_domain"):
         """
         Prepares Protein-Domain edges for BioCypher
+        Args:
+            edge_label: label of protein-domain edge
         """
         
         # create list of edges
@@ -256,8 +273,9 @@ class InterPro:
                     if interpro_props.get(field, None):
                         props[field.replace(" ","_").lower()] = self.check_length(list(interpro_props[field]))
                     
-                interpro_id = normalize_curie("interpro:" + annotation.interpro_id)
-                uniprot_id = normalize_curie("uniprot:" + k)                
+                interpro_id = self.add_prefix_to_id("interpro", annotation.interpro_id)
+                uniprot_id = self.add_prefix_to_id("uniprot", k)
+                
                 self.edge_list.append((None, uniprot_id, interpro_id, edge_label, props))
                 
                 counter += 1
@@ -270,6 +288,9 @@ class InterPro:
         
         
     def set_node_and_edge_fields(self, node_fields, edge_fields):
+        """
+        Sets Interpro node and edge fields 
+        """
         
         if node_fields:
             self.node_fields = node_fields            
