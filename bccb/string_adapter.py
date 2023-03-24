@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 import time
 import collections
+from typing import List, Optional, Union
 
 from pathlib import Path
 from time import time
@@ -33,7 +34,7 @@ class StringEdgeFields(Enum):
 
 class STRING:
     def __init__(self, output_dir = None, export_csvs = False, split_output = False, cache=False, debug=False, retries=6,
-                organism=9606, string_fields=None):
+                organism=9606, string_fields: Optional[Union[None, List]] = None, add_prefix = True, test_mode = False):
         """
         Downloads and processes STRING data
 
@@ -46,6 +47,8 @@ class STRING:
                 retries: number of retries in case of download error.
                 organism: taxonomy id number of selected organism, if it is None, downloads all organism data.
                 string_fields: string fields to be used in the graph.
+                add_prefix: if True, add prefix to uniprot ids
+                test_mode: if True, take small sample from data for testing
                 
         """
         
@@ -56,7 +59,9 @@ class STRING:
         self.debug = debug
         self.retries = retries        
         self.organism = organism
-        self.string_fields = string_fields        
+        self.string_fields = string_fields
+        self.add_prefix = add_prefix
+        self.test_mode = test_mode
 
         
         if export_csvs:
@@ -133,12 +138,15 @@ class STRING:
                     
                     if organism_string_ints:
                         self.string_ints.extend(organism_string_ints)
+        
+        if self.test_mode:
+            self.string_ints = self.string_ints[:100]
             
         t1 = time()
         logger.info(f'STRING data is downloaded in {round((t1-t0) / 60, 2)} mins')
                          
 
-    def string_process(self, rename_selected_fields=None):
+    def string_process(self, rename_selected_fields: Optional[Union[None, List]] = None):
         """
         Processor function for STRING data. It drops duplicate and reciprocal duplicate protein pairs. In addition, it maps entries to uniprot ids 
         using crossreferences to STRING in the Uniprot data. Also, it filters protein pairs found in swissprot.
@@ -146,10 +154,7 @@ class STRING:
          Args:
             rename_selected_fields : List of new field names for selected fields. If not defined, default field names will be used.
         """
-        if self.string_fields is None:
-            selected_fields = [field.value for field in StringEdgeFields]
-        else:
-            selected_fields = [field.value for field in self.string_fields]
+        selected_fields = self.set_edge_fields()
         
         default_field_names = {"source":"source", "combined_score":"string_combined_score", 
                                "physical_combined_score":"string_physical_combined_score"}
@@ -227,11 +232,32 @@ class STRING:
             string_output_path = self.export_dataframe(string_df_unique, "string")
             logger.info(f'Final STRING data is written: {string_output_path}')
 
-        self.final_string_ints = string_df_unique            
+        self.final_string_ints = string_df_unique
+        
     
-    def get_string_edges(self, early_stopping=500):
+    def set_edge_fields(self) -> list:
         """
-        Get PPI edges from biogrid data
+        Sets string edge fields
+        Returns:
+            selected field list
+        """
+        if self.string_fields is None:
+            return [field.value for field in StringEdgeFields]
+        else:
+            return [field.value for field in self.string_fields]
+        
+    def add_prefix_to_id(self, prefix="uniprot", identifier, sep=":") -> str:
+        """
+        Adds prefix to uniprot id
+        """
+        if self.add_prefix:
+            return normalize_curie( prefix + sep + str(identifier))
+        
+        return identifier 
+    
+    def get_string_edges(self) -> list:
+        """
+        Get PPI edges from string data
         """
         
         # create edge list
@@ -240,8 +266,8 @@ class STRING:
         for index, row in tqdm(self.final_string_ints.iterrows(), total=self.final_string_ints.shape[0]):
             _dict = row.to_dict()
             
-            _source = normalize_curie("uniprot:" + str(_dict["uniprot_a"]))
-            _target = normalize_curie("uniprot:" + str(_dict["uniprot_b"]))
+            _source = self.add_prefix_to_id(_dict["uniprot_a"])
+            _target = self.add_prefix_to_id(_dict["uniprot_b"])
             
             del _dict["uniprot_a"], _dict["uniprot_b"]
             
@@ -256,8 +282,5 @@ class STRING:
            
 
             edge_list.append((None, _source, _target, "Interacts_With", _props))
-            
-            if early_stopping and (index+1) == early_stopping:
-                break
             
         return edge_list
