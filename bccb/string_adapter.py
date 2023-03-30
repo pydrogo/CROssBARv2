@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 import time
 import collections
-from typing import List, Optional, Union
+from typing import Union
 
 from pathlib import Path
 from time import time
