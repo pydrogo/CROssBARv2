@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 import time
 import collections
-from typing import List, Optional, Union
+from typing import Union
 
 from pathlib import Path
 from time import time
@@ -35,7 +35,7 @@ class BiogridEdgeFields(Enum):
 
 class BioGRID:
     def __init__(self, output_dir = None, export_csvs = False, split_output = False, cache=False, debug=False, retries=6,
-                organism=9606, biogrid_fields: Optional[Union[None, List]] = None, add_prefix = True, test_mode = False, aggregate_pubmed_ids: bool = True,
+                organism=9606, biogrid_fields: Union[None, list[BiogridEdgeFields]] = None, add_prefix = True, test_mode = False, aggregate_pubmed_ids: bool = True,
                 aggregate_methods: bool = True):
         """
         Downloads and processes BioGRID data
@@ -127,7 +127,7 @@ class BioGRID:
         logger.info(f'BioGRID data is downloaded in {round((t1-t0) / 60, 2)} mins')
                          
 
-    def biogrid_process(self, rename_selected_fields: Optional[Union[None, List]] = None):
+    def biogrid_process(self, rename_selected_fields: Union[None, list[str]] = None) -> None:
         """
         Processor function for BioGRID data. It drops duplicate and reciprocal duplicate protein pairs and collects pubmed ids of duplicated pairs. In addition, it
         maps entries to uniprot ids using gene name and tax id information in the BioGRID data. Also, it filters protein pairs found in swissprot.
