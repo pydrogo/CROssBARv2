@@ -34,7 +34,7 @@ class StringEdgeFields(Enum):
 
 class STRING:
     def __init__(self, output_dir = None, export_csvs = False, split_output = False, cache=False, debug=False, retries=6,
-                organism=9606, string_fields: Optional[Union[None, List]] = None, add_prefix = True, test_mode = False):
+                organism=9606, string_fields: Union[None, list[StringEdgeFields]] = None, add_prefix = True, test_mode = False):
         """
         Downloads and processes STRING data
 
@@ -146,7 +146,7 @@ class STRING:
         logger.info(f'STRING data is downloaded in {round((t1-t0) / 60, 2)} mins')
                          
 
-    def string_process(self, rename_selected_fields: Optional[Union[None, List]] = None):
+    def string_process(self, rename_selected_fields: Union[None, list[str]] = None) -> None:
         """
         Processor function for STRING data. It drops duplicate and reciprocal duplicate protein pairs. In addition, it maps entries to uniprot ids 
         using crossreferences to STRING in the Uniprot data. Also, it filters protein pairs found in swissprot.
