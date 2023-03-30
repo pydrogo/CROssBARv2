@@ -5,7 +5,7 @@ from pypath.utils import go as go_util
 from contextlib import ExitStack
 from bioregistry import normalize_curie
 
-from typing import List, Optional, Union
+from typing import Union
 
 from time import time
 
@@ -58,7 +58,7 @@ class ProteinToCellularComponentEdgeLabel(Enum):
     
     @classmethod
     def neccessary_edge_type(cls):
-        return GOEdgeType.PROTEIN_TO_CELLULAR_COMPONENT           
+        return GOEdgeType.PROTEIN_TO_CELLULAR_COMPONENT          
     
 class ProteinToBiologicalProcessEdgeLabel(Enum):
     INVOLVED_IN = "involved_in"
@@ -180,6 +180,23 @@ class GO:
         self.go_to_go_edge_types = [GOEdgeType.CELLULAR_COMPONENT_TO_CELLULAR_COMPONENT, GOEdgeType.BIOLOGICAL_PROCESS_TO_BIOLOGICAL_PROCESS,
                                    GOEdgeType.MOLECULAR_FUNCTION_TO_MOLECULAR_FUNCTION, GOEdgeType.BIOLOGICAL_PROCESS_TO_MOLECULAR_FUNCTION]
         
+        
+        self.check_edge_type_duals = {
+         GOEdgeType.PROTEIN_TO_CELLULAR_COMPONENT:"protein-cellular component", 
+         GOEdgeType.PROTEIN_TO_BIOLOGICAL_PROCESS:"protein-biological process",
+         GOEdgeType.PROTEIN_TO_MOLECULAR_FUNCTION:"protein-molecular function", 
+         GOEdgeType.CELLULAR_COMPONENT_TO_CELLULAR_COMPONENT:"cellular component-cellular component",
+         GOEdgeType.BIOLOGICAL_PROCESS_TO_BIOLOGICAL_PROCESS:"biological process-biological process",
+         GOEdgeType.MOLECULAR_FUNCTION_TO_MOLECULAR_FUNCTION:"molecular function-molecular function",
+         GOEdgeType.BIOLOGICAL_PROCESS_TO_MOLECULAR_FUNCTION: "biological process-molecular function",
+         GOEdgeType.DOMAIN_TO_CELLULAR_COMPONENT:"domain-cellular component",
+         GOEdgeType.DOMAIN_TO_BIOLOGICAL_PROCESS:"domain-biological process",
+         GOEdgeType.DOMAIN_TO_MOLECULAR_FUNCTION:"domain-molecular function",
+         
+        }
+        
+        # will be used for edge filtering
+        self.edge_filterer = set()
 
         # set node and edge types
         self.set_node_and_edge_types(node_types=node_types, edge_types=edge_types)
@@ -262,6 +279,7 @@ class GO:
             self.edge_types = edge_types
             
             for edge_type in edge_types:
+                self.create_edge_filterer(edge_type)
                 check_node_types = self.check_node_types_of_edges[edge_type]
                 
                 for nt in check_node_types:
@@ -271,6 +289,9 @@ class GO:
                     
         else:
             self.edge_types = [_type for _type in GOEdgeType]
+            
+            for _type in GOEdgeType:
+                self.create_edge_filterer(_type)
             
     def set_edge_labels(self, edge_labels:list) -> None:
         """
@@ -371,6 +392,14 @@ class GO:
         if GONodeType.MOLECULAR_FUNCTION in self.node_types:
             self.aspect_to_node_label_dict["F"] = "molecular function"
             
+    def create_edge_filterer(self, edge_type) -> None:
+        """
+        Creates a dictionary for edge type filtering
+        """
+        if self.check_edge_type_duals.get(edge_type, None):
+            self.edge_filterer.add(self.check_edge_type_duals[edge_type])
+        
+            
     def add_prefix_to_id(self, prefix, identifier, sep=":") -> str:
         """
         Adds prefix to ids
@@ -434,7 +463,7 @@ class GO:
                         # subtract annotations and qualifiers that are not in self.protein_to_go_edge_labels and the ones that not in go ontology
                         if annotation.go_id in self.go_ontology.aspect.keys() and annotation.evidence_code not in self.remove_selected_annotations and str(annotation.qualifier) in self.protein_to_go_edge_labels: 
 
-                            if self.aspect_to_node_label_dict.get(self.go_ontology.aspect[annotation.go_id], None):
+                            if self.aspect_to_node_label_dict.get(self.go_ontology.aspect[annotation.go_id], None) and "protein-"+self.aspect_to_node_label_dict[self.go_ontology.aspect[annotation.go_id]] in self.edge_filterer:
                                 go_id = self.add_prefix_to_id("go", annotation.go_id)
                                 edge_label = "_".join(["protein",
                                                        str(annotation.qualifier).replace(" ","_"),
@@ -455,7 +484,7 @@ class GO:
                 if self.early_stopping and counter >= self.early_stopping:
                     break
                     
-        # GO-GO EDGES     
+        # GO-GO EDGES    
         if any([True if et in self.edge_types else False for et in self.go_to_go_edge_types]):
             logger.info("Preparing GO-GO edges.")
         
@@ -467,7 +496,7 @@ class GO:
 
                 for ancestor in list(v):
                     if str(ancestor[1]) in self.go_to_go_edge_labels and str(k) in self.go_ontology.aspect.keys() and ancestor[0] in self.go_ontology.aspect.keys():                    
-                        if self.aspect_to_node_label_dict.get(self.go_ontology.aspect[k], None) and self.aspect_to_node_label_dict.get(self.go_ontology.aspect[ancestor[0]], None):
+                        if self.aspect_to_node_label_dict.get(self.go_ontology.aspect[k], None) and self.aspect_to_node_label_dict.get(self.go_ontology.aspect[ancestor[0]], None) and (self.aspect_to_node_label_dict[self.go_ontology.aspect[k]]+"-"+self.aspect_to_node_label_dict[self.go_ontology.aspect[ancestor[0]]]) in self.edge_filterer:
                             target_go_id = self.add_prefix_to_id("go", ancestor[0])
                             edge_label = "_".join([self.aspect_to_node_label_dict[self.go_ontology.aspect[k]].replace(" ","_"),
                                                   ancestor[1],
@@ -498,7 +527,7 @@ class GO:
                     for go_term in v:
                         if go_term in self.go_ontology.aspect.keys():                        
                             aspect = self.go_ontology.aspect.get(go_term)
-                            if domain_function_label_dict.get(aspect) in self.domain_to_go_edge_labels and self.aspect_to_node_label_dict.get(self.go_ontology.aspect[go_term], None):
+                            if domain_function_label_dict.get(aspect) in self.domain_to_go_edge_labels and self.aspect_to_node_label_dict.get(self.go_ontology.aspect[go_term], None) and "domain-"+self.aspect_to_node_label_dict[self.go_ontology.aspect[go_term]] in self.edge_filterer:
                                 
                                 edge_label = "_".join(["protein_domain", domain_function_label_dict.get(aspect),
                                                       self.aspect_to_node_label_dict[self.go_ontology.aspect[go_term]].replace(" ","_")])
