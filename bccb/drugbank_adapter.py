@@ -72,15 +72,20 @@ class PrimaryNodeIdentifier(Enum):
     CHEMBL = "chembl"
     RXCUI = "RxCUI"
     
+class DrugbankEdgeField(Enum):
+    ACTIONS = "actions"
+    REFERENCES = "references"
+    KNOWN_ACTION = "known_action"    
+    
 
 class DrugBank:
     """
-    Class that downloads drug data using pypath and reformats it to be ready
+    Class that downloads DRUGBANK drug data using pypath and reformats it to be ready
     for import into BioCypher.
     """
     
     def __init__(self, drugbank_user:str, drugbank_passwd:str, node_fields:Union[list[DrugBankNodeField], None] = None,
-                primary_node_id:Union[PrimaryNodeIdentifier, None] = None):
+                dti_edge_fields: Union[list[DrugbankEdgeField], None] = None, primary_node_id:Union[PrimaryNodeIdentifier, None] = None):
         """
         Args
             drugbank_user: drugbank username
@@ -91,7 +96,7 @@ class DrugBank:
         self.passwd = drugbank_passwd
         
         # set node fields
-        self.set_node_fields(node_fields=node_fields)
+        self.set_node_and_edge_fields(node_fields=node_fields, dti_edge_fields=dti_edge_fields)
         
         # set primary id of drug nodes
         self.set_primary_id(primary_node_id=primary_node_id)
@@ -123,6 +128,10 @@ class DrugBank:
             
             self.download_drugbank_node_data()
             
+            self.download_drugbank_dti_data()
+            
+            # create drugbank to primary id mapping
+            self.set_drugbank_to_primary_id_mapping()
             
             t1 = time()
             logger.info(f'All data is downloaded in {round((t1-t0) / 60, 2)} mins'.upper())
@@ -130,9 +139,7 @@ class DrugBank:
             
     def download_drugbank_node_data(self) -> None:
         """
-        Wrapper function to download DrugBank drug entries, DTI and DDI data using pypath
-        Args:
-            drugbank_node_fields: node properties that will be included in nodes
+        Wrapper function to download DrugBank drug entries using pypath
         """        
         
         
@@ -141,8 +148,7 @@ class DrugBank:
         
         self.drugbank_data = drugbank.DrugbankFull(user = self.user, passwd = self.passwd)
         
-        if self.drugbank_external_node_fields:
-            self.drugbank_drugs_external_ids = self.drugbank_data.drugbank_external_ids_full()
+        self.drugbank_drugs_external_ids = self.drugbank_data.drugbank_external_ids_full()
         
         if self.property_node_fields:            
             self.drugbank_properties = self.drugbank_data.drugbank_properties_full()
@@ -157,17 +163,25 @@ class DrugBank:
         t1 = time()
         logger.info(f'Drugbank drug node data is downloaded in {round((t1-t0) / 60, 2)} mins')
         
-    def download_drugbank_dti_data(self):
+    def download_drugbank_dti_data(self) -> None:
+        """
+        Wrapper function to download DrugBank DTI data using pypath
+        """ 
         
         logger.debug('Downloading Drugbank DTI data')
         t0 = time()
         
-        self.drugbank_dti = self.drugbank_data.drugbank_targets_full(fields=['drugbank_id', 'actions', 'references', 'known_action', 'polypeptide',])
+        fields = self.dti_edge_fields.copy() + ["drugbank_id", "polypeptide"]
+        self.drugbank_dti = self.drugbank_data.drugbank_targets_full(fields = fields)
         
         t1 = time()
         logger.info(f'Drugbank DTI data is downloaded in {round((t1-t0) / 60, 2)} mins')
         
-    def download_drugbank_ddi_data(self):
+    def download_drugbank_ddi_data(self) -> None:
+        """
+        Wrapper function to download DrugBank DDI data using pypath
+        """ 
+            
         logger.debug('Downloading Drugbank DDI data')
         t0 = time()
         
@@ -176,7 +190,7 @@ class DrugBank:
         t1 = time()
         logger.info(f'Drugbank DDI data is downloaded in {round((t1-t0) / 60, 2)} mins')
         
-    def set_node_fields(self, node_fields):
+    def set_node_and_edge_fields(self, node_fields, dti_edge_fields):
         if node_fields:
             self.all_node_fields = [field.value for field in node_fields]
             self.primary_node_fields = [field.value for field in DrugBankNodeField.get_primary_fields() if field in node_fields]
@@ -189,6 +203,11 @@ class DrugBank:
             self.property_node_fields = [field.value for field in DrugBankNodeField.get_property_fields()]
             self.drugbank_external_node_fields = [field.value for field in DrugBankNodeField.get_drugbank_external_fields()]
             self.unichem_mapping_node_fields = [field.value for field in DrugBankNodeField.get_unichem_external_mappings()]
+            
+        if dti_edge_fields:
+            self.dti_edge_fields = [field.value for field in edge_fields]
+        else:
+            self.dti_edge_fields = [field.value for field in DrugbankEdgeField]
         
     def get_unichem_mappings(self) -> None:
         
@@ -238,6 +257,46 @@ class DrugBank:
             for drugbank_id, mapping_dict in self.drugbank_drugs_external_ids.items():
                 if mapping_dict.get(self.primary_id, None):
                     self.drugbank_to_primary_id[drugbank_id] = mapping_dict[self.primary_id]
+                    
+        else:
+            self.drugbank_to_primary_id = {}
+                    
+    def get_dti_edges(self) -> None:
+        self.dti_edge_list = []
+        
+        def get_uniprot_ids(element):
+            if element:
+                if isinstance(element, tuple) and element[1] == 'Swiss-Prot':
+                    return [element[0]]
+                elif isinstance(element, list):
+                    return [x[0] for x in element if x[1] == "Swiss-Prot"]
+            else:
+                return None
+            
+            
+        logger.debug('Processing Drugbank DTI data')
+        t0 = time()
+        
+        # process drugbank dti
+        for dti in self.drugbank_dti:
+            uniprot_ids = get_uniprot_ids(dti.polypeptide)
+
+            if not uniprot_ids or not dti.drugbank_id:
+                continue
+                
+            if self.primary_id != "drugbank" and self.drugbank_to_primary_id and not self.drugbank_to_primary_id.get(dti.drugbank_id, None):
+                continue
+                
+            if self.primary_id != "drugbank":                
+                source = self.drugbank_to_primary_id[dti.drugbank_id]                
+            else:
+                source = dti.drugbank_id
+                    
+            for _id in uniprot_ids:
+                props = {k:v for k, v in dti._asdict().items() if k in self.dti_edge_fields}
+                target = _id
+                
+                self.dti_edge_list.append((None, source, target, "drug_targets_protein", props))
                 
                 
     def get_drug_nodes(self, label="drug"):
@@ -270,8 +329,6 @@ class DrugBank:
                 self.node_list.append((node_id, label, props))
                 
         else:
-            # create drugbank to primary id mapping
-            self.set_drugbank_to_primary_id_mapping()
             
             for drug in tqdm(self.drugbank_drugs_detailed):
                 if self.drugbank_to_primary_id.get(drug.drugbank_id, None):
@@ -297,5 +354,3 @@ class DrugBank:
 
 
                     self.node_list.append((node_id, label, props))
-
-            
