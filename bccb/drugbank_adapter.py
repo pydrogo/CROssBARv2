@@ -67,15 +67,21 @@ class DrugBankNodeField(Enum):
     
 class PrimaryNodeIdentifier(Enum):
     DRUGBANK = "drugbank"
-    KEGG_LIGAND = "kegg_ligand" # kegg ligand id (not drug id)
+    KEGG_DRUG = "KEGG Drug"
+    KEGG_LIGAND = "kegg_ligand" # kegg ligand id
     DRUGCENTRAL = "drugcentral"
     CHEMBL = "chembl"
     RXCUI = "RxCUI"
     
-class DrugbankEdgeField(Enum):
+class DrugbankDTIEdgeField(Enum):
     ACTIONS = "actions"
     REFERENCES = "references"
-    KNOWN_ACTION = "known_action"    
+    KNOWN_ACTION = "known_action"
+    
+
+class DrugbankEdgeType(Enum):
+    DRUG_TARGET_INTERACTION = auto()
+    DRUG_DRUG_INTERACTION = auto()
     
 
 class DrugBank:
@@ -85,7 +91,8 @@ class DrugBank:
     """
     
     def __init__(self, drugbank_user:str, drugbank_passwd:str, node_fields:Union[list[DrugBankNodeField], None] = None,
-                dti_edge_fields: Union[list[DrugbankEdgeField], None] = None, primary_node_id:Union[PrimaryNodeIdentifier, None] = None):
+                dti_edge_fields: Union[list[DrugbankDTIEdgeField], None] = None, primary_node_id:Union[PrimaryNodeIdentifier, None] = None,
+                edge_types: Union[list[DrugbankEdgeType], None] = None):
         """
         Args
             drugbank_user: drugbank username
@@ -100,6 +107,9 @@ class DrugBank:
         
         # set primary id of drug nodes
         self.set_primary_id(primary_node_id=primary_node_id)
+        
+        # set edge types
+        self.set_edge_types(edge_types = edge_types)
         
         
     def download_drugbank_data(self, cache=False, debug=False, retries=6,):
@@ -126,12 +136,19 @@ class DrugBank:
             
             t0 = time()
             
+            # download node data
             self.download_drugbank_node_data()
             
-            self.download_drugbank_dti_data()
-            
+            if DrugbankEdgeType.DRUG_DRUG_INTERACTION in self.edge_types:
+                # download DTI data
+                self.download_drugbank_dti_data()
+
             # create drugbank to primary id mapping
             self.set_drugbank_to_primary_id_mapping()
+            
+            if DrugbankEdgeType.DRUG_DRUG_INTERACTION in self.edge_types:
+                # download DDI data
+                self.download_drugbank_ddi_data()
             
             t1 = time()
             logger.info(f'All data is downloaded in {round((t1-t0) / 60, 2)} mins'.upper())
@@ -140,8 +157,7 @@ class DrugBank:
     def download_drugbank_node_data(self) -> None:
         """
         Wrapper function to download DrugBank drug entries using pypath
-        """        
-        
+        """
         
         logger.debug('Downloading Drugbank drug node data')
         t0 = time()
@@ -207,7 +223,7 @@ class DrugBank:
         if dti_edge_fields:
             self.dti_edge_fields = [field.value for field in edge_fields]
         else:
-            self.dti_edge_fields = [field.value for field in DrugbankEdgeField]
+            self.dti_edge_fields = [field.value for field in DrugbankDTIEdgeField]
         
     def get_unichem_mappings(self) -> None:
         
@@ -222,7 +238,8 @@ class DrugBank:
                 
                 # add unichem_mappings
                 self.unichem_mappings[field] = _dict
-            except TypeError:
+            
+            except TypeError: # in case id1-id2 doesnt exist, try id2-id1
                 _dict = unichem.unichem_mapping(field, "drugbank")
                 
                 # switch values and keys
@@ -260,8 +277,15 @@ class DrugBank:
                     
         else:
             self.drugbank_to_primary_id = {}
+            
+    def set_edge_types(self, edge_types):
+        if edge_types:
+            self.edge_types = edge_types
+        else:
+            self.edge_types = [field for field in DrugbankEdgeType]
                     
-    def get_dti_edges(self) -> None:
+    def get_dti_edges(self, label="drug_targets_protein") -> None:
+        
         self.dti_edge_list = []
         
         def get_uniprot_ids(element):
@@ -278,7 +302,7 @@ class DrugBank:
         t0 = time()
         
         # process drugbank dti
-        for dti in self.drugbank_dti:
+        for dti in tqdm(self.drugbank_dti):
             uniprot_ids = get_uniprot_ids(dti.polypeptide)
 
             if not uniprot_ids or not dti.drugbank_id:
@@ -296,61 +320,66 @@ class DrugBank:
                 props = {k:v for k, v in dti._asdict().items() if k in self.dti_edge_fields}
                 target = _id
                 
-                self.dti_edge_list.append((None, source, target, "drug_targets_protein", props))
+                self.dti_edge_list.append((None, source, target, label, props))
+                
+    def get_ddi_edges(self, label="drug_interacts_with_drug") -> None:
+        self.ddi_edge_list = []
+        
+        for ddi in tqdm(self.drugbank_ddi):
+            
+            if not ddi.drug_interactions:
+                continue
+                
+            if self.primary_id != "drugbank" and self.drugbank_to_primary_id and not self.drugbank_to_primary_id.get(ddi.drugbank_id, None):
+                continue
+                
+            if self.primary_id != "drugbank":                
+                source = self.drugbank_to_primary_id[ddi.drugbank_id]                
+            else:
+                source = ddi.drugbank_id
+            
+            for pair2 in ddi.drug_interactions:
+                
+                if self.primary_id != "drugbank" and self.drugbank_to_primary_id and not self.drugbank_to_primary_id.get(pair2, None):
+                    continue
+                    
+                if self.primary_id != "drugbank":                
+                    target = self.drugbank_to_primary_id[pair2]            
+                else:
+                    target = pair2
+                
+                self.ddi_edge_list.append((None, source, target, label, {}))
                 
                 
     def get_drug_nodes(self, label="drug"):
         
         self.node_list = []
                 
-        if self.primary_id == "drugbank":
-            for drug in tqdm(self.drugbank_drugs_detailed):
+        for drug in tqdm(self.drugbank_drugs_detailed):
 
+            if self.primary_id != "drugbank" and self.drugbank_to_primary_id and not self.drugbank_to_primary_id.get(drug.drugbank_id, None):
+                continue
+
+            if self.primary_id != "drugbank":
+                node_id = self.drugbank_to_primary_id[drug.drugbank_id]
+            else:
                 node_id = drug.drugbank_id
 
-                props = {}
+            props = {}
 
-                if self.primary_node_fields:                
-                    props = props | {k:v for k, v in drug._asdict().items() if k in self.primary_node_fields}
+            if self.primary_node_fields:                
+                props = props | {k:v for k, v in drug._asdict().items() if k in self.primary_node_fields}
 
-                if self.property_node_fields and self.drugbank_properties.get(drug.drugbank_id, None):
-                    props = props | {k:v for k, v in self.drugbank_properties[drug.drugbank_id].items() if k in self.property_node_fields}
+            if self.property_node_fields and self.drugbank_properties.get(drug.drugbank_id, None):
+                props = props | {k:v for k, v in self.drugbank_properties[drug.drugbank_id].items() if k in self.property_node_fields}
 
-                if self.drugbank_external_node_fields and self.drugbank_drugs_external_ids.get(drug.drugbank_id, None):
-                    props = props | {k:v for k, v in self.drugbank_drugs_external_ids[drug.drugbank_id].items() if k in self.drugbank_external_node_fields}
+            if self.drugbank_external_node_fields and self.drugbank_drugs_external_ids.get(drug.drugbank_id, None):
+                props = props | {k:v for k, v in self.drugbank_drugs_external_ids[drug.drugbank_id].items() if k in self.drugbank_external_node_fields}
 
-                if self.unichem_mapping_node_fields:
-
-                    for db, mapping_dict in self.unichem_mappings.items():
-                        if mapping_dict.get(drug.drugbank_id, None):
-                            props[db] = mapping_dict[drug.drugbank_id]
-
-
-                self.node_list.append((node_id, label, props))
-                
-        else:
-            
-            for drug in tqdm(self.drugbank_drugs_detailed):
-                if self.drugbank_to_primary_id.get(drug.drugbank_id, None):
-                    
-                    node_id = self.drugbank_to_primary_id[drug.drugbank_id]
-                    
-                    props = {}
-                    
-                    if self.primary_node_fields:                
-                        props = props | {k:v for k, v in drug._asdict().items() if k in self.primary_node_fields}
-
-                    if self.property_node_fields and self.drugbank_properties.get(drug.drugbank_id, None):
-                        props = props | {k:v for k, v in self.drugbank_properties[drug.drugbank_id].items() if k in self.property_node_fields}
-
-                    if self.drugbank_external_node_fields and self.drugbank_drugs_external_ids.get(drug.drugbank_id, None):
-                        props = props | {k:v for k, v in self.drugbank_drugs_external_ids[drug.drugbank_id].items() if k in self.drugbank_external_node_fields}
-
-                    if self.unichem_mapping_node_fields:
-
-                        for db, mapping_dict in self.unichem_mappings.items():
-                            if mapping_dict.get(drug.drugbank_id, None):
-                                props[db] = mapping_dict[drug.drugbank_id]
+            if self.unichem_mapping_node_fields:
+                for db, mapping_dict in self.unichem_mappings.items():
+                    if mapping_dict.get(drug.drugbank_id, None):
+                        props[db] = mapping_dict[drug.drugbank_id]
 
 
-                    self.node_list.append((node_id, label, props))
+            self.node_list.append((node_id, label, props))
