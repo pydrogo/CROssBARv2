@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from pypath.share import curl, settings, common
+from pypath.share import curl, settings
 
 from pypath.inputs import drugbank, unichem
 
@@ -9,10 +9,6 @@ from typing import Union
 from bioregistry import normalize_curie
 from tqdm import tqdm
 from time import time
-import collections
-
-import pandas as pd
-import numpy as np
 
 from biocypher._logger import logger
 
@@ -51,18 +47,30 @@ class DrugBankNodeField(Enum):
     
     @classmethod
     def get_primary_fields(cls):
+        """
+        Get drugbank primary fields
+        """
         return [cls.NAME, cls.CAS_NUMBER, cls.GROUPS, cls.GENERAL_REFERENCES, cls.ATC_CODES, cls.DRUGBANK_ID]
     
     @classmethod
     def get_property_fields(cls):
+        """
+        Get drugbank property fields
+        """
         return [cls.INCHI, cls.INCHIKEY]
     
     @classmethod
     def get_drugbank_external_fields(cls):
+        """
+        Get drugbank external database cross-references
+        """
         return [cls.KEGG_DRUG, cls.RXCUI, cls.PHARMGKB, cls.PDB]
     
     @classmethod
     def get_unichem_external_mappings(cls):
+        """
+        Get unichem database cross-references
+        """
         return [cls.ZINC, cls.CHEMBL, cls.BINDINGDB, cls.CLINICALTRIALS, cls.CHEBI, cls.PUBCHEM, cls.DRUGCENTRAL]
     
 class PrimaryNodeIdentifier(Enum):
@@ -92,15 +100,22 @@ class DrugBank:
     
     def __init__(self, drugbank_user:str, drugbank_passwd:str, node_fields:Union[list[DrugBankNodeField], None] = None,
                 dti_edge_fields: Union[list[DrugbankDTIEdgeField], None] = None, primary_node_id:Union[PrimaryNodeIdentifier, None] = None,
-                edge_types: Union[list[DrugbankEdgeType], None] = None):
+                edge_types: Union[list[DrugbankEdgeType], None] = None,  add_prefix = True, test_mode: bool = False,):
         """
         Args
             drugbank_user: drugbank username
             drugbank_passwd: drugbank password
+            node_fields: node properties that will be included in graph, if None select all fields belonging to DrugBankNodeField class
+            dti_edge_fields: Drug_target interaction edge properties that will included in graph, if None select all fields belonging to DrugbankDTIEdgeField class
+            primary_node_id: primary drug node identifier, if None selects drugbank as primary identifier
+            edge_types: edge types that will be included in graph, if None select all fields belonging to DrugbankEdgeType class
+            add_prefix: if True, add prefix to database identifiers
+            test_mode: if True, limits amount of data for testing
         """
         
         self.user = drugbank_user
         self.passwd = drugbank_passwd
+        self.add_prefix = add_prefix
         
         # set node fields
         self.set_node_and_edge_fields(node_fields=node_fields, dti_edge_fields=dti_edge_fields)
@@ -111,6 +126,10 @@ class DrugBank:
         # set edge types
         self.set_edge_types(edge_types = edge_types)
         
+        # set early_stopping, if test_mode true
+        self.early_stopping = None
+        if test_mode:
+            self.early_stopping = 100
         
     def download_drugbank_data(self, cache=False, debug=False, retries=6,):
         """
@@ -139,12 +158,12 @@ class DrugBank:
             # download node data
             self.download_drugbank_node_data()
             
+            # create drugbank to primary id mapping
+            self.set_drugbank_to_primary_id_mapping()
+            
             if DrugbankEdgeType.DRUG_DRUG_INTERACTION in self.edge_types:
                 # download DTI data
                 self.download_drugbank_dti_data()
-
-            # create drugbank to primary id mapping
-            self.set_drugbank_to_primary_id_mapping()
             
             if DrugbankEdgeType.DRUG_DRUG_INTERACTION in self.edge_types:
                 # download DDI data
@@ -207,6 +226,9 @@ class DrugBank:
         logger.info(f'Drugbank DDI data is downloaded in {round((t1-t0) / 60, 2)} mins')
         
     def set_node_and_edge_fields(self, node_fields, dti_edge_fields):
+        """
+        Sets node and edge properties
+        """
         if node_fields:
             self.all_node_fields = [field.value for field in node_fields]
             self.primary_node_fields = [field.value for field in DrugBankNodeField.get_primary_fields() if field in node_fields]
@@ -224,8 +246,20 @@ class DrugBank:
             self.dti_edge_fields = [field.value for field in edge_fields]
         else:
             self.dti_edge_fields = [field.value for field in DrugbankDTIEdgeField]
+            
+    def set_edge_types(self, edge_types):
+        """
+        Set edge types
+        """
+        if edge_types:
+            self.edge_types = edge_types
+        else:
+            self.edge_types = [field for field in DrugbankEdgeType]
         
     def get_unichem_mappings(self) -> None:
+        """
+        Download database mappings from pypath's unichem script and save them in a dictionary
+        """
         
         self.unichem_mappings = {}
         
@@ -249,6 +283,9 @@ class DrugBank:
                 self.unichem_mappings[field] = _dict
                 
     def set_primary_id(self, primary_node_id) -> None:
+        """
+        Set primary identifier of drug nodes
+        """
         if primary_node_id:
             self.primary_id = primary_node_id.value
         else:
@@ -256,6 +293,9 @@ class DrugBank:
                             
                 
     def set_drugbank_to_primary_id_mapping(self) -> None:
+        """
+        If identifiers other than drugbank are selected, create a mapping dictionary from drugbank to selected identifier
+        """
         unichem_fields = [field.value for field in DrugBankNodeField.get_unichem_external_mappings()]
         drugbank_external_fields = [field.value for field in DrugBankNodeField.get_drugbank_external_fields()]
         
@@ -278,17 +318,28 @@ class DrugBank:
         else:
             self.drugbank_to_primary_id = {}
             
-    def set_edge_types(self, edge_types):
-        if edge_types:
-            self.edge_types = edge_types
-        else:
-            self.edge_types = [field for field in DrugbankEdgeType]
+    def add_prefix_to_id(self, prefix, identifier, sep=":") -> str:
+        """
+        Adds prefix to ids
+        """
+        if self.add_prefix:
+            return normalize_curie(prefix + sep + str(identifier))
+        
+        return identifier
                     
     def get_dti_edges(self, label="drug_targets_protein") -> None:
+        """
+        Get Drug-target interaction edges
+        Args:
+            label = label of edges
+        """
         
         self.dti_edge_list = []
         
         def get_uniprot_ids(element):
+            """
+            Extracts Swiss-Prot Uniprot ids
+            """
             if element:
                 if isinstance(element, tuple) and element[1] == 'Swiss-Prot':
                     return [element[0]]
@@ -298,76 +349,118 @@ class DrugBank:
                 return None
             
             
-        logger.debug('Processing Drugbank DTI data')
-        t0 = time()
+        logger.debug('Getting Drugbank DTI edges')
         
-        # process drugbank dti
+        counter = 0
+        
         for dti in tqdm(self.drugbank_dti):
             uniprot_ids = get_uniprot_ids(dti.polypeptide)
-
+            
+            # if uniprot or drugbank id doesnt exist, skip it
             if not uniprot_ids or not dti.drugbank_id:
                 continue
-                
+            
+            # if primary id is not drugbank and it doesnt have any mapping skip it
             if self.primary_id != "drugbank" and self.drugbank_to_primary_id and not self.drugbank_to_primary_id.get(dti.drugbank_id, None):
                 continue
                 
-            if self.primary_id != "drugbank":                
-                source = self.drugbank_to_primary_id[dti.drugbank_id]                
+            if self.primary_id != "drugbank":
+                # if primary id is not drugbank, get mapping for it
+                source = self.add_prefix_to_id("something", self.drugbank_to_primary_id[dti.drugbank_id])            
             else:
-                source = dti.drugbank_id
+                source = self.add_prefix_to_id("drugbank", dti.drugbank_id)
                     
             for _id in uniprot_ids:
+                # create props dict
                 props = {k:v for k, v in dti._asdict().items() if k in self.dti_edge_fields}
-                target = _id
+                
+                target = self.add_prefix_to_id("uniprot", _id)
                 
                 self.dti_edge_list.append((None, source, target, label, props))
                 
+                counter += 1
+            
+            if self.early_stopping and counter >= self.early_stopping:
+                break
+            
     def get_ddi_edges(self, label="drug_interacts_with_drug") -> None:
+        """
+        Get Drug-Drug interaction edges
+        Args:
+            label = label of edges
+        """
         self.ddi_edge_list = []
+        
+        counter = 0
+        
+        logger.debug('Getting Drugbank DDI edges')
         
         for ddi in tqdm(self.drugbank_ddi):
             
+            # if drug1 doesnt have any interaction, skip it
             if not ddi.drug_interactions:
                 continue
                 
+            # if drug1's primary id is not drugbank and it doesnt have any mapping skip it
             if self.primary_id != "drugbank" and self.drugbank_to_primary_id and not self.drugbank_to_primary_id.get(ddi.drugbank_id, None):
                 continue
                 
-            if self.primary_id != "drugbank":                
-                source = self.drugbank_to_primary_id[ddi.drugbank_id]                
+            if self.primary_id != "drugbank":
+                # if drug1's primary id is not drugbank, get mapping for it
+                source = self.add_prefix_to_id("something", self.drugbank_to_primary_id[ddi.drugbank_id])             
             else:
-                source = ddi.drugbank_id
+                source = self.add_prefix_to_id("drugbank", ddi.drugbank_id)
             
             for pair2 in ddi.drug_interactions:
                 
+                # if drug2's primary id is not drugbank and it doesnt have any mapping skip it
                 if self.primary_id != "drugbank" and self.drugbank_to_primary_id and not self.drugbank_to_primary_id.get(pair2, None):
                     continue
                     
-                if self.primary_id != "drugbank":                
-                    target = self.drugbank_to_primary_id[pair2]            
+                if self.primary_id != "drugbank":
+                    # if drug2's primary id is not drugbank, get mapping for it
+                    target = self.add_prefix_to_id("something", self.drugbank_to_primary_id[pair2])  
                 else:
-                    target = pair2
+                    target = self.add_prefix_to_id("drugbank", pair2)
                 
                 self.ddi_edge_list.append((None, source, target, label, {}))
                 
+                counter += 1
+                
+            if self.early_stopping and counter >= self.early_stopping:
+                break
+                
                 
     def get_drug_nodes(self, label="drug"):
+        """
+        Get drug nodes
+        Args:
+            label = label of nodes
+        """
         
         self.node_list = []
-                
+        
+        counter = 0
+        
+        logger.debug('Getting Drugbank nodes')
+        
         for drug in tqdm(self.drugbank_drugs_detailed):
-
+            
+            # if node's primary id is not drugbank and it doesnt have any mapping skip it
             if self.primary_id != "drugbank" and self.drugbank_to_primary_id and not self.drugbank_to_primary_id.get(drug.drugbank_id, None):
                 continue
 
             if self.primary_id != "drugbank":
-                node_id = self.drugbank_to_primary_id[drug.drugbank_id]
+                # if primary id is not drugbank, get mapping for it
+                node_id = self.add_prefix_to_id("something", self.drugbank_to_primary_id[drug.drugbank_id])
             else:
-                node_id = drug.drugbank_id
-
+                node_id = self.add_prefix_to_id("drugbank", drug.drugbank_id)
+            
+            # create props dict
             props = {}
-
-            if self.primary_node_fields:                
+            
+            # get node properties
+            if self.primary_node_fields:
                 props = props | {k:v for k, v in drug._asdict().items() if k in self.primary_node_fields}
 
             if self.property_node_fields and self.drugbank_properties.get(drug.drugbank_id, None):
@@ -383,3 +476,8 @@ class DrugBank:
 
 
             self.node_list.append((node_id, label, props))
+            
+            counter += 1
+            
+            if self.early_stopping and counter >= self.early_stopping:
+                break
