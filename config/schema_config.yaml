@@ -51,6 +51,7 @@ cellular component:
     name: str
 
 molecular function:
+  synonym_for: molecular activity
   represented_as: node
   preferred_id: go
   label_in_input: molecular function
@@ -198,7 +199,7 @@ post translational interaction:
     string_physical_combined_score: int
 
 protein to biological process association:
-  #is_a: macromolecular machine to biological process association
+  is_a: macromolecular machine to biological process association
   represented_as: edge
   label_as_edge: Involved_in
   preferred_id: go
@@ -209,32 +210,33 @@ protein to biological process association:
     reference: str
     evidence_code: str
 
-protein to cellular component association:
-  #is_a: macromolecular machine to cellular component association
-  represented_as: node
-  label_as_edge: [Located_in, Part_of, Is_active_in]
-  preferred_id: go
-  source: protein
-  target: cellular component
-  label_in_input: [Located_in, Part_of, Is_active_in]
-  properties:
-    reference: str
-    evidence_code: str
+# protein to cellular component association:
+#   #is_a: macromolecular machine to cellular component association
+#   represented_as: node
+#   label_as_edge: [Located_in, Part_of, Is_active_in]
+#   preferred_id: go
+#   source: protein
+#   target: cellular component
+#   label_in_input: [Located_in, Part_of, Is_active_in]
+#   properties:
+#     reference: str
+#     evidence_code: str
   
-protein to molecular function association:
-  #is_a: macromolecular machine to molecular function association
-  represented_as: node
-  label_as_edge: [Enables, Contributes_to]
-  preferred_id: go
-  source: protein
-  target: cellular component
-  label_in_input: [Enables, Contributes_to]
-  properties:
-    reference: str
-    evidence_code: str
+# protein to molecular function association:
+#   #is_a: macromolecular machine to molecular function association
+#   represented_as: node
+#   label_as_edge: [Enables, Contributes_to]
+#   preferred_id: go
+#   source: protein
+#   target: cellular component
+#   label_in_input: [Enables, Contributes_to]
+#   properties:
+#     reference: str
+#     evidence_code: str
 
 
 small molecule to protein association:
+  is_a: pairwise molecular interaction
   represented_as: edge
   label_as_edge: targets
   preferred_id: id
@@ -257,6 +259,7 @@ small molecule to protein association:
     source: str[]
 
 small molecule to small molecule association:
+  is_a: pairwise molecular interaction
   represented_as: edge
   label_as_edge: interacts_with
   preferred_id: id
@@ -270,19 +273,20 @@ small molecule to small molecule association:
     source: str[]
 
 
-small molecule to gene association:
-  represented_as: edge
-  label_as_edge: [decreases_expression, increases_expression]
-  preferred_id: id
-  source: small molecule
-  target: gene
-  label_in_input: [drug_decreases_expression_gene, drug_increases_expression_gene]
-  properties:
-    source: str[]
-    references: str[]
+# small molecule to gene association:
+#   represented_as: edge
+#   label_as_edge: [decreases_expression, increases_expression]
+#   preferred_id: id
+#   source: small molecule
+#   target: gene
+#   label_in_input: [drug_decreases_expression_gene, drug_increases_expression_gene]
+#   properties:
+#     source: str[]
+#     references: str[]
 
 
 molecular mixture to protein association:
+  is_a: pairwise molecular interaction
   represented_as: edge
   label_as_edge: targets
   preferred_id: id
@@ -300,6 +304,7 @@ molecular mixture to protein association:
 
 
 gene to gene orthology association:
+  is_a: association
   represented_as: edge
   label_as_edge: Is_Orthologous_With
   preferred_id: id
