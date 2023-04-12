@@ -174,7 +174,7 @@ class PPI:
             rename_selected_fields : List of new field names for selected fields. If not defined, default field names will be used.
         """
         if self.intact_fields is None:
-            selected_fields = [field.value for field in IntactEdgeFields]
+            selected_fields = [field.value for field in IntactEdgeField]
         else:
             selected_fields = [field.value for field in self.intact_fields]
 
@@ -374,7 +374,7 @@ class PPI:
         """
 
         if self.biogrid_fields is None:
-            selected_fields = [field.value for field in BiogridEdgeFields]
+            selected_fields = [field.value for field in BiogridEdgeField]
         else:
             selected_fields = [field.value for field in self.biogrid_fields]
 
@@ -634,7 +634,7 @@ class PPI:
             rename_selected_fields : List of new field names for selected fields. If not defined, default field names will be used.
         """
         if self.string_fields is None:
-            selected_fields = [field.value for field in StringEdgeFields]
+            selected_fields = [field.value for field in StringEdgeField]
         else:
             selected_fields = [field.value for field in self.string_fields]
 
