@@ -35,6 +35,7 @@ pandas = "^1.4.3"
 pypath-omnipath = "^0.14.16"
 bioregistry = "^0.6.9"
 biocypher = "^0.5.4"
+psutil = "^5.9.4"
 
 [tool.poetry.dev-dependencies]
 pytest = ">=6.0"

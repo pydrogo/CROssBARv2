@@ -9,12 +9,6 @@ from bccb.uniprot_adapter import (
     UniprotEdgeType,
     UniprotEdgeField,
 )
-from bccb.ppi_adapter import (
-    PPI,
-    IntactEdgeField,
-    BiogridEdgeField,
-    StringEdgeField,
-)
 
 from biocypher import BioCypher
 
@@ -51,26 +45,6 @@ uniprot_edge_fields = [
     UniprotEdgeField.GENE_ENSEMBL_GENE_ID,
 ]
 
-intact_edge_fields = [
-    IntactEdgeField.SOURCE,
-    IntactEdgeField.PUBMED_IDS,
-    IntactEdgeField.INTACT_SCORE,
-    IntactEdgeField.METHODS,
-    IntactEdgeField.INTERACTION_TYPES,
-]
-
-biogrid_edge_fields = [
-    BiogridEdgeField.SOURCE,
-    BiogridEdgeField.PUBMED_IDS,
-    BiogridEdgeField.EXPERIMENTAL_SYSTEM,
-]
-
-string_edge_fields = [
-    StringEdgeField.SOURCE,
-    StringEdgeField.COMBINED_SCORE,
-    StringEdgeField.PHYSICAL_COMBINED_SCORE,
-]
-
 
 # Run build
 def main():
@@ -80,7 +54,7 @@ def main():
     """
 
     # Start biocypher
-    driver = BioCypher()
+    bc = BioCypher()
 
     # Start uniprot adapter and load data
     uniprot_adapter = Uniprot(
@@ -98,35 +72,11 @@ def main():
     )
 
     # Write uniprot nodes and edges
-    driver.write_nodes(uniprot_adapter.get_nodes())
-    driver.write_edges(uniprot_adapter.get_edges())
-
-    # # Start ppi adapter and load data
-    # ppi_adapter = PPI(organism=9606,
-    #                 intact_fields=intact_edge_fields,
-    #                 biogrid_fields=biogrid_edge_fields,
-    #                 string_fields=string_edge_fields,
-    # )
-
-    # ppi_adapter.download_intact_data()
-    # ppi_adapter.intact_process()
-
-    # ppi_adapter.download_biogrid_data()
-    # ppi_adapter.biogrid_process()
-
-    # ppi_adapter.download_string_data()
-    # ppi_adapter.string_process()
-
-    # ppi_adapter.merge_all()
-
-    # # Write ppi edges
-    # driver.write_edges(ppi_adapter.get_edges())
+    bc.write_nodes(uniprot_adapter.get_nodes())
 
     # Write import call and other post-processing
-    driver.write_import_call()
-    driver.log_missing_bl_types()
-    driver.log_duplicates()
-    driver.show_ontology_structure()
+    bc.write_import_call()
+    bc.summary()
 
 
 if __name__ == "__main__":
