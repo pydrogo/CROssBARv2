@@ -1201,7 +1201,7 @@ class PPI:
 
         if self.export_csvs:
             all_df_path = self.export_dataframe(
-                self.all_selected_features_df, "ppi_all"
+                self.all_ppi_df, "ppi_all"
             )
             logger.info(f"Final data is written: {all_df_path}")
 
@@ -1212,7 +1212,7 @@ class PPI:
 
         # create edge list
         edge_list = []
-        for _, row in tqdm(self.all_selected_features_df.iterrows()):
+        for _, row in tqdm(self.all_ppi_df.iterrows()):
             _dict = row.to_dict()
 
             _source = normalize_curie("uniprot:" + str(row["uniprot_a"]))
