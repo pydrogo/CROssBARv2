@@ -808,7 +808,7 @@ class PPI:
                 and self.check_status_and_properties[db]["processed"]
             ):
                 dbs_will_be_merged.append(db)
-        print(dbs_will_be_merged)
+        
         seen_dbs = set()
         for db in dbs_will_be_merged:
             if db in seen_dbs:
@@ -1201,7 +1201,7 @@ class PPI:
 
         if self.export_csvs:
             all_df_path = self.export_dataframe(
-                self.all_ppi_df, "ppi_all"
+                self.all_selected_features_df, "ppi_all"
             )
             logger.info(f"Final data is written: {all_df_path}")
 
