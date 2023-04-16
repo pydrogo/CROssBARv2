@@ -10,9 +10,16 @@ from bccb.uniprot_adapter import (
     UniprotEdgeField,
 )
 
+from bccb.ppi_adapter import (
+    PPI,
+    IntactEdgeField,
+    BiogridEdgeField,
+    StringEdgeField,
+)
+
 from biocypher import BioCypher
 
-# Source configuration
+# uniprot configuration
 uniprot_node_types = [
     UniprotNodeType.PROTEIN,
     UniprotNodeType.GENE,
@@ -45,6 +52,11 @@ uniprot_edge_fields = [
     UniprotEdgeField.GENE_ENSEMBL_GENE_ID,
 ]
 
+# ppi configuration
+intact_fields = [field for field in IntactEdgeField]
+biogrid_fields = [field for field in BiogridEdgeField]
+string_fields = [field for field in StringEdgeField]
+
 
 # Run build
 def main():
@@ -54,7 +66,7 @@ def main():
     """
 
     # Start biocypher
-    bc = BioCypher()
+    bc = BioCypher(schema_config_path=r"D:/crossbar/CROssBAR-BioCypher-Migration/scripts/config/schema_config.yaml")
 
     # Start uniprot adapter and load data
     uniprot_adapter = Uniprot(
@@ -71,8 +83,29 @@ def main():
         retries=5,
     )
 
+    ppi_adapter = PPI(cache=True, organism=9606, intact_fields=intact_fields, biogrid_fields=biogrid_fields,
+                      string_fields=string_fields, test_mode=False)
+    
+    # download and process intact data
+    ppi_adapter.download_intact_data()
+    ppi_adapter.intact_process()
+
+    # download and process biogrid data
+    ppi_adapter.download_biogrid_data()
+    ppi_adapter.biogrid_process()
+
+    # download and process string data
+    ppi_adapter.download_string_data()
+    ppi_adapter.string_process()
+
+    # Merge all ppi data
+    ppi_adapter.merge_all()
+
     # Write uniprot nodes and edges
     bc.write_nodes(uniprot_adapter.get_nodes())
+
+    # write ppi edges
+    bc.write_edges(ppi_adapter.get_ppi_edges())
 
     # Write import call and other post-processing
     bc.write_import_call()
