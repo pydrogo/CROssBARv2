@@ -58,6 +58,8 @@ class PPI:
         intact_fields=None,
         biogrid_fields=None,
         string_fields=None,
+        add_prefix = True,
+        test_mode = False,
     ):
         """
         Downloads and processes PPI data
@@ -73,6 +75,8 @@ class PPI:
                 intact_fields: intact fields to be used in the graph.
                 biogrid_fields: biogrid fields to be used in the graph.
                 string_fields: string fields to be used in the graph.
+                add_prefix: if True, add prefix to uniprot ids.
+                test_mode: if True, take small sample from data for testing.
 
         """
 
@@ -86,6 +90,8 @@ class PPI:
         self.intact_fields = intact_fields
         self.biogrid_fields = biogrid_fields
         self.string_fields = string_fields
+        self.add_prefix = add_prefix
+        self.test_mode = test_mode
 
         self.check_status_and_properties = {
             "intact": {
@@ -162,6 +168,9 @@ class PPI:
         logger.info(
             f"IntAct data is downloaded in {round((t1-t0) / 60, 2)} mins"
         )
+        
+        if self.test_mode:
+            self.intact_ints = self.intact_ints[:100]
 
         self.check_status_and_properties["intact"]["downloaded"] = True
 
@@ -361,6 +370,9 @@ class PPI:
         logger.info(
             f"BioGRID data is downloaded in {round((t1-t0) / 60, 2)} mins"
         )
+        
+        if self.test_mode:
+            self.biogrid_ints = self.biogrid_ints[:100]
 
         self.check_status_and_properties["biogrid"]["downloaded"] = True
 
@@ -622,6 +634,9 @@ class PPI:
         logger.info(
             f"STRING data is downloaded in {round((t1-t0) / 60, 2)} mins"
         )
+        
+        if self.test_mode:
+            self.string_ints = self.string_ints[:100]
 
         self.check_status_and_properties["string"]["downloaded"] = True
 
@@ -811,6 +826,7 @@ class PPI:
         
         seen_dbs = set()
         for db in dbs_will_be_merged:
+            
             if db in seen_dbs:
                 continue
 
@@ -981,6 +997,7 @@ class PPI:
                                 ],
                                 inplace=True,
                             )
+                    
                 else:
                     seen_dbs.add(db)
                     seen_dbs.add(dbs_will_be_merged[1])
@@ -1113,17 +1130,17 @@ class PPI:
 
             else:
                 seen_dbs.add(db)
-                print(db)
+                
                 df2 = self.check_status_and_properties[db]["dataframe"]
-
+                source_flag = "source" in list(merged_df.columns)
+                
                 merged_df = pd.merge(
                     merged_df, df2, on=["uniprot_a", "uniprot_b"], how="outer"
                 )
-                print(merged_df.columns)
+                
                 # if source column exists in both merged_df and string merge them
-                if "source" in list(
-                    merged_df.columns
-                ) and self.string_field_new_names.get("source", None):
+                if source_flag and self.string_field_new_names.get("source", None):
+                    
                     # if they have the same name
                     if "source" == self.string_field_new_names["source"]:
                         merged_df["source"] = merged_df[
@@ -1140,7 +1157,7 @@ class PPI:
                             ],
                             inplace=True,
                         )
-
+                        
                     # if they dont have the same name
                     else:
                         merged_df["source"] = merged_df[
@@ -1154,7 +1171,7 @@ class PPI:
                             ],
                             inplace=True,
                         )
-
+                
                 # if combined_score field exists in dataframe force its data data type become int
                 if self.string_field_new_names.get("combined_score", None):
                     merged_df[
@@ -1201,11 +1218,20 @@ class PPI:
 
         if self.export_csvs:
             all_df_path = self.export_dataframe(
-                self.all_selected_features_df, "ppi_all"
+                self.all_ppi_df, "ppi_all"
             )
             logger.info(f"Final data is written: {all_df_path}")
+            
+    def add_prefix_to_id(self, prefix="uniprot", identifier: str = None, sep=":") -> str:
+        """
+        Adds prefix to uniprot id
+        """
+        if self.add_prefix and identifier:
+            return normalize_curie(prefix + sep + str(identifier))
+        
+        return identifier
 
-    def get_ppi_edges(self):
+    def get_ppi_edges(self) -> list:
         """
         Get PPI edges from merged data
         """
@@ -1215,8 +1241,8 @@ class PPI:
         for _, row in tqdm(self.all_ppi_df.iterrows()):
             _dict = row.to_dict()
 
-            _source = normalize_curie("uniprot:" + str(row["uniprot_a"]))
-            _target = normalize_curie("uniprot:" + str(row["uniprot_b"]))
+            _source = self.add_prefix_to_id(identifier = str(row["uniprot_a"]))
+            _target = self.add_prefix_to_id(identifier = str(row["uniprot_b"]))
 
             del _dict["uniprot_a"], _dict["uniprot_b"]
 
