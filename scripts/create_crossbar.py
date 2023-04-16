@@ -66,7 +66,7 @@ def main():
     """
 
     # Start biocypher
-    bc = BioCypher(schema_config_path=r"D:/crossbar/CROssBAR-BioCypher-Migration/scripts/config/schema_config.yaml")
+    bc = BioCypher(schema_config_path=r"config/schema_config.yaml")
 
     # Start uniprot adapter and load data
     uniprot_adapter = Uniprot(
