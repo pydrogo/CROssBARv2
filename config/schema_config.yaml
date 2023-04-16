@@ -35,6 +35,20 @@ organism taxon:
   label_in_input: organism
   properties:
     organism: str
+
+protein domain:  
+  represented_as: node
+  preferred_id: interpro
+  label_in_input: domain
+  properties:    
+    protein_count: int
+    name: str
+    type: str
+    parent_list: str[]
+    child_list: str[]
+    pfam: str[]
+    ec: str[]
+    pdb: str[]
     
 biological process: 
   represented_as: node
@@ -197,6 +211,16 @@ post translational interaction:
     intact_score: float
     string_combined_score: int
     string_physical_combined_score: int
+
+protein to protein domain association:
+  represented_as: edge
+  label_as_edge: protein_has_domain
+  preferred_id: id
+  source: protein
+  target: protein domain
+  label_in_input: protein_has_domain
+  properties:
+    locations: str[]
 
 protein to biological process association:
   is_a: macromolecular machine to biological process association
