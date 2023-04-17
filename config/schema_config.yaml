@@ -224,8 +224,9 @@ protein to protein domain association:
     locations: str[]
 
 protein to biological process association:
+  is_a: macromolecular machine to biological process association
   represented_as: edge
-  label_as_edge: involved_in
+  label_as_edge: protein_involved_in_biological_process
   preferred_id: go
   source: protein
   target: biological process
@@ -235,6 +236,7 @@ protein to biological process association:
     evidence_code: str
 
 # protein to cellular component association:
+#   is_a: macromolecular machine to cellular component association
 #   represented_as: edge
 #   label_as_edge: [located_in, part_of, is_active_in]
 #   preferred_id: go
@@ -246,6 +248,7 @@ protein to biological process association:
 #     evidence_code: str
   
 # protein to molecular function association:
+#   is_a: macromolecular machine to molecular function association
 #   represented_as: edge
 #   label_as_edge: [enables, contributes_to]
 #   preferred_id: go
@@ -289,24 +292,27 @@ protein to biological process association:
 #   label_in_input: [cellular_component_is_a_cellular_component, cellular_component_part_of_cellular_component]
 
 protein domain to molecular function association:
+  is_a: association
   represented_as: edge
-  label_as_edge: enables
+  label_as_edge: protein_domain_enables_molecular_function
   preferred_id: id
   source: protein domain
   target: molecular function
   label_in_input: protein_domain_enables_molecular_function
   
 protein domain to biological process association:
+  is_a: association
   represented_as: edge
-  label_as_edge: involved_in
+  label_as_edge: protein_domain_involved_in_biological_process
   preferred_id: id
   source: protein domain
   target: biological process
   label_in_input: protein_domain_involved_in_biological_process
   
 protein domain to cellular component association:
+  is_a: association
   represented_as: edge
-  label_as_edge: located_in
+  label_as_edge: protein_domain_located_in_cellular_component
   preferred_id: id
   source: protein domain
   target: cellular component
