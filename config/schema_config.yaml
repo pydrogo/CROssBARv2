@@ -213,6 +213,7 @@ post translational interaction:
     string_physical_combined_score: int
 
 protein to protein domain association:
+  is_a: association
   represented_as: edge
   label_as_edge: protein_has_domain
   preferred_id: id
