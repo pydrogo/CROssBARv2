@@ -17,6 +17,12 @@ from bccb.ppi_adapter import (
     StringEdgeField,
 )
 
+from bccb.interpro_adapter import (
+    InterPro,
+    InterProNodeField,
+    InterProEdgeField,
+)
+
 from biocypher import BioCypher
 
 # uniprot configuration
@@ -57,6 +63,9 @@ intact_fields = [field for field in IntactEdgeField]
 biogrid_fields = [field for field in BiogridEdgeField]
 string_fields = [field for field in StringEdgeField]
 
+# interpro (protein-domain edge) configuration
+interpro_node_fields = [field for field in InterProNodeField]
+interpro_edge_fields = [field for field in InterProEdgeField]
 
 # Run build
 def main():
@@ -66,7 +75,7 @@ def main():
     """
 
     # Start biocypher
-    bc = BioCypher(schema_config_path=r"config/schema_config.yaml")
+    bc = BioCypher(schema_config_path=r"D:/crossbar/CROssBAR-BioCypher-Migration/scripts/config/schema_config.yaml")
 
     # Start uniprot adapter and load data
     uniprot_adapter = Uniprot(
@@ -83,8 +92,12 @@ def main():
         retries=5,
     )
 
-    ppi_adapter = PPI(cache=True, organism=9606, intact_fields=intact_fields, biogrid_fields=biogrid_fields,
-                      string_fields=string_fields, test_mode=False)
+    ppi_adapter = PPI(cache=True, 
+                      organism=9606, 
+                      intact_fields=intact_fields, 
+                      biogrid_fields=biogrid_fields,
+                      string_fields=string_fields, 
+                      test_mode=True)
     
     # download and process intact data
     ppi_adapter.download_intact_data()
@@ -101,11 +114,32 @@ def main():
     # Merge all ppi data
     ppi_adapter.merge_all()
 
+    interpro_adapter = InterPro(cache=True, 
+                                page_size=100, 
+                                organism="9606",
+                                node_fields=interpro_node_fields,
+                                edge_fields=interpro_edge_fields, 
+                                test_mode=True)
+    
+    # download domain data
+    interpro_adapter.download_domain_node_data()
+    interpro_adapter.download_domain_edge_data()
+
+    # get interpro nodes and edge
+    interpro_adapter.get_interpro_nodes()
+    interpro_adapter.get_interpro_edges()
+
     # Write uniprot nodes and edges
     bc.write_nodes(uniprot_adapter.get_nodes())
 
     # write ppi edges
     bc.write_edges(ppi_adapter.get_ppi_edges())
+
+    # write interpro (domain) nodes
+    bc.write_nodes(interpro_adapter.node_list)
+
+    # write interpro edges (protein-domain) edges
+    bc.write_edges(interpro_adapter.edge_list)
 
     # Write import call and other post-processing
     bc.write_import_call()
