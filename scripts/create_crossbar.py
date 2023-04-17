@@ -23,6 +23,14 @@ from bccb.interpro_adapter import (
     InterProEdgeField,
 )
 
+from bccb.go_adapter import (
+    GO,
+    GONodeType,
+    GOEdgeType,
+    GONodeField,
+    GOEdgeField,
+)
+
 from biocypher import BioCypher
 
 # uniprot configuration
@@ -63,9 +71,17 @@ intact_fields = [field for field in IntactEdgeField]
 biogrid_fields = [field for field in BiogridEdgeField]
 string_fields = [field for field in StringEdgeField]
 
-# interpro (protein-domain edge) configuration
+# interpro (protein-domain edges and domain nodes) configuration
 interpro_node_fields = [field for field in InterProNodeField]
 interpro_edge_fields = [field for field in InterProEdgeField]
+
+# GO configuration (Protein-GO, Domain-GO, GO-GO)
+go_node_types = [GONodeType.PROTEIN, GONodeType.DOMAIN, GONodeType.BIOLOGICAL_PROCESS,
+                 GONodeType.CELLULAR_COMPONENT, GONodeType.MOLECULAR_FUNCTION]
+go_edge_types = [GOEdgeType.PROTEIN_TO_BIOLOGICAL_PROCESS, GOEdgeType.DOMAIN_TO_BIOLOGICAL_PROCESS,
+                 GOEdgeType.DOMAIN_TO_CELLULAR_COMPONENT, GOEdgeType.DOMAIN_TO_MOLECULAR_FUNCTION] # There are more associations, however current version of BioCypher probably only supports these
+go_node_fields = [field for field in GONodeField]
+go_edge_fields = [field for field in GOEdgeField]
 
 # Run build
 def main():
@@ -75,7 +91,7 @@ def main():
     """
 
     # Start biocypher
-    bc = BioCypher(schema_config_path=r"D:/crossbar/CROssBAR-BioCypher-Migration/scripts/config/schema_config.yaml")
+    bc = BioCypher(schema_config_path=r"config/schema_config.yaml")
 
     # Start uniprot adapter and load data
     uniprot_adapter = Uniprot(
@@ -129,17 +145,34 @@ def main():
     interpro_adapter.get_interpro_nodes()
     interpro_adapter.get_interpro_edges()
 
+    go_adapter = GO(organism=9606, node_types=go_node_types, go_node_fields=go_node_fields,
+                    edge_types=go_edge_types, go_edge_fields=go_edge_fields, test_mode=True)
+    
+    # download go data
+    go_adapter.download_go_data(cache=True)
+
+    # get go nodes and go-protein, domain-go edges
+    go_adapter.get_go_nodes()
+    go_adapter.get_go_edges()
+
+
     # Write uniprot nodes and edges
     bc.write_nodes(uniprot_adapter.get_nodes())
 
     # write ppi edges
     bc.write_edges(ppi_adapter.get_ppi_edges())
-
+    
     # write interpro (domain) nodes
     bc.write_nodes(interpro_adapter.node_list)
 
     # write interpro edges (protein-domain) edges
     bc.write_edges(interpro_adapter.edge_list)
+
+    # write GO nodes
+    bc.write_nodes(go_adapter.node_list)
+
+    # write GO edges
+    bc.write_edges(go_adapter.edge_list)
 
     # Write import call and other post-processing
     bc.write_import_call()
