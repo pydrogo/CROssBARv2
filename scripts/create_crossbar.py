@@ -31,6 +31,14 @@ from bccb.go_adapter import (
     GOEdgeField,
 )
 
+from bccb.drugbank_adapter import (
+    DrugBank,
+    DrugBankNodeField,
+    DrugbankDTIEdgeField,
+    DrugbankEdgeType,
+    PrimaryNodeIdentifier,
+)
+
 from biocypher import BioCypher
 
 # uniprot configuration
@@ -79,9 +87,17 @@ interpro_edge_fields = [field for field in InterProEdgeField]
 go_node_types = [GONodeType.PROTEIN, GONodeType.DOMAIN, GONodeType.BIOLOGICAL_PROCESS,
                  GONodeType.CELLULAR_COMPONENT, GONodeType.MOLECULAR_FUNCTION]
 go_edge_types = [GOEdgeType.PROTEIN_TO_BIOLOGICAL_PROCESS, GOEdgeType.DOMAIN_TO_BIOLOGICAL_PROCESS,
-                 GOEdgeType.DOMAIN_TO_CELLULAR_COMPONENT, GOEdgeType.DOMAIN_TO_MOLECULAR_FUNCTION] # There are more associations, however current version of BioCypher probably only supports these
+                 GOEdgeType.DOMAIN_TO_CELLULAR_COMPONENT, GOEdgeType.DOMAIN_TO_MOLECULAR_FUNCTION] # There are more associations available, however current version of BioCypher probably only supports these
 go_node_fields = [field for field in GONodeField]
 go_edge_fields = [field for field in GOEdgeField]
+
+
+# drugbank configuration
+drugbank_node_fields = [field for field in DrugBankNodeField]
+drugbank_dti_edge_fields = [field for field in DrugbankDTIEdgeField]
+drugbank_edge_types = [DrugbankEdgeType.DRUG_TARGET_INTERACTION]
+primary_drug_id = PrimaryNodeIdentifier.DRUGBANK
+
 
 # Run build
 def main():
@@ -155,6 +171,16 @@ def main():
     go_adapter.get_go_nodes()
     go_adapter.get_go_edges()
 
+    drugbank_adapter = DrugBank(drugbank_user="drugbank_username", drugbank_passwd="drugbank_password", node_fields=drugbank_node_fields,
+                                dti_edge_fields=drugbank_dti_edge_fields, edge_types=drugbank_edge_types, primary_node_id=primary_drug_id,
+                                test_mode=True)
+    
+    # download drugbank data
+    drugbank_adapter.download_drugbank_data(cache=True)
+
+    # get drug nodes and drug-target edges
+    drugbank_adapter.get_drug_nodes()
+    drugbank_adapter.get_dti_edges()
 
     # Write uniprot nodes and edges
     bc.write_nodes(uniprot_adapter.get_nodes())
@@ -173,6 +199,12 @@ def main():
 
     # write GO edges
     bc.write_edges(go_adapter.edge_list)
+
+    # write drug nodes
+    bc.write_nodes(drugbank_adapter.node_list)
+
+    # write dti edges
+    bc.write_edges(drugbank_adapter.dti_edge_list)
 
     # Write import call and other post-processing
     bc.write_import_call()
