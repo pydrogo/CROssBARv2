@@ -10,9 +10,38 @@ from bccb.uniprot_adapter import (
     UniprotEdgeField,
 )
 
+from bccb.ppi_adapter import (
+    PPI,
+    IntactEdgeField,
+    BiogridEdgeField,
+    StringEdgeField,
+)
+
+from bccb.interpro_adapter import (
+    InterPro,
+    InterProNodeField,
+    InterProEdgeField,
+)
+
+from bccb.go_adapter import (
+    GO,
+    GONodeType,
+    GOEdgeType,
+    GONodeField,
+    GOEdgeField,
+)
+
+from bccb.drugbank_adapter import (
+    DrugBank,
+    DrugBankNodeField,
+    DrugbankDTIEdgeField,
+    DrugbankEdgeType,
+    PrimaryNodeIdentifier,
+)
+
 from biocypher import BioCypher
 
-# Source configuration
+# uniprot configuration
 uniprot_node_types = [
     UniprotNodeType.PROTEIN,
     UniprotNodeType.GENE,
@@ -45,6 +74,30 @@ uniprot_edge_fields = [
     UniprotEdgeField.GENE_ENSEMBL_GENE_ID,
 ]
 
+# ppi configuration
+intact_fields = [field for field in IntactEdgeField]
+biogrid_fields = [field for field in BiogridEdgeField]
+string_fields = [field for field in StringEdgeField]
+
+# interpro (protein-domain edges and domain nodes) configuration
+interpro_node_fields = [field for field in InterProNodeField]
+interpro_edge_fields = [field for field in InterProEdgeField]
+
+# GO configuration (Protein-GO, Domain-GO, GO-GO)
+go_node_types = [GONodeType.PROTEIN, GONodeType.DOMAIN, GONodeType.BIOLOGICAL_PROCESS,
+                 GONodeType.CELLULAR_COMPONENT, GONodeType.MOLECULAR_FUNCTION]
+go_edge_types = [GOEdgeType.PROTEIN_TO_BIOLOGICAL_PROCESS, GOEdgeType.DOMAIN_TO_BIOLOGICAL_PROCESS,
+                 GOEdgeType.DOMAIN_TO_CELLULAR_COMPONENT, GOEdgeType.DOMAIN_TO_MOLECULAR_FUNCTION] # There are more associations available, however current version of BioCypher probably only supports these
+go_node_fields = [field for field in GONodeField]
+go_edge_fields = [field for field in GOEdgeField]
+
+
+# drugbank configuration
+drugbank_node_fields = [field for field in DrugBankNodeField]
+drugbank_dti_edge_fields = [field for field in DrugbankDTIEdgeField]
+drugbank_edge_types = [DrugbankEdgeType.DRUG_TARGET_INTERACTION]
+primary_drug_id = PrimaryNodeIdentifier.DRUGBANK
+
 
 # Run build
 def main():
@@ -54,7 +107,7 @@ def main():
     """
 
     # Start biocypher
-    bc = BioCypher()
+    bc = BioCypher(schema_config_path=r"config/schema_config.yaml")
 
     # Start uniprot adapter and load data
     uniprot_adapter = Uniprot(
@@ -71,8 +124,87 @@ def main():
         retries=5,
     )
 
+    ppi_adapter = PPI(cache=True, 
+                      organism=9606, 
+                      intact_fields=intact_fields, 
+                      biogrid_fields=biogrid_fields,
+                      string_fields=string_fields, 
+                      test_mode=True)
+    
+    # download and process intact data
+    ppi_adapter.download_intact_data()
+    ppi_adapter.intact_process()
+
+    # download and process biogrid data
+    ppi_adapter.download_biogrid_data()
+    ppi_adapter.biogrid_process()
+
+    # download and process string data
+    ppi_adapter.download_string_data()
+    ppi_adapter.string_process()
+
+    # Merge all ppi data
+    ppi_adapter.merge_all()
+
+    interpro_adapter = InterPro(cache=True, 
+                                page_size=100, 
+                                organism="9606",
+                                node_fields=interpro_node_fields,
+                                edge_fields=interpro_edge_fields, 
+                                test_mode=True)
+    
+    # download domain data
+    interpro_adapter.download_domain_node_data()
+    interpro_adapter.download_domain_edge_data()
+
+    # get interpro nodes and edge
+    interpro_adapter.get_interpro_nodes()
+    interpro_adapter.get_interpro_edges()
+
+    go_adapter = GO(organism=9606, node_types=go_node_types, go_node_fields=go_node_fields,
+                    edge_types=go_edge_types, go_edge_fields=go_edge_fields, test_mode=True)
+    
+    # download go data
+    go_adapter.download_go_data(cache=True)
+
+    # get go nodes and go-protein, domain-go edges
+    go_adapter.get_go_nodes()
+    go_adapter.get_go_edges()
+
+    drugbank_adapter = DrugBank(drugbank_user="drugbank_username", drugbank_passwd="drugbank_password", node_fields=drugbank_node_fields,
+                                dti_edge_fields=drugbank_dti_edge_fields, edge_types=drugbank_edge_types, primary_node_id=primary_drug_id,
+                                test_mode=True)
+    
+    # download drugbank data
+    drugbank_adapter.download_drugbank_data(cache=True)
+
+    # get drug nodes and drug-target edges
+    drugbank_adapter.get_drug_nodes()
+    drugbank_adapter.get_dti_edges()
+
     # Write uniprot nodes and edges
     bc.write_nodes(uniprot_adapter.get_nodes())
+
+    # write ppi edges
+    bc.write_edges(ppi_adapter.get_ppi_edges())
+    
+    # write interpro (domain) nodes
+    bc.write_nodes(interpro_adapter.node_list)
+
+    # write interpro edges (protein-domain) edges
+    bc.write_edges(interpro_adapter.edge_list)
+
+    # write GO nodes
+    bc.write_nodes(go_adapter.node_list)
+
+    # write GO edges
+    bc.write_edges(go_adapter.edge_list)
+
+    # write drug nodes
+    bc.write_nodes(drugbank_adapter.node_list)
+
+    # write dti edges
+    bc.write_edges(drugbank_adapter.dti_edge_list)
 
     # Write import call and other post-processing
     bc.write_import_call()

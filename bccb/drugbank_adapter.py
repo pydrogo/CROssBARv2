@@ -161,7 +161,7 @@ class DrugBank:
             # create drugbank to primary id mapping
             self.set_drugbank_to_primary_id_mapping()
             
-            if DrugbankEdgeType.DRUG_DRUG_INTERACTION in self.edge_types:
+            if DrugbankEdgeType.DRUG_TARGET_INTERACTION in self.edge_types:
                 # download DTI data
                 self.download_drugbank_dti_data()
             
@@ -243,7 +243,7 @@ class DrugBank:
             self.unichem_mapping_node_fields = [field.value for field in DrugBankNodeField.get_unichem_external_mappings()]
             
         if dti_edge_fields:
-            self.dti_edge_fields = [field.value for field in edge_fields]
+            self.dti_edge_fields = [field.value for field in dti_edge_fields]
         else:
             self.dti_edge_fields = [field.value for field in DrugbankDTIEdgeField]
             
@@ -372,7 +372,7 @@ class DrugBank:
                     
             for _id in uniprot_ids:
                 # create props dict
-                props = {k:v for k, v in dti._asdict().items() if k in self.dti_edge_fields}
+                props = {str(k).replace(" ", "_").lower():v for k, v in dti._asdict().items() if k in self.dti_edge_fields}
                 
                 target = self.add_prefix_to_id("uniprot", _id)
                 
@@ -461,18 +461,18 @@ class DrugBank:
             
             # get node properties
             if self.primary_node_fields:
-                props = props | {k:v for k, v in drug._asdict().items() if k in self.primary_node_fields}
+                props = props | {str(k).replace(" ","_").lower():v for k, v in drug._asdict().items() if k in self.primary_node_fields}
 
             if self.property_node_fields and self.drugbank_properties.get(drug.drugbank_id, None):
-                props = props | {k:v for k, v in self.drugbank_properties[drug.drugbank_id].items() if k in self.property_node_fields}
+                props = props | {str(k).replace(" ","_").lower():v for k, v in self.drugbank_properties[drug.drugbank_id].items() if k in self.property_node_fields}
 
             if self.drugbank_external_node_fields and self.drugbank_drugs_external_ids.get(drug.drugbank_id, None):
-                props = props | {k:v for k, v in self.drugbank_drugs_external_ids[drug.drugbank_id].items() if k in self.drugbank_external_node_fields}
+                props = props | {str(k).replace(" ","_").lower():v for k, v in self.drugbank_drugs_external_ids[drug.drugbank_id].items() if k in self.drugbank_external_node_fields}
 
             if self.unichem_mapping_node_fields:
                 for db, mapping_dict in self.unichem_mappings.items():
                     if mapping_dict.get(drug.drugbank_id, None):
-                        props[db] = mapping_dict[drug.drugbank_id]
+                        props[str(db).replace(" ","_").lower()] = mapping_dict[drug.drugbank_id]
 
 
             self.node_list.append((node_id, label, props))

@@ -246,12 +246,12 @@ class STRING:
         else:
             return [field.value for field in self.string_fields]
         
-    def add_prefix_to_id(self, prefix="uniprot", identifier, sep=":") -> str:
+    def add_prefix_to_id(self, prefix="uniprot", identifier=None, sep=":") -> str:
         """
         Adds prefix to uniprot id
         """
-        if self.add_prefix:
-            return normalize_curie( prefix + sep + str(identifier))
+        if self.add_prefix and identifier:
+            return normalize_curie(prefix + sep + str(identifier))
         
         return identifier 
     
@@ -266,8 +266,8 @@ class STRING:
         for index, row in tqdm(self.final_string_ints.iterrows(), total=self.final_string_ints.shape[0]):
             _dict = row.to_dict()
             
-            _source = self.add_prefix_to_id(_dict["uniprot_a"])
-            _target = self.add_prefix_to_id(_dict["uniprot_b"])
+            _source = self.add_prefix_to_id(identifier = _dict["uniprot_a"])
+            _target = self.add_prefix_to_id(identifier = _dict["uniprot_b"])
             
             del _dict["uniprot_a"], _dict["uniprot_b"]
             

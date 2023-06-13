@@ -35,6 +35,20 @@ organism taxon:
   label_in_input: organism
   properties:
     organism: str
+
+protein domain:  
+  represented_as: node
+  preferred_id: interpro
+  label_in_input: domain
+  properties:    
+    protein_count: int
+    name: str
+    type: str
+    parent_list: str[]
+    child_list: str[]
+    pfam: str[]
+    ec: str[]
+    pdb: str[]
     
 biological process: 
   represented_as: node
@@ -63,6 +77,7 @@ small molecule:
   preferred_id: drugbank
   label_in_input: drug
   properties:
+    drugbank_id: str
     cas_number: str
     name: str
     groups: str[]
@@ -198,70 +213,152 @@ post translational interaction:
     string_combined_score: int
     string_physical_combined_score: int
 
+protein to protein domain association:
+  is_a: association
+  represented_as: edge
+  label_as_edge: protein_has_domain
+  preferred_id: id
+  source: protein
+  target: protein domain
+  label_in_input: protein_has_domain
+  properties:
+    locations: str[]
+
 protein to biological process association:
   is_a: macromolecular machine to biological process association
   represented_as: edge
-  label_as_edge: Involved_in
+  label_as_edge: protein_involved_in_biological_process
   preferred_id: go
   source: protein
   target: biological process
-  label_in_input: Involved_in
+  label_in_input: protein_involved_in_biological_process
   properties:
     reference: str
     evidence_code: str
 
 # protein to cellular component association:
-#   #is_a: macromolecular machine to cellular component association
-#   represented_as: node
-#   label_as_edge: [Located_in, Part_of, Is_active_in]
+#   is_a: macromolecular machine to cellular component association
+#   represented_as: edge
+#   label_as_edge: [located_in, part_of, is_active_in]
 #   preferred_id: go
 #   source: protein
 #   target: cellular component
-#   label_in_input: [Located_in, Part_of, Is_active_in]
+#   label_in_input: [protein_located_in_cellular_component, protein_part_of_cellular_component, protein_is_active_in_cellular_component] 
 #   properties:
 #     reference: str
 #     evidence_code: str
   
 # protein to molecular function association:
-#   #is_a: macromolecular machine to molecular function association
-#   represented_as: node
-#   label_as_edge: [Enables, Contributes_to]
+#   is_a: macromolecular machine to molecular function association
+#   represented_as: edge
+#   label_as_edge: [enables, contributes_to]
 #   preferred_id: go
 #   source: protein
-#   target: cellular component
-#   label_in_input: [Enables, Contributes_to]
+#   target: molecular function
+#   label_in_input: [protein_enables_molecular_function, protein_contributes_to_molecular_function]
 #   properties:
 #     reference: str
 #     evidence_code: str
 
+# biological process to biological process association:
+#   represented_as: edge
+#   label_as_edge: [is_a, part_of, positively_regulates, negatively_regulates]
+#   preferred_id: go
+#   source: biological process
+#   target: biological process
+#   label_in_input: [biological_process_is_a_biological_process, biological_process_part_of_biological_process, biological_process_positively_regulates_biological_process, biological_process_negatively_regulates_biological_process]
+
+# biological process to molecular function association:
+#   represented_as: edge
+#   label_as_edge: [positively_regulates, negatively_regulates]
+#   preferred_id: go
+#   source: biological process
+#   target: molecular function
+#   label_in_input: [biological_process_positively_regulates_molecular_function, biological_process_negatively_regulates_molecular_function]
+
+# molecular function to molecular function association:
+#   represented_as: edge
+#   label_as_edge: [is_a, part_of, positively_regulates, negatively_regulates]
+#   preferred_id: go
+#   source: molecular function
+#   target: molecular function
+#   label_in_input: [molecular_function_is_a_molecular_function, molecular_function_part_of_molecular_function, molecular_function_positively_regulates_molecular_function, molecular_function_negatively_regulates_molecular_function]
+
+# cellular component to cellular component association:
+#   represented_as: edge
+#   label_as_edge: [is_a, part_of]
+#   preferred_id: go
+#   source: cellular component
+#   target: cellular component
+#   label_in_input: [cellular_component_is_a_cellular_component, cellular_component_part_of_cellular_component]
+
+protein domain to molecular function association:
+  is_a: association
+  represented_as: edge
+  label_as_edge: protein_domain_enables_molecular_function
+  preferred_id: id
+  source: protein domain
+  target: molecular function
+  label_in_input: protein_domain_enables_molecular_function
+  
+protein domain to biological process association:
+  is_a: association
+  represented_as: edge
+  label_as_edge: protein_domain_involved_in_biological_process
+  preferred_id: id
+  source: protein domain
+  target: biological process
+  label_in_input: protein_domain_involved_in_biological_process
+  
+protein domain to cellular component association:
+  is_a: association
+  represented_as: edge
+  label_as_edge: protein_domain_located_in_cellular_component
+  preferred_id: id
+  source: protein domain
+  target: cellular component
+  label_in_input: protein_domain_located_in_cellular_component
+
+# small molecule to protein association:
+#   is_a: pairwise molecular interaction
+#   represented_as: edge
+#   label_as_edge: drug_targets_protein
+#   preferred_id: id
+#   source: small molecule
+#   target: protein
+#   label_in_input: drug_targets_protein
+#   properties:
+#     known_action: str
+#     activity_value: float
+#     confidence_score: float
+#     direct_interaction: bool
+#     disease_efficacy: bool
+#     mechanism_of_action: str
+#     pchembl: float
+#     activity_type: str
+#     dgidb_score: float
+#     references: str[]
+#     mechanism_of_action_type: str
+#     stitch_combined_score: float
+#     source: str[]
 
 small molecule to protein association:
   is_a: pairwise molecular interaction
   represented_as: edge
-  label_as_edge: targets
+  label_as_edge: drug_targets_protein
   preferred_id: id
   source: small molecule
   target: protein
   label_in_input: drug_targets_protein
   properties:
     known_action: str
-    activity_value: float
-    confidence_score: float
-    direct_interaction: bool
-    disease_efficacy: bool
-    mechanism_of_action: str
-    pchembl: float
-    activity_type: str
-    dgidb_score: float
     references: str[]
-    mechanism_of_action_type: str
-    stitch_combined_score: float
-    source: str[]
+    actions: str[]
 
 small molecule to small molecule association:
   is_a: pairwise molecular interaction
   represented_as: edge
-  label_as_edge: interacts_with
+  label_as_edge: drug_interacts_with_drug
   preferred_id: id
   source: small molecule
   target: small molecule

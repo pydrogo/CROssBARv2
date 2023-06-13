@@ -188,7 +188,7 @@ class InterPro:
         
         # set counter for early stopping
         counter = 0
-
+        
         for entry in tqdm(self.interpro_entries):
             props = dict()
             interpro_props = entry._asdict()
@@ -197,6 +197,7 @@ class InterPro:
             
             # get primary InterPro attributes
             for element in primary_attributes:
+                
                 if element in self.node_fields and interpro_props.get(element):
                     if element == "protein_count":
                         props[element.replace(" ", "_").lower()] = int(interpro_props.get(element))
@@ -217,7 +218,7 @@ class InterPro:
             for element in structural_attributes:
                     if element in self.node_fields and self.interpro_structural_xrefs.get(entry.interpro_id).get(element):
                         props[element.replace(" ", "_").lower()] = self.check_length(self.interpro_structural_xrefs.get(entry.interpro_id).get(element))
-                
+              
             self.node_list.append((domain_id, node_label, props))
             
             counter += 1
@@ -295,12 +296,12 @@ class InterPro:
         """
         
         if node_fields:
-            self.node_fields = node_fields            
+            self.node_fields = [field.value for field in node_fields]            
         else:
             self.node_fields = [field.value for field in InterProNodeField]
             
         if edge_fields:
-            self.edge_fields = edge_fields
+            self.edge_fields = [field.value for field in edge_fields]
         else:
             self.edge_fields = [field.value for field in InterProEdgeField]
         
