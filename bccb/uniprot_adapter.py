@@ -3,6 +3,7 @@ import collections
 from typing import Dict, List, Optional
 from enum import Enum, auto
 from functools import lru_cache
+import pandas as pd
 
 from tqdm import tqdm  # progress bar
 from pypath.share import curl, settings
@@ -23,6 +24,7 @@ class UniprotNodeType(Enum):
     PROTEIN = auto()
     GENE = auto()
     ORGANISM = auto()
+    CELLULAR_COMPARTMENT = auto()
 
 
 class UniprotNodeField(Enum):
@@ -33,14 +35,15 @@ class UniprotNodeField(Enum):
 
     # core attributes
     PROTEIN_LENGTH = "length"
+    PROTEIN_SUBCELLULAR_LOCATION = "subcellular_location"
     PROTEIN_MASS = "mass"
     PROTEIN_ORGANISM = "organism_name"
     PROTEIN_ORGANISM_ID = "organism_id"
     PROTEIN_NAMES = "protein_name"
     PROTEIN_EC = "ec"
     PROTEIN_GENE_NAMES = "gene_names"
-    PROTEIN_ENSEMBL_TRANSCRIPT_IDS = "xref_ensembl"
     # xref attributes
+    PROTEIN_ENSEMBL_TRANSCRIPT_IDS = "xref_ensembl"
     PROTEIN_PROTEOME = "xref_proteomes"
     PROTEIN_ENTREZ_GENE_IDS = "xref_geneid"
     PROTEIN_VIRUS_HOSTS = "virus_hosts"
@@ -119,6 +122,21 @@ class Uniprot:
             edge_fields=edge_fields,
         )
 
+        # loading of ligands and receptors sets
+        self.ligands = self._read_ligands_set()
+        self.receptors = self._read_receptors_set()
+
+        # loading of subcellular locations set
+        self.locations = set()
+
+    def _read_ligands_set(self) -> set:
+        ligand_file = pd.read_csv("data/ligands_curated.csv", header=None)
+        return set(ligand_file[0])
+
+    def _read_receptors_set(self) -> set:
+        receptor_file = pd.read_csv("data/receptors_curated.csv", header=None)
+        return set(receptor_file[0])
+
     def download_uniprot_data(
         self,
         cache=False,
@@ -183,10 +201,15 @@ class Uniprot:
                 UniprotNodeField.PROTEIN_SECONDARY_IDS.value,
             ]:
                 continue
-
-            self.data[query_key] = uniprot.uniprot_data(
-                query_key, self.organism, self.rev
-            )
+            
+            elif query_key == UniprotNodeField.PROTEIN_SUBCELLULAR_LOCATION.value:
+                self.data[query_key] = uniprot.uniprot_locations(
+                    self.organism, self.rev
+                )
+            else:
+                self.data[query_key] = uniprot.uniprot_data(
+                    query_key, self.organism, self.rev
+                )
 
             logger.debug(f"{query_key} field is downloaded")
 
@@ -249,14 +272,14 @@ class Uniprot:
             
             # Simple replace
             elif arg not in self.split_fields:
+                if not arg == UniprotNodeField.PROTEIN_SUBCELLULAR_LOCATION.value:
+                    for protein, attribute_value in self.data.get(arg).items():
 
-                for protein, attribute_value in self.data.get(arg).items():
-
-                    self.data[arg][protein] = (
-                        attribute_value.replace("|", ",")
-                        .replace("'", "^")
-                        .strip()
-                    )
+                        self.data[arg][protein] = (
+                            attribute_value.replace("|", ",")
+                            .replace("'", "^")
+                            .strip()
+                        )
 
             # Split fields
             else:
@@ -305,7 +328,37 @@ class Uniprot:
                         attribute_value
                     )
 
-    def get_nodes(self):
+            elif arg == UniprotNodeField.PROTEIN_SUBCELLULAR_LOCATION.value:
+                for protein, attribute_value in self.data.get(arg).items():
+                    individual_protein_locations = []
+                    for element in attribute_value:
+                        loc = (
+                            str(element.location)
+                            .replace("'", "")
+                            .replace("[", "")
+                            .replace("]", "")
+                            .strip()
+                        )
+                        individual_protein_locations.append(loc)
+                        self.locations.add(loc)
+
+                    self.data[arg][protein] = individual_protein_locations
+
+    def _get_ligand_or_receptor(self, uniprot_id: str):
+        """
+        Tell if UniProt protein node is a L, R or nothing.
+        """
+
+        uniprot_id = uniprot_id[8:]
+
+        if uniprot_id in self.ligands:
+            return "ligand"
+        if uniprot_id in self.receptors:
+            return "receptor"
+
+        return "protein"
+    
+    def get_nodes(self, ligand_or_receptor: bool = False):
         """
         Yield nodes (protein, gene, organism) from UniProt data.
         """
@@ -322,7 +375,11 @@ class Uniprot:
             protein_props = self._get_protein_properties(all_props)
 
             # append protein node to output
-            yield (protein_id, "protein", protein_props)
+            if ligand_or_receptor:
+                ligand_or_receptor = self._get_ligand_or_receptor(protein_id)
+                yield (protein_id, ligand_or_receptor, protein_props)
+            else:
+                yield (protein_id, "protein", protein_props)
 
             # append gene node to output if desired
             if UniprotNodeType.GENE in self.node_types:
