@@ -10,9 +10,9 @@ gene:
   preferred_id: ncbigene
   label_in_input: gene
   properties:    
-    genes: str[]
-    kegg: str[]
-    ensembl: str[]
+    gene_names: str[]
+    xref_kegg: str[]
+    xref_ensembl: str[]
     ensembl_gene_ids: str[]
 
 protein:
@@ -24,7 +24,7 @@ protein:
     length: int
     mass: int
     protein_names: str[]
-    proteome: str[]
+    xref_proteome: str[]
     organism_id: int
     ec: str[]
     virus_hosts: int[] 
