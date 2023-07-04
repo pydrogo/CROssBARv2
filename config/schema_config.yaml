@@ -32,7 +32,7 @@ protein:
 organism taxon:
   represented_as: node
   preferred_id: ncbitaxon
-  label_in_input: organism
+  label_in_input: organism_name
   properties:
     organism: str
 

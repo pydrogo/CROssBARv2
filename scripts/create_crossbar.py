@@ -119,91 +119,92 @@ def main():
     )
 
     uniprot_adapter.download_uniprot_data(
-        cache=False,
+        cache=True,
         retries=5,
     )
 
-    ppi_adapter = PPI(cache=False, 
-                      organism=9606, 
-                      intact_fields=intact_fields, 
-                      biogrid_fields=biogrid_fields,
-                      string_fields=string_fields, 
-                      test_mode=True)
+    # ppi_adapter = PPI(cache=False, 
+    #                   organism=9606, 
+    #                   intact_fields=intact_fields, 
+    #                   biogrid_fields=biogrid_fields,
+    #                   string_fields=string_fields, 
+    #                   test_mode=True)
     
-    # download and process intact data
-    ppi_adapter.download_intact_data()
-    ppi_adapter.intact_process()
+    # # download and process intact data
+    # ppi_adapter.download_intact_data()
+    # ppi_adapter.intact_process()
 
-    # download and process biogrid data
-    ppi_adapter.download_biogrid_data()
-    ppi_adapter.biogrid_process()
+    # # download and process biogrid data
+    # ppi_adapter.download_biogrid_data()
+    # ppi_adapter.biogrid_process()
 
-    # download and process string data
-    ppi_adapter.download_string_data()
-    ppi_adapter.string_process()
+    # # download and process string data
+    # ppi_adapter.download_string_data()
+    # ppi_adapter.string_process()
 
-    # Merge all ppi data
-    ppi_adapter.merge_all()
+    # # Merge all ppi data
+    # ppi_adapter.merge_all()
 
-    interpro_adapter = InterPro(cache=False, 
-                                page_size=100, 
-                                organism="9606",
-                                node_fields=interpro_node_fields,
-                                edge_fields=interpro_edge_fields, 
-                                test_mode=True)
+    # interpro_adapter = InterPro(cache=False, 
+    #                             page_size=100, 
+    #                             organism="9606",
+    #                             node_fields=interpro_node_fields,
+    #                             edge_fields=interpro_edge_fields, 
+    #                             test_mode=True)
     
-    # download domain data
-    interpro_adapter.download_domain_node_data()
-    interpro_adapter.download_domain_edge_data()
+    # # download domain data
+    # interpro_adapter.download_domain_node_data()
+    # interpro_adapter.download_domain_edge_data()
 
-    # get interpro nodes and edge
-    interpro_adapter.get_interpro_nodes()
-    interpro_adapter.get_interpro_edges()
+    # # get interpro nodes and edge
+    # interpro_adapter.get_interpro_nodes()
+    # interpro_adapter.get_interpro_edges()
 
-    go_adapter = GO(organism=9606, node_types=go_node_types, go_node_fields=go_node_fields,
-                    edge_types=go_edge_types, go_edge_fields=go_edge_fields, test_mode=True)
+    # go_adapter = GO(organism=9606, node_types=go_node_types, go_node_fields=go_node_fields,
+    #                 edge_types=go_edge_types, go_edge_fields=go_edge_fields, test_mode=True)
     
-    # download go data
-    go_adapter.download_go_data(cache=False)
+    # # download go data
+    # go_adapter.download_go_data(cache=False)
 
-    # get go nodes and go-protein, domain-go edges
-    go_adapter.get_go_nodes()
-    go_adapter.get_go_edges()
+    # # get go nodes and go-protein, domain-go edges
+    # go_adapter.get_go_nodes()
+    # go_adapter.get_go_edges()
 
-    drugbank_adapter = DrugBank(drugbank_user="drugbank_username", drugbank_passwd="drugbank_password", node_fields=drugbank_node_fields,
-                                dti_edge_fields=drugbank_dti_edge_fields, edge_types=drugbank_edge_types, primary_node_id=primary_drug_id,
-                                test_mode=True)
+    # drugbank_adapter = DrugBank(drugbank_user="drugbank_username", drugbank_passwd="drugbank_password", node_fields=drugbank_node_fields,
+    #                             dti_edge_fields=drugbank_dti_edge_fields, edge_types=drugbank_edge_types, primary_node_id=primary_drug_id,
+    #                             test_mode=True)
     
-    # download drugbank data
-    drugbank_adapter.download_drugbank_data(cache=False)
+    # # download drugbank data
+    # drugbank_adapter.download_drugbank_data(cache=False)
 
-    # get drug nodes and drug-target edges
-    drugbank_adapter.get_drug_nodes()
-    drugbank_adapter.get_dti_edges()
+    # # get drug nodes and drug-target edges
+    # drugbank_adapter.get_drug_nodes()
+    # drugbank_adapter.get_dti_edges()
 
     # Write uniprot nodes and edges
     bc.write_nodes(uniprot_adapter.get_nodes())
+    bc.write_edges(uniprot_adapter.get_edges())
 
-    # write ppi edges
-    bc.write_edges(ppi_adapter.get_ppi_edges())
+    # # write ppi edges
+    # bc.write_edges(ppi_adapter.get_ppi_edges())
     
-    # write interpro (domain) nodes
-    bc.write_nodes(interpro_adapter.node_list)
+    # # write interpro (domain) nodes
+    # bc.write_nodes(interpro_adapter.node_list)
 
-    # write interpro edges (protein-domain) edges
-    bc.write_edges(interpro_adapter.edge_list)
+    # # write interpro edges (protein-domain) edges
+    # bc.write_edges(interpro_adapter.edge_list)
 
-    # write GO nodes
-    bc.write_nodes(go_adapter.node_list)
+    # # write GO nodes
+    # bc.write_nodes(go_adapter.node_list)
 
-    # write GO edges
-    bc.write_edges(go_adapter.edge_list)
+    # # write GO edges
+    # bc.write_edges(go_adapter.edge_list)
 
-    # write drug nodes
-    bc.write_nodes(drugbank_adapter.node_list)
+    # # write drug nodes
+    # bc.write_nodes(drugbank_adapter.node_list)
 
-    # write dti edges
-    bc.write_edges(drugbank_adapter.dti_edge_list)
+    # # write dti edges
+    # bc.write_edges(drugbank_adapter.dti_edge_list)
 
     # Write import call and other post-processing
     bc.write_import_call()
