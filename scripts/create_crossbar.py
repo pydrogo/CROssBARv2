@@ -49,6 +49,7 @@ uniprot_node_types = [
 ]
 
 uniprot_node_fields = [
+    UniprotNodeField.PROTEIN_SECONDARY_IDS,
     UniprotNodeField.PROTEIN_LENGTH,
     UniprotNodeField.PROTEIN_MASS,
     UniprotNodeField.PROTEIN_ORGANISM,

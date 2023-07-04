@@ -37,16 +37,19 @@ class UniprotNodeField(Enum):
     PROTEIN_ORGANISM = "organism_name"
     PROTEIN_ORGANISM_ID = "organism_id"
     PROTEIN_NAMES = "protein_name"
-    PROTEIN_PROTEOME = "xref_proteomes"
     PROTEIN_EC = "ec"
     PROTEIN_GENE_NAMES = "gene_names"
     PROTEIN_ENSEMBL_TRANSCRIPT_IDS = "xref_ensembl"
-    # we provide these by mapping ENSTs via pypath
-    PROTEIN_ENSEMBL_GENE_IDS = "ensembl_gene_ids"
     # xref attributes
+    PROTEIN_PROTEOME = "xref_proteomes"
     PROTEIN_ENTREZ_GENE_IDS = "xref_geneid"
     PROTEIN_VIRUS_HOSTS = "virus_hosts"
     PROTEIN_KEGG_IDS = "xref_kegg"
+
+    # not from uniprot REST
+    # we provide these by mapping ENSTs via pypath
+    PROTEIN_ENSEMBL_GENE_IDS = "ensembl_gene_ids"
+    PROTEIN_SECONDARY_IDS = "secondary_ids"
 
 
 class UniprotEdgeType(Enum):
@@ -175,9 +178,12 @@ class Uniprot:
         # download attribute dicts
         self.data = {}
         for query_key in tqdm(self.node_fields):
-            if query_key == UniprotNodeField.PROTEIN_ENSEMBL_GENE_IDS.value:
+            if query_key in [
+                UniprotNodeField.PROTEIN_ENSEMBL_GENE_IDS.value, 
+                UniprotNodeField.PROTEIN_SECONDARY_IDS.value,
+            ]:
                 continue
-            
+
             self.data[query_key] = uniprot.uniprot_data(
                 query_key, self.organism, self.rev
             )
@@ -185,21 +191,21 @@ class Uniprot:
             logger.debug(f"{query_key} field is downloaded")
 
         secondary_ids = uniprot.get_uniprot_sec(None)
-        # self.data[
-        #     UniprotNodeField.PROTEIN_SECONDARY_IDS.value
-        # ] = collections.defaultdict(list)
+        self.data[
+            UniprotNodeField.PROTEIN_SECONDARY_IDS.value
+        ] = collections.defaultdict(list)
 
-        # # TODO why loop twice?
-        # for sec_id in secondary_ids:
-        #     self.data[UniprotNodeField.PROTEIN_SECONDARY_IDS.value][
-        #         sec_id[1]
-        #     ].append(sec_id[0])
-        # for k, v in self.data[
-        #     UniprotNodeField.PROTEIN_SECONDARY_IDS.value
-        # ].items():
-        #     self.data[UniprotNodeField.PROTEIN_SECONDARY_IDS.value][
-        #         k
-        #     ] = ";".join(v)
+        # TODO why loop twice?
+        for sec_id in secondary_ids:
+            self.data[UniprotNodeField.PROTEIN_SECONDARY_IDS.value][
+                sec_id[1]
+            ].append(sec_id[0])
+        for k, v in self.data[
+            UniprotNodeField.PROTEIN_SECONDARY_IDS.value
+        ].items():
+            self.data[UniprotNodeField.PROTEIN_SECONDARY_IDS.value][
+                k
+            ] = ";".join(v)
 
         # add ensembl gene ids
         self.data[UniprotNodeField.PROTEIN_ENSEMBL_GENE_IDS.value] = {}
