@@ -4,6 +4,7 @@ from typing import Dict, List, Optional
 from enum import Enum, auto
 from functools import lru_cache
 import pandas as pd
+import os
 
 from tqdm import tqdm  # progress bar
 from pypath.share import curl, settings
@@ -130,10 +131,18 @@ class Uniprot:
         self.locations = set()
 
     def _read_ligands_set(self) -> set:
+        # check if ligands file exists
+        if not os.path.isfile("data/ligands_curated.csv"):
+            return set()
+        
         ligand_file = pd.read_csv("data/ligands_curated.csv", header=None)
         return set(ligand_file[0])
 
     def _read_receptors_set(self) -> set:
+        # check if receptors file exists
+        if not os.path.isfile("data/receptors_curated.csv"):
+            return set()
+        
         receptor_file = pd.read_csv("data/receptors_curated.csv", header=None)
         return set(receptor_file[0])
 
@@ -362,6 +371,15 @@ class Uniprot:
         """
         Yield nodes (protein, gene, organism) from UniProt data.
         """
+
+        # raise error if ligand_or_receptor is True but self.ligands or
+        # self.receptors are empty
+        if ligand_or_receptor:
+            if not self.ligands or not self.receptors:
+                raise ValueError(
+                    "No ligands or receptors found in the 'data' directory. "
+                    "Please set ligand_or_receptor to False or add the files."
+                )
 
         logger.info(
             "Preparing UniProt edges of the types "
