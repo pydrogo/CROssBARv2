@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "bccb"
-version = "0.0.2"
+version = "0.0.3"
 description = "Project description"
 license = "MIT"
 authors = [
@@ -32,7 +32,7 @@ toml = "*"
 numpy = "^1.23.1"
 tqdm = "^4.64.0"
 pandas = "^2.0.1"
-pypath-omnipath = "^0.14.16"
+pypath-omnipath = "^0.15.4"
 bioregistry = "^0.6.9"
 biocypher = "^0.5.4"
 psutil = "^5.9.4"
