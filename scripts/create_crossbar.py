@@ -49,7 +49,6 @@ uniprot_node_types = [
 ]
 
 uniprot_node_fields = [
-    UniprotNodeField.PROTEIN_SECONDARY_IDS,
     UniprotNodeField.PROTEIN_LENGTH,
     UniprotNodeField.PROTEIN_MASS,
     UniprotNodeField.PROTEIN_ORGANISM,
@@ -120,11 +119,11 @@ def main():
     )
 
     uniprot_adapter.download_uniprot_data(
-        cache=True,
+        cache=False,
         retries=5,
     )
 
-    ppi_adapter = PPI(cache=True, 
+    ppi_adapter = PPI(cache=False, 
                       organism=9606, 
                       intact_fields=intact_fields, 
                       biogrid_fields=biogrid_fields,
@@ -146,7 +145,7 @@ def main():
     # Merge all ppi data
     ppi_adapter.merge_all()
 
-    interpro_adapter = InterPro(cache=True, 
+    interpro_adapter = InterPro(cache=False, 
                                 page_size=100, 
                                 organism="9606",
                                 node_fields=interpro_node_fields,
@@ -165,7 +164,7 @@ def main():
                     edge_types=go_edge_types, go_edge_fields=go_edge_fields, test_mode=True)
     
     # download go data
-    go_adapter.download_go_data(cache=True)
+    go_adapter.download_go_data(cache=False)
 
     # get go nodes and go-protein, domain-go edges
     go_adapter.get_go_nodes()
@@ -176,7 +175,7 @@ def main():
                                 test_mode=True)
     
     # download drugbank data
-    drugbank_adapter.download_drugbank_data(cache=True)
+    drugbank_adapter.download_drugbank_data(cache=False)
 
     # get drug nodes and drug-target edges
     drugbank_adapter.get_drug_nodes()

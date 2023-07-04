@@ -31,7 +31,6 @@ class UniprotNodeField(Enum):
     """
 
     # core attributes
-    PROTEIN_SECONDARY_IDS = "secondary_ids"
     PROTEIN_LENGTH = "length"
     PROTEIN_MASS = "mass"
     PROTEIN_ORGANISM = "organism"
@@ -180,22 +179,22 @@ class Uniprot:
 
             logger.debug(f"{query_key} field is downloaded")
 
-        secondary_ids = uniprot.get_uniprot_sec(None)
-        self.data[
-            UniprotNodeField.PROTEIN_SECONDARY_IDS.value
-        ] = collections.defaultdict(list)
+        # secondary_ids = uniprot.get_uniprot_sec(None)
+        # self.data[
+        #     UniprotNodeField.PROTEIN_SECONDARY_IDS.value
+        # ] = collections.defaultdict(list)
 
-        # TODO why loop twice?
-        for sec_id in secondary_ids:
-            self.data[UniprotNodeField.PROTEIN_SECONDARY_IDS.value][
-                sec_id[1]
-            ].append(sec_id[0])
-        for k, v in self.data[
-            UniprotNodeField.PROTEIN_SECONDARY_IDS.value
-        ].items():
-            self.data[UniprotNodeField.PROTEIN_SECONDARY_IDS.value][
-                k
-            ] = ";".join(v)
+        # # TODO why loop twice?
+        # for sec_id in secondary_ids:
+        #     self.data[UniprotNodeField.PROTEIN_SECONDARY_IDS.value][
+        #         sec_id[1]
+        #     ].append(sec_id[0])
+        # for k, v in self.data[
+        #     UniprotNodeField.PROTEIN_SECONDARY_IDS.value
+        # ].items():
+        #     self.data[UniprotNodeField.PROTEIN_SECONDARY_IDS.value][
+        #         k
+        #     ] = ";".join(v)
 
         # add ensembl gene ids
         self.data[UniprotNodeField.PROTEIN_ENSEMBL_GENE_IDS.value] = {}
@@ -767,7 +766,6 @@ class Uniprot:
     def _configure_fields(self):
         # fields that need splitting
         self.split_fields = [
-            UniprotNodeField.PROTEIN_SECONDARY_IDS.value,
             UniprotNodeField.PROTEIN_PROTEOME.value,
             UniprotNodeField.PROTEIN_GENE_NAMES.value,
             UniprotNodeField.PROTEIN_EC.value,
@@ -778,7 +776,6 @@ class Uniprot:
 
         # properties of nodes
         self.protein_properties = [
-            UniprotNodeField.PROTEIN_SECONDARY_IDS.value,
             UniprotNodeField.PROTEIN_LENGTH.value,
             UniprotNodeField.PROTEIN_MASS.value,
             UniprotNodeField.PROTEIN_NAMES.value,
