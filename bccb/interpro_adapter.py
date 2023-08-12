@@ -71,7 +71,8 @@ class InterProEdgeField(Enum):
     """
     Domain edge fields in InterPro 
     """
-    LOCATIONS = "locations"
+    START = "start"
+    END = "end"
     
 
 class InterPro:
@@ -167,7 +168,7 @@ class InterPro:
             logger.info(f'InterPro annotation data is downloaded in {round((t1-t0) / 60, 2)} mins')
 
     
-    def get_interpro_nodes(self, node_label="domain") -> None:
+    def get_interpro_nodes(self, node_label="domain") -> list:
         """
         Prepares InterPro domain nodes for BioCypher
         Args:
@@ -175,7 +176,7 @@ class InterPro:
         """
 
         # create list of nodes
-        self.node_list = []
+        node_list = []
 
         # define primary and external attributes
         primary_attributes = InterProNodeField.get_primary_attributes()
@@ -219,7 +220,7 @@ class InterPro:
                     if element in self.node_fields and self.interpro_structural_xrefs.get(entry.interpro_id).get(element):
                         props[element.replace(" ", "_").lower()] = self.check_length(self.interpro_structural_xrefs.get(entry.interpro_id).get(element))
               
-            self.node_list.append((domain_id, node_label, props))
+            node_list.append((domain_id, node_label, props))
             
             counter += 1
             
@@ -228,27 +229,10 @@ class InterPro:
         
         t1 = time()
         logger.info(f'InterPro nodes created in {round((t1-t0) / 60, 2)} mins')
-        
-        
-    def check_length(self, element:str) -> str | list:
-        """
-        If the type of given entry is a list and has just one element returns this one element
-        """
-        if isinstance(element, list) and len(element) == 1:
-            return element[0]
-        else:
-            return element
-        
-    def add_prefix_to_id(self, prefix, identifier, sep=":") -> str:
-        """
-        Adds prefix to ids
-        """
-        if self.add_prefix:
-            return normalize_curie(prefix + sep + str(identifier))
-        
-        return identifier
+
+        return node_list
     
-    def get_interpro_edges(self, edge_label="protein_has_domain") -> None:
+    def get_interpro_edges(self, edge_label="protein_has_domain") -> list:
         """
         Prepares Protein-Domain edges for BioCypher
         Args:
@@ -256,7 +240,7 @@ class InterPro:
         """
         
         # create list of edges
-        self.edge_list = []
+        edge_list = []
         
         logger.debug("Creating protein-domain edges")
         t0 = time()
@@ -274,12 +258,12 @@ class InterPro:
                 
                 for field in self.edge_fields:
                     if interpro_props.get(field, None):
-                        props[field.replace(" ","_").lower()] = self.check_length(list(interpro_props[field]))
+                        props[field.replace(" ","_").lower()] = self.check_length(interpro_props[field])
                     
                 interpro_id = self.add_prefix_to_id("interpro", annotation.interpro_id)
                 uniprot_id = self.add_prefix_to_id("uniprot", k)
                 
-                self.edge_list.append((None, uniprot_id, interpro_id, edge_label, props))
+                edge_list.append((None, uniprot_id, interpro_id, edge_label, props))
                 
                 counter += 1
                 
@@ -289,6 +273,25 @@ class InterPro:
         t1 = time()
         logger.info(f'InterPro edges created in {round((t1-t0) / 60, 2)} mins')
         
+        return edge_list
+    
+    def check_length(self, element:str) -> str | list:
+        """
+        If the type of given entry is a list and has just one element returns this one element
+        """
+        if isinstance(element, list) and len(element) == 1:
+            return element[0]
+        else:
+            return element
+        
+    def add_prefix_to_id(self, prefix, identifier, sep=":") -> str:
+        """
+        Adds prefix to ids
+        """
+        if self.add_prefix:
+            return normalize_curie(prefix + sep + str(identifier))
+        
+        return identifier      
         
     def set_node_and_edge_fields(self, node_fields, edge_fields) -> None:
         """
