@@ -111,7 +111,7 @@ class STRING:
                 self.tax_ids = [self.organism]
         
             # map string ids to swissprot ids
-            uniprot_to_string = uniprot.uniprot_data("database(STRING)", "*", True)
+            uniprot_to_string = uniprot.uniprot_data("xref_string", "*", True)
             
             self.string_to_uniprot = collections.defaultdict(list)
             for k,v in uniprot_to_string.items():
