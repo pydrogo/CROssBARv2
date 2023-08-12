@@ -53,8 +53,6 @@ class UniprotNodeField(Enum):
     # not from uniprot REST
     # we provide these by mapping ENSTs via pypath
     PROTEIN_ENSEMBL_GENE_IDS = "ensembl_gene_ids"
-    PROTEIN_SECONDARY_IDS = "secondary_ids"
-
 
 class UniprotEdgeType(Enum):
     """
@@ -207,7 +205,6 @@ class Uniprot:
         for query_key in tqdm(self.node_fields):
             if query_key in [
                 UniprotNodeField.PROTEIN_ENSEMBL_GENE_IDS.value, 
-                UniprotNodeField.PROTEIN_SECONDARY_IDS.value,
             ]:
                 continue
             
@@ -221,23 +218,6 @@ class Uniprot:
                 )
 
             logger.debug(f"{query_key} field is downloaded")
-
-        secondary_ids = uniprot.get_uniprot_sec(None)
-        self.data[
-            UniprotNodeField.PROTEIN_SECONDARY_IDS.value
-        ] = collections.defaultdict(list)
-
-        # TODO why loop twice?
-        for sec_id in secondary_ids:
-            self.data[UniprotNodeField.PROTEIN_SECONDARY_IDS.value][
-                sec_id[1]
-            ].append(sec_id[0])
-        for k, v in self.data[
-            UniprotNodeField.PROTEIN_SECONDARY_IDS.value
-        ].items():
-            self.data[UniprotNodeField.PROTEIN_SECONDARY_IDS.value][
-                k
-            ] = ";".join(v)
 
         # add ensembl gene ids
         self.data[UniprotNodeField.PROTEIN_ENSEMBL_GENE_IDS.value] = {}
@@ -419,7 +399,7 @@ class Uniprot:
 
                     yield (
                         organism_id,
-                        UniprotNodeField.PROTEIN_ORGANISM.value,
+                        "organism",
                         organism_props,
                     )
 
@@ -480,7 +460,7 @@ class Uniprot:
                         gene,
                     )
                     edge_list.append(
-                        (None, gene_id, protein_id, "Encodes", properties)
+                        (None, gene_id, protein_id, "Gene_encodes_protein", properties)
                     )
 
             if UniprotEdgeType.PROTEIN_TO_ORGANISM in self.edge_types:
@@ -503,7 +483,7 @@ class Uniprot:
                             None,
                             protein_id,
                             organism_id,
-                            "Belongs_To",
+                            "Protein_belongs_to_organism",
                             properties,
                         )
                     )
@@ -869,7 +849,6 @@ class Uniprot:
             UniprotNodeField.PROTEIN_EC.value,
             UniprotNodeField.PROTEIN_VIRUS_HOSTS.value,
             UniprotNodeField.PROTEIN_ORGANISM_ID.value,
-            UniprotNodeField.PROTEIN_ENSEMBL_GENE_IDS.value,
         ]
 
         self.gene_properties = [
