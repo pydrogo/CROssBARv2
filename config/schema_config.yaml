@@ -20,21 +20,21 @@ protein:
   preferred_id: uniprot
   label_in_input: protein
   properties:
-    secondary_ids: str[]
     length: int
     mass: int
-    protein_names: str[]
-    xref_proteome: str[]
+    protein_name: str[]
+    xref_proteomes: str[]
+    organism_name: str
     organism_id: int
     ec: str[]
-    virus_hosts: int[] 
+    virus_hosts: int[]
   
 organism taxon:
   represented_as: node
   preferred_id: ncbitaxon
-  label_in_input: organism_name
+  label_in_input: organism
   properties:
-    organism: str
+    organism_name: str
 
 protein domain:  
   represented_as: node
@@ -181,32 +181,32 @@ molecular mixture:
 gene to protein relationship:
   is_a: gene to gene product relationship
   represented_as: edge
-  label_as_edge: Encodes
+  label_as_edge: Gene_encodes_protein
   preferred_id: id
   source: gene
   target: protein
-  label_in_input: Encodes
+  label_in_input: Gene_encodes_protein
   
 protein to organism taxon association:
   is_a: association
   represented_as: edge
-  label_as_edge: Belongs_To
+  label_as_edge: Protein_belongs_to_organism
   preferred_id: id
   source: protein
   target: organismTaxon
-  label_in_input: Belongs_To  
+  label_in_input: Protein_belongs_to_organism
   
 post translational interaction:
   is_a: pairwise molecular interaction
   represented_as: edge
-  label_as_edge: Interacts_With
+  label_as_edge: Protein_interacts_with_protein
   preferred_id: id
   source: protein
   target: protein
-  label_in_input: Interacts_With
+  label_in_input: Protein_interacts_with_protein
   properties:    
     source: str[]
-    pubmed_id: int[]
+    pubmed_ids: str[]
     method: str
     interaction_type: str
     intact_score: float
