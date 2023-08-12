@@ -131,7 +131,7 @@ class IntAct:
         selected_fields = self.set_edge_fields()
         
         # if rename_selected_fields is not defined create column names from this dictionary
-        default_field_names = {"source":"source", "pubmeds":"pubmed_id", "mi_score":"intact_score", "methods":"method", "interaction_types":"interaction_type"}
+        default_field_names = {"source":"source", "pubmeds":"pubmed_ids", "mi_score":"intact_score", "methods":"method", "interaction_types":"interaction_type"}
         
         self.intact_field_new_names = {}
         
