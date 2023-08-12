@@ -190,7 +190,7 @@ class PPI:
         # if rename_selected_fields is not defined create column names from this dictionary
         default_field_names = {
             "source": "source",
-            "pubmeds": "pubmed_id",
+            "pubmeds": "pubmed_ids",
             "mi_score": "intact_score",
             "methods": "method",
             "interaction_types": "interaction_type",
@@ -363,8 +363,8 @@ class PPI:
             )
 
             # download these fields for mapping from gene symbol to uniprot id
-            self.uniprot_to_gene = uniprot.uniprot_data("genes", "*", True)
-            self.uniprot_to_tax = uniprot.uniprot_data("organism-id", "*", True)
+            self.uniprot_to_gene = uniprot.uniprot_data("gene_names", "*", True)
+            self.uniprot_to_tax = uniprot.uniprot_data("organism_id", "*", True)
 
         t1 = time()
         logger.info(
@@ -392,7 +392,7 @@ class PPI:
 
         default_field_names = {
             "source": "source",
-            "pmid": "pubmed_id",
+            "pmid": "pubmed_ids",
             "experimental_system": "method",
         }
 
@@ -589,7 +589,7 @@ class PPI:
 
             # map string ids to swissprot ids
             uniprot_to_string = uniprot.uniprot_data(
-                "database(STRING)", "*", True
+                "xref_string", "*", True
             )
 
             self.string_to_uniprot = collections.defaultdict(list)
@@ -898,7 +898,7 @@ class PPI:
                             self.intact_field_new_names["pubmeds"]
                             == self.biogrid_field_new_names["pmid"]
                         ):
-                            merged_df["pubmed_id"] = merged_df[
+                            merged_df["pubmed_ids"] = merged_df[
                                 [
                                     self.intact_field_new_names["pubmeds"]
                                     + "_x",
@@ -917,7 +917,7 @@ class PPI:
 
                         # if they dont have the same name
                         else:
-                            merged_df["pubmed_id"] = merged_df[
+                            merged_df["pubmed_ids"] = merged_df[
                                 [
                                     self.intact_field_new_names["pubmeds"],
                                     self.biogrid_field_new_names["pmid"],
@@ -1258,6 +1258,6 @@ class PPI:
                             v
                         ).replace("'", "^")
 
-            edge_list.append((None, _source, _target, "Interacts_With", _props))
+            edge_list.append((None, _source, _target, "Protein_interacts_with_protein", _props))
 
         return edge_list
