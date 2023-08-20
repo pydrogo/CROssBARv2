@@ -9,7 +9,7 @@ from typing import Union
 
 from time import time
 
-from tqdm.notebook import tqdm
+from tqdm import tqdm
 
 from biocypher._logger import logger
 
@@ -415,8 +415,8 @@ class GO:
         """
         logger.info("Preparing nodes.")
         
-        # create list of nodes
-        self.node_list = []
+        # create a list for nodes
+        node_list = []
         
         # create node label dict
         self.create_aspect_to_node_label_dict()
@@ -432,12 +432,14 @@ class GO:
                 if GONodeField.NAME.value in self.go_node_fields or GONodeField.NAME in self.go_node_fields:             
                     node_props[GONodeField.NAME.value] = self.go_ontology.name[go_term].replace("'","^").replace("|","")
                 
-                self.node_list.append((go_id, label, node_props))
+                node_list.append((go_id, label, node_props))
                 
                 counter += 1
                 
             if self.early_stopping and counter >= self.early_stopping:
                 break
+        
+        return node_list
 
     
     def get_go_edges(self) -> None:
@@ -447,7 +449,8 @@ class GO:
         # in case someone wants get only edges, run this function again
         self.create_aspect_to_node_label_dict()
         
-        self.edge_list = []
+        # create a list for edges
+        edge_list = []
         
         # PROTEIN-GO EDGES
         if any([True if et in self.edge_types else False for et in self.protein_to_go_edge_types]):
@@ -477,7 +480,7 @@ class GO:
                                     props[GOEdgeField.EVIDENCE_CODE.value] = annotation.evidence_code
 
                                 self.protein_to_go_edges.append((None, protein_id, go_id, edge_label, props)) # TODO delete this row after checking data and keep only self.edge_list.append() line
-                                self.edge_list.append((None, protein_id, go_id, edge_label, props))
+                                edge_list.append((None, protein_id, go_id, edge_label, props))
                                 
                                 counter += 1
                                 
@@ -502,7 +505,7 @@ class GO:
                                                   ancestor[1],
                                                   self.aspect_to_node_label_dict[self.go_ontology.aspect[ancestor[0]]].replace(" ","_")])
                             self.go_to_go_edges.append((None, source_go_id, target_go_id, edge_label)) # TODO delete this row after checking data and keep only self.edge_list.append() line
-                            self.edge_list.append((None, source_go_id, target_go_id, edge_label, {}))
+                            edge_list.append((None, source_go_id, target_go_id, edge_label, {}))
                             
                             counter += 1
                             
@@ -534,10 +537,12 @@ class GO:
                                 interpro_id = self.add_prefix_to_id("interpro", k)
                                 go_id = self.add_prefix_to_id("go", go_term)
                                 self.domain_to_go_edges.append((None, interpro_id, go_id, edge_label)) # TODO delete this row after checking data and keep only self.edge_list.append() line
-                                self.edge_list.append((None, interpro_id, go_id, edge_label, {}))
+                                edge_list.append((None, interpro_id, go_id, edge_label, {}))
                                 
                                 counter += 1
                                 
                 if self.early_stopping and counter >= self.early_stopping:
                     break
+
+        return edge_list
                         
