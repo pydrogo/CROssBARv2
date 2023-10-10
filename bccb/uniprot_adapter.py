@@ -43,6 +43,7 @@ class UniprotNodeField(Enum):
     PROTEIN_NAMES = "protein_name"
     PROTEIN_EC = "ec"
     PROTEIN_GENE_NAMES = "gene_names"
+    PRIMARY_GENE_NAME = "gene_primary"
     # xref attributes
     PROTEIN_ENSEMBL_TRANSCRIPT_IDS = "xref_ensembl"
     PROTEIN_PROTEOME = "xref_proteomes"
@@ -98,7 +99,7 @@ class Uniprot:
         edge_types: Optional[list] = None,
         edge_fields: Optional[list] = None,
         normalise_curies: bool = True,
-        test_mode=False,
+        test_mode: bool = False,
     ):
 
         # params
@@ -387,7 +388,6 @@ class Uniprot:
                 for gene_id, gene_props in gene_list:
 
                     if gene_id:
-
                         yield (gene_id, "gene", gene_props)
 
             # append organism node to output if desired
@@ -396,7 +396,6 @@ class Uniprot:
                 organism_id, organism_props = self._get_organism(all_props)
 
                 if organism_id:
-
                     yield (
                         organism_id,
                         "organism",
@@ -608,6 +607,9 @@ class Uniprot:
             # define protein_properties
             if k not in self.protein_properties:
                 continue
+            
+            if k == UniprotNodeField.PROTEIN_NAMES.value:                
+                protein_props["primary_protein_name"] = self._ensure_iterable(all_props[k])[0]
 
             # replace hyphens and spaces with underscore
             protein_props[k.replace(" ", "_").replace("-", "_")] = all_props[k]
@@ -857,6 +859,7 @@ class Uniprot:
             UniprotNodeField.PROTEIN_KEGG_IDS.value,
             UniprotNodeField.PROTEIN_ENSEMBL_TRANSCRIPT_IDS.value,
             UniprotNodeField.PROTEIN_ENSEMBL_GENE_IDS.value,
+            UniprotNodeField.PRIMARY_GENE_NAME.value,
         ]
 
         self.organism_properties = [UniprotNodeField.PROTEIN_ORGANISM.value]
@@ -910,3 +913,43 @@ class Uniprot:
             return [value]
         else:
             return value
+        
+    def export_data_to_csv(self, node_data = None, edge_data = None, path: str | None = None):
+        """
+        Save node and edge data to csv
+            node_data: output of `get_nodes()` function
+            edge_data: output of `get_edges()` function
+            path: where to save csv files
+        """
+        if node_data:
+            logger.info("Saving node data as csv")
+            node_types_dict = collections.defaultdict(list)
+            for _id, _type, props in node_data:
+                _dict = {"id":_id} | props
+                node_types_dict[_type].append(_dict)
+            
+            for _type, values in node_types_dict.items():
+                df = pd.DataFrame.from_records(values)
+                if path:
+                    full_path = os.path.join(path, f"{_type.capitalize()}.csv")
+                else:
+                    full_path = f"{_type.capitalize()}.csv"
+                
+                df.to_csv(full_path, index=False)
+
+        if edge_data:
+            logger.info("Saving node data as csv")
+            edge_types_dict = collections.defaultdict(list)
+            for _, source_id, target_id, _type, props in edge_data:
+                _dict = {"source_id":source_id, "target_id":target_id} | props
+                edge_types_dict[_type].append(_dict)
+
+            for _type, values in edge_types_dict.items():
+                df = pd.DataFrame.from_records(values)
+                if path:
+                    full_path = os.path.join(path, f"{_type.capitalize()}.csv")
+                else:
+                    full_path = f"{_type.capitalize()}.csv"
+
+                df.to_csv(full_path, index=False)
+                
