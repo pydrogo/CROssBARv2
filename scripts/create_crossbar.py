@@ -49,7 +49,7 @@ uniprot_node_types = [
 ]
 
 uniprot_node_fields = [
-    UniprotNodeField.PROTEIN_SECONDARY_IDS,
+    UniprotNodeField.PRIMARY_GENE_NAME,
     UniprotNodeField.PROTEIN_LENGTH,
     UniprotNodeField.PROTEIN_MASS,
     UniprotNodeField.PROTEIN_ORGANISM,
@@ -72,7 +72,7 @@ uniprot_edge_types = [
 ]
 
 uniprot_edge_fields = [
-    UniprotEdgeField.GENE_ENSEMBL_GENE_ID,
+    UniprotEdgeField.GENE_ENTREZ_ID,
 ]
 
 # ppi configuration
