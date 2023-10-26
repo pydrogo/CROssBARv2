@@ -49,7 +49,7 @@ class PPI:
     def __init__(
         self,
         output_dir=None,
-        export_csvs=False,
+        export_csv=False,
         split_output=False,
         cache=False,
         debug=False,
@@ -65,8 +65,7 @@ class PPI:
         Downloads and processes PPI data
 
             Args:
-                export_csvs: Flag for whether or not create csvs of outputs of databases
-                split_csvs: whether or not to split output csv files to multiple parts
+                export_csv: Flag for whether or not create csvs of outputs of databases
                 cache: if True, it uses the cached version of the data, otherwise
                 forces download.
                 debug: if True, turns on debug mode in pypath.
@@ -80,8 +79,7 @@ class PPI:
 
         """
 
-        self.export_csvs = export_csvs
-        self.split_output = split_output
+        self.export_csv = export_csv
         self.swissprots = list(uniprot._all_uniprots("*", True))
         self.cache = cache
         self.debug = debug
@@ -114,26 +112,8 @@ class PPI:
             },
         }
 
-        if export_csvs:
-            Path(output_dir).mkdir(parents=True, exist_ok=True)
+        if export_csv:
             self.output_dir = output_dir
-
-    def export_dataframe(self, dataframe, data_label):
-        Path(self.output_dir).mkdir(parents=True, exist_ok=True)
-
-        # TODO: activate this block after adding n_rows_in_file setting to config file
-        # if self.split_output:
-        #     n_chunks = round(len(dataframe) / n_rows_in_file)
-        # output_path =  os.path.join(self.output_dir, data_label)
-        # for id, chunk in  enumerate(np.array_split(dataframe, n_chunks)):
-        #     chunk.to_csv(os.path.join(output_path, f"crossbar_ppi_data_{data_label}_{id+1}.csv"), index=False)
-        # else:
-        output_path = os.path.join(
-            self.output_dir, f"crossbar_ppi_data_{data_label}.csv"
-        )
-        dataframe.to_csv(output_path, index=False)
-
-        return output_path
 
     def download_intact_data(self):
         """
@@ -314,26 +294,14 @@ class PPI:
                 .duplicated()
             ].reset_index(drop=True)
 
-        if self.export_csvs:
-            intact_output_path = self.export_dataframe(
-                intact_df_unique, "intact"
-            )
-            logger.info(f"Final IntAct data is written: {intact_output_path}")
-
-        self.final_intact_ints = intact_df_unique
-
         t2 = time()
         logger.info(
             f"IntAct data is processed in {round((t2-t1) / 60, 2)} mins"
         )
 
         self.check_status_and_properties["intact"]["processed"] = True
-        self.check_status_and_properties["intact"][
-            "dataframe"
-        ] = self.final_intact_ints
-        self.check_status_and_properties["intact"][
-            "properties_dict"
-        ] = self.intact_field_new_names
+        self.check_status_and_properties["intact"]["dataframe"] = intact_df_unique
+        self.check_status_and_properties["intact"]["properties_dict"] = self.intact_field_new_names
 
     def download_biogrid_data(self):
         """
@@ -542,23 +510,13 @@ class PPI:
                 .duplicated()
             ].reset_index(drop=True)
 
-        if self.export_csvs:
-            biogrid_output_path = self.export_dataframe(
-                biogrid_df_unique, "biogrid"
-            )
-            logger.info(f"Final BioGRID data is written: {biogrid_output_path}")
-
-        self.final_biogrid_ints = biogrid_df_unique
-
         t2 = time()
         logger.info(
             f"BioGRID data is processed in {round((t2-t1) / 60, 2)} mins"
         )
 
         self.check_status_and_properties["biogrid"]["processed"] = True
-        self.check_status_and_properties["biogrid"][
-            "dataframe"
-        ] = self.final_biogrid_ints
+        self.check_status_and_properties["biogrid"]["dataframe"] = biogrid_df_unique
         self.check_status_and_properties["biogrid"][
             "properties_dict"
         ] = self.biogrid_field_new_names
@@ -606,7 +564,7 @@ class PPI:
 
             # this tax id give an error
             tax_ids_to_be_skipped = [
-                "4565",
+                "4565", "8032",
             ]
 
             # it may take around 100 hours to download whole data
@@ -624,11 +582,12 @@ class PPI:
                     ]
 
                     logger.debug(
-                        f"Downloaded STRING data with taxonomy id {str(tax)}"
+                        f"Downloaded STRING data with taxonomy id {str(tax)}, filtered interaction count for this tax id is {len(organism_string_ints)}"
                     )
 
                     if organism_string_ints:
                         self.string_ints.extend(organism_string_ints)
+                        logger.debug(f"Total interaction count is {len(self.string_ints)}")
 
         t1 = time()
         logger.info(
@@ -755,23 +714,13 @@ class PPI:
                 .duplicated()
             ].reset_index(drop=True)
 
-        if self.export_csvs:
-            string_output_path = self.export_dataframe(
-                string_df_unique, "string"
-            )
-            logger.info(f"Final STRING data is written: {string_output_path}")
-
-        self.final_string_ints = string_df_unique
-
         t2 = time()
         logger.info(
             f"STRING data is processed in {round((t2-t1) / 60, 2)} mins"
         )
 
         self.check_status_and_properties["string"]["processed"] = True
-        self.check_status_and_properties["string"][
-            "dataframe"
-        ] = self.final_string_ints
+        self.check_status_and_properties["string"]["dataframe"] = string_df_unique
         self.check_status_and_properties["string"][
             "properties_dict"
         ] = self.string_field_new_names
@@ -836,9 +785,7 @@ class PPI:
                     seen_dbs.add(dbs_will_be_merged[1])
 
                     df1 = self.check_status_and_properties[db]["dataframe"]
-                    df2 = self.check_status_and_properties[
-                        dbs_will_be_merged[1]
-                    ]["dataframe"]
+                    df2 = self.check_status_and_properties[dbs_will_be_merged[1]]["dataframe"]
 
                     merged_df = pd.merge(
                         df1, df2, on=["uniprot_a", "uniprot_b"], how="outer"
@@ -1208,19 +1155,19 @@ class PPI:
                         float_to_int
                     )
 
-        self.all_ppi_df = merged_df
-
-        logger.debug("merged all interactions")
+        logger.debug("Merged all interactions")
         t2 = time()
         logger.info(
             f"All data is merged and processed in {round((t2-t1) / 60, 2)} mins"
         )
 
-        if self.export_csvs:
-            all_df_path = self.export_dataframe(
-                self.all_ppi_df, "ppi_all"
-            )
-            logger.info(f"Final data is written: {all_df_path}")
+        if self.export_csv:
+            full_path = os.path.join(self.output_dir, "PPI.csv")
+            merged_df.to_csv(full_path, index=False)
+            logger.info(f"PPI data is written: {full_path}")
+
+        
+        return merged_df
             
     def add_prefix_to_id(self, prefix="uniprot", identifier: str = None, sep=":") -> str:
         """
@@ -1235,10 +1182,11 @@ class PPI:
         """
         Get PPI edges from merged data
         """
+        merged_df = self.merge_all()
 
         # create edge list
         edge_list = []
-        for _, row in tqdm(self.all_ppi_df.iterrows()):
+        for _, row in tqdm(merged_df.iterrows()):
             _dict = row.to_dict()
 
             _source = self.add_prefix_to_id(identifier = str(row["uniprot_a"]))
