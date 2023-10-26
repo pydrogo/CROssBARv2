@@ -363,7 +363,7 @@ class Uniprot:
                 )
 
         logger.info(
-            "Preparing UniProt edges of the types "
+            "Preparing UniProt nodes of the types "
             f"{[type.name for type in self.node_types]}."
         )
 
@@ -609,7 +609,7 @@ class Uniprot:
                 continue
             
             if k == UniprotNodeField.PROTEIN_NAMES.value:                
-                protein_props["primary_protein_name"] = self._ensure_iterable(all_props[k])[0]
+                protein_props["primary_protein_name"] = self._ensure_iterable(all_props[k])[0] if all_props[k] else None
 
             # replace hyphens and spaces with underscore
             protein_props[k.replace(" ", "_").replace("-", "_")] = all_props[k]
@@ -936,6 +936,7 @@ class Uniprot:
                     full_path = f"{_type.capitalize()}.csv"
                 
                 df.to_csv(full_path, index=False)
+                logger.info(f"{_type.capitalize()} data is written: {full_path}")
 
         if edge_data:
             logger.info("Saving node data as csv")
@@ -952,4 +953,5 @@ class Uniprot:
                     full_path = f"{_type.capitalize()}.csv"
 
                 df.to_csv(full_path, index=False)
+                logger.info(f"{_type.capitalize()} data is written: {full_path}")
                 
