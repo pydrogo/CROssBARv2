@@ -444,23 +444,21 @@ class Uniprot:
 
                 genes = self.data.get(id_type).get(protein)
 
-                if not genes:
-                    continue
+                if genes:
+                    genes = self._ensure_iterable(genes)
 
-                genes = self._ensure_iterable(genes)
+                    for gene in genes:
 
-                for gene in genes:
+                        if not gene:
+                            continue
 
-                    if not gene:
-                        continue
-
-                    gene_id = self._normalise_curie_cached(
-                        type_dict[id_type],
-                        gene,
-                    )
-                    edge_list.append(
-                        (None, gene_id, protein_id, "Gene_encodes_protein", properties)
-                    )
+                        gene_id = self._normalise_curie_cached(
+                            type_dict[id_type],
+                            gene,
+                        )
+                        edge_list.append(
+                            (None, gene_id, protein_id, "Gene_encodes_protein", properties)
+                        )
 
             if UniprotEdgeType.PROTEIN_TO_ORGANISM in self.edge_types:
 
