@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+import os
+import pandas as pd
+
 from pypath.share import curl, settings
 from pypath.inputs import interpro
 
@@ -175,6 +178,9 @@ class InterPro:
             node_label : label of interpro nodes
         """
 
+        if not hasattr(self, "interpro_entries"):
+            self.download_domain_node_data()
+
         # create list of nodes
         node_list = []
 
@@ -238,6 +244,9 @@ class InterPro:
         Args:
             edge_label: label of protein-domain edge
         """
+
+        if not hasattr(self, "interpro_annotations"):
+            self.download_domain_edge_data()
         
         # create list of edges
         edge_list = []
@@ -307,4 +316,40 @@ class InterPro:
             self.edge_fields = [field.value for field in edge_fields]
         else:
             self.edge_fields = [field.value for field in InterProEdgeField]
-        
+
+    
+    def export_as_csv(self, path: str | None = None, node_csv_name: str  = None, 
+                      edge_csv_name: str  = None):
+        if path:
+            node_full_path = os.path.join(path, f"{node_csv_name.capitalize()}.csv")
+            edge_full_path = os.path.join(path, f"{edge_csv_name.capitalize()}.csv")
+        else:
+            node_full_path = f"{node_csv_name.capitalize()}.csv"
+            edge_full_path = f"{edge_csv_name.capitalize()}.csv"
+
+        # write nodes
+        nodes = self.get_interpro_nodes()
+        node_df_list = []
+        for n in nodes:
+                props = {}
+                props["id"] = n[0]
+                props = props | n[2]
+                node_df_list.append(props)
+
+        nodes_df = pd.DataFrame.from_records(node_df_list)
+        nodes_df.to_csv(node_full_path, index=False)
+        logger.info(f"Domain node data is written: {node_full_path}")
+
+        # write edges
+        edges = self.get_interpro_edges()
+        edges_df_list = []
+        for e in edges:
+            props = {}
+            props["source_id"] = e[1]
+            props["target_id"] = e[2]
+            props = props | e[4]
+            edges_df_list.append(props)
+
+        edges_df = pd.DataFrame.from_records(edges_df_list)
+        edges_df.to_csv(edge_full_path, index=False)
+        logger.info(f"Domain edge data is written: {node_full_path}")
