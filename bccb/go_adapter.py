@@ -5,6 +5,11 @@ from pypath.utils import go as go_util
 from contextlib import ExitStack
 from bioregistry import normalize_curie
 
+import collections
+import os
+import requests
+import pandas as pd
+
 from typing import Union
 
 from time import time
@@ -213,7 +218,9 @@ class GO:
             self.early_stopping = 100
             
     def download_go_data(
-        self, cache=False, debug=False, retries=6,
+        self, cache=False, debug=False, retries=6, 
+        all_go_annotations_url = "https://ftp.ebi.ac.uk/pub/databases/GO/goa/UNIPROT/goa_uniprot_gcrp.gaf.gz",
+        all_annotations_output_dir : str | None = None
     ):
         """
         Wrapper function to download Gene Ontology data using pypath; used to access
@@ -245,12 +252,39 @@ class GO:
             logger.info(f'Gene Ontology entry data is downloaded in {round((t1-t0) / 60, 2)} mins')
             
             if any([True if et in self.edge_types else False for et in self.protein_to_go_edge_types]):                
-                logger.debug("Started downloading Gene Ontology annotation data")
                 t0 = time()
-
-                self.go_annots = go_input.go_annotations_all(organism = self.organism, fields= ['qualifier', 'go_id', 'reference', 'evidence_code']) # returns dict of uniprot ids as keys and go term annotations as values
-                
                 self.swissprots = list(uniprot._all_uniprots(organism = self.organism, swissprot =True))
+
+                if self.organism in ("*", None):
+                    logger.debug("Started downloading Gene Ontology annotation data for all organisms")
+                    
+                    if all_annotations_output_dir:
+                        full_path = os.path.join(all_annotations_output_dir, "goa_uniprot_gcrp.gaf.gz")
+                    else:
+                        full_path = os.path.join(os.getcwd(), "goa_uniprot_gcrp.gaf.gz")
+                    
+                    if not os.path.exists(full_path):
+                        with requests.get(all_go_annotations_url, stream=True) as response:
+                            with open(full_path, 'wb') as f:
+                                for chunk in response.iter_content(1024):
+                                    if chunk:
+                                        f.write(chunk)
+
+                    colnames = ["DB", "DB_Object_ID", "DB_Object_Symbol", "Qualifier", "GO_ID", "DB:Reference", "Evidence Code", "With (or) From", "Aspect", "DB_Object_Name", "DB_Object_Synonym", "DB_Object_Type", "Taxon and Interacting taxon", "Date", "Assigned_By", "Annotation_Extension", "Gene_Product_Form_ID"]
+                    go_annots = pd.read_csv(full_path, skiprows=10, sep="\t", 
+                    names=colnames, usecols=["DB_Object_ID", "Qualifier", "GO_ID", "DB:Reference", "Evidence Code"], header=None, low_memory=False, chunksize=10_000_000)
+
+                    self.go_annots_df = pd.DataFrame()
+                    for chunk in go_annots:
+                        chunk.columns = ['entry', 'qualifier', 'go_id', 'reference', 'evidence_code']
+                        filtered = chunk[chunk["entry"].isin(self.swissprots)]
+                        self.go_annots_df = pd.concat([self.go_annots_df, filtered], ignore_index=True)
+                else:
+                    logger.debug(f"Started downloading Gene Ontology annotation data for tax id {self.organism}")
+                    
+                    self.go_annots = go_input.go_annotations_all(organism = self.organism, fields= ['qualifier', 'go_id', 'reference', 'evidence_code']) # returns dict of uniprot ids as keys and go term annotations as values
+                
+                
                 t1 = time()
                 
                 logger.info(f'Gene Ontology annotation data is downloaded in {round((t1-t0) / 60, 2)} mins')
@@ -409,10 +443,14 @@ class GO:
         
         return identifier
             
-    def get_go_nodes(self) -> None:
+    def get_go_nodes(self) -> list[tuple]:
         """
         Prepare nodes ready to import into BioCypher
         """
+
+        if not hasattr(self, "go_ontology"):
+            self.download_go_data(cache=True)
+
         logger.info("Preparing nodes.")
         
         # create a list for nodes
@@ -440,12 +478,14 @@ class GO:
                 break
         
         return node_list
-
     
-    def get_go_edges(self) -> None:
+    def get_go_edges(self) -> list[tuple]:
         """
         Prepare edges ready to import into BioCypher
         """
+        if not hasattr(self, "go_annots_df") and not hasattr(self, "go_annots"):
+            self.download_go_data(cache=True)
+
         # in case someone wants get only edges, run this function again
         self.create_aspect_to_node_label_dict()
         
@@ -457,35 +497,60 @@ class GO:
             logger.info("Preparing Protein-GO edges.")
             
             self.protein_to_go_edges = []
-            
-            counter = 0
-            for k, v in tqdm(self.go_annots.items()):
-                if k in self.swissprots:
-                    protein_id = self.add_prefix_to_id("uniprot", k)
-                    for annotation in list(v):
+
+            if self.organism in ("*", None):                
+                for index, row in tqdm(self.go_annots_df.iterrows(), total=self.go_annots_df.shape[0]):
+                    if row["go_id"] in self.go_ontology.aspect.keys() and row["evidence_code"] not in self.remove_selected_annotations and str(row["qualifier"]) in self.protein_to_go_edge_labels:
                         # subtract annotations and qualifiers that are not in self.protein_to_go_edge_labels and the ones that not in go ontology
-                        if annotation.go_id in self.go_ontology.aspect.keys() and annotation.evidence_code not in self.remove_selected_annotations and str(annotation.qualifier) in self.protein_to_go_edge_labels: 
+                        if self.aspect_to_node_label_dict.get(self.go_ontology.aspect[row["go_id"]], None) and "protein-"+self.aspect_to_node_label_dict[self.go_ontology.aspect[row["go_id"]]] in self.edge_filterer:
+                            protein_id = self.add_prefix_to_id("uniprot", row["entry"])
+                            go_id = self.add_prefix_to_id("go", row["go_id"])
+                            edge_label = "_".join(["protein",
+                                                        str(row["qualifier"]).replace(" ","_"),
+                                                        self.aspect_to_node_label_dict[self.go_ontology.aspect[row["go_id"]]].replace(" ","_")])
+                            
+                            props = {}
 
-                            if self.aspect_to_node_label_dict.get(self.go_ontology.aspect[annotation.go_id], None) and "protein-"+self.aspect_to_node_label_dict[self.go_ontology.aspect[annotation.go_id]] in self.edge_filterer:
-                                go_id = self.add_prefix_to_id("go", annotation.go_id)
-                                edge_label = "_".join(["protein",
-                                                       str(annotation.qualifier).replace(" ","_"),
-                                                       self.aspect_to_node_label_dict[self.go_ontology.aspect[annotation.go_id]].replace(" ","_")])
-                                
-                                props = {}
-                                if GOEdgeField.REFERENCE in self.go_edge_fields or GOEdgeField.REFERENCE.value in self.go_edge_fields:
-                                    props[GOEdgeField.REFERENCE.value] = annotation.reference
+                            if GOEdgeField.REFERENCE in self.go_edge_fields or GOEdgeField.REFERENCE.value in self.go_edge_fields:
+                                props[GOEdgeField.REFERENCE.value] = row["reference"]
+
+                            if GOEdgeField.EVIDENCE_CODE in self.go_edge_fields or GOEdgeField.EVIDENCE_CODE.value in self.go_edge_fields:
+                                props[GOEdgeField.EVIDENCE_CODE.value] = row["evidence_code"]
+
+                            self.protein_to_go_edges.append((None, protein_id, go_id, edge_label, props)) # TODO delete this row after checking data
+                            edge_list.append((None, protein_id, go_id, edge_label, props))
+                    
+                    if self.early_stopping and index >= self.early_stopping:
+                        break
+            else:
+                counter = 0
+                for k, v in tqdm(self.go_annots.items()):
+                    if k in self.swissprots:
+                        protein_id = self.add_prefix_to_id("uniprot", k)
+                        for annotation in list(v):
+                            # subtract annotations and qualifiers that are not in self.protein_to_go_edge_labels and the ones that not in go ontology
+                            if annotation.go_id in self.go_ontology.aspect.keys() and annotation.evidence_code not in self.remove_selected_annotations and str(annotation.qualifier) in self.protein_to_go_edge_labels: 
+
+                                if self.aspect_to_node_label_dict.get(self.go_ontology.aspect[annotation.go_id], None) and "protein-"+self.aspect_to_node_label_dict[self.go_ontology.aspect[annotation.go_id]] in self.edge_filterer:
+                                    go_id = self.add_prefix_to_id("go", annotation.go_id)
+                                    edge_label = "_".join(["protein",
+                                                        str(annotation.qualifier).replace(" ","_"),
+                                                        self.aspect_to_node_label_dict[self.go_ontology.aspect[annotation.go_id]].replace(" ","_")])
                                     
-                                if GOEdgeField.EVIDENCE_CODE in self.go_edge_fields or GOEdgeField.EVIDENCE_CODE.value in self.go_edge_fields:
-                                    props[GOEdgeField.EVIDENCE_CODE.value] = annotation.evidence_code
+                                    props = {}
+                                    if GOEdgeField.REFERENCE in self.go_edge_fields or GOEdgeField.REFERENCE.value in self.go_edge_fields:
+                                        props[GOEdgeField.REFERENCE.value] = annotation.reference
+                                        
+                                    if GOEdgeField.EVIDENCE_CODE in self.go_edge_fields or GOEdgeField.EVIDENCE_CODE.value in self.go_edge_fields:
+                                        props[GOEdgeField.EVIDENCE_CODE.value] = annotation.evidence_code
 
-                                self.protein_to_go_edges.append((None, protein_id, go_id, edge_label, props)) # TODO delete this row after checking data and keep only self.edge_list.append() line
-                                edge_list.append((None, protein_id, go_id, edge_label, props))
-                                
-                                counter += 1
-                                
-                if self.early_stopping and counter >= self.early_stopping:
-                    break
+                                    self.protein_to_go_edges.append((None, protein_id, go_id, edge_label, props)) # TODO delete this row after checking data
+                                    edge_list.append((None, protein_id, go_id, edge_label, props))
+                                    
+                                    counter += 1
+                                    
+                    if self.early_stopping and counter >= self.early_stopping:
+                        break
                     
         # GO-GO EDGES    
         if any([True if et in self.edge_types else False for et in self.go_to_go_edge_types]):
@@ -504,7 +569,7 @@ class GO:
                             edge_label = "_".join([self.aspect_to_node_label_dict[self.go_ontology.aspect[k]].replace(" ","_"),
                                                   ancestor[1],
                                                   self.aspect_to_node_label_dict[self.go_ontology.aspect[ancestor[0]]].replace(" ","_")])
-                            self.go_to_go_edges.append((None, source_go_id, target_go_id, edge_label)) # TODO delete this row after checking data and keep only self.edge_list.append() line
+                            self.go_to_go_edges.append((None, source_go_id, target_go_id, edge_label, {})) # TODO delete this row after checking data and keep only self.edge_list.append() line
                             edge_list.append((None, source_go_id, target_go_id, edge_label, {}))
                             
                             counter += 1
@@ -536,7 +601,7 @@ class GO:
                                                       self.aspect_to_node_label_dict[self.go_ontology.aspect[go_term]].replace(" ","_")])
                                 interpro_id = self.add_prefix_to_id("interpro", k)
                                 go_id = self.add_prefix_to_id("go", go_term)
-                                self.domain_to_go_edges.append((None, interpro_id, go_id, edge_label)) # TODO delete this row after checking data and keep only self.edge_list.append() line
+                                self.domain_to_go_edges.append((None, interpro_id, go_id, edge_label, {})) # TODO delete this row after checking data and keep only self.edge_list.append() line
                                 edge_list.append((None, interpro_id, go_id, edge_label, {}))
                                 
                                 counter += 1
@@ -545,4 +610,49 @@ class GO:
                     break
 
         return edge_list
-                        
+    
+    def export_as_csv(self, path: str | None = None):
+        # Write nodes
+        nodes = self.get_go_nodes()
+
+        nodes_df_dict = collections.defaultdict(list)
+        for n in nodes:
+            row = {"id":n[0]} | n[2]
+            nodes_df_dict[n[1]].append(row)
+
+        for label, data in nodes_df_dict.items():
+            df = pd.DataFrame.from_records(data)
+
+            if path:
+                full_path = os.path.join(path, f"{label.replace(' ','_').capitalize()}.csv")
+            else:
+                full_path = f"{label.replace(' ','_').capitalize()}.csv"
+
+            df.to_csv(full_path, index=False)
+            logger.info(f"{label.replace(' ','_').capitalize()} data is written: {full_path}")
+
+        # Write edges
+        if not hasattr(self, "protein_to_go_edges") or not hasattr(self, "go_to_go_edges") or not hasattr(self, "domain_to_go_edges"):
+            _ = self.get_go_edges()        
+        
+        edge_data_dict = {"protein_to_go":self.protein_to_go_edges,
+                          "go_to_go":self.go_to_go_edges,
+                          "domain_to_go":self.domain_to_go_edges}
+        edges_df_dict = collections.defaultdict(list)
+        
+        for label, edge_type in edge_data_dict.items():
+            for e in edge_type:
+                row = {"source":e[1], "target":e[2], "label":e[3]} | e[4]
+                edges_df_dict[label].append(row)
+
+        
+        for label, data in edges_df_dict.items():
+            df = pd.DataFrame.from_records(data)
+
+            if path:
+                full_path = os.path.join(path, f"{label.capitalize()}.csv")
+            else:
+                full_path = f"{label.capitalize()}.csv"
+
+            df.to_csv(full_path, index=False)
+            logger.info(f"{label.capitalize()} data is written: {full_path}")
