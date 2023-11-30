@@ -50,7 +50,6 @@ class PPI:
         self,
         output_dir=None,
         export_csv=False,
-        split_output=False,
         cache=False,
         debug=False,
         retries=6,
@@ -298,6 +297,7 @@ class PPI:
         logger.info(
             f"IntAct data is processed in {round((t2-t1) / 60, 2)} mins"
         )
+        logger.debug(f"Total number of interactions for IntAct is {intact_df_unique.shape[0]}")
 
         self.check_status_and_properties["intact"]["processed"] = True
         self.check_status_and_properties["intact"]["dataframe"] = intact_df_unique
@@ -514,6 +514,7 @@ class PPI:
         logger.info(
             f"BioGRID data is processed in {round((t2-t1) / 60, 2)} mins"
         )
+        logger.debug(f"Total number of interactions for BioGRID is {biogrid_df_unique.shape[0]}")
 
         self.check_status_and_properties["biogrid"]["processed"] = True
         self.check_status_and_properties["biogrid"]["dataframe"] = biogrid_df_unique
@@ -607,6 +608,7 @@ class PPI:
          Args:
             rename_selected_fields : List of new field names for selected fields. If not defined, default field names will be used.
         """
+        
         if self.string_fields is None:
             selected_fields = [field.value for field in StringEdgeField]
         else:
@@ -718,12 +720,12 @@ class PPI:
         logger.info(
             f"STRING data is processed in {round((t2-t1) / 60, 2)} mins"
         )
+        logger.debug(f"Total number of interactions for STRING is {string_df_unique.shape[0]}")
+        
 
         self.check_status_and_properties["string"]["processed"] = True
         self.check_status_and_properties["string"]["dataframe"] = string_df_unique
-        self.check_status_and_properties["string"][
-            "properties_dict"
-        ] = self.string_field_new_names
+        self.check_status_and_properties["string"]["properties_dict"] = self.string_field_new_names
 
     def merge_all(self):
         """
@@ -1137,9 +1139,7 @@ class PPI:
                     )
 
                 # if physical_combined_score field exists in dataframe force its data data type become int
-                if self.string_field_new_names.get(
-                    "physical_combined_score", None
-                ):
+                if self.string_field_new_names.get("physical_combined_score", None):
                     merged_df[
                         self.string_field_new_names["physical_combined_score"]
                     ] = merged_df[
@@ -1160,9 +1160,14 @@ class PPI:
         logger.info(
             f"All data is merged and processed in {round((t2-t1) / 60, 2)} mins"
         )
+        logger.debug(f"Total number of interactions for PPI data is {merged_df.shape[0]}")
 
         if self.export_csv:
-            full_path = os.path.join(self.output_dir, "PPI.csv")
+            if self.output_dir:
+                full_path = os.path.join(self.output_dir, "PPI.csv")
+            else:
+                full_path = os.path.join(os.getcwd(), "PPI.csv")
+            
             merged_df.to_csv(full_path, index=False)
             logger.info(f"PPI data is written: {full_path}")
 
