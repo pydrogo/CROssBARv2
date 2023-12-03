@@ -114,7 +114,7 @@ class PPI:
         if export_csv:
             self.output_dir = output_dir
 
-    def download_intact_data(self):
+    def download_intact_data(self) -> None:
         """
         Wrapper function to download IntAct data using pypath; used to access
         settings.
@@ -153,7 +153,7 @@ class PPI:
 
         self.check_status_and_properties["intact"]["downloaded"] = True
 
-    def intact_process(self, rename_selected_fields=None):
+    def intact_process(self, rename_selected_fields=None) -> None:
         """
         Processor function for IntAct data. It drops duplicate and reciprocal duplicate protein pairs and collects pubmed ids of duplicated pairs. Also, it filters
         protein pairs found in swissprot.
@@ -303,7 +303,7 @@ class PPI:
         self.check_status_and_properties["intact"]["dataframe"] = intact_df_unique
         self.check_status_and_properties["intact"]["properties_dict"] = self.intact_field_new_names
 
-    def download_biogrid_data(self):
+    def download_biogrid_data(self) -> None:
         """
         Wrapper function to download BioGRID data using pypath; used to access
         settings.
@@ -344,7 +344,7 @@ class PPI:
 
         self.check_status_and_properties["biogrid"]["downloaded"] = True
 
-    def biogrid_process(self, rename_selected_fields=None):
+    def biogrid_process(self, rename_selected_fields=None) -> None:
         """
         Processor function for BioGRID data. It drops duplicate and reciprocal duplicate protein pairs and collects pubmed ids of duplicated pairs. In addition, it
         maps entries to uniprot ids using gene name and tax id information in the BioGRID data. Also, it filters protein pairs found in swissprot.
@@ -522,7 +522,7 @@ class PPI:
             "properties_dict"
         ] = self.biogrid_field_new_names
 
-    def download_string_data(self):
+    def download_string_data(self) -> None:
         """
         Wrapper function to download STRING data using pypath; used to access
         settings.
@@ -600,7 +600,7 @@ class PPI:
 
         self.check_status_and_properties["string"]["downloaded"] = True
 
-    def string_process(self, rename_selected_fields=None):
+    def string_process(self, rename_selected_fields=None) -> None:
         """
         Processor function for STRING data. It drops duplicate and reciprocal duplicate protein pairs. In addition, it maps entries to uniprot ids
         using crossreferences to STRING in the Uniprot data. Also, it filters protein pairs found in swissprot.
@@ -727,7 +727,7 @@ class PPI:
         self.check_status_and_properties["string"]["dataframe"] = string_df_unique
         self.check_status_and_properties["string"]["properties_dict"] = self.string_field_new_names
 
-    def merge_all(self):
+    def merge_all(self) -> pd.DataFrame:
         """
         Merge function for all 3 databases. Merge dataframes according to uniprot_a and uniprot_b (i.e., protein pairs) columns.
 
@@ -1183,7 +1183,7 @@ class PPI:
         
         return identifier
 
-    def get_ppi_edges(self) -> list:
+    def get_ppi_edges(self) -> list[tuple]:
         """
         Get PPI edges from merged data
         """
