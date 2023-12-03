@@ -148,7 +148,7 @@ class Drug:
             
             t0 = time()
 
-            self.download_drugbank_node_data(self.user, self.passwd)
+            self.download_drugbank_node_data()
 
             if DrugEdgeType.DRUG_TARGET_INTERACTION in self.edge_types:
                 self.download_chembl_dti_data()
@@ -278,6 +278,22 @@ class Drug:
         
         t1 = time()
         logger.info(f'Drugbank drug node data is processed in {round((t1-t0) / 60, 2)} mins')
+
+        # write node data to csv
+        if self.export_csv:
+            if self.output_dir:
+                full_path = os.path.join(self.output_dir, "Drug.csv")
+            else:
+                full_path = os.path.join(os.getcwd(), "Drug.csv")
+            
+            drugs_df_list = []
+            for drug, attributes in drugbank_drugs.items():
+                props = {"drugbank_id":drug} | attributes
+                drugs_df_list.append(props)
+
+            df = pd.DataFrame.from_records(drugs_df_list)
+            df.to_csv(full_path, index=False)
+            logger.info(f"Drug node data is written: {full_path}")
 
         return drugbank_drugs
 
