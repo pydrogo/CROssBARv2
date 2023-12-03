@@ -611,7 +611,7 @@ class GO:
 
         return edge_list
     
-    def export_as_csv(self, path: str | None = None):
+    def export_as_csv(self, path: str | None = None) -> None:
         # Write nodes
         nodes = self.get_go_nodes()
 
