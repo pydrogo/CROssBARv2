@@ -21,6 +21,7 @@ from enum import Enum, auto
 logger.debug(f"Loading module {__name__}.")
 
 class DrugNodeField(Enum):
+    SMILES = "SMILES"
     INCHI = "InChI"
     INCHIKEY = "InChIKey"
     CAS = "cas_number"
@@ -39,6 +40,25 @@ class DrugNodeField(Enum):
     PHARMGKB = "PharmGKB"
     PDB = "PDB"
     DRUGCENTRAL = "Drugcentral"
+
+    @classmethod
+    def get_drugbank_properties(cls):
+        return [cls.SMILES.value, cls.INCHI.value, cls.INCHIKEY.value]
+
+    @classmethod
+    def get_drugbank_external_fields(cls):
+        return [cls.KEGG_DRUG.value, cls.RXCUI.value, cls.PHARMGKB.value, cls.PDB.value, cls.DRUGCENTRAL.value]
+
+    @classmethod
+    def get_unichem_mapping_fields(cls):
+        return [cls.ZINC.value, cls.CHEMBL.value, cls.BINDINGDB.value, cls.CLINICALTRIALS.value,
+                cls.CHEBI.value, cls.PUBCHEM.value]
+
+    @classmethod
+    def get_drugbank_core_fields(cls):
+        return [cls.CAS.value, cls.NAME.value, cls.GROUPS.value, cls.GENERAL_REFERENCES.value,
+                cls.ATC_CODES.value]
+
 
 class DrugDTIEdgeField(Enum):
     MECHANISM_OF_ACTION_TYPE = "mechanism_of_action_type"
@@ -200,20 +220,22 @@ class Drug:
     def download_drugbank_node_data(self):
 
         # define  fields belong to drugbank or unichem
-        fields_list = ['cas_number', 'name', 'groups', 'general_references', 'atc_codes',]
-        unichem_external_fields_list = ['zinc', 'chembl', 'bindingdb', 'clinicaltrials', 'chebi', 'pubchem']
-        drugbank_external_fields_list = ['KEGG Drug', 'RxCUI', 'PharmGKB', 'PDB', 'Drugcentral']
-        
+        fields_list = DrugNodeField.get_drugbank_core_fields()
+        unichem_external_fields_list = DrugNodeField.get_unichem_mapping_fields()
+        drugbank_external_fields_list = DrugNodeField.get_drugbank_external_fields()
+        drugbank_property_fields_list = DrugNodeField.get_drugbank_properties()
+
         self.unichem_external_fields = []
         self.drugbank_external_fields = []
         fields = []
+        self.drugbank_property_fields = []
         self.add_inchi = False
         self.add_inchikey = False
+
+        # TO DO: Unflag drugbank properties. Make them more proper
         for f in self.node_fields:
-            if f == 'InChI':
-                self.add_inchi = True
-            elif f == 'InChIKey':
-                self.add_inchikey = True
+            if f in drugbank_property_fields_list:
+                self.drugbank_property_fields.append(f)
             elif f in fields_list:
                 fields.append(f)
             elif f in unichem_external_fields_list:
@@ -233,8 +255,8 @@ class Drug:
         # external ids
         self.drugbank_drugs_external_ids = self.drugbank_data.drugbank_external_ids_full()
         
-        # inchi and inchikey
-        if self.add_inchi or self.add_inchikey:
+        # inchi, inchikey and smiles
+        if self.drugbank_property_fields:
             self.drugbank_properties = self.drugbank_data.drugbank_properties_full()
         
         # core properties
@@ -268,13 +290,12 @@ class Drug:
 
             drugbank_drugs[drugbank_id] = {f: temp_dict.get(f, None) for f in all_fields}
             
-            if self.add_inchi:
-                drugbank_drugs[drugbank_id]["InChI"] = self.drugbank_properties.get(drugbank_id, {}).get("InChI", None)
+            
+            if self.drugbank_property_fields:
+                for p in self.drugbank_property_fields:
+                    drugbank_drugs[drugbank_id][p] = self.drugbank_properties.get(drugbank_id, {}).get(p, None)
                 
-            if self.add_inchikey:
-                drugbank_drugs[drugbank_id]["InChIKey"] = self.drugbank_properties.get(drugbank_id, {}).get("InChIKey", None)
-
-            del drugbank_drugs[drugbank_id]['drugbank_id']            
+            del drugbank_drugs[drugbank_id]['drugbank_id']       
         
         t1 = time()
         logger.info(f'Drugbank drug node data is processed in {round((t1-t0) / 60, 2)} mins')
@@ -302,10 +323,12 @@ class Drug:
         # DTI edge data
         logger.debug('Downloading Drugbank DTI data')
         t0 = time()
+        
         if not hasattr(self, "drugbank_data"):
             self.drugbank_data = drugbank.DrugbankFull(user = self.user, passwd = self.passwd)
 
         self.drugbank_dti = self.drugbank_data.drugbank_targets_full(fields=['drugbank_id', 'actions', 'references', 'known_action', 'polypeptide',])
+        
         t1 = time()
         logger.info(f'Drugbank DTI data is downloaded in {round((t1-t0) / 60, 2)} mins')
 
@@ -313,22 +336,22 @@ class Drug:
         logger.debug("Createing external database mappings")
         
         if not hasattr(self, "unichem_external_fields"):
-            self.unichem_external_fields = ['zinc', 'chembl', 'bindingdb', 'clinicaltrials', 'chebi', 'pubchem']
+            self.unichem_external_fields = DrugNodeField.get_unichem_mapping_fields()
         
         if not hasattr(self, "drugbank_external_fields"):
-            self.drugbank_external_fields = ['KEGG Drug', 'RxCUI', 'PharmGKB', 'PDB', 'Drugcentral']
+            self.drugbank_external_fields = DrugNodeField.get_drugbank_external_fields()
         
         if not hasattr(self, "drugbank_drugs_external_ids"):
             if not hasattr(self, "drugbank_data"):
                 self.drugbank_data = drugbank.DrugbankFull(user = self.user, passwd = self.passwd)
-            else:
-                self.drugbank_drugs_external_ids = self.drugbank_data.drugbank_external_ids_full()
+            
+            self.drugbank_drugs_external_ids = self.drugbank_data.drugbank_external_ids_full()
         
         if not hasattr(self, "drugbank_drugs_detailed"):
             if not hasattr(self, "drugbank_data"):
                 self.drugbank_data = drugbank.DrugbankFull(user = self.user, passwd = self.passwd)
-            else:
-                self.drugbank_drugs_detailed = self.drugbank_data.drugbank_drugs_full(fields = ["cas_number"])
+            
+            self.drugbank_drugs_detailed = self.drugbank_data.drugbank_drugs_full(fields = ["cas_number"])
                 
         # create dictionaries for every unichem external fields
         unichem_drugbank_to_zinc_mapping = unichem.unichem_mapping('drugbank', 'zinc')
@@ -643,18 +666,21 @@ class Drug:
         return kegg_dti_df
         
     def download_kegg_ddi_data(self, from_csv=False):
+
         # DDI
         logger.debug('Downloading KEGG DDI data, this may take around 12 hours')
         t0 = time()
+
         if from_csv:
             logger.info("Skipping to processing part")
         else:
             self.kegg_ddi_data = kegg_local.drug_to_drug()
+
         t1 = time()
         logger.info(f'KEGG DDI data is downloaded in {round((t1-t0) / 60, 2)} mins')
         
     def process_kegg_ddi_data(self, from_csv=False) -> pd.DataFrame:
-        
+
         logger.debug('Processing KEGG DDI data')
         t0 = time()
         
@@ -667,6 +693,9 @@ class Drug:
         else:
             if not hasattr(self, "kegg_ddi_data"):
                 self.download_kegg_ddi_data()
+            
+            if not hasattr(self, "kegg_to_drugbank"):
+                self.get_external_database_mappings()
 
             kegg_ddi = set()
 
@@ -1073,6 +1102,7 @@ class Drug:
         for tax in tqdm(organism):
             if str(tax) in ["36329"]:
                 continue
+            
             try:
                 organism_stitch_ints = [
                     i for i in stitch.stitch_links_interactions(ncbi_tax_id=int(tax), score_threshold=score_threshold, physical_interaction_score = physical_interaction_score)
