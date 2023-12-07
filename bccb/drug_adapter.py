@@ -969,6 +969,9 @@ class Drug:
 
         if not hasattr(self, "ctd_dgi"):
             self.download_ctd_data()
+
+        if not hasattr(self, "cas_to_drugbank"):
+            self.get_external_database_mappings()
         
         logger.debug('Processing CTD DGI data')
         t0 = time()
@@ -1008,7 +1011,7 @@ class Drug:
         
         
         def detect_conflicting_action_type(element):
-            # if decreases_expression and increases_expression occur in same drug-gene pair, the pair is probably a bad entry
+            # if decreases_expression and increases_expression occur in same drug-gene pair, the pair is probably a erroneous entry
             if len(set(element.dropna().values)) > 1:
                 return np.nan
             else:
