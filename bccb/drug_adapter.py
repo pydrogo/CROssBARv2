@@ -17,6 +17,7 @@ import numpy as np
 from biocypher._logger import logger
 
 from enum import Enum, auto
+from pydantic import BaseModel, DirectoryPath, validate_call
 
 logger.debug(f"Loading module {__name__}.")
 
@@ -90,6 +91,17 @@ class DrugEdgeType(Enum):
     DRUG_TARGET_INTERACTION = auto()
     DRUG_GENE_INTERACTION = auto()
 
+class CompoundModel(BaseModel):
+    drugbank_user : str
+    drugbank_passwd: str
+    node_fields: Union[list[DrugNodeField], None] = None
+    dti_edge_fields: Union[list[DrugDTIEdgeField], None] = None
+    ddi_edge_fields: Union[list[DrugDDIEdgeField], None] = None
+    edge_types: Union[list[DrugEdgeType], None] = None
+    add_prefix: bool = True
+    test_mode: bool = False
+    export_csv: bool = False
+    output_dir: DirectoryPath | None = None
 
 class Drug:
     """
@@ -102,12 +114,16 @@ class Drug:
     for import into a BioCypher database.
     """
 
-    def __init__(self, drugbank_user, drugbank_passwd, node_fields: Union[list[DrugNodeField], None] = None,
-                 dti_edge_fields: Union[list[DrugDTIEdgeField], None] = None, ddi_edge_fields: Union[list[DrugDDIEdgeField], None] = None,
+    def __init__(self, drugbank_user, drugbank_passwd, 
+                 node_fields: Union[list[DrugNodeField], None] = None,
+                 dti_edge_fields: Union[list[DrugDTIEdgeField], None] = None, 
+                 ddi_edge_fields: Union[list[DrugDDIEdgeField], None] = None,
                  dgi_edge_fields: Union[list[DrugDGIEdgeField], None] = None, 
                  edge_types: Union[list[DrugEdgeType], None] = None,
-                 add_prefix = True, test_mode = False, export_csv = False,
-                 output_dir = None):
+                 add_prefix: bool = True, 
+                 test_mode: bool = False, 
+                 export_csv: bool = False,
+                 output_dir: DirectoryPath | None = None):
         """
         Args:
             drugbank_user: drugbank username
@@ -121,26 +137,32 @@ class Drug:
             test_mode: if True, limits amount of output data
         """
 
-        self.user = drugbank_user
-        self.passwd = drugbank_passwd
-        self.add_prefix = add_prefix
-        self.export_csv = export_csv
-        self.output_dir = output_dir
+        model = CompoundModel(drugbank_user=drugbank_user, drugbank_passwd=drugbank_passwd,
+                              node_fields=node_fields, dti_edge_fields=dti_edge_fields,
+                              ddi_edge_fields=ddi_edge_fields, dgi_edge_fields=dgi_edge_fields,
+                              edge_types=edge_types, add_prefix=add_prefix, test_mode=test_mode,
+                              export_csv=export_csv, output_dir=output_dir).model_dump()
+
+        self.user = model["drugbank_user"]
+        self.passwd = model["drugbank_passwd"]
+        self.add_prefix = model["add_prefix"]
+        self.export_csv = model["export_csv"]
+        self.output_dir = model["output_dir"]
         
         self.swissprots = list(uniprot._all_uniprots(organism = '*', swissprot=True))
 
         # set node fields
-        self.set_node_fields(node_fields=node_fields)
+        self.set_node_fields(node_fields=model["node_fields"])
 
         # set edge fields
-        self.set_edge_fields(dti_edge_fields, ddi_edge_fields, dgi_edge_fields)
+        self.set_edge_fields(model["dti_edge_fields"], model["ddi_edge_fields"], model["dgi_edge_fields"])
 
         # set edge types
-        self.set_edge_types(edge_types)
+        self.set_edge_types(model["edge_types"])
 
         # set early_stopping, if test_mode true
         self.early_stopping = None
-        if test_mode:
+        if model["test_mode"]:
             self.early_stopping = 100
 
     def download_drug_data(
@@ -1328,7 +1350,8 @@ class Drug:
         
         # return final dataframe
         return kegg_plus_ddinter_ddi_df
-        
+    
+    @validate_call
     def get_drug_nodes(self, label="drug") -> list[tuple]:
         """
         Merges drug node information from different sources. 
@@ -1360,6 +1383,7 @@ class Drug:
 
         return node_list
 
+    @validate_call
     def get_dti_edges(self, label = "drug_targets_protein") -> list[tuple]:
 
         dti_df = self.merge_all_dtis()
@@ -1391,6 +1415,7 @@ class Drug:
 
         return edge_list
 
+    @validate_call
     def get_dgi_edges(self) -> list[tuple]:
 
         dgi_df = self.process_ctd_data()
@@ -1429,6 +1454,7 @@ class Drug:
         
         return edge_list
 
+    @validate_call
     def get_ddi_edges(self, label = "drug_interacts_with_drug") -> list[tuple]:
 
         ddi_df = self.merge_all_ddis()
@@ -1489,7 +1515,8 @@ class Drug:
         else:
             self.edge_types = [edge_type for edge_type in DrugEdgeType]
 
-    def add_prefix_to_id(self, prefix, identifier : str = None, sep=":") -> str:
+    @validate_call
+    def add_prefix_to_id(self, prefix : str, identifier : str, sep: str =":") -> str:
         """
         Adds prefix to ids
         """
