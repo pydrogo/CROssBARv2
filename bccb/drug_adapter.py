@@ -91,7 +91,7 @@ class DrugEdgeType(Enum):
     DRUG_TARGET_INTERACTION = auto()
     DRUG_GENE_INTERACTION = auto()
 
-class CompoundModel(BaseModel):
+class DrugModel(BaseModel):
     drugbank_user : str
     drugbank_passwd: str
     node_fields: Union[list[DrugNodeField], None] = None
@@ -137,7 +137,7 @@ class Drug:
             test_mode: if True, limits amount of output data
         """
 
-        model = CompoundModel(drugbank_user=drugbank_user, drugbank_passwd=drugbank_passwd,
+        model = DrugModel(drugbank_user=drugbank_user, drugbank_passwd=drugbank_passwd,
                               node_fields=node_fields, dti_edge_fields=dti_edge_fields,
                               ddi_edge_fields=ddi_edge_fields, dgi_edge_fields=dgi_edge_fields,
                               edge_types=edge_types, add_prefix=add_prefix, test_mode=test_mode,
