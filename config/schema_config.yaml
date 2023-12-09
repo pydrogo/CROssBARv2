@@ -14,6 +14,7 @@ gene:
     xref_kegg: str[]
     xref_ensembl: str[]
     ensembl_gene_ids: str[]
+    gene_primary: str
 
 protein:
   represented_as: node
@@ -22,6 +23,7 @@ protein:
   properties:
     length: int
     mass: int
+    primary_protein_name: str
     protein_name: str[]
     xref_proteomes: str[]
     organism_name: str
@@ -72,11 +74,12 @@ molecular function:
   properties:
     name: str
   
-small molecule:
+drug:
   represented_as: node
   preferred_id: drugbank
   label_in_input: drug
   properties:
+    smiles: str
     drugbank_id: str
     cas_number: str
     name: str
@@ -97,11 +100,13 @@ small molecule:
     inchi: str
     inchikey: str
 
-molecular mixture:
+compound:
+  is_a: ChemicalEntity
   represented_as: node
   preferred_id: id
   label_in_input: compound
   properties:
+    smiles: str
     type: str
     full_mwt: float
     species: str
@@ -226,7 +231,7 @@ protein to protein domain association:
     end: str
 
 protein to biological process association:
-  is_a: macromolecular machine to biological process association
+  is_a: GeneToGoTermAssociation
   represented_as: edge
   label_as_edge: protein_involved_in_biological_process
   preferred_id: go
@@ -238,7 +243,7 @@ protein to biological process association:
     evidence_code: str
 
 protein to cellular component association:
-  is_a: macromolecular machine to cellular component association
+  is_a: GeneToGoTermAssociation
   represented_as: edge
   preferred_id: go
   source: [protein_located_in_cellular_component, protein_part_of_cellular_component, protein_is_active_in_cellular_component]
@@ -249,7 +254,7 @@ protein to cellular component association:
     evidence_code: str
   
 protein to molecular function association:
-  is_a: macromolecular machine to molecular function association
+  is_a: GeneToGoTermAssociation
   represented_as: edge
   preferred_id: go
   source: [protein_enables_molecular_function, protein_contributes_to_molecular_function]
@@ -318,30 +323,7 @@ protein domain to cellular component association:
   target: cellular component
   label_in_input: protein_domain_located_in_cellular_component
 
-# small molecule to protein association:
-#   is_a: pairwise molecular interaction
-#   represented_as: edge
-#   label_as_edge: drug_targets_protein
-#   preferred_id: id
-#   source: small molecule
-#   target: protein
-#   label_in_input: drug_targets_protein
-#   properties:
-#     known_action: str
-#     activity_value: float
-#     confidence_score: float
-#     direct_interaction: bool
-#     disease_efficacy: bool
-#     mechanism_of_action: str
-#     pchembl: float
-#     activity_type: str
-#     dgidb_score: float
-#     references: str[]
-#     mechanism_of_action_type: str
-#     stitch_combined_score: float
-#     source: str[]
-
-small molecule to protein association:
+drug to protein association:
   is_a: pairwise molecular interaction
   represented_as: edge
   label_as_edge: drug_targets_protein
@@ -351,11 +333,21 @@ small molecule to protein association:
   label_in_input: drug_targets_protein
   properties:
     known_action: str
+    activity_value: float
+    confidence_score: float
+    direct_interaction: bool
+    disease_efficacy: bool
+    mechanism_of_action: str
+    pchembl: float
+    activity_type: str
+    dgidb_score: float
     references: str[]
-    actions: str[]
+    mechanism_of_action_type: str
+    stitch_combined_score: float
+    source: str[]
 
-small molecule to small molecule association:
-  is_a: pairwise molecular interaction
+drug to drug association:
+  is_a: chemical to chemical association
   represented_as: edge
   label_as_edge: drug_interacts_with_drug
   preferred_id: id
@@ -368,20 +360,18 @@ small molecule to small molecule association:
     interaction_type: str[]
     source: str[]
 
+drug to gene association:
+  is_a: association
+  represented_as: edge
+  preferred_id: id
+  source: [drug_downregulates_gene, drug_upregulates_gene]
+  target: gene
+  label_in_input: [drug_downregulates_gene, drug_upregulates_gene]
+  properties:
+    source: str[]
+    references: str[]
 
-# small molecule to gene association:
-#   represented_as: edge
-#   label_as_edge: [decreases_expression, increases_expression]
-#   preferred_id: id
-#   source: small molecule
-#   target: gene
-#   label_in_input: [drug_decreases_expression_gene, drug_increases_expression_gene]
-#   properties:
-#     source: str[]
-#     references: str[]
-
-
-molecular mixture to protein association:
+compound to protein association:
   is_a: pairwise molecular interaction
   represented_as: edge
   label_as_edge: targets
@@ -397,12 +387,13 @@ molecular mixture to protein association:
     assay_chembl: str[]
     confidence_score: float
     stitch_combined_score: float
+    references: str[]
 
 
 gene to gene orthology association:
   is_a: association
   represented_as: edge
-  label_as_edge: Is_Orthologous_With
+  label_as_edge: gene_is_orthologous_with_gene
   preferred_id: id
   source: gene
   target: gene
