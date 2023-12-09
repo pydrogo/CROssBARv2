@@ -165,8 +165,9 @@ class Drug:
         if model["test_mode"]:
             self.early_stopping = 100
 
+    @validate_call
     def download_drug_data(
-        self, cache=False, debug=False, retries=6,):
+        self, cache: bool = False, debug: bool = False, retries: int = 6,):
 
         """
         Wrapper function to download drug data from various databases using pypath.
@@ -1061,11 +1062,12 @@ class Drug:
             ctd_cgi_df.to_csv(full_path, index=False)
             logger.info(f"DGI data is written: {full_path}")
         
-        return ctd_cgi_df        
-
+        return ctd_cgi_df
+         
+    @validate_call
     def download_stitch_dti_data(
             self, 
-            organism: str | list = None,
+            organism: str | list | None = None,
             score_threshold: int | Literal[
                 'highest_confidence',
                 'high_confidence',
@@ -1352,7 +1354,7 @@ class Drug:
         return kegg_plus_ddinter_ddi_df
     
     @validate_call
-    def get_drug_nodes(self, label="drug") -> list[tuple]:
+    def get_drug_nodes(self, label: str ="drug") -> list[tuple]:
         """
         Merges drug node information from different sources. 
         """
@@ -1384,7 +1386,7 @@ class Drug:
         return node_list
 
     @validate_call
-    def get_dti_edges(self, label = "drug_targets_protein") -> list[tuple]:
+    def get_dti_edges(self, label: str = "drug_targets_protein") -> list[tuple]:
 
         dti_df = self.merge_all_dtis()
         
@@ -1415,7 +1417,6 @@ class Drug:
 
         return edge_list
 
-    @validate_call
     def get_dgi_edges(self) -> list[tuple]:
 
         dgi_df = self.process_ctd_data()
@@ -1455,7 +1456,7 @@ class Drug:
         return edge_list
 
     @validate_call
-    def get_ddi_edges(self, label = "drug_interacts_with_drug") -> list[tuple]:
+    def get_ddi_edges(self, label: str = "drug_interacts_with_drug") -> list[tuple]:
 
         ddi_df = self.merge_all_ddis()
         
