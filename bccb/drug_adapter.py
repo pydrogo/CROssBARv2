@@ -97,6 +97,7 @@ class DrugModel(BaseModel):
     node_fields: Union[list[DrugNodeField], None] = None
     dti_edge_fields: Union[list[DrugDTIEdgeField], None] = None
     ddi_edge_fields: Union[list[DrugDDIEdgeField], None] = None
+    dgi_edge_fields: Union[list[DrugDGIEdgeField], None] = None
     edge_types: Union[list[DrugEdgeType], None] = None
     add_prefix: bool = True
     test_mode: bool = False
@@ -128,13 +129,15 @@ class Drug:
         Args:
             drugbank_user: drugbank username
             drugbank_passwd: drugbank password
-            node_fields: drug node fields that will be included in graph, if defined it must be values of elements from DrugNodeField enum class
-            dti_edge_fields: Drug-Target edge fields that will be included in graph, if defined it must be values of elements from DrugDTIEdgeField enum class
-            ddi_edge_fields: Drug-Drug edge fields that will be included in graph, if defined it must be values of elements from DrugDDIEdgeField enum class
-            dgi_edge_fields: Drug-Gene edge fields that will be included in graph, if defined it must be values of elements from DrugDGIEdgeField enum class
+            node_fields: drug node fields that will be included in graph, if defined it must be values of elements from DrugNodeField enum class (not the names)
+            dti_edge_fields: Drug-Target edge fields that will be included in graph, if defined it must be values of elements from DrugDTIEdgeField enum class (not the names)
+            ddi_edge_fields: Drug-Drug edge fields that will be included in graph, if defined it must be values of elements from DrugDDIEdgeField enum class (not the names)
+            dgi_edge_fields: Drug-Gene edge fields that will be included in graph, if defined it must be values of elements from DrugDGIEdgeField enum class (not the names)
             edge_types: list of edge types that will be included in graph, if defined it must be elements (not values of elements) from DrugEdgeType enum class
             add_prefix: if True, add prefix to database identifiers
             test_mode: if True, limits amount of output data
+            export_csv: if True, export data as csv
+            output_dir: Location of csv export if `export_csv` is True, if not defined it will be current directory
         """
 
         model = DrugModel(drugbank_user=drugbank_user, drugbank_passwd=drugbank_passwd,
@@ -318,7 +321,7 @@ class Drug:
                 for p in self.drugbank_property_fields:
                     drugbank_drugs[drugbank_id][p] = self.drugbank_properties.get(drugbank_id, {}).get(p, None)
                 
-            del drugbank_drugs[drugbank_id]['drugbank_id']       
+            del drugbank_drugs[drugbank_id]['drugbank_id']
         
         t1 = time()
         logger.info(f'Drugbank drug node data is processed in {round((t1-t0) / 60, 2)} mins')
