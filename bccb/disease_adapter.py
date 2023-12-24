@@ -302,7 +302,7 @@ class Disease:
                     result = kegg_local.get_diseases(dis)
                     self.kegg_diseases_mappings[dis] = result[0].db_links
                 except (IndexError, UnicodeDecodeError) as e:
-                    logger.debug(f'{dis} is not available')
+                    logger.debug(f'{dis} is not available due to {e}')
                 
             t1 = time()
             logger.info(f"KEGG drug indication data is downloaded in {round((t1-t0) / 60, 2)} mins")
