@@ -116,10 +116,33 @@ compound:
     inchikey: str
     qed_score: float 
 
-# disease:
-  # represented_as: node
-  # preferred_id: mondo
-  # label_in_input: Disease
+disease:
+  represented_as: node
+  preferred_id: mondo
+  label_in_input: disease
+  properties:
+    name: str
+    synonyms: str[]
+    umls: str
+    doid: str
+    mesh: str
+    omim: str
+    efo: str
+    orphanet: str
+    hp: str
+    icd10cm: str
+    ncit: str
+    icd9: str
+    meddra: str
+
+phenotype:
+  is_a: PhenotypicFeature
+  represented_as: node
+  preferred_id: hp
+  label_in_input: phenotype
+  properties:
+    name: str
+    synonyms: str[]
 
 # pathway:
   # represented_as: node
@@ -135,11 +158,6 @@ compound:
   # represented_as: node
   # preferred_id: CL
   # label_in_input: Cell
-
-# phenotype:
-  # represented_as: node
-  # preferred_id: hp
-  # label_in_input: Phenotype
       
 # biological process: # other two go categories?
   # represented_as: node
@@ -328,7 +346,7 @@ drug to protein association:
   represented_as: edge
   label_as_edge: drug_targets_protein
   preferred_id: id
-  source: small molecule
+  source: drug
   target: protein
   label_in_input: drug_targets_protein
   properties:
@@ -351,8 +369,8 @@ drug to drug association:
   represented_as: edge
   label_as_edge: drug_interacts_with_drug
   preferred_id: id
-  source: small molecule
-  target: small molecule
+  source: drug
+  target: drug
   label_in_input: drug_interacts_with_drug
   properties:
     recommendation: str
@@ -374,9 +392,9 @@ drug to gene association:
 compound to protein association:
   is_a: pairwise molecular interaction
   represented_as: edge
-  label_as_edge: targets
+  label_as_edge: compound_targets_protein
   preferred_id: id
-  source: molecular mixture
+  source: compound
   target: protein
   label_in_input: compound_targets_protein
   properties:
@@ -404,15 +422,111 @@ gene to gene orthology association:
     oma_orthology_score: float
 
 
+organism taxon to disease association:
+  is_a: association
+  represented_as: edge
+  label_as_edge: organism_causes_disease
+  preferred_id: id
+  source: organism taxon
+  target: disease
+  label_in_input: organism_causes_disease
 
 
-# protein to protein domain association:
-  # represented_as: edge
-  # label_as_edge: Has_Domain
-  # preferred_id: id
-  # source: protein
-  # target: protein domain
-  # label_in_input: Protein_Has_Domain
+disease to drug association:
+  is_a: chemical or drug or treatment to disease or phenotypic feature association
+  represented_as: edge
+  label_as_edge: disease_is_treated_by_drug
+  preferred_id: id
+  source: disease
+  target: drug
+  label_in_input: disease_is_treated_by_drug
+  properties:
+    source: str[]
+    pubmed_ids: str[]
+    max_phase: str
+
+disease to disease hierarchical association:
+  is_a: association
+  represented_as: edge
+  label_as_edge: disease_is_a_disease
+  preferred_id: id
+  source: disease
+  target: disease
+  label_in_input: disease_is_a_disease
+
+disease to disease association:
+  is_a: association
+  represented_as: edge
+  label_as_edge: disease_is_associated_with_disease
+  preferred_id: id
+  source: disease
+  target: disease
+  label_in_input: disease_is_associated_with_disease
+  properties:
+    source: str[]
+    disgenet_jaccard_genes_score: float
+    disgenet_jaccard_variants_score: float
+
+disease to disease comorbidity association:
+  is_a: association
+  represented_as: edge
+  label_as_edge: disease_is_comorbid_with_disease
+  preferred_id: id
+  source: disease
+  target: disease
+  label_in_input: disease_is_comorbid_with_disease
+
+gene to disease association:
+  is_a: association
+  represented_as: edge
+  label_as_edge: gene_is_related_to_disease
+  preferred_id: id
+  source: gene
+  target: disease
+  label_in_input: gene_is_related_to_disease
+  properties:
+    source: str[]
+    variant_source: str[]
+    opentargets_score: float
+    disgenet_gene_disease_score: float
+    disgenet_variant_disease_score: float
+    diseases_confidence_score: float
+    allele_id: str
+    clinical_significance: str
+    review_status: int
+    variation_id: str
+    pubmed_ids: str[]
+    dbsnp_id: str[]
+
+protein to phenotype association:
+  is_a: GeneToPhenotypicFeatureAssociation
+  represented_as: edge
+  label_as_edge: protein_is_associated_with_phenotype
+  preferred_id: id
+  source: protein
+  target: phenotype
+  label_in_input: protein_is_associated_with_phenotype
+
+phenotype hierarchical association:
+  is_a: association
+  represented_as: edge
+  label_as_edge: phenotype_is_a_phenotype
+  preferred_id: id
+  source: phenotype
+  target: phenotype
+  label_in_input: phenotype_is_a_phenotype
+
+phenotype to disease association:
+  is_a: DiseaseToPhenotypicFeatureAssociation
+  represented_as: edge
+  label_as_edge: phenotype_is_associated_with_disease
+  preferred_id: id
+  source: phenotype
+  target: disease
+  label_in_input: phenotype_is_associated_with_disease
+  properties:
+    pubmed_ids: str[]
+    evidence: str
 
 # protein to pathway association:
   # represented_as: edge
