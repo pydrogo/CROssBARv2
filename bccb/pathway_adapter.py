@@ -48,14 +48,14 @@ class Pathway:
                  drugbank_user, 
                  drugbank_passwd,
                  pathway_node_fields: Union[list[PathwayNodeField], None] = None,
-                 protein_pathway_edge_fields : Union[list[ProteinPathwayEdgeField], None] = None,
+                 protein_pathway_edge_fields: Union[list[ProteinPathwayEdgeField], None] = None,
                  edge_types: Union[list[PathwayEdgeType], None] = None,
-                 remove_selected_annotations: list = ["IEA"],
+                 remove_selected_annotations: list[str] = ["IEA"],
                  test_mode: bool = False,
                  export_csv: bool = False,
                  output_dir: DirectoryPath | None = None,
                  add_prefix: bool = True, 
-                 kegg_organism: list | str | None = None):
+                 kegg_organism: list[str] | str | None = None):
         
         """
         Args:
@@ -163,7 +163,7 @@ class Pathway:
             try:
                 self.kegg_pathways.extend(kegg_local._kegg_list("pathway", org=org))
             except (IndexError, UnicodeDecodeError, gzip.BadGzipFile) as e:
-                logger.debug(f"Error occured in {org} organism in pathway data downloading with an {e}")
+                logger.debug(f"Error occured in {org} organism in pathway data downloading with an {e} error")
         
         if PathwayEdgeType.PROTEIN_TO_PATHWAY in self.edge_types:
             self.kegg_gene_to_pathway = {}
@@ -171,7 +171,7 @@ class Pathway:
                 try:
                     self.kegg_gene_to_pathway = self.kegg_gene_to_pathway | kegg_local.gene_to_pathway(org=org)
                 except (IndexError, UnicodeDecodeError, gzip.BadGzipFile) as e:
-                    logger.debug(f"Error occured in {org} organism  in gene-pathway data downloading with an {e}")
+                    logger.debug(f"Error occured in {org} organism  in gene-pathway data downloading with an {e} error")
                 
                 
             self.kegg_to_uniprot = {v.strip(";").split(";")[0]:k for k, v in uniprot.uniprot_data("xref_kegg", 9606, True).items()}
