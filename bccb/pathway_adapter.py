@@ -43,14 +43,16 @@ class PathwayEdgeType(Enum):
 logger.debug(f"Loading module {__name__}.")
 
 class PathwayModel(BaseModel):
-    pathway_node_fields: Union[list[PathwayNodeField], None] = None,
-    protein_pathway_edge_fields: Union[list[ProteinPathwayEdgeField], None] = None,
-    edge_types: Union[list[PathwayEdgeType], None] = None,
-    remove_selected_annotations: list[str] = ["IEA"],
-    test_mode: bool = False,
-    export_csv: bool = False,
-    output_dir: DirectoryPath | None = None,
-    add_prefix: bool = True, 
+    drugbank_user: str
+    drugbank_passwd: str
+    pathway_node_fields: Union[list[PathwayNodeField], None] = None
+    protein_pathway_edge_fields: Union[list[ProteinPathwayEdgeField], None] = None
+    edge_types: Union[list[PathwayEdgeType], None] = None
+    remove_selected_annotations: list[str] = ["IEA"]
+    test_mode: bool = False
+    export_csv: bool = False
+    output_dir: DirectoryPath | None = None
+    add_prefix: bool = True,
     kegg_organism: list[str] | str | None = None
 
 # ADD evidence_code to schema
@@ -82,7 +84,9 @@ class Pathway:
             if defined, it should kegg organism prefixes.
         """
         
-        self.model = PathwayModel(pathway_node_fields=pathway_node_fields,
+        model = PathwayModel(drugbank_user=drugbank_user,
+                             drugbank_passwd= drugbank_passwd,
+                             pathway_node_fields=pathway_node_fields,
                                 protein_pathway_edge_fields=protein_pathway_edge_fields,
                                 edge_types=edge_types,
                                 remove_selected_annotations=remove_selected_annotations,
@@ -92,12 +96,12 @@ class Pathway:
                                 add_prefix=add_prefix, 
                                 kegg_organism=kegg_organism).model_dump()
 
-        self.drugbank_user = drugbank_user
-        self.drugbank_passwd = drugbank_passwd
-        self.add_prefix = add_prefix
-        self.remove_selected_annotations = remove_selected_annotations
-        self.export_csv = export_csv
-        self.output_dir = output_dir
+        self.drugbank_user = model["drugbank_user"]
+        self.drugbank_passwd = model["drugbank_passwd"]
+        self.add_prefix = model["add_prefix"]
+        self.remove_selected_annotations = model["remove_selected_annotations"]
+        self.export_csv = model["export_csv"]
+        self.output_dir = model["output_dir"]
         
         # set kegg organisms list
         if not kegg_organism:
@@ -106,13 +110,13 @@ class Pathway:
             self.kegg_organism = self.ensure_iterable(kegg_organism)
         
         # set node fields
-        self.set_node_fields(pathway_node_fields=pathway_node_fields)
+        self.set_node_fields(pathway_node_fields=model["pathway_node_fields"])
 
         # set edge fields
-        self.set_edge_fields(protein_pathway_edge_fields=protein_pathway_edge_fields)
+        self.set_edge_fields(protein_pathway_edge_fields=model["protein_pathway_edge_fields"])
 
         # set edge types
-        self.set_edge_types(edge_types=edge_types)
+        self.set_edge_types(edge_types=model["edge_types"])
 
         # set early_stopping, if test_mode true
         self.early_stopping = None
@@ -499,7 +503,7 @@ class Pathway:
         return merged_df
     
     @validate_call
-    def get_nodes(self, label="pathway") -> list[tuple]:
+    def get_nodes(self, label: str = "pathway") -> list[tuple]:
 
         if not hasattr(self, "reactome_pathways"):
             self.download_reactome_data()
@@ -587,7 +591,7 @@ class Pathway:
         return edge_list
 
     @validate_call    
-    def get_protein_pathway_edges(self, label="protein_take_part_in_pathway") -> list[tuple]:
+    def get_protein_pathway_edges(self, label: str = "protein_take_part_in_pathway") -> list[tuple]:
         
         protein_pathway_edges_df = self.merge_protein_pathway_data()
         
@@ -622,7 +626,7 @@ class Pathway:
         return edge_list
     
     @validate_call
-    def get_drug_pathway_edges(self, label="drug_has_target_in_pathway") -> list[tuple]:
+    def get_drug_pathway_edges(self, label: str = "drug_has_target_in_pathway") -> list[tuple]:
         
         drug_pathway_edges_df = self.merge_drug_pathway_data()
         
@@ -657,7 +661,7 @@ class Pathway:
         return edge_list
     
     @validate_call
-    def get_disease_pathway_edges(self, label="disease_modulates_pathway") -> list[tuple]:
+    def get_disease_pathway_edges(self, label: str = "disease_modulates_pathway") -> list[tuple]:
         
         disease_pathway_edges_df = self.merge_disease_pathway_data()
         
@@ -741,7 +745,7 @@ class Pathway:
         return edge_list
     
     @validate_call
-    def get_reactome_hierarchical_edges(self, label="pathway_participates_pathway") -> list[tuple]:
+    def get_reactome_hierarchical_edges(self, label: str = "pathway_participates_pathway") -> list[tuple]:
         
         if not hasattr(self, "reactome_hierarchial_relations"):
             self.download_reactome_data()
@@ -778,7 +782,7 @@ class Pathway:
         return edge_list
     
     @validate_call
-    def get_pathway_pathway_orthology_edges(self, label="pathway_is_ortholog_to_pathway") -> list[tuple]:
+    def get_pathway_pathway_orthology_edges(self, label: str = "pathway_is_ortholog_to_pathway") -> list[tuple]:
         
         if not hasattr(self, "kegg_pathways"):
             self.download_kegg_data()
@@ -874,7 +878,7 @@ class Pathway:
         
         return identifier
     
-    @validate_call
+
     def merge_source_column(self, element, joiner="|"):
         
         _list = []
