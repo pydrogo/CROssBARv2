@@ -42,6 +42,17 @@ class PathwayEdgeType(Enum):
 
 logger.debug(f"Loading module {__name__}.")
 
+class PathwayModel(BaseModel):
+    pathway_node_fields: Union[list[PathwayNodeField], None] = None,
+    protein_pathway_edge_fields: Union[list[ProteinPathwayEdgeField], None] = None,
+    edge_types: Union[list[PathwayEdgeType], None] = None,
+    remove_selected_annotations: list[str] = ["IEA"],
+    test_mode: bool = False,
+    export_csv: bool = False,
+    output_dir: DirectoryPath | None = None,
+    add_prefix: bool = True, 
+    kegg_organism: list[str] | str | None = None
+
 # ADD evidence_code to schema
 class Pathway:
     def __init__(self, 
@@ -71,6 +82,16 @@ class Pathway:
             if defined, it should kegg organism prefixes.
         """
         
+        self.model = PathwayModel(pathway_node_fields=pathway_node_fields,
+                                protein_pathway_edge_fields=protein_pathway_edge_fields,
+                                edge_types=edge_types,
+                                remove_selected_annotations=remove_selected_annotations,
+                                test_mode=test_mode,
+                                export_csv=export_csv,
+                                output_dir=output_dir,
+                                add_prefix=add_prefix, 
+                                kegg_organism=kegg_organism).model_dump()
+
         self.drugbank_user = drugbank_user
         self.drugbank_passwd = drugbank_passwd
         self.add_prefix = add_prefix
@@ -98,6 +119,7 @@ class Pathway:
         if test_mode:
             self.early_stopping = 100
     
+    @validate_call
     def download_pathway_data(
         self,
         cache: bool = False,
@@ -475,7 +497,8 @@ class Pathway:
             logger.info(f"Disease-pathway edge data data is written: {full_path}")
         
         return merged_df
-        
+    
+    @validate_call
     def get_nodes(self, label="pathway") -> list[tuple]:
 
         if not hasattr(self, "reactome_pathways"):
@@ -562,7 +585,8 @@ class Pathway:
             edge_list.extend(self.get_pathway_pathway_orthology_edges())
         
         return edge_list
-        
+
+    @validate_call    
     def get_protein_pathway_edges(self, label="protein_take_part_in_pathway") -> list[tuple]:
         
         protein_pathway_edges_df = self.merge_protein_pathway_data()
@@ -597,6 +621,7 @@ class Pathway:
         
         return edge_list
     
+    @validate_call
     def get_drug_pathway_edges(self, label="drug_has_target_in_pathway") -> list[tuple]:
         
         drug_pathway_edges_df = self.merge_drug_pathway_data()
@@ -631,6 +656,7 @@ class Pathway:
             
         return edge_list
     
+    @validate_call
     def get_disease_pathway_edges(self, label="disease_modulates_pathway") -> list[tuple]:
         
         disease_pathway_edges_df = self.merge_disease_pathway_data()
@@ -714,6 +740,7 @@ class Pathway:
                 
         return edge_list
     
+    @validate_call
     def get_reactome_hierarchical_edges(self, label="pathway_participates_pathway") -> list[tuple]:
         
         if not hasattr(self, "reactome_hierarchial_relations"):
@@ -750,6 +777,7 @@ class Pathway:
             
         return edge_list
     
+    @validate_call
     def get_pathway_pathway_orthology_edges(self, label="pathway_is_ortholog_to_pathway") -> list[tuple]:
         
         if not hasattr(self, "kegg_pathways"):
@@ -835,7 +863,8 @@ class Pathway:
                     if xref.get("database") in mapping_db_list:                
                         db = mapping_db_list[mapping_db_list.index(xref.get("database"))]
                         self.mondo_mappings[db][xref["id"]] = term.obo_id
-        
+
+    @validate_call    
     def add_prefix_to_id(self, prefix: str = None, identifier: str = None, sep: str = ":") -> str:
         """
         Adds prefix to database id
@@ -845,6 +874,7 @@ class Pathway:
         
         return identifier
     
+    @validate_call
     def merge_source_column(self, element, joiner="|"):
         
         _list = []
