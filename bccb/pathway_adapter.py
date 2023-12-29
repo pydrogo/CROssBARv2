@@ -52,7 +52,7 @@ class PathwayModel(BaseModel):
     test_mode: bool = False
     export_csv: bool = False
     output_dir: DirectoryPath | None = None
-    add_prefix: bool = True,
+    add_prefix: bool = True
     kegg_organism: list[str] | str | None = None
 
 # ADD evidence_code to schema
