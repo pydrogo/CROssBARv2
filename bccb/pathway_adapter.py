@@ -72,6 +72,8 @@ class Pathway:
         
         """
         Args:
+            drugbank_user: drugbank username
+            drugbank_passwd: drugbank password
             pathway_node_fields: Pathway node fields that will be included in graph, if defined it must be values of elements from PathwayNodeField enum class (not the names)
             protein_pathway_edge_fields: Protein-pathway edge fields that will included in grah, if defined it must be values of elements from ProteinPathwayEdgeField enum class (not the names)
             edge_types: list of edge types that will be included in graph, if defined it must be elements (not values of elements) from PathwayEdgeType enum class
@@ -104,10 +106,10 @@ class Pathway:
         self.output_dir = model["output_dir"]
         
         # set kegg organisms list
-        if not kegg_organism:
+        if not model["kegg_organism"]:
             self.kegg_organism = list(kegg_local._Organism()._data.keys())
         else:
-            self.kegg_organism = self.ensure_iterable(kegg_organism)
+            self.kegg_organism = self.ensure_iterable(model["kegg_organism"])
         
         # set node fields
         self.set_node_fields(pathway_node_fields=model["pathway_node_fields"])
@@ -120,7 +122,7 @@ class Pathway:
 
         # set early_stopping, if test_mode true
         self.early_stopping = None
-        if test_mode:
+        if model["test_mode"]:
             self.early_stopping = 100
     
     @validate_call
