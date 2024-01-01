@@ -204,15 +204,15 @@ class HPO:
             hpo_id = self.add_prefix_to_id(prefix="hp", identifier=term)
             
             props = {}
-            if "name" in self.phenotype_node_fields:
-                props["name"] = name.replace("|",",").replace("'","^")
+            if PhenotypeNodeField.NAME.value in self.phenotype_node_fields:
+                props[PhenotypeNodeField.NAME.value] = name.replace("|",",").replace("'","^")
 
-            if "synonyms" in self.phenotype_node_fields:
+            if PhenotypeNodeField.SYNONYMS.value in self.phenotype_node_fields:
                 if self.hpo_ontology["synonyms"].get(term):
                     if len(self.hpo_ontology["synonyms"].get(term)) == 1:
-                        props["synonyms"] = list(self.hpo_ontology["synonyms"].get(term))[0].replace("|",",").replace("'","^")
+                        props[PhenotypeNodeField.SYNONYMS.value] = list(self.hpo_ontology["synonyms"].get(term))[0].replace("|",",").replace("'","^")
                     else:                    
-                        props["synonyms"] = [t.replace("|",",").replace("'","^") for t in self.hpo_ontology["synonyms"].get(term)]
+                        props[PhenotypeNodeField.SYNONYMS.value] = [t.replace("|",",").replace("'","^") for t in self.hpo_ontology["synonyms"].get(term)]
                         
             node_list.append((hpo_id, label, props))
 
@@ -411,4 +411,3 @@ class HPO:
             self.edge_types = edge_types
         else:
             self.edge_types = [field for field in PhenotypeEdgeType]
-          
