@@ -89,14 +89,14 @@ class Pathway:
         model = PathwayModel(drugbank_user=drugbank_user,
                              drugbank_passwd= drugbank_passwd,
                              pathway_node_fields=pathway_node_fields,
-                                protein_pathway_edge_fields=protein_pathway_edge_fields,
-                                edge_types=edge_types,
-                                remove_selected_annotations=remove_selected_annotations,
-                                test_mode=test_mode,
-                                export_csv=export_csv,
-                                output_dir=output_dir,
-                                add_prefix=add_prefix, 
-                                kegg_organism=kegg_organism).model_dump()
+                             protein_pathway_edge_fields=protein_pathway_edge_fields,
+                             edge_types=edge_types,
+                             remove_selected_annotations=remove_selected_annotations,
+                             test_mode=test_mode,
+                             export_csv=export_csv,
+                             output_dir=output_dir,
+                             add_prefix=add_prefix, 
+                             kegg_organism=kegg_organism).model_dump()
 
         self.drugbank_user = model["drugbank_user"]
         self.drugbank_passwd = model["drugbank_passwd"]
@@ -520,11 +520,11 @@ class Pathway:
             pathway_id = self.add_prefix_to_id(prefix="reactome", identifier=p.pathway_id)
             
             props = {}
-            if "name" in self.pathway_node_fields:
-                props["name"] = p.pathway_name.replace("'","^")
+            if PathwayNodeField.NAME.value in self.pathway_node_fields:
+                props[PathwayNodeField.NAME.value] = p.pathway_name.replace("'","^")
 
-            if "organism" in self.pathway_node_fields:
-                props["organism"] = p.organism
+            if PathwayNodeField.ORGANISM.value in self.pathway_node_fields:
+                props[PathwayNodeField.ORGANISM.value] = p.organism
 
             node_list.append((pathway_id, label, props))
 
@@ -535,11 +535,11 @@ class Pathway:
             pathway_id = self.add_prefix_to_id(prefix="kegg.pathway", identifier=p[0])
 
             props = {}
-            if "name" in self.pathway_node_fields:
-                props["name"] = p[1].split("-")[0].strip().replace("'","^")
+            if PathwayNodeField.NAME.value in self.pathway_node_fields:
+                props[PathwayNodeField.NAME.value] = p[1].split("-")[0].strip().replace("'","^")
 
-            if "organism" in self.pathway_node_fields:
-                props["organism"] = self.kegg_pathway_abbv_organism_name_dict.get(p[0][:3])
+            if PathwayNodeField.ORGANISM.value in self.pathway_node_fields:
+                props[PathwayNodeField.ORGANISM.value] = self.kegg_pathway_abbv_organism_name_dict.get(p[0][:3])
 
             node_list.append((pathway_id, label, props))
 
@@ -826,8 +826,8 @@ class Pathway:
                     continue
                     
                 if p1_id_last_element == p2_id_last_element:
-                    pathway1_id =self.add_prefix_to_id(prefix="kegg.pathway", identifier=p1.pathway_id)
-                    pathway2_id = self.add_prefix_to_id(prefix="kegg.pathway", identifier=p2.pathway_id)
+                    pathway1_id =self.add_prefix_to_id(prefix="reactome", identifier=p1.pathway_id)
+                    pathway2_id = self.add_prefix_to_id(prefix="reactome", identifier=p2.pathway_id)
                     edge_list.append((None, pathway1_id, pathway2_id, label, {}))
 
                     index += 1
