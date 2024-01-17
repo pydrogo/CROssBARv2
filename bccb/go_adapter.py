@@ -263,7 +263,7 @@ class GO:
                     else:
                         full_path = os.path.join(os.getcwd(), "goa_uniprot_gcrp.gaf.gz")
                     
-                    if not os.path.exists(full_path):
+                    if not os.path.isfile(full_path):
                         with requests.get(all_go_annotations_url, stream=True) as response:
                             with open(full_path, 'wb') as f:
                                 for chunk in response.iter_content(1024):
