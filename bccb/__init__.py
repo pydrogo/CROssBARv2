@@ -1,2 +1,2 @@
 version = "0.0.1"
-authors = ["Sebastian Lobentanzer", "Bünyamin Şen", "Erva Ulusoy"]
+authors = ["Sebastian Lobentanzer", "Bünyamin Şen", "Erva Ulusoy", "Melih Darcan", "Atabey Ünlü"]
