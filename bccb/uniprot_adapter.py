@@ -1,10 +1,15 @@
 from time import time
 import collections
-from typing import Dict, List, Optional
+from typing import Optional, Union, Literal
+from collections.abc import Generator
 from enum import Enum, auto
 from functools import lru_cache
 import pandas as pd
+import numpy as np
+
 import os
+import requests
+import h5py
 
 from tqdm import tqdm  # progress bar
 from pypath.share import curl, settings
@@ -13,6 +18,8 @@ from pypath.inputs import uniprot
 from biocypher._logger import logger
 from contextlib import ExitStack
 from bioregistry import normalize_curie
+
+from pydantic import BaseModel, DirectoryPath, validate_call
 
 logger.debug(f"Loading module {__name__}.")
 
@@ -44,6 +51,7 @@ class UniprotNodeField(Enum):
     PROTEIN_EC = "ec"
     PROTEIN_GENE_NAMES = "gene_names"
     PRIMARY_GENE_NAME = "gene_primary"
+    SEQUENCE = "sequence"
     # xref attributes
     PROTEIN_ENSEMBL_TRANSCRIPT_IDS = "xref_ensembl"
     PROTEIN_PROTEOME = "xref_proteomes"
@@ -55,6 +63,10 @@ class UniprotNodeField(Enum):
     # we provide these by mapping ENSTs via pypath
     PROTEIN_ENSEMBL_GENE_IDS = "ensembl_gene_ids"
 
+    # not from uniprot REST
+    # we provide these by downloading the ProtT5 embeddings from uniprot
+    PROTT5_EMBEDDING = "prott5_embedding"
+
 class UniprotEdgeType(Enum):
     """
     Edge types of the UniProt API represented in this adapter.
@@ -64,7 +76,7 @@ class UniprotEdgeType(Enum):
     GENE_TO_PROTEIN = auto()
 
 
-class UniprotEdgeField(Enum):
+class UniprotIDField(Enum):
     """
     Fields of edges of the UniProt API represented in this adapter. Used to
     assign source and target identifiers in `get_edges()`.
@@ -79,6 +91,16 @@ class UniprotEdgeField(Enum):
     GENE_ENSEMBL_GENE_ID = auto()
 
 
+class UniProtModel(BaseModel):
+    organism: Literal["*"] | int | None = "*"
+    rev: bool = True
+    node_types: Optional[Union[list[UniprotNodeType], None]] = None
+    node_fields: Optional[Union[list[UniprotNodeField], None]] = None
+    edge_types: Optional[Union[list[UniprotEdgeType], None]] = None
+    id_fields: Optional[Union[list[UniprotIDField], None]] = None
+    add_prefix: bool = True
+    test_mode: bool = False
+
 class Uniprot:
     """
     Class that downloads uniprot data using pypath and reformats it to be ready
@@ -92,21 +114,29 @@ class Uniprot:
 
     def __init__(
         self,
-        organism="*",
-        rev=True,
-        node_types: Optional[list] = None,
-        node_fields: Optional[list] = None,
-        edge_types: Optional[list] = None,
-        edge_fields: Optional[list] = None,
-        normalise_curies: bool = True,
+        organism: Literal["*"] | int | None = "*",
+        rev: bool = True,
+        node_types: Optional[Union[list[UniprotNodeType], None]] = None,
+        node_fields: Optional[Union[list[UniprotNodeField], None]] = None,
+        edge_types: Optional[Union[list[UniprotEdgeType], None]] = None,
+        id_fields: Optional[Union[list[UniprotIDField], None]] = None,
+        add_prefix: bool = True,
         test_mode: bool = False,
     ):
+        model = UniProtModel(organism=organism,
+                             rev=rev,
+                             node_types=node_types,
+                             node_fields=node_fields,
+                             edge_types=edge_types,
+                             id_fields=id_fields,
+                             add_prefix=add_prefix,
+                             test_mode=test_mode).model_dump()
 
         # params
-        self.organism = organism
-        self.rev = rev
-        self.normalise_curies = normalise_curies
-        self.test_mode = test_mode
+        self.organism = model["organism"]
+        self.rev = model["rev"]
+        self.add_prefix = model["add_prefix"]
+        self.test_mode = model["test_mode"]
 
         # provenance
         self.data_source = "uniprot"
@@ -116,11 +146,12 @@ class Uniprot:
         self._configure_fields()
 
         self._set_node_and_edge_fields(
-            node_types=node_types,
-            node_fields=node_fields,
-            edge_types=edge_types,
-            edge_fields=edge_fields,
+            node_types=model["node_types"],
+            node_fields=model["node_fields"],
+            edge_types=model["edge_types"],
         )
+
+        self.set_id_fields(id_fields=model["id_fields"])
 
         # loading of ligands and receptors sets
         self.ligands = self._read_ligands_set()
@@ -145,11 +176,13 @@ class Uniprot:
         receptor_file = pd.read_csv("data/receptors_curated.csv", header=None)
         return set(receptor_file[0])
 
+    @validate_call
     def download_uniprot_data(
         self,
-        cache=False,
-        debug=False,
-        retries=3,
+        cache: bool = False,
+        debug: bool = False,
+        retries: int = 3,
+        prott5_embedding_output_path: DirectoryPath | None = None,
     ):
         """
         Wrapper function to download uniprot data using pypath; used to access
@@ -175,12 +208,13 @@ class Uniprot:
             if not cache:
                 stack.enter_context(curl.cache_off())
 
-            self._download_uniprot_data()
+            self._download_uniprot_data(prott5_embedding_output_path=prott5_embedding_output_path)
 
             # preprocess data
             self._preprocess_uniprot_data()
 
-    def _download_uniprot_data(self):
+    @validate_call
+    def _download_uniprot_data(self, prott5_embedding_output_path: DirectoryPath | None = None):
         """
         Download uniprot data from uniprot.org through pypath.
 
@@ -195,17 +229,18 @@ class Uniprot:
         t0 = time()
 
         # download all swissprot ids
-        self.uniprot_ids = list(uniprot._all_uniprots(self.organism, self.rev))
+        self.uniprot_ids = set(uniprot._all_uniprots(self.organism, self.rev))
 
         # limit to 100 for testing
         if self.test_mode:
-            self.uniprot_ids = self.uniprot_ids[:100]
+            self.uniprot_ids = set(list(self.uniprot_ids)[:100])
 
         # download attribute dicts
         self.data = {}
         for query_key in tqdm(self.node_fields):
             if query_key in [
-                UniprotNodeField.PROTEIN_ENSEMBL_GENE_IDS.value, 
+                UniprotNodeField.PROTEIN_ENSEMBL_GENE_IDS.value,
+                UniprotNodeField.PROTT5_EMBEDDING.value,
             ]:
                 continue
             
@@ -223,9 +258,44 @@ class Uniprot:
         # add ensembl gene ids
         self.data[UniprotNodeField.PROTEIN_ENSEMBL_GENE_IDS.value] = {}
 
+        if UniprotNodeField.PROTT5_EMBEDDING.value in self.node_fields:
+            self.data[UniprotNodeField.PROTT5_EMBEDDING.value] = {}
+            self.download_prott5_embeddings(prott5_embedding_output_path=prott5_embedding_output_path)
+
         t1 = time()
         msg = f"Acquired UniProt data in {round((t1-t0) / 60, 2)} mins."
         logger.info(msg)
+
+    @validate_call
+    def download_prott5_embeddings(self, prott5_embedding_output_path: DirectoryPath | None = None):
+        """
+        Downloads ProtT5 embedding from uniprot website
+        If the files exists in a defined directory as `per-protein.h5` file, then
+        directly read it.
+
+        Args:
+            prott5_embedding_output_path (DirectoryPath, optional): Defaults to None.
+        """
+        if prott5_embedding_output_path:
+            full_path = os.path.join(prott5_embedding_output_path, "per-protein.h5")
+        else:
+            full_path = os.path.join(os.getcwd(), "per-protein.h5")
+
+        logger.info("Downloading ProtT5 embeddings...")
+
+        if not os.path.isfile(full_path):
+            with requests.get("https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/embeddings/uniprot_sprot/per-protein.h5", stream=True) as response:
+                with open(full_path, 'wb') as f:
+                    for chunk in response.iter_content(1024):
+                        if chunk:
+                            f.write(chunk)
+
+        with h5py.File(full_path, "r") as file:
+            for uniprot_id, embedding in file.items():
+                if self.organism not in ("*", None) and uniprot_id in self.uniprot_ids:
+                    self.data[UniprotNodeField.PROTT5_EMBEDDING.value][uniprot_id] = np.array(embedding).tolist()
+                else:
+                    self.data[UniprotNodeField.PROTT5_EMBEDDING.value][uniprot_id] = np.array(embedding).tolist()
 
     def _preprocess_uniprot_data(self):
         """
@@ -334,6 +404,7 @@ class Uniprot:
 
                     self.data[arg][protein] = individual_protein_locations
 
+    @validate_call
     def _get_ligand_or_receptor(self, uniprot_id: str):
         """
         Tell if UniProt protein node is a L, R or nothing.
@@ -348,7 +419,8 @@ class Uniprot:
 
         return "protein"
     
-    def get_nodes(self, ligand_or_receptor: bool = False):
+    @validate_call
+    def get_nodes(self, ligand_or_receptor: bool = False) -> Generator[str, str, dict]:
         """
         Yield nodes (protein, gene, organism) from UniProt data.
         """
@@ -402,7 +474,7 @@ class Uniprot:
                         organism_props,
                     )
 
-    def get_edges(self):
+    def get_edges(self) -> Generator[None, str, str, str, dict]:
         """
         Get nodes and edges from UniProt data.
         """
@@ -424,7 +496,7 @@ class Uniprot:
 
         for protein in tqdm(self.uniprot_ids):
 
-            protein_id = self._normalise_curie_cached("uniprot", protein)
+            protein_id = self.add_prefix_to_id("uniprot", protein)
 
             if UniprotEdgeType.GENE_TO_PROTEIN in self.edge_types:
 
@@ -434,11 +506,11 @@ class Uniprot:
                 }
 
                 # find preferred identifier for gene
-                if UniprotEdgeField.GENE_ENTREZ_ID in self.edge_fields:
+                if UniprotIDField.GENE_ENTREZ_ID in self.id_fields:
 
                     id_type = UniprotNodeField.PROTEIN_ENTREZ_GENE_IDS.value
 
-                elif UniprotEdgeField.GENE_ENSEMBL_GENE_ID in self.edge_fields:
+                elif UniprotIDField.GENE_ENSEMBL_GENE_ID in self.id_fields:
 
                     id_type = UniprotNodeField.PROTEIN_ENSEMBL_GENE_IDS.value
 
@@ -452,7 +524,7 @@ class Uniprot:
                         if not gene:
                             continue
 
-                        gene_id = self._normalise_curie_cached(
+                        gene_id = self.add_prefix_to_id(
                             type_dict[id_type],
                             gene,
                         )
@@ -472,7 +544,7 @@ class Uniprot:
 
                 if organism_id:
 
-                    organism_id = self._normalise_curie_cached(
+                    organism_id = self.add_prefix_to_id(
                         "ncbitaxon", organism_id
                     )
                     edge_list.append(
@@ -497,7 +569,7 @@ class Uniprot:
 
         for protein in tqdm(self.uniprot_ids):
 
-            protein_id = self._normalise_curie_cached("uniprot", protein)
+            protein_id = self.add_prefix_to_id("uniprot", protein)
 
             _props = {}
 
@@ -507,6 +579,7 @@ class Uniprot:
 
             yield protein_id, _props
 
+    @validate_call
     def _get_gene(self, all_props: dict) -> list:
         """
         Get gene node representation from UniProt data per protein. Since one
@@ -522,11 +595,11 @@ class Uniprot:
             return []
 
         # Find preferred identifier for gene and check if it exists
-        if UniprotEdgeField.GENE_ENTREZ_ID in self.edge_fields:
+        if UniprotIDField.GENE_ENTREZ_ID in self.id_fields:
 
             id_type = UniprotNodeField.PROTEIN_ENTREZ_GENE_IDS.value
 
-        elif UniprotEdgeField.GENE_ENSEMBL_GENE_ID in self.edge_fields:
+        elif UniprotIDField.GENE_ENSEMBL_GENE_ID in self.id_fields:
 
             id_type = UniprotNodeField.PROTEIN_ENSEMBL_GENE_IDS.value
 
@@ -566,7 +639,7 @@ class Uniprot:
 
         for gene in genes:
 
-            gene_id = self._normalise_curie_cached(
+            gene_id = self.add_prefix_to_id(
                 type_dict[id_type],
                 gene,
             )
@@ -574,12 +647,13 @@ class Uniprot:
             gene_list.append((gene_id, gene_props))
 
         return gene_list
-
+    
+    @validate_call
     def _get_organism(self, all_props: dict):
 
         organism_props = dict()
 
-        organism_id = self._normalise_curie_cached(
+        organism_id = self.add_prefix_to_id(
             "ncbitaxon",
             all_props.pop(UniprotNodeField.PROTEIN_ORGANISM_ID.value),
         )
@@ -596,6 +670,7 @@ class Uniprot:
 
         return organism_id, organism_props
 
+    @validate_call
     def _get_protein_properties(self, all_props: dict) -> dict:
 
         protein_props = dict()
@@ -828,6 +903,17 @@ class Uniprot:
             return identifier
 
         return normalize_curie(f"{prefix}{sep}{identifier}", sep=sep)
+    
+    @lru_cache
+    @validate_call
+    def add_prefix_to_id(self, prefix: str = None, identifier: str = None, sep: str = ":") -> str:
+        """
+        Adds prefix to database id
+        """
+        if self.add_prefix and identifier:
+            return normalize_curie(prefix + sep + str(identifier))
+        
+        return identifier
 
     def _configure_fields(self):
         # fields that need splitting
@@ -849,6 +935,8 @@ class Uniprot:
             UniprotNodeField.PROTEIN_EC.value,
             UniprotNodeField.PROTEIN_VIRUS_HOSTS.value,
             UniprotNodeField.PROTEIN_ORGANISM_ID.value,
+            UniprotNodeField.SEQUENCE.value,
+            UniprotNodeField.PROTT5_EMBEDDING.value,
         ]
 
         self.gene_properties = [
@@ -863,7 +951,7 @@ class Uniprot:
         self.organism_properties = [UniprotNodeField.PROTEIN_ORGANISM.value]
 
     def _set_node_and_edge_fields(
-        self, node_types, node_fields, edge_types, edge_fields
+        self, node_types, node_fields, edge_types,
     ):
 
         # ensure computation of ENSGs
@@ -898,21 +986,25 @@ class Uniprot:
 
             self.edge_types = [field for field in UniprotEdgeType]
 
-        if edge_fields:
+    def set_id_fields(self, id_fields):
+        if id_fields:
 
-            self.edge_fields = edge_fields
+            self.id_fields = id_fields
 
         else:
 
-            self.edge_fields = [field for field in UniprotEdgeField][:3]
+            self.id_fields = [field for field in UniprotIDField][:3]
 
     def _ensure_iterable(self, value):
         if isinstance(value, str):
             return [value]
         else:
             return value
-        
-    def export_data_to_csv(self, node_data = None, edge_data = None, path: str | None = None):
+    
+    @validate_call
+    def export_data_to_csv(self, node_data: Generator[str, str, dict] = None, 
+                           edge_data: Generator[None, str, str, str, dict] = None, 
+                           path: DirectoryPath | None = None):
         """
         Save node and edge data to csv
             node_data: output of `get_nodes()` function
@@ -920,7 +1012,7 @@ class Uniprot:
             path: where to save csv files
         """
         if node_data:
-            logger.info("Saving node data as csv")
+            logger.debug("Saving node data as csv")
             node_types_dict = collections.defaultdict(list)
             for _id, _type, props in node_data:
                 _dict = {"id":_id} | props
@@ -931,13 +1023,13 @@ class Uniprot:
                 if path:
                     full_path = os.path.join(path, f"{_type.capitalize()}.csv")
                 else:
-                    full_path = f"{_type.capitalize()}.csv"
+                    full_path = os.path.join(os.getcwd(), f"{_type.capitalize()}.csv")
                 
                 df.to_csv(full_path, index=False)
                 logger.info(f"{_type.capitalize()} data is written: {full_path}")
 
         if edge_data:
-            logger.info("Saving node data as csv")
+            logger.debug("Saving edge data as csv")
             edge_types_dict = collections.defaultdict(list)
             for _, source_id, target_id, _type, props in edge_data:
                 _dict = {"source_id":source_id, "target_id":target_id} | props
@@ -948,7 +1040,7 @@ class Uniprot:
                 if path:
                     full_path = os.path.join(path, f"{_type.capitalize()}.csv")
                 else:
-                    full_path = f"{_type.capitalize()}.csv"
+                    full_path = os.path.join(os.getcwd(), f"{_type.capitalize()}.csv")
 
                 df.to_csv(full_path, index=False)
                 logger.info(f"{_type.capitalize()} data is written: {full_path}")
