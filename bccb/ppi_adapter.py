@@ -53,7 +53,7 @@ class PPI:
         cache=False,
         debug=False,
         retries=6,
-        organism=9606,
+        organism=None,
         intact_fields=None,
         biogrid_fields=None,
         string_fields=None,
@@ -83,7 +83,7 @@ class PPI:
         self.cache = cache
         self.debug = debug
         self.retries = retries
-        self.organism = organism
+        self.organism = None if organism in ("*", None) else organism
         self.intact_fields = intact_fields
         self.biogrid_fields = biogrid_fields
         self.string_fields = string_fields
