@@ -76,7 +76,6 @@ uniprot_node_fields = [
     UniprotNodeField.ORGANISM_ID,
     UniprotNodeField.PROTEIN_NAMES,
     UniprotNodeField.PROTEOME,
-    UniprotNodeField.SUBCELLULAR_LOCATION,
     UniprotNodeField.PROTEIN_GENE_NAMES,
     UniprotNodeField.ENSEMBL_TRANSCRIPT_IDS,
     UniprotNodeField.ENSEMBL_GENE_IDS,
