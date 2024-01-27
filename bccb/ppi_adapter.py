@@ -1,11 +1,8 @@
 import os
-import sys
 import pandas as pd
 import numpy as np
 import time
 import collections
-import argparse
-from pathlib import Path
 from time import time
 
 from pypath.inputs import intact
