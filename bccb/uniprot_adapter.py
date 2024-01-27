@@ -42,26 +42,27 @@ class UniprotNodeField(Enum):
     """
 
     # core attributes
-    PROTEIN_LENGTH = "length"
-    PROTEIN_SUBCELLULAR_LOCATION = "subcellular_location"
-    PROTEIN_MASS = "mass"
-    PROTEIN_ORGANISM = "organism_name"
-    PROTEIN_ORGANISM_ID = "organism_id"
+    LENGTH = "length"
+    SUBCELLULAR_LOCATION = "subcellular_location"
+    MASS = "mass"
+    ORGANISM = "organism_name"
+    ORGANISM_ID = "organism_id"
     PROTEIN_NAMES = "protein_name"
-    PROTEIN_EC = "ec"
+    EC = "ec"
     PROTEIN_GENE_NAMES = "gene_names"
     PRIMARY_GENE_NAME = "gene_primary"
     SEQUENCE = "sequence"
+
     # xref attributes
-    PROTEIN_ENSEMBL_TRANSCRIPT_IDS = "xref_ensembl"
-    PROTEIN_PROTEOME = "xref_proteomes"
-    PROTEIN_ENTREZ_GENE_IDS = "xref_geneid"
-    PROTEIN_VIRUS_HOSTS = "virus_hosts"
-    PROTEIN_KEGG_IDS = "xref_kegg"
+    ENSEMBL_TRANSCRIPT_IDS = "xref_ensembl"
+    PROTEOME = "xref_proteomes"
+    ENTREZ_GENE_IDS = "xref_geneid"
+    VIRUS_HOSTS = "virus_hosts"
+    KEGG_IDS = "xref_kegg"
 
     # not from uniprot REST
     # we provide these by mapping ENSTs via pypath
-    PROTEIN_ENSEMBL_GENE_IDS = "ensembl_gene_ids"
+    ENSEMBL_GENE_IDS = "ensembl_gene_ids"
 
     # not from uniprot REST
     # we provide these by downloading the ProtT5 embeddings from uniprot
@@ -239,12 +240,12 @@ class Uniprot:
         self.data = {}
         for query_key in tqdm(self.node_fields):
             if query_key in [
-                UniprotNodeField.PROTEIN_ENSEMBL_GENE_IDS.value,
+                UniprotNodeField.ENSEMBL_GENE_IDS.value,
                 UniprotNodeField.PROTT5_EMBEDDING.value,
             ]:
                 continue
             
-            elif query_key == UniprotNodeField.PROTEIN_SUBCELLULAR_LOCATION.value:
+            elif query_key == UniprotNodeField.SUBCELLULAR_LOCATION.value:
                 self.data[query_key] = uniprot.uniprot_locations(
                     self.organism, self.rev
                 )
@@ -256,7 +257,7 @@ class Uniprot:
             logger.debug(f"{query_key} field is downloaded")
 
         # add ensembl gene ids
-        self.data[UniprotNodeField.PROTEIN_ENSEMBL_GENE_IDS.value] = {}
+        self.data[UniprotNodeField.ENSEMBL_GENE_IDS.value] = {}
 
         if UniprotNodeField.PROTT5_EMBEDDING.value in self.node_fields:
             self.data[UniprotNodeField.PROTT5_EMBEDDING.value] = {}
@@ -286,7 +287,7 @@ class Uniprot:
         if not os.path.isfile(full_path):
             with requests.get("https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/embeddings/uniprot_sprot/per-protein.h5", stream=True) as response:
                 with open(full_path, 'wb') as f:
-                    for chunk in response.iter_content(1024):
+                    for chunk in response.iter_content(512 * 1024):
                         if chunk:
                             f.write(chunk)
 
@@ -316,14 +317,17 @@ class Uniprot:
         for arg in tqdm(self.node_fields):
 
             # do not process ensembl gene ids (we will get them from pypath)
-            if arg == UniprotNodeField.PROTEIN_ENSEMBL_GENE_IDS.value:
+            # and prott5 embeddings
+            if arg in [UniprotNodeField.ENSEMBL_GENE_IDS.value,
+                       UniprotNodeField.PROTT5_EMBEDDING.value
+            ]:
                 pass
 
             # Integers
             elif arg in [
-                UniprotNodeField.PROTEIN_LENGTH.value,
-                UniprotNodeField.PROTEIN_MASS.value,
-                UniprotNodeField.PROTEIN_ORGANISM_ID.value,
+                UniprotNodeField.LENGTH.value,
+                UniprotNodeField.MASS.value,
+                UniprotNodeField.ORGANISM_ID.value,
             ]:
                 for protein, attribute_value in self.data.get(arg).items():
                     self.data[arg][protein] = int(
@@ -332,7 +336,7 @@ class Uniprot:
             
             # Simple replace
             elif arg not in self.split_fields:
-                if not arg == UniprotNodeField.PROTEIN_SUBCELLULAR_LOCATION.value:
+                if not arg == UniprotNodeField.SUBCELLULAR_LOCATION.value:
                     for protein, attribute_value in self.data.get(arg).items():
 
                         self.data[arg][protein] = (
@@ -352,7 +356,7 @@ class Uniprot:
 
             # Special treatment
             # ENST and ENSG ids
-            if arg == UniprotNodeField.PROTEIN_ENSEMBL_TRANSCRIPT_IDS.value:
+            if arg == UniprotNodeField.ENSEMBL_TRANSCRIPT_IDS.value:
 
                 for protein, attribute_value in self.data.get(arg).items():
 
@@ -362,13 +366,13 @@ class Uniprot:
 
                     # update enst in data dict
                     self.data[
-                        UniprotNodeField.PROTEIN_ENSEMBL_TRANSCRIPT_IDS.value
+                        UniprotNodeField.ENSEMBL_TRANSCRIPT_IDS.value
                     ][protein] = attribute_value
 
                     if ensg_ids:
                         # add ensgs to data dict
                         self.data[
-                            UniprotNodeField.PROTEIN_ENSEMBL_GENE_IDS.value
+                            UniprotNodeField.ENSEMBL_GENE_IDS.value
                         ][protein] = ensg_ids
 
             # Protein names
@@ -380,7 +384,7 @@ class Uniprot:
                         attribute_value
                     )
 
-            elif arg == UniprotNodeField.PROTEIN_VIRUS_HOSTS.value:
+            elif arg == UniprotNodeField.VIRUS_HOSTS.value:
 
                 for protein, attribute_value in self.data.get(arg).items():
 
@@ -388,7 +392,7 @@ class Uniprot:
                         attribute_value
                     )
 
-            elif arg == UniprotNodeField.PROTEIN_SUBCELLULAR_LOCATION.value:
+            elif arg == UniprotNodeField.SUBCELLULAR_LOCATION.value:
                 for protein, attribute_value in self.data.get(arg).items():
                     individual_protein_locations = []
                     for element in attribute_value:
@@ -501,18 +505,18 @@ class Uniprot:
             if UniprotEdgeType.GENE_TO_PROTEIN in self.edge_types:
 
                 type_dict = {
-                    UniprotNodeField.PROTEIN_ENTREZ_GENE_IDS.value: "ncbigene",
-                    UniprotNodeField.PROTEIN_ENSEMBL_GENE_IDS.value: "ensembl",
+                    UniprotNodeField.ENTREZ_GENE_IDS.value: "ncbigene",
+                    UniprotNodeField.ENSEMBL_GENE_IDS.value: "ensembl",
                 }
 
                 # find preferred identifier for gene
                 if UniprotIDField.GENE_ENTREZ_ID in self.id_fields:
 
-                    id_type = UniprotNodeField.PROTEIN_ENTREZ_GENE_IDS.value
+                    id_type = UniprotNodeField.ENTREZ_GENE_IDS.value
 
                 elif UniprotIDField.GENE_ENSEMBL_GENE_ID in self.id_fields:
 
-                    id_type = UniprotNodeField.PROTEIN_ENSEMBL_GENE_IDS.value
+                    id_type = UniprotNodeField.ENSEMBL_GENE_IDS.value
 
                 genes = self.data.get(id_type).get(protein)
 
@@ -538,7 +542,7 @@ class Uniprot:
                 # is it even still necessary?
 
                 organism_id = (
-                    self.data.get(UniprotNodeField.PROTEIN_ORGANISM_ID.value)
+                    self.data.get(UniprotNodeField.ORGANISM_ID.value)
                     .get(protein)
                 )
 
@@ -589,7 +593,7 @@ class Uniprot:
         # if genes and database(GeneID) fields exist, define gene_properties
         if not (
             UniprotNodeField.PROTEIN_GENE_NAMES.value in all_props.keys()
-            and UniprotNodeField.PROTEIN_ENTREZ_GENE_IDS.value
+            and UniprotNodeField.ENTREZ_GENE_IDS.value
             in all_props.keys()
         ):
             return []
@@ -597,11 +601,11 @@ class Uniprot:
         # Find preferred identifier for gene and check if it exists
         if UniprotIDField.GENE_ENTREZ_ID in self.id_fields:
 
-            id_type = UniprotNodeField.PROTEIN_ENTREZ_GENE_IDS.value
+            id_type = UniprotNodeField.ENTREZ_GENE_IDS.value
 
         elif UniprotIDField.GENE_ENSEMBL_GENE_ID in self.id_fields:
 
-            id_type = UniprotNodeField.PROTEIN_ENSEMBL_GENE_IDS.value
+            id_type = UniprotNodeField.ENSEMBL_GENE_IDS.value
 
         gene_raw = all_props.pop(id_type)
 
@@ -609,8 +613,8 @@ class Uniprot:
             return []
 
         type_dict = {
-            UniprotNodeField.PROTEIN_ENTREZ_GENE_IDS.value: "ncbigene",
-            UniprotNodeField.PROTEIN_ENSEMBL_GENE_IDS.value: "ensembl",
+            UniprotNodeField.ENTREZ_GENE_IDS.value: "ncbigene",
+            UniprotNodeField.ENSEMBL_GENE_IDS.value: "ensembl",
         }
 
         gene_props = dict()
@@ -620,13 +624,8 @@ class Uniprot:
             if k not in self.gene_properties:
                 continue
 
-            if "(" in k:
-                k_new = k.split("(")[1].split(")")[0].lower()
-            else:
-                k_new = k.lower()
-
             # select parenthesis content in field names and make lowercase
-            gene_props[k_new] = all_props[k]
+            gene_props[k.replace(" ","_").replace("-", "_").lower() if k != UniprotNodeField.PRIMARY_GENE_NAME.value else "primary_gene_name"] = all_props[k]
 
         # source, licence, and version fields
         gene_props["source"] = self.data_source
@@ -655,7 +654,7 @@ class Uniprot:
 
         organism_id = self.add_prefix_to_id(
             "ncbitaxon",
-            all_props.pop(UniprotNodeField.PROTEIN_ORGANISM_ID.value),
+            str(all_props.pop(UniprotNodeField.ORGANISM_ID.value)),
         )
 
         for k in all_props.keys():
@@ -685,7 +684,7 @@ class Uniprot:
                 protein_props["primary_protein_name"] = self._ensure_iterable(all_props[k])[0] if all_props[k] else None
 
             # replace hyphens and spaces with underscore
-            protein_props[k.replace(" ", "_").replace("-", "_")] = all_props[k]
+            protein_props[k.replace(" ", "_").replace("-", "_") if k != UniprotNodeField.PROTEIN_NAMES.value else "protein_names"] = all_props[k]
 
         # source, licence, and version fields
         protein_props["source"] = self.data_source
@@ -709,7 +708,7 @@ class Uniprot:
 
             # define fields that will not be splitted by semicolon
             split_dict = {
-                UniprotNodeField.PROTEIN_PROTEOME.value: ",",
+                UniprotNodeField.PROTEOME.value: ",",
                 UniprotNodeField.PROTEIN_GENE_NAMES.value: " ",
             }
 
@@ -725,14 +724,14 @@ class Uniprot:
                 field_value = field_value.strip().strip(";").split(";")
 
                 # split colons (":") in kegg field
-                if field_key == UniprotNodeField.PROTEIN_KEGG_IDS.value:
+                if field_key == UniprotNodeField.KEGG_IDS.value:
                     _list = []
                     for e in field_value:
                         _list.append(e.split(":")[1].strip())
                     field_value = _list
 
                 # take first element in database(GeneID) field
-                if field_key == UniprotNodeField.PROTEIN_ENTREZ_GENE_IDS.value:
+                if field_key == UniprotNodeField.ENTREZ_GENE_IDS.value:
                     field_value = field_value[0]
 
                 # if field has just one element in the list make it string
@@ -918,47 +917,47 @@ class Uniprot:
     def _configure_fields(self):
         # fields that need splitting
         self.split_fields = [
-            UniprotNodeField.PROTEIN_PROTEOME.value,
+            UniprotNodeField.PROTEOME.value,
             UniprotNodeField.PROTEIN_GENE_NAMES.value,
-            UniprotNodeField.PROTEIN_EC.value,
-            UniprotNodeField.PROTEIN_ENTREZ_GENE_IDS.value,
-            UniprotNodeField.PROTEIN_ENSEMBL_TRANSCRIPT_IDS.value,
-            UniprotNodeField.PROTEIN_KEGG_IDS.value,
+            UniprotNodeField.EC.value,
+            UniprotNodeField.ENTREZ_GENE_IDS.value,
+            UniprotNodeField.ENSEMBL_TRANSCRIPT_IDS.value,
+            UniprotNodeField.KEGG_IDS.value,
         ]
 
         # properties of nodes
         self.protein_properties = [
-            UniprotNodeField.PROTEIN_LENGTH.value,
-            UniprotNodeField.PROTEIN_MASS.value,
+            UniprotNodeField.LENGTH.value,
+            UniprotNodeField.MASS.value,
             UniprotNodeField.PROTEIN_NAMES.value,
-            UniprotNodeField.PROTEIN_PROTEOME.value,
-            UniprotNodeField.PROTEIN_EC.value,
-            UniprotNodeField.PROTEIN_VIRUS_HOSTS.value,
-            UniprotNodeField.PROTEIN_ORGANISM_ID.value,
+            UniprotNodeField.PROTEOME.value,
+            UniprotNodeField.EC.value,
+            UniprotNodeField.VIRUS_HOSTS.value,
+            UniprotNodeField.ORGANISM_ID.value,
             UniprotNodeField.SEQUENCE.value,
             UniprotNodeField.PROTT5_EMBEDDING.value,
         ]
 
         self.gene_properties = [
             UniprotNodeField.PROTEIN_GENE_NAMES.value,
-            UniprotNodeField.PROTEIN_ENTREZ_GENE_IDS.value,
-            UniprotNodeField.PROTEIN_KEGG_IDS.value,
-            UniprotNodeField.PROTEIN_ENSEMBL_TRANSCRIPT_IDS.value,
-            UniprotNodeField.PROTEIN_ENSEMBL_GENE_IDS.value,
+            UniprotNodeField.ENTREZ_GENE_IDS.value,
+            UniprotNodeField.KEGG_IDS.value,
+            UniprotNodeField.ENSEMBL_TRANSCRIPT_IDS.value,
+            UniprotNodeField.ENSEMBL_GENE_IDS.value,
             UniprotNodeField.PRIMARY_GENE_NAME.value,
         ]
 
-        self.organism_properties = [UniprotNodeField.PROTEIN_ORGANISM.value]
+        self.organism_properties = [UniprotNodeField.ORGANISM.value]
 
     def _set_node_and_edge_fields(
         self, node_types, node_fields, edge_types,
     ):
 
         # ensure computation of ENSGs
-        if UniprotNodeField.PROTEIN_ENSEMBL_GENE_IDS in node_fields and not (
-            UniprotNodeField.PROTEIN_ENSEMBL_TRANSCRIPT_IDS in node_fields
+        if UniprotNodeField.ENSEMBL_GENE_IDS in node_fields and not (
+            UniprotNodeField.ENSEMBL_TRANSCRIPT_IDS in node_fields
         ):
-            node_fields.append(UniprotNodeField.PROTEIN_ENSEMBL_TRANSCRIPT_IDS)
+            node_fields.append(UniprotNodeField.ENSEMBL_TRANSCRIPT_IDS)
 
         # check which node types and fields to include
         if node_types:
