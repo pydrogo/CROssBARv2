@@ -144,25 +144,35 @@ phenotype:
     name: str
     synonyms: str[]
 
-# pathway:
-  # represented_as: node
-  # preferred_id: [reactome, kegg]
-  # label_in_input: [Pathway_Reactome, Pathway_KEGG]
-  
-# molecular mixture: # there is no compound in Biolink. could be molecular mixture
-  # represented_as: node
-  # preferred_id: chembl.compound
-  # label_in_input: Compound
+pathway:
+  represented_as: node
+  preferred_id: id
+  label_in_input: pathway
+  properties:
+    name: str
+    organism: str
+
+side effect:
+  is_a: phenotypic feature
+  represented_as: node
+  preferred_id: meddra
+  label_in_input: side_effect
+  properties:
+    name: str
+    synonyms: str[]
+
+ec number:
+  is_a: molecular activity
+  represented_as: node
+  preferred_id: eccode
+  label_in_input: ec_number
+  properties:
+    name: str
 
 # Cell: # relevant?
   # represented_as: node
   # preferred_id: CL
   # label_in_input: Cell
-      
-# biological process: # other two go categories?
-  # represented_as: node
-  # preferred_id: go
-  # label_in_input: Function
 
 # cell line:
   # represented_as: node
@@ -180,22 +190,6 @@ phenotype:
   # represented_as: node
   # preferred_id: id
   # label_in_input: Patient
-  
-# protein domain:
-  # represented_as: node
-  # preferred_id: interpro
-  # label_in_input: Domain
-
-# side effect:
-  # is_a: phenotypic feature
-  # represented_as: node
-  # preferred_id: sider.effect
-  # label_in_input: Side_Effect
-
-# location:
-  # represented_as: node
-  # preferred_id: go
-  # label_in_input: Location
 
 # ---
 # Associations
@@ -528,37 +522,110 @@ phenotype to disease association:
     pubmed_ids: str[]
     evidence: str
 
-# protein to pathway association:
-  # represented_as: edge
-  # label_as_edge: Takes_Part_In
-  # preferred_id: id
-  # source: protein
-  # target: pathway
-  # label_in_input: Take_Part_In
+protein to pathway association:
+  is_a: GeneToPathwayAssociation
+  represented_as: edge
+  label_as_edge: protein_take_part_in_pathway
+  preferred_id: id
+  source: protein
+  target: pathway
+  label_in_input: protein_take_part_in_pathway
+  properties:
+    source: str
+    evidence_code: str
 
-# protein to disease association:
-  # represented_as: edge
-  # label_as_edge: Is_Targeted_In
-  # preferred_id: id
-  # source: protein
-  # target: disease
-  # label_in_input: Protein_Is_Related_To_Disease
+disease to pathway association:
+  is_a: association
+  represented_as: edge
+  label_as_edge: disease_modulates_pathway
+  preferred_id: id
+  source: disease
+  target: pathway
+  label_in_input: disease_modulates_pathway
+  properties:
+    source: str[]
 
-# gene to gene homology association:
-  # represented_as: edge
-  # label_as_edge: Is_Ortholog_To
-  # preferred_id: id
-  # source: gene
-  # target: gene
-  # label_in_input: Is_Ortholog_To
+drug to pathway association:
+  is_a: ChemicalToPathwayAssociation
+  represented_as: edge
+  label_as_edge: drug_has_target_in_pathway
+  preferred_id: id
+  source: drug
+  target: pathway
+  label_in_input: drug_has_target_in_pathway
+  properties:
+    source: str
 
-# pairwise gene to gene interaction:
-  # represented_as: edge
-  # label_as_edge: Regulates
-  # preferred_id: id
-  # source: gene
-  # target: gene
-  # label_in_input: Regulates
+pathway to pathway association:
+  is_a: association
+  represented_as: edge
+  preferred_id: id
+  source: [pathway_is_part_of_pathway, pathway_is_equivalent_to_pathway]
+  target: pathway
+  label_in_input: [pathway_is_part_of_pathway, pathway_is_equivalent_to_pathway]
+
+reactome hierarchical association:
+  is_a: association
+  represented_as: edge
+  label_as_edge: pathway_participates_pathway
+  preferred_id: id
+  source: pathway
+  target: pathway
+  label_in_input: pathway_participates_pathway
+
+drug to side effect association:
+  is_a: association
+  represented_as: edge
+  label_as_edge: drug_has_side_effect
+  preferred_id: id
+  source: drug
+  target: side effect
+  label_in_input: drug_has_side_effect
+  properties:
+    source: str[]
+    proportional_reporting_ratio: str
+    frequency: str
+
+side effect hierarchical association:
+  is_a: association
+  represented_as: edge
+  label_as_edge: side_effect_is_a_side_effect
+  preferred_id: id
+  source: side effect
+  target: side effect
+  label_in_input: side_effect_is_a_side_effect
+
+protein to ec number association:
+  is_a: macromolecular machine to molecular activity association
+  represented_as: edge
+  label_as_edge: protein_catalyzes_ec_number
+  preferred_id: id
+  source: protein
+  target: ec number
+  label_in_input: protein_catalyzes_ec_number
+
+ec number hierarchical association:
+  is_a: molecular activity to molecular activity association
+  represented_as: edge
+  label_as_edge: ec_number_is_a_ec_number
+  preferred_id: id
+  source: ec number
+  target: ec number
+  label_in_input: ec_number_is_a_ec_number
+
+gene to gene regulatory association:
+  is_a: pairwise gene to gene interaction
+  represented_as: edge
+  label_as_edge: gene_regulates_gene
+  preferred_id: id
+  source: gene
+  target: gene
+  label_in_input: gene_regulates_gene
+  properties:
+    source: str[]
+    dorothea_confidence_level: str
+    pubmed_id: str[]
+    tf_effect: str
 
 # mutation to tissue association:
   # is_a: [genotype to tissue association, association]
