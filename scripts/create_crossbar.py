@@ -70,20 +70,21 @@ uniprot_node_types = [
 
 uniprot_node_fields = [
     UniprotNodeField.PRIMARY_GENE_NAME,
-    UniprotNodeField.PROTEIN_LENGTH,
-    UniprotNodeField.PROTEIN_MASS,
-    UniprotNodeField.PROTEIN_ORGANISM,
-    UniprotNodeField.PROTEIN_ORGANISM_ID,
+    UniprotNodeField.LENGTH,
+    UniprotNodeField.MASS,
+    UniprotNodeField.ORGANISM,
+    UniprotNodeField.ORGANISM_ID,
     UniprotNodeField.PROTEIN_NAMES,
-    UniprotNodeField.PROTEIN_PROTEOME,
-    UniprotNodeField.PROTEIN_SUBCELLULAR_LOCATION,
-    UniprotNodeField.PROTEIN_EC,
+    UniprotNodeField.PROTEOME,
+    UniprotNodeField.SUBCELLULAR_LOCATION,
     UniprotNodeField.PROTEIN_GENE_NAMES,
-    UniprotNodeField.PROTEIN_ENSEMBL_TRANSCRIPT_IDS,
-    UniprotNodeField.PROTEIN_ENSEMBL_GENE_IDS,
-    UniprotNodeField.PROTEIN_ENTREZ_GENE_IDS,
-    UniprotNodeField.PROTEIN_VIRUS_HOSTS,
-    UniprotNodeField.PROTEIN_KEGG_IDS,
+    UniprotNodeField.ENSEMBL_TRANSCRIPT_IDS,
+    UniprotNodeField.ENSEMBL_GENE_IDS,
+    UniprotNodeField.ENTREZ_GENE_IDS,
+    UniprotNodeField.VIRUS_HOSTS,
+    UniprotNodeField.KEGG_IDS,
+    UniprotNodeField.SEQUENCE,
+    UniprotNodeField.PROTT5_EMBEDDING,
 ]
 
 uniprot_edge_types = [
@@ -91,8 +92,8 @@ uniprot_edge_types = [
     UniprotEdgeType.GENE_TO_PROTEIN,
 ]
 
-uniprot_edge_fields = [
-    UniprotEdgeField.GENE_ENTREZ_ID,
+uniprot_id_type = [
+    UniprotIDField.GENE_ENTREZ_ID,
 ]
 
 uniprot_adapter = Uniprot(
@@ -100,7 +101,7 @@ uniprot_adapter = Uniprot(
         node_types=uniprot_node_types,
         node_fields=uniprot_node_fields,
         edge_types=uniprot_edge_types,
-        edge_fields=uniprot_edge_fields,
+        id_fields=uniprot_id_type,
         test_mode=False,
     )
 
