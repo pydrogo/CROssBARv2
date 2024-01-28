@@ -8,7 +8,7 @@ from pypath.inputs import chembl, stitch, uniprot, unichem, string
 from contextlib import ExitStack
 from bioregistry import normalize_curie
 
-from typing import Literal, Union
+from typing import Literal, Union, Optional
 
 import pandas as pd
 import numpy as np
@@ -57,12 +57,12 @@ class Compound:
     for import into the BioCypher.
     """
 
-    def __init__(self, node_fields:Union[list[CompoundNodeField], None] = None,
-                 cti_edge_fields:Union[list[CompoundCTIEdgeField], None] = None,
-                 add_prefix: bool = True, 
-                 test_mode: bool = False, 
-                 export_csv: bool = False,
-                 output_dir: DirectoryPath | None = None):
+    def __init__(self, node_fields: Optional[Union[list[CompoundNodeField], None]] = None,
+                 cti_edge_fields: Optional[Union[list[CompoundCTIEdgeField], None]] = None,
+                 add_prefix: Optional[bool] = True, 
+                 test_mode: Optional[bool] = False, 
+                 export_csv: Optional[bool] = False,
+                 output_dir: Optional[DirectoryPath | None] = None):
         
         """
         Initialize the Compound class.
@@ -76,8 +76,11 @@ class Compound:
             output_dir: Location of csv export if `export_csv` is True, if not defined it will be current directory
         """
 
-        model = CompoundModel(node_fields=node_fields, cti_edge_fields=cti_edge_fields,
-                              test_mode=test_mode, add_prefix=add_prefix, export_csv=export_csv,
+        model = CompoundModel(node_fields=node_fields, 
+                              cti_edge_fields=cti_edge_fields,
+                              test_mode=test_mode, 
+                              add_prefix=add_prefix, 
+                              export_csv=export_csv,
                               output_dir=output_dir).model_dump()
         
         self.add_prefix = model["add_prefix"]
@@ -149,7 +152,7 @@ class Compound:
         chembl_targets = chembl.chembl_targets()
 
         # filter out TrEMBL targets
-        swissprots = list(uniprot._all_uniprots(organism = '*', swissprot =True))
+        swissprots = set(uniprot._all_uniprots(organism = '*', swissprot =True))
         chembl_targets = [i for i in chembl_targets if i.accession in swissprots]
         self.target_dict = {i.target_chembl_id: i.accession for i in chembl_targets}
 
@@ -501,7 +504,7 @@ class Compound:
         return joiner.join(list(dict.fromkeys(_list).keys()))
     
     @validate_call
-    def add_prefix_to_id(self, prefix: str, identifier : str = None, sep=":") -> str:
+    def add_prefix_to_id(self, prefix: str, identifier : str = None, sep: str =":") -> str:
         """
         Adds prefix to ids
         """
