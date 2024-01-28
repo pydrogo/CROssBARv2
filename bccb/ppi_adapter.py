@@ -16,6 +16,8 @@ from tqdm import tqdm  # progress bar
 from biocypher._logger import logger
 from pypath.resources import urls
 from contextlib import ExitStack
+from pydantic import BaseModel, DirectoryPath, validate_call
+from typing import Literal, Union, Optional
 
 from bioregistry import normalize_curie
 
@@ -42,52 +44,79 @@ class StringEdgeField(Enum):
     PHYSICAL_COMBINED_SCORE = "physical_combined_score"
 
 
+class PPIModel(BaseModel):
+    output_dir: Optional[Union[DirectoryPath, None]] = None
+    export_csv: Optional[bool] = False
+    cache: Optional[bool] = False
+    debug: Optional[bool] = False
+    retries: Optional[int] = 6
+    organism: Optional[Union[int, Literal["*"], None]] = None
+    intact_fields: Optional[Union[list[IntactEdgeField], None]] = None
+    biogrid_fields: Optional[Union[list[BiogridEdgeField], None]] = None
+    string_fields: Optional[Union[list[StringEdgeField], None]] = None
+    add_prefix: Optional[bool] = True
+    test_mode: Optional[bool] = False
+
+
 class PPI:
     def __init__(
         self,
-        output_dir=None,
-        export_csv=False,
-        cache=False,
-        debug=False,
-        retries=6,
-        organism=None,
-        intact_fields=None,
-        biogrid_fields=None,
-        string_fields=None,
-        add_prefix = True,
-        test_mode = False,
+        output_dir: Optional[Union[DirectoryPath, None]] = None,
+        export_csv: Optional[bool] = False,
+        cache: Optional[bool] = False,
+        debug: Optional[bool] = False,
+        retries: Optional[int] = 6,
+        organism: Optional[Union[int, Literal["*"], None]] = None,
+        intact_fields: Optional[Union[list[IntactEdgeField], None]] = None,
+        biogrid_fields: Optional[Union[list[BiogridEdgeField], None]] = None,
+        string_fields: Optional[Union[list[StringEdgeField], None]] = None,
+        add_prefix: Optional[bool] = True,
+        test_mode: Optional[bool] = False
     ):
         """
         Downloads and processes PPI data
 
             Args:
+                output_dir: Directory to save the output csv file
                 export_csv: Flag for whether or not create csvs of outputs of databases
                 cache: if True, it uses the cached version of the data, otherwise
                 forces download.
                 debug: if True, turns on debug mode in pypath.
                 retries: number of retries in case of download error.
-                organism: taxonomy id number of selected organism, if it is None, downloads all organism data.
-                intact_fields: intact fields to be used in the graph.
-                biogrid_fields: biogrid fields to be used in the graph.
-                string_fields: string fields to be used in the graph.
+                organism: organism code in NCBI taxid format, e.g. "9606" for human. If it is None or "*", downloads all organism data.
+                intact_fields: `IntactEdgeField` fields to be used in the graph, if it is None, select all fields.
+                biogrid_fields: `BiogridEdgeField` fields to be used in the graph, if it is None, select all fields.
+                string_fields: `StringEdgeField` fields to be used in the graph, if it is None, select all fields.
                 add_prefix: if True, add prefix to uniprot ids.
                 test_mode: if True, take small sample from data for testing.
 
         """
+        model = PPIModel(output_dir=output_dir,
+                         export_csv=export_csv,
+                         cache=cache,
+                         debug=debug,
+                         retries=retries,
+                         organism=organism,
+                         intact_fields=intact_fields,
+                         biogrid_fields=biogrid_fields,
+                         string_fields=string_fields,
+                         add_prefix=add_prefix,
+                         test_mode=test_mode).model_dump()
+        
+        self.export_csv = model["export_csv"]
+        self.cache = model["cache"]
+        self.debug = model["debug"]
+        self.retries = model["retries"]
+        self.organism = None if model["organism"] in ("*", None) else model["organism"]
+        self.intact_fields = model["intact_fields"]
+        self.biogrid_fields = model["biogrid_fields"]
+        self.string_fields = model["string_fields"]
+        self.add_prefix = model["add_prefix"]
+        self.test_mode = model["test_mode"]
 
-        self.export_csv = export_csv
-        self.swissprots = list(uniprot._all_uniprots("*", True))
-        self.cache = cache
-        self.debug = debug
-        self.retries = retries
-        self.organism = None if organism in ("*", None) else organism
-        self.intact_fields = intact_fields
-        self.biogrid_fields = biogrid_fields
-        self.string_fields = string_fields
-        self.add_prefix = add_prefix
-        self.test_mode = test_mode
+        self.swissprots = set(uniprot._all_uniprots("*", True))
 
-        self.check_status_and_properties = {
+        self.check_status_and_properties: dict[str, dict] = {
             "intact": {
                 "downloaded": False,
                 "processed": False,
@@ -108,8 +137,8 @@ class PPI:
             },
         }
 
-        if export_csv:
-            self.output_dir = output_dir
+        if model["export_csv"]:
+            self.output_dir = model["output_dir"]
 
     def download_intact_data(self) -> None:
         """
@@ -150,7 +179,8 @@ class PPI:
 
         self.check_status_and_properties["intact"]["downloaded"] = True
 
-    def intact_process(self, rename_selected_fields=None) -> None:
+    @validate_call
+    def intact_process(self, rename_selected_fields: dict[str, str] = None) -> None:
         """
         Processor function for IntAct data. It drops duplicate and reciprocal duplicate protein pairs and collects pubmed ids of duplicated pairs. Also, it filters
         protein pairs found in swissprot.
@@ -341,7 +371,8 @@ class PPI:
 
         self.check_status_and_properties["biogrid"]["downloaded"] = True
 
-    def biogrid_process(self, rename_selected_fields=None) -> None:
+    @validate_call
+    def biogrid_process(self, rename_selected_fields: dict[str, str] = None) -> None:
         """
         Processor function for BioGRID data. It drops duplicate and reciprocal duplicate protein pairs and collects pubmed ids of duplicated pairs. In addition, it
         maps entries to uniprot ids using gene name and tax id information in the BioGRID data. Also, it filters protein pairs found in swissprot.
@@ -597,7 +628,8 @@ class PPI:
 
         self.check_status_and_properties["string"]["downloaded"] = True
 
-    def string_process(self, rename_selected_fields=None) -> None:
+    @validate_call
+    def string_process(self, rename_selected_fields: dict[str, str] = None) -> None:
         """
         Processor function for STRING data. It drops duplicate and reciprocal duplicate protein pairs. In addition, it maps entries to uniprot ids
         using crossreferences to STRING in the Uniprot data. Also, it filters protein pairs found in swissprot.
@@ -1170,8 +1202,9 @@ class PPI:
 
         
         return merged_df
-            
-    def add_prefix_to_id(self, prefix="uniprot", identifier: str = None, sep=":") -> str:
+    
+    @validate_call
+    def add_prefix_to_id(self, prefix: str = "uniprot", identifier: str = None, sep: str = ":") -> str:
         """
         Adds prefix to uniprot id
         """
@@ -1180,9 +1213,12 @@ class PPI:
         
         return identifier
 
-    def get_ppi_edges(self) -> list[tuple]:
+    @validate_call
+    def get_ppi_edges(self, label: str = "Protein_interacts_with_protein") -> list[tuple]:
         """
         Get PPI edges from merged data
+        Args:
+            label: label of protein-protein interaction edges
         """
         merged_df = self.merge_all()
 
@@ -1208,6 +1244,6 @@ class PPI:
                             v
                         ).replace("'", "^")
 
-            edge_list.append((None, _source, _target, "Protein_interacts_with_protein", _props))
+            edge_list.append((None, _source, _target, label, _props))
 
         return edge_list
