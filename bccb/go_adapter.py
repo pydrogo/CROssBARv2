@@ -10,7 +10,8 @@ import os
 import requests
 import pandas as pd
 
-from typing import Union
+from typing import Literal, Union, Optional
+from pydantic import BaseModel, DirectoryPath, HttpUrl, validate_call
 
 from time import time
 
@@ -21,7 +22,6 @@ from biocypher._logger import logger
 from enum import Enum, auto
 
 logger.debug(f"Loading module {__name__}.")
-
 
 
 class GONodeField(Enum):
@@ -137,6 +137,27 @@ class BiologicalProcessToMolecularFunctionEdgeLabel(Enum):
     def neccessary_edge_type(cls):
         return GOEdgeType.BIOLOGICAL_PROCESS_TO_MOLECULAR_FUNCTION
     
+class GOModel(BaseModel):
+    organism: int | Literal["*"] | None = None, 
+    node_types: Union[list[GONodeType], None] = None, 
+    go_node_fields: Union[list[GONodeField], None] = None,
+    edge_types: Union[list[GOEdgeType], None] = None, 
+    go_edge_fields: Union[list[GOEdgeField], None] = None, 
+    edge_labels: Union[list[ProteinToCellularComponentEdgeLabel,
+                    ProteinToBiologicalProcessEdgeLabel,
+                    ProteinToMolecularFunctionEdgeLabel,
+                    DomainToCellularComponentEdgeLabel,
+                    DomainToBiologicalProcessEdgeLabel,
+                    DomainToMolecularFunctionEdgeLabel,
+                    MolecularFunctionToMolecularFunctionEdgeLabel,
+                    BiologicalProcessToBiologicalProcessEdgeLabel,
+                    CellularComponentToCellularComponentEdgeLabel,
+                    BiologicalProcessToMolecularFunctionEdgeLabel],
+                    None] = None, 
+    add_prefix: bool = True, 
+    test_mode: bool = False, 
+    remove_selected_annotations: list[str] = ["IEA"]
+
 
 class GO:
     """
@@ -144,9 +165,26 @@ class GO:
     for import into a BioCypher database.
     """
 
-    def __init__(self, organism = 9606, node_types: Union[list[GONodeType], None] = None, go_node_fields: Union[list[GONodeField], None] = None,
-        edge_types: Union[list[GOEdgeType], None] = None, go_edge_fields: Union[list[GOEdgeField], None] = None, 
-        edge_labels: Union[list, None] = None, add_prefix = True, test_mode: bool = False, remove_selected_annotations: list = ["IEA"]):
+    def __init__(self, 
+                 organism: Optional[int | Literal["*"] | None] = None, 
+                 node_types: Optional[Union[list[GONodeType], None]] = None, 
+                 go_node_fields: Optional[Union[list[GONodeField], None]] = None,
+                 edge_types: Optional[Union[list[GOEdgeType], None]] = None, 
+                 go_edge_fields: Optional[Union[list[GOEdgeField], None]] = None, 
+                 edge_labels: Optional[Union[list[ProteinToCellularComponentEdgeLabel,
+                                    ProteinToBiologicalProcessEdgeLabel,
+                                    ProteinToMolecularFunctionEdgeLabel,
+                                    DomainToCellularComponentEdgeLabel,
+                                    DomainToBiologicalProcessEdgeLabel,
+                                    DomainToMolecularFunctionEdgeLabel,
+                                    MolecularFunctionToMolecularFunctionEdgeLabel,
+                                    BiologicalProcessToBiologicalProcessEdgeLabel,
+                                    CellularComponentToCellularComponentEdgeLabel,
+                                    BiologicalProcessToMolecularFunctionEdgeLabel],
+                                    None]] = None, 
+                 add_prefix: Optional[bool] = True, 
+                 test_mode: Optional[bool] = False, 
+                 remove_selected_annotations: Optional[list[str]] = ["IEA"]):
         """
         Args:
             organism: ncbi tax id or known name of organism of interest
@@ -159,10 +197,19 @@ class GO:
             test_mode: if True, limits amount of data for testing
             remove_selected_annotations: removes selected annotations from protein-go edges, by default it removes electronic annotations
         """
-        
-        self.organism = organism
-        self.add_prefix = add_prefix
-        self.remove_selected_annotations = remove_selected_annotations
+        model = GOModel(organism=organism,
+                        node_types=node_types,
+                        go_node_fields=go_node_fields,
+                        edge_types=edge_types,
+                        go_edge_fields=go_edge_fields,
+                        edge_labels=edge_labels,
+                        add_prefix=add_prefix,
+                        test_mode=test_mode,
+                        remove_selected_annotations=remove_selected_annotations).model_dump()
+
+        self.organism = "*" if model["organism"] in ("*", None) else model["organism"]
+        self.add_prefix = model["add_prefix"]
+        self.remove_selected_annotations = model["remove_selected_annotations"]
         
         # for checking source and target node types of selected edge types
         self.check_node_types_of_edges = {
@@ -204,23 +251,29 @@ class GO:
         self.edge_filterer = set()
 
         # set node and edge types
-        self.set_node_and_edge_types(node_types=node_types, edge_types=edge_types)
+        self.set_node_and_edge_types(node_types=model["node_types"], 
+                                     edge_types=model["edge_types"])
         
         # set edge labels
-        self.set_edge_labels(edge_labels=edge_labels)
+        self.set_edge_labels(edge_labels=model["edge_labels"])
         
         # set node and edge properties
-        self.set_node_and_edge_properties(go_node_fields=go_node_fields, go_edge_fields=go_edge_fields)
+        self.set_node_and_edge_properties(go_node_fields=model["go_node_fields"], 
+                                          go_edge_fields=model["go_edge_fields"])
         
         # set early_stopping, if test_mode true
         self.early_stopping = None
-        if test_mode:
+        if model["test_mode"]:
             self.early_stopping = 100
-            
+
+    @validate_call  
     def download_go_data(
-        self, cache=False, debug=False, retries=6, 
-        all_go_annotations_url = "https://ftp.ebi.ac.uk/pub/databases/GO/goa/UNIPROT/goa_uniprot_gcrp.gaf.gz",
-        all_annotations_output_dir : str | None = None
+        self, 
+        cache: bool = False, 
+        debug: bool = False, 
+        retries: int = 6, 
+        all_go_annotations_url: HttpUrl = "https://ftp.ebi.ac.uk/pub/databases/GO/goa/UNIPROT/goa_uniprot_gcrp.gaf.gz",
+        all_annotations_output_dir : str | DirectoryPath = None
     ):
         """
         Wrapper function to download Gene Ontology data using pypath; used to access
@@ -253,7 +306,7 @@ class GO:
             
             if any([True if et in self.edge_types else False for et in self.protein_to_go_edge_types]):                
                 t0 = time()
-                self.swissprots = list(uniprot._all_uniprots(organism = self.organism, swissprot =True))
+                self.swissprots = list(uniprot._all_uniprots(organism = "*", swissprot =True))
 
                 if self.organism in ("*", None):
                     logger.debug("Started downloading Gene Ontology annotation data for all organisms")
@@ -263,7 +316,7 @@ class GO:
                     else:
                         full_path = os.path.join(os.getcwd(), "goa_uniprot_gcrp.gaf.gz")
                     
-                    if not os.path.isfile(full_path):
+                    if not os.path.exists(full_path):
                         with requests.get(all_go_annotations_url, stream=True) as response:
                             with open(full_path, 'wb') as f:
                                 for chunk in response.iter_content(1024):
@@ -298,7 +351,7 @@ class GO:
                 logger.info(f'Interpro2go data is downloaded in {round((t1-t0) / 60, 2)} mins')
             
             
-    def set_node_and_edge_types(self, node_types:list, edge_types:list) -> None:
+    def set_node_and_edge_types(self, node_types: list, edge_types: list) -> None:
         """
         Prepare node and edge types
         
@@ -319,7 +372,7 @@ class GO:
                 for nt in check_node_types:
                     if nt not in self.node_types:
                         logger.error(f"{nt} must be included in node_types list")
-                        return False
+                        raise ValueError(f"{nt} must be included in node_types list")
                     
         else:
             self.edge_types = [_type for _type in GOEdgeType]
@@ -327,7 +380,7 @@ class GO:
             for _type in GOEdgeType:
                 self.create_edge_filterer(_type)
             
-    def set_edge_labels(self, edge_labels:list) -> None:
+    def set_edge_labels(self, edge_labels: list) -> None:
         """
         Prepare edge labels
         
@@ -355,7 +408,7 @@ class GO:
                         
                         if enum_class.neccessary_edge_type() not in self.edge_types:
                             logger.error(f"{enum_class.neccessary_edge_type()} must be included in edge_types list")
-                            return False
+                            raise ValueError(f"{enum_class.neccessary_edge_type()} must be included in edge_types list")
                     
                 # define Go-Go edge labels
                 for enum_class in go_enum_classes:
@@ -364,7 +417,7 @@ class GO:
                         
                         if enum_class.neccessary_edge_type() not in self.edge_types:
                             logger.error(f"{enum_class.neccessary_edge_type()} must be included in edge_types list")
-                            return False
+                            raise ValueError(f"{enum_class.neccessary_edge_type()} must be included in edge_types list")
                 
                 # define Domain-Go edge labels
                 for enum_class in domain_enum_classes:
@@ -373,7 +426,7 @@ class GO:
                         
                         if enum_class.neccessary_edge_type() not in self.edge_types:
                             logger.error(f"{enum_class.neccessary_edge_type()} must be included in edge_types list")
-                            return False
+                            raise ValueError(f"{enum_class.neccessary_edge_type()} must be included in edge_types list")
             
         else:
             # create lists for edge label selection
@@ -399,7 +452,7 @@ class GO:
             self.domain_to_go_edge_labels = set(self.domain_to_go_edge_labels)
             
     
-    def set_node_and_edge_properties(self, go_node_fields:list, go_edge_fields:list) -> None:
+    def set_node_and_edge_properties(self, go_node_fields: list, go_edge_fields: list) -> None:
         """
         Prepare node and edge properties
         """
@@ -433,8 +486,8 @@ class GO:
         if self.check_edge_type_duals.get(edge_type, None):
             self.edge_filterer.add(self.check_edge_type_duals[edge_type])
         
-            
-    def add_prefix_to_id(self, prefix, identifier, sep=":") -> str:
+    @validate_call
+    def add_prefix_to_id(self, prefix: str = None, identifier: str = None, sep: str = ":") -> str:
         """
         Adds prefix to ids
         """
@@ -451,7 +504,7 @@ class GO:
         if not hasattr(self, "go_ontology"):
             self.download_go_data(cache=True)
 
-        logger.info("Preparing nodes.")
+        logger.info("Preparing GO nodes.")
         
         # create a list for nodes
         node_list = []
