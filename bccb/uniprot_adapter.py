@@ -19,7 +19,7 @@ from biocypher._logger import logger
 from contextlib import ExitStack
 from bioregistry import normalize_curie
 
-from pydantic import BaseModel, DirectoryPath, validate_call
+from pydantic import BaseModel, DirectoryPath, HttpUrl, validate_call
 
 logger.debug(f"Loading module {__name__}.")
 
@@ -197,9 +197,7 @@ class Uniprot:
         Args:
             cache: if True, it uses the cached version of the data, otherwise
             forces download.
-
             debug: if True, turns on debug mode in pypath.
-
             retries: number of retries in case of download error.
         """
 
@@ -282,6 +280,7 @@ class Uniprot:
         Args:
             prott5_embedding_output_path (DirectoryPath, optional): Defaults to None.
         """
+        url: HttpUrl = "https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/embeddings/uniprot_sprot/per-protein.h5"
         if prott5_embedding_output_path:
             full_path = os.path.join(prott5_embedding_output_path, "per-protein.h5")
         else:
@@ -290,7 +289,7 @@ class Uniprot:
         logger.info("Downloading ProtT5 embeddings...")
 
         if not os.path.isfile(full_path):
-            with requests.get("https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/embeddings/uniprot_sprot/per-protein.h5", stream=True) as response:
+            with requests.get(url, stream=True) as response:
                 with open(full_path, 'wb') as f:
                     for chunk in response.iter_content(512 * 1024):
                         if chunk:
@@ -1013,10 +1012,10 @@ class Uniprot:
         Save node and edge data to csv
             node_data: output of `get_nodes()` function
             edge_data: output of `get_edges()` function
-            path: where to save csv files
+            path: Directory to save the output csv file
         """
         if node_data:
-            logger.debug("Saving node data as csv")
+            logger.debug("Saving uniprot node data as csv")
             node_types_dict = collections.defaultdict(list)
             for _id, _type, props in node_data:
                 _dict = {"id":_id} | props
@@ -1033,7 +1032,7 @@ class Uniprot:
                 logger.info(f"{_type.capitalize()} data is written: {full_path}")
 
         if edge_data:
-            logger.debug("Saving edge data as csv")
+            logger.debug("Saving uniprot edge data as csv")
             edge_types_dict = collections.defaultdict(list)
             for _, source_id, target_id, _type, props in edge_data:
                 _dict = {"source_id":source_id, "target_id":target_id} | props
