@@ -4,7 +4,7 @@ from pypath.share import curl, settings, common
 from pypath.inputs import drugbank, drugcentral, stitch, string, uniprot, dgidb, pharos, ctdbase, unichem, chembl, ddinter
 import kegg_local
 from contextlib import ExitStack
-from typing import Literal, Union
+from typing import Literal, Union, Optional
 from bioregistry import normalize_curie
 from tqdm import tqdm
 from time import time
@@ -17,7 +17,7 @@ import numpy as np
 from biocypher._logger import logger
 
 from enum import Enum, auto
-from pydantic import BaseModel, DirectoryPath, validate_call
+from pydantic import BaseModel, DirectoryPath, EmailStr, validate_call
 
 logger.debug(f"Loading module {__name__}.")
 
@@ -92,7 +92,7 @@ class DrugEdgeType(Enum):
     DRUG_GENE_INTERACTION = auto()
 
 class DrugModel(BaseModel):
-    drugbank_user : str
+    drugbank_user : EmailStr
     drugbank_passwd: str
     node_fields: Union[list[DrugNodeField], None] = None
     dti_edge_fields: Union[list[DrugDTIEdgeField], None] = None
@@ -115,16 +115,18 @@ class Drug:
     for import into a BioCypher database.
     """
 
-    def __init__(self, drugbank_user, drugbank_passwd, 
-                 node_fields: Union[list[DrugNodeField], None] = None,
-                 dti_edge_fields: Union[list[DrugDTIEdgeField], None] = None, 
-                 ddi_edge_fields: Union[list[DrugDDIEdgeField], None] = None,
-                 dgi_edge_fields: Union[list[DrugDGIEdgeField], None] = None, 
-                 edge_types: Union[list[DrugEdgeType], None] = None,
-                 add_prefix: bool = True, 
-                 test_mode: bool = False, 
-                 export_csv: bool = False,
-                 output_dir: DirectoryPath | None = None):
+    def __init__(self, 
+                 drugbank_user: EmailStr,
+                 drugbank_passwd: str, 
+                 node_fields: Optional[Union[list[DrugNodeField], None]] = None,
+                 dti_edge_fields: Optional[Union[list[DrugDTIEdgeField], None]] = None, 
+                 ddi_edge_fields: Optional[Union[list[DrugDDIEdgeField], None]] = None,
+                 dgi_edge_fields: Optional[Union[list[DrugDGIEdgeField], None]] = None, 
+                 edge_types: Optional[Union[list[DrugEdgeType], None]] = None,
+                 add_prefix: Optional[bool] = True, 
+                 test_mode: Optional[bool] = False, 
+                 export_csv: Optional[bool] = False,
+                 output_dir: Optional[DirectoryPath | None] = None):
         """
         Args:
             drugbank_user: drugbank username
@@ -140,11 +142,17 @@ class Drug:
             output_dir: Location of csv export if `export_csv` is True, if not defined it will be current directory
         """
 
-        model = DrugModel(drugbank_user=drugbank_user, drugbank_passwd=drugbank_passwd,
-                              node_fields=node_fields, dti_edge_fields=dti_edge_fields,
-                              ddi_edge_fields=ddi_edge_fields, dgi_edge_fields=dgi_edge_fields,
-                              edge_types=edge_types, add_prefix=add_prefix, test_mode=test_mode,
-                              export_csv=export_csv, output_dir=output_dir).model_dump()
+        model = DrugModel(drugbank_user=drugbank_user, 
+                          drugbank_passwd=drugbank_passwd,
+                          node_fields=node_fields, 
+                          dti_edge_fields=dti_edge_fields,
+                          ddi_edge_fields=ddi_edge_fields, 
+                          dgi_edge_fields=dgi_edge_fields,
+                          edge_types=edge_types, 
+                          add_prefix=add_prefix, 
+                          test_mode=test_mode,
+                          export_csv=export_csv, 
+                          output_dir=output_dir).model_dump()
 
         self.user = model["drugbank_user"]
         self.passwd = model["drugbank_passwd"]
@@ -152,13 +160,15 @@ class Drug:
         self.export_csv = model["export_csv"]
         self.output_dir = model["output_dir"]
         
-        self.swissprots = list(uniprot._all_uniprots(organism = '*', swissprot=True))
+        self.swissprots = set(uniprot._all_uniprots(organism = '*', swissprot=True))
 
         # set node fields
         self.set_node_fields(node_fields=model["node_fields"])
 
         # set edge fields
-        self.set_edge_fields(model["dti_edge_fields"], model["ddi_edge_fields"], model["dgi_edge_fields"])
+        self.set_edge_fields(model["dti_edge_fields"], 
+                             model["ddi_edge_fields"], 
+                             model["dgi_edge_fields"])
 
         # set edge types
         self.set_edge_types(model["edge_types"])
@@ -269,7 +279,7 @@ class Drug:
             elif f in drugbank_external_fields_list:
                 self.drugbank_external_fields.append(f)
             else:
-                raise ValueError(f" {f} is an inappropriate field name. Please provide a sutiable field name")            
+                raise ValueError(f"{f} is an inappropriate field name. Please provide a sutiable field name")            
         
         
         logger.debug('Downloading Drugbank drug node data')
@@ -1520,7 +1530,7 @@ class Drug:
             self.edge_types = [edge_type for edge_type in DrugEdgeType]
 
     @validate_call
-    def add_prefix_to_id(self, prefix : str, identifier : str, sep: str =":") -> str:
+    def add_prefix_to_id(self, prefix : str, identifier : str, sep: str = ":") -> str:
         """
         Adds prefix to ids
         """
