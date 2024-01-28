@@ -109,20 +109,25 @@ class Uniprot:
 
     Args:
         organism: organism code in NCBI taxid format, e.g. "9606" for human.
-
-        rev: if True, it downloads reviewed entries only.
+        rev: if True, it downloads swissprot (i.e., reviewed) entries only.
+        node_types: `UniprotNodeType` fields that will be included in graph, if it is None, select all fields.
+        node_fields: `UniprotNodeField` fields that will be included in graph, if it is None, select all fields.
+        edge_types: `UniprotEdgeType` fields that will be included in graph, if it is None, select all fields.
+        id_fields: `UniprotIDField` field that will be included in graph as node identifier, if it is None, selects first 3 fields.
+        add_prefix: if True, add prefix to database identifiers.
+        test_mode: if True, limits amount of output data.
     """
 
     def __init__(
         self,
-        organism: Literal["*"] | int | None = "*",
-        rev: bool = True,
+        organism: Optional[Literal["*"] | int | None] = "*",
+        rev: Optional[bool] = True,
         node_types: Optional[Union[list[UniprotNodeType], None]] = None,
         node_fields: Optional[Union[list[UniprotNodeField], None]] = None,
         edge_types: Optional[Union[list[UniprotEdgeType], None]] = None,
         id_fields: Optional[Union[list[UniprotIDField], None]] = None,
-        add_prefix: bool = True,
-        test_mode: bool = False,
+        add_prefix: Optional[bool] = True,
+        test_mode: Optional[bool] = False,
     ):
         model = UniProtModel(organism=organism,
                              rev=rev,
@@ -141,7 +146,7 @@ class Uniprot:
 
         # provenance
         self.data_source = "uniprot"
-        self.data_version = "2022_04"  # TODO get version from pypath
+        self.data_version = "2024_01"
         self.data_licence = "CC BY 4.0"
 
         self._configure_fields()
