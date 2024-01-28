@@ -13,7 +13,8 @@ from tqdm import tqdm
 from time import time
 from biocypher._logger import logger
 
-from typing import Union
+from typing import Literal, Union, Optional
+from pydantic import BaseModel, DirectoryPath, validate_call
 
 from enum import Enum
 
@@ -78,15 +79,33 @@ class InterProEdgeField(Enum):
     END = "end"
     
 
+class InterProModel(BaseModel):
+    cache: bool = False
+    debug: bool = False
+    page_size: int = 150
+    retries: int = 6
+    organism: int | Literal["*"] | None = None
+    add_prefix: bool = True
+    node_fields: Union[list[InterProNodeField], None] = None
+    edge_fields: Union[list[InterProEdgeField], None] = None
+    test_mode: bool = False
+
 class InterPro:
     """
     Class that downloads InterPro data using pypath and reformats it to be ready
     for import into a BioCypher database.
     """
 
-    def __init__(self, cache=False, debug=False, page_size=150, retries=6, organism=None, add_prefix = True,
-                node_fields:Union[InterProNodeField, None] = None, edge_fields:Union[InterProEdgeField, None] = None,
-                test_mode: bool = False):
+    def __init__(self, 
+                 cache: Optional[bool] = False, 
+                 debug: Optional[bool] = False, 
+                 page_size: Optional[int] = 150, 
+                 retries: Optional[int] = 6, 
+                 organism: Optional[int | Literal["*"] | None] = None, 
+                 add_prefix: Optional[bool]= True,
+                 node_fields: Optional[Union[list[InterProNodeField], None]] = None, 
+                 edge_fields: Optional[Union[list[InterProEdgeField], None]] = None,
+                 test_mode: Optional[bool]= False):
         """        
         Args:
             cache: if True, it uses the cached version of the data, otherwise
@@ -94,25 +113,36 @@ class InterPro:
             debug: if True, turns on debug mode in pypath.
             retries: number of retries in case of download error.
             page_size: page size of downloaded annotation data
-            organism: taxonomy id of selected organism, if None take all available organisms
+            organism: rganism code in NCBI taxid format, e.g. "9606" for human. If it is None or "*", downloads all organism data.
             add_prefix: if True, add prefix to database identifiers
-            node_fields: fields that will be included in domain nodes
-            edge_fields: fields that will be included in protein-domain edges
+            node_fields: `InterProNodeField` fields to be used in the graph, if it is None, select all fields.
+            edge_fields: `InterProEdgeField` fields to be used in the graph, if it is None, select all fields.
             test_mode: limits amount of data for testing
         """
-        self.cache = cache
-        self.debug = debug
-        self.retries = retries
-        self.page_size = page_size
-        self.organism = organism
-        self.add_prefix = add_prefix
+
+        model = InterProModel(cache=cache,
+                              debug=debug,
+                              retries=retries,
+                              page_size=page_size,
+                              organism=organism,
+                              add_prefix=add_prefix,
+                              node_fields=node_fields,
+                              edge_fields=edge_fields,
+                              test_mode=test_mode).model_dump()
+        
+        self.cache = model["cache"]
+        self.debug = model["debug"]
+        self.retries = model["retries"]
+        self.page_size = model["page_size"]
+        self.organism = None if model["organism"] in ("*", None) else model["organism"]
+        self.add_prefix = model["add_prefix"]
         
         
         # set node and edge fields
-        self.set_node_and_edge_fields(node_fields=node_fields, edge_fields=edge_fields)
+        self.set_node_and_edge_fields(node_fields=model["node_fields"], edge_fields=model["edge_fields"])
         
         self.early_stopping = None
-        if test_mode:
+        if model["test_mode"]:
             self.early_stopping = 100        
 
 
@@ -170,8 +200,8 @@ class InterPro:
             t1 = time()
             logger.info(f'InterPro annotation data is downloaded in {round((t1-t0) / 60, 2)} mins')
 
-    
-    def get_interpro_nodes(self, node_label="domain") -> list:
+    @validate_call
+    def get_interpro_nodes(self, node_label: str = "domain") -> list[tuple]:
         """
         Prepares InterPro domain nodes for BioCypher
         Args:
@@ -238,7 +268,8 @@ class InterPro:
 
         return node_list
     
-    def get_interpro_edges(self, edge_label="protein_has_domain") -> list:
+    @validate_call
+    def get_interpro_edges(self, edge_label: str = "protein_has_domain") -> list[tuple]:
         """
         Prepares Protein-Domain edges for BioCypher
         Args:
@@ -284,7 +315,8 @@ class InterPro:
         
         return edge_list
     
-    def check_length(self, element:str) -> str | list:
+    @validate_call
+    def check_length(self, element: str | list) -> str | list:
         """
         If the type of given entry is a list and has just one element returns this one element
         """
@@ -292,8 +324,9 @@ class InterPro:
             return element[0]
         else:
             return element
-        
-    def add_prefix_to_id(self, prefix, identifier, sep=":") -> str:
+    
+    @validate_call
+    def add_prefix_to_id(self, prefix: str = None, identifier: str = None, sep: str = ":") -> str:
         """
         Adds prefix to ids
         """
@@ -318,14 +351,13 @@ class InterPro:
             self.edge_fields = [field.value for field in InterProEdgeField]
 
     
-    def export_as_csv(self, path: str | None = None, node_csv_name: str  = None, 
-                      edge_csv_name: str  = None):
+    def export_as_csv(self, path: DirectoryPath | None = None):
         if path:
-            node_full_path = os.path.join(path, f"{node_csv_name.capitalize()}.csv")
-            edge_full_path = os.path.join(path, f"{edge_csv_name.capitalize()}.csv")
+            node_full_path = os.path.join(path, "Domain.csv")
+            edge_full_path = os.path.join(path, "Protein_has_domain.csv")
         else:
-            node_full_path = f"{node_csv_name.capitalize()}.csv"
-            edge_full_path = f"{edge_csv_name.capitalize()}.csv"
+            node_full_path = os.path.join(os.getcwd(), "Domain.csv")
+            edge_full_path = os.path.join(os.getcwd(), "Protein_has_domain.csv")
 
         # write nodes
         nodes = self.get_interpro_nodes()
@@ -353,3 +385,4 @@ class InterPro:
         edges_df = pd.DataFrame.from_records(edges_df_list)
         edges_df.to_csv(edge_full_path, index=False)
         logger.info(f"Domain edge data is written: {node_full_path}")
+        
