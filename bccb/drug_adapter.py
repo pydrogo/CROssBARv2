@@ -1398,7 +1398,7 @@ class Drug:
 
         return node_list
     
-    def get_edges(self):
+    def get_edges(self) -> list[tuple]:
         edge_list = []
 
         if DrugEdgeType.DRUG_TARGET_INTERACTION in self.edge_types:
