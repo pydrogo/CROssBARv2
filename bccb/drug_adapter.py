@@ -1397,6 +1397,20 @@ class Drug:
                 break
 
         return node_list
+    
+    def get_edges(self):
+        edge_list = []
+
+        if DrugEdgeType.DRUG_TARGET_INTERACTION in self.edge_types:
+            edge_list.extend(self.get_dti_edges())
+        
+        if DrugEdgeType.DRUG_DRUG_INTERACTION in self.edge_types:
+            edge_list.extend(self.get_ddi_edges())
+
+        if DrugEdgeType.DRUG_GENE_INTERACTION in self.edge_types:
+            edge_list.extend(self.get_dgi_edges())
+
+        return edge_list
 
     @validate_call
     def get_dti_edges(self, label: str = "drug_targets_protein") -> list[tuple]:
