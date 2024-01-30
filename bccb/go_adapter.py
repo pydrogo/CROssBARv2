@@ -138,24 +138,24 @@ class BiologicalProcessToMolecularFunctionEdgeLabel(Enum):
         return GOEdgeType.BIOLOGICAL_PROCESS_TO_MOLECULAR_FUNCTION
     
 class GOModel(BaseModel):
-    organism: int | Literal["*"] | None = None, 
-    node_types: Union[list[GONodeType], None] = None, 
-    go_node_fields: Union[list[GONodeField], None] = None,
-    edge_types: Union[list[GOEdgeType], None] = None, 
-    go_edge_fields: Union[list[GOEdgeField], None] = None, 
-    edge_labels: Union[list[ProteinToCellularComponentEdgeLabel,
-                    ProteinToBiologicalProcessEdgeLabel,
-                    ProteinToMolecularFunctionEdgeLabel,
-                    DomainToCellularComponentEdgeLabel,
-                    DomainToBiologicalProcessEdgeLabel,
-                    DomainToMolecularFunctionEdgeLabel,
-                    MolecularFunctionToMolecularFunctionEdgeLabel,
-                    BiologicalProcessToBiologicalProcessEdgeLabel,
-                    CellularComponentToCellularComponentEdgeLabel,
-                    BiologicalProcessToMolecularFunctionEdgeLabel],
-                    None] = None, 
-    add_prefix: bool = True, 
-    test_mode: bool = False, 
+    organism: Union[int, Literal["*"], None] = None 
+    node_types: Union[list[GONodeType], None] = None 
+    go_node_fields: Union[list[GONodeField], None] = None
+    edge_types: Union[list[GOEdgeType], None] = None
+    go_edge_fields: Union[list[GOEdgeField], None] = None
+    edge_labels: Union[list[ProteinToCellularComponentEdgeLabel],
+                    list[ProteinToBiologicalProcessEdgeLabel],
+                    list[ProteinToMolecularFunctionEdgeLabel],
+                    list[DomainToCellularComponentEdgeLabel],
+                    list[DomainToBiologicalProcessEdgeLabel],
+                    list[DomainToMolecularFunctionEdgeLabel],
+                    list[MolecularFunctionToMolecularFunctionEdgeLabel],
+                    list[BiologicalProcessToBiologicalProcessEdgeLabel],
+                    list[CellularComponentToCellularComponentEdgeLabel],
+                    list[BiologicalProcessToMolecularFunctionEdgeLabel],
+                    None] = None
+    add_prefix: bool = True
+    test_mode: bool = False
     remove_selected_annotations: list[str] = ["IEA"]
 
 
@@ -171,17 +171,17 @@ class GO:
                  go_node_fields: Optional[Union[list[GONodeField], None]] = None,
                  edge_types: Optional[Union[list[GOEdgeType], None]] = None, 
                  go_edge_fields: Optional[Union[list[GOEdgeField], None]] = None, 
-                 edge_labels: Optional[Union[list[ProteinToCellularComponentEdgeLabel,
-                                    ProteinToBiologicalProcessEdgeLabel,
-                                    ProteinToMolecularFunctionEdgeLabel,
-                                    DomainToCellularComponentEdgeLabel,
-                                    DomainToBiologicalProcessEdgeLabel,
-                                    DomainToMolecularFunctionEdgeLabel,
-                                    MolecularFunctionToMolecularFunctionEdgeLabel,
-                                    BiologicalProcessToBiologicalProcessEdgeLabel,
-                                    CellularComponentToCellularComponentEdgeLabel,
-                                    BiologicalProcessToMolecularFunctionEdgeLabel],
-                                    None]] = None, 
+                 edge_labels: Union[list[ProteinToCellularComponentEdgeLabel],
+                        list[ProteinToBiologicalProcessEdgeLabel],
+                        list[ProteinToMolecularFunctionEdgeLabel],
+                        list[DomainToCellularComponentEdgeLabel],
+                        list[DomainToBiologicalProcessEdgeLabel],
+                        list[DomainToMolecularFunctionEdgeLabel],
+                        list[MolecularFunctionToMolecularFunctionEdgeLabel],
+                        list[BiologicalProcessToBiologicalProcessEdgeLabel],
+                        list[CellularComponentToCellularComponentEdgeLabel],
+                        list[BiologicalProcessToMolecularFunctionEdgeLabel],
+                        None] = None, 
                  add_prefix: Optional[bool] = True, 
                  test_mode: Optional[bool] = False, 
                  remove_selected_annotations: Optional[list[str]] = ["IEA"]):
