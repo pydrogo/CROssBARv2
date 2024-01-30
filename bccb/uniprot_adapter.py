@@ -286,14 +286,16 @@ class Uniprot:
         else:
             full_path = os.path.join(os.getcwd(), "per-protein.h5")
 
-        logger.info("Downloading ProtT5 embeddings...")
-
         if not os.path.isfile(full_path):
+            logger.info("Downloading ProtT5 embeddings...")
+
             with requests.get(url, stream=True) as response:
                 with open(full_path, 'wb') as f:
                     for chunk in response.iter_content(512 * 1024):
                         if chunk:
                             f.write(chunk)
+        else:
+            logger.info("Embedding file is exists. Reading from the file..")
 
         with h5py.File(full_path, "r") as file:
             for uniprot_id, embedding in file.items():
@@ -546,8 +548,7 @@ class Uniprot:
                 # is it even still necessary?
 
                 organism_id = (
-                    self.data.get(UniprotNodeField.ORGANISM_ID.value)
-                    .get(protein)
+                    str(self.data.get(UniprotNodeField.ORGANISM_ID.value).get(protein)) if self.data.get(UniprotNodeField.ORGANISM_ID.value).get(protein) else None
                 )
 
                 if organism_id:
