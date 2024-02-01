@@ -9,7 +9,7 @@ from time import time
 import pandas as pd
 import os
 
-from enum import Enum, auto
+from enum import Enum, EnumMeta, auto
 from typing import Union
 
 from pypath.inputs import expasy, uniprot
@@ -20,10 +20,23 @@ from pydantic import BaseModel, DirectoryPath, validate_call
 
 logger.debug(f"Loading module {__name__}.")
 
-class ECNodeField(Enum):
+class ECEnumMeta(EnumMeta):  
+    def __contains__(cls, item): 
+        return item in cls.__members__.keys()
+    
+class ECNodeField(Enum, metaclass=ECEnumMeta):
     NAME = "name"
 
-class ECEdgeType(Enum):
+    @classmethod
+    def _missing_(cls, value: str):
+        value = value.lower()
+        for member in cls.__members__.values():
+            if member.value.lower() == value:
+                return member        
+        return None
+
+
+class ECEdgeType(Enum, metaclass=ECEnumMeta):
     EC_HIERARCHY = auto()
     PROTEIN_TO_EC = auto()
 
