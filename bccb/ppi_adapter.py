@@ -21,27 +21,56 @@ from typing import Literal, Union, Optional
 
 from bioregistry import normalize_curie
 
-from enum import Enum
+from enum import Enum, EnumMeta
 
 
-class IntactEdgeField(Enum):
+class PPIEnumMeta(EnumMeta):
+    def __contains__(cls, item):
+        return item in cls.__members__.keys()
+
+
+class IntactEdgeField(Enum, metaclass=PPIEnumMeta):
     SOURCE = "source"
     PUBMED_IDS = "pubmeds"
     INTACT_SCORE = "mi_score"
     METHODS = "methods"
     INTERACTION_TYPES = "interaction_types"
 
+    @classmethod
+    def _missing_(cls, value: str):
+        value = value.lower()
+        for member in cls.__members__.values():
+            if member.value.lower() == value:
+                return member
+        return None
 
-class BiogridEdgeField(Enum):
+
+class BiogridEdgeField(Enum, metaclass=PPIEnumMeta):
     SOURCE = "source"
     PUBMED_IDS = "pmid"
     EXPERIMENTAL_SYSTEM = "experimental_system"
 
+    @classmethod
+    def _missing_(cls, value: str):
+        value = value.lower()
+        for member in cls.__members__.values():
+            if member.value.lower() == value:
+                return member
+        return None
 
-class StringEdgeField(Enum):
+
+class StringEdgeField(Enum, metaclass=PPIEnumMeta):
     SOURCE = "source"
     COMBINED_SCORE = "combined_score"
     PHYSICAL_COMBINED_SCORE = "physical_combined_score"
+
+    @classmethod
+    def _missing_(cls, value: str):
+        value = value.lower()
+        for member in cls.__members__.values():
+            if member.value.lower() == value:
+                return member
+        return None
 
 
 class PPIModel(BaseModel):
@@ -71,7 +100,7 @@ class PPI:
         biogrid_fields: Optional[Union[list[BiogridEdgeField], None]] = None,
         string_fields: Optional[Union[list[StringEdgeField], None]] = None,
         add_prefix: Optional[bool] = True,
-        test_mode: Optional[bool] = False
+        test_mode: Optional[bool] = False,
     ):
         """
         Downloads and processes PPI data
@@ -91,23 +120,27 @@ class PPI:
                 test_mode: if True, take small sample from data for testing.
 
         """
-        model = PPIModel(output_dir=output_dir,
-                         export_csv=export_csv,
-                         cache=cache,
-                         debug=debug,
-                         retries=retries,
-                         organism=organism,
-                         intact_fields=intact_fields,
-                         biogrid_fields=biogrid_fields,
-                         string_fields=string_fields,
-                         add_prefix=add_prefix,
-                         test_mode=test_mode).model_dump()
-        
+        model = PPIModel(
+            output_dir=output_dir,
+            export_csv=export_csv,
+            cache=cache,
+            debug=debug,
+            retries=retries,
+            organism=organism,
+            intact_fields=intact_fields,
+            biogrid_fields=biogrid_fields,
+            string_fields=string_fields,
+            add_prefix=add_prefix,
+            test_mode=test_mode,
+        ).model_dump()
+
         self.export_csv = model["export_csv"]
         self.cache = model["cache"]
         self.debug = model["debug"]
         self.retries = model["retries"]
-        self.organism = None if model["organism"] in ("*", None) else model["organism"]
+        self.organism = (
+            None if model["organism"] in ("*", None) else model["organism"]
+        )
         self.intact_fields = model["intact_fields"]
         self.biogrid_fields = model["biogrid_fields"]
         self.string_fields = model["string_fields"]
@@ -173,14 +206,16 @@ class PPI:
         logger.info(
             f"IntAct data is downloaded in {round((t1-t0) / 60, 2)} mins"
         )
-        
+
         if self.test_mode:
             self.intact_ints = self.intact_ints[:100]
 
         self.check_status_and_properties["intact"]["downloaded"] = True
 
     @validate_call
-    def intact_process(self, rename_selected_fields: dict[str, str] = None) -> None:
+    def intact_process(
+        self, rename_selected_fields: dict[str, str] = None
+    ) -> None:
         """
         Processor function for IntAct data. It drops duplicate and reciprocal duplicate protein pairs and collects pubmed ids of duplicated pairs. Also, it filters
         protein pairs found in swissprot.
@@ -220,9 +255,9 @@ class PPI:
 
         else:
             for field_old_name in selected_fields:
-                self.intact_field_new_names[
-                    field_old_name
-                ] = default_field_names[field_old_name]
+                self.intact_field_new_names[field_old_name] = (
+                    default_field_names[field_old_name]
+                )
 
             self.intact_field_new_names["id_a"] = "uniprot_a"
             self.intact_field_new_names["id_b"] = "uniprot_b"
@@ -283,10 +318,7 @@ class PPI:
 
         def aggregate_pubmeds(element):
             element = "|".join([str(e) for e in set(element.dropna())])
-            if element == "":
-                return np.nan
-            else:
-                return element
+            return np.nan if not element else element
 
         agg_dict = {}
         for e in self.intact_field_new_names.values():
@@ -324,11 +356,17 @@ class PPI:
         logger.info(
             f"IntAct data is processed in {round((t2-t1) / 60, 2)} mins"
         )
-        logger.debug(f"Total number of interactions for IntAct is {intact_df_unique.shape[0]}")
+        logger.debug(
+            f"Total number of interactions for IntAct is {intact_df_unique.shape[0]}"
+        )
 
         self.check_status_and_properties["intact"]["processed"] = True
-        self.check_status_and_properties["intact"]["dataframe"] = intact_df_unique
-        self.check_status_and_properties["intact"]["properties_dict"] = self.intact_field_new_names
+        self.check_status_and_properties["intact"][
+            "dataframe"
+        ] = intact_df_unique
+        self.check_status_and_properties["intact"][
+            "properties_dict"
+        ] = self.intact_field_new_names
 
     def download_biogrid_data(self) -> None:
         """
@@ -365,14 +403,16 @@ class PPI:
         logger.info(
             f"BioGRID data is downloaded in {round((t1-t0) / 60, 2)} mins"
         )
-        
+
         if self.test_mode:
             self.biogrid_ints = self.biogrid_ints[:100]
 
         self.check_status_and_properties["biogrid"]["downloaded"] = True
 
     @validate_call
-    def biogrid_process(self, rename_selected_fields: dict[str, str] = None) -> None:
+    def biogrid_process(
+        self, rename_selected_fields: dict[str, str] = None
+    ) -> None:
         """
         Processor function for BioGRID data. It drops duplicate and reciprocal duplicate protein pairs and collects pubmed ids of duplicated pairs. In addition, it
         maps entries to uniprot ids using gene name and tax id information in the BioGRID data. Also, it filters protein pairs found in swissprot.
@@ -409,9 +449,9 @@ class PPI:
             self.biogrid_field_new_names["uniprot_b"] = "uniprot_b"
         else:
             for field_old_name in selected_fields:
-                self.biogrid_field_new_names[
-                    field_old_name
-                ] = default_field_names[field_old_name]
+                self.biogrid_field_new_names[field_old_name] = (
+                    default_field_names[field_old_name]
+                )
 
             self.biogrid_field_new_names["uniprot_a"] = "uniprot_a"
             self.biogrid_field_new_names["uniprot_b"] = "uniprot_b"
@@ -502,10 +542,7 @@ class PPI:
 
         def aggregate_pubmeds(element):
             element = "|".join([str(e) for e in set(element.dropna())])
-            if element == "":
-                return np.nan
-            else:
-                return element
+            return np.nan if not element else element
 
         agg_dict = {}
         for e in self.biogrid_field_new_names.values():
@@ -542,10 +579,14 @@ class PPI:
         logger.info(
             f"BioGRID data is processed in {round((t2-t1) / 60, 2)} mins"
         )
-        logger.debug(f"Total number of interactions for BioGRID is {biogrid_df_unique.shape[0]}")
+        logger.debug(
+            f"Total number of interactions for BioGRID is {biogrid_df_unique.shape[0]}"
+        )
 
         self.check_status_and_properties["biogrid"]["processed"] = True
-        self.check_status_and_properties["biogrid"]["dataframe"] = biogrid_df_unique
+        self.check_status_and_properties["biogrid"][
+            "dataframe"
+        ] = biogrid_df_unique
         self.check_status_and_properties["biogrid"][
             "properties_dict"
         ] = self.biogrid_field_new_names
@@ -575,9 +616,7 @@ class PPI:
                 self.tax_ids = [self.organism]
 
             # map string ids to swissprot ids
-            uniprot_to_string = uniprot.uniprot_data(
-                "xref_string", "*", True
-            )
+            uniprot_to_string = uniprot.uniprot_data("xref_string", "*", True)
 
             self.string_to_uniprot = collections.defaultdict(list)
             for k, v in uniprot_to_string.items():
@@ -593,7 +632,8 @@ class PPI:
 
             # this tax id give an error
             tax_ids_to_be_skipped = [
-                "4565", "8032",
+                "4565",
+                "8032",
             ]
 
             # it may take around 100 hours to download whole data
@@ -616,20 +656,24 @@ class PPI:
 
                     if organism_string_ints:
                         self.string_ints.extend(organism_string_ints)
-                        logger.debug(f"Total interaction count is {len(self.string_ints)}")
+                        logger.debug(
+                            f"Total interaction count is {len(self.string_ints)}"
+                        )
 
         t1 = time()
         logger.info(
             f"STRING data is downloaded in {round((t1-t0) / 60, 2)} mins"
         )
-        
+
         if self.test_mode:
             self.string_ints = self.string_ints[:100]
 
         self.check_status_and_properties["string"]["downloaded"] = True
 
     @validate_call
-    def string_process(self, rename_selected_fields: dict[str, str] = None) -> None:
+    def string_process(
+        self, rename_selected_fields: dict[str, str] = None
+    ) -> None:
         """
         Processor function for STRING data. It drops duplicate and reciprocal duplicate protein pairs. In addition, it maps entries to uniprot ids
         using crossreferences to STRING in the Uniprot data. Also, it filters protein pairs found in swissprot.
@@ -637,7 +681,7 @@ class PPI:
          Args:
             rename_selected_fields : List of new field names for selected fields. If not defined, default field names will be used.
         """
-        
+
         if self.string_fields is None:
             selected_fields = [field.value for field in StringEdgeField]
         else:
@@ -666,9 +710,9 @@ class PPI:
             self.string_field_new_names["uniprot_b"] = "uniprot_b"
         else:
             for field_old_name in selected_fields:
-                self.string_field_new_names[
-                    field_old_name
-                ] = default_field_names[field_old_name]
+                self.string_field_new_names[field_old_name] = (
+                    default_field_names[field_old_name]
+                )
 
             self.string_field_new_names["uniprot_a"] = "uniprot_a"
             self.string_field_new_names["uniprot_b"] = "uniprot_b"
@@ -749,12 +793,17 @@ class PPI:
         logger.info(
             f"STRING data is processed in {round((t2-t1) / 60, 2)} mins"
         )
-        logger.debug(f"Total number of interactions for STRING is {string_df_unique.shape[0]}")
-        
+        logger.debug(
+            f"Total number of interactions for STRING is {string_df_unique.shape[0]}"
+        )
 
         self.check_status_and_properties["string"]["processed"] = True
-        self.check_status_and_properties["string"]["dataframe"] = string_df_unique
-        self.check_status_and_properties["string"]["properties_dict"] = self.string_field_new_names
+        self.check_status_and_properties["string"][
+            "dataframe"
+        ] = string_df_unique
+        self.check_status_and_properties["string"][
+            "properties_dict"
+        ] = self.string_field_new_names
 
     def merge_all(self) -> pd.DataFrame:
         """
@@ -796,17 +845,17 @@ class PPI:
                 return element
 
         # check which databases will be merged
-        dbs_will_be_merged = list()
+        dbs_will_be_merged = []
         for db in self.check_status_and_properties.keys():
             if (
                 self.check_status_and_properties[db]["downloaded"]
                 and self.check_status_and_properties[db]["processed"]
             ):
                 dbs_will_be_merged.append(db)
-        
+
         seen_dbs = set()
         for db in dbs_will_be_merged:
-            
+
             if db in seen_dbs:
                 continue
 
@@ -816,7 +865,9 @@ class PPI:
                     seen_dbs.add(dbs_will_be_merged[1])
 
                     df1 = self.check_status_and_properties[db]["dataframe"]
-                    df2 = self.check_status_and_properties[dbs_will_be_merged[1]]["dataframe"]
+                    df2 = self.check_status_and_properties[
+                        dbs_will_be_merged[1]
+                    ]["dataframe"]
 
                     merged_df = pd.merge(
                         df1, df2, on=["uniprot_a", "uniprot_b"], how="outer"
@@ -933,9 +984,11 @@ class PPI:
                                     + "_y",
                                 ]
                             ].apply(
-                                lambda x: x.dropna().tolist()[0]
-                                if len(x.dropna().tolist()) > 0
-                                else np.nan,
+                                lambda x: (
+                                    x.dropna().tolist()[0]
+                                    if len(x.dropna().tolist()) > 0
+                                    else np.nan
+                                ),
                                 axis=1,
                             )
 
@@ -960,9 +1013,11 @@ class PPI:
                                     ],
                                 ]
                             ].apply(
-                                lambda x: x.dropna().tolist()[0]
-                                if len(x.dropna().tolist()) > 0
-                                else np.nan,
+                                lambda x: (
+                                    x.dropna().tolist()[0]
+                                    if len(x.dropna().tolist()) > 0
+                                    else np.nan
+                                ),
                                 axis=1,
                             )
 
@@ -975,7 +1030,7 @@ class PPI:
                                 ],
                                 inplace=True,
                             )
-                    
+
                 else:
                     seen_dbs.add(db)
                     seen_dbs.add(dbs_will_be_merged[1])
@@ -1108,17 +1163,19 @@ class PPI:
 
             else:
                 seen_dbs.add(db)
-                
+
                 df2 = self.check_status_and_properties[db]["dataframe"]
                 source_flag = "source" in list(merged_df.columns)
-                
+
                 merged_df = pd.merge(
                     merged_df, df2, on=["uniprot_a", "uniprot_b"], how="outer"
                 )
-                
+
                 # if source column exists in both merged_df and string merge them
-                if source_flag and self.string_field_new_names.get("source", None):
-                    
+                if source_flag and self.string_field_new_names.get(
+                    "source", None
+                ):
+
                     # if they have the same name
                     if "source" == self.string_field_new_names["source"]:
                         merged_df["source"] = merged_df[
@@ -1135,7 +1192,7 @@ class PPI:
                             ],
                             inplace=True,
                         )
-                        
+
                     # if they dont have the same name
                     else:
                         merged_df["source"] = merged_df[
@@ -1149,26 +1206,24 @@ class PPI:
                             ],
                             inplace=True,
                         )
-                
+
                 # if combined_score field exists in dataframe force its data data type become int
                 if self.string_field_new_names.get("combined_score", None):
-                    merged_df[
-                        self.string_field_new_names["combined_score"]
-                    ] = merged_df[
-                        self.string_field_new_names["combined_score"]
-                    ].astype(
-                        str, errors="ignore"
+                    merged_df[self.string_field_new_names["combined_score"]] = (
+                        merged_df[
+                            self.string_field_new_names["combined_score"]
+                        ].astype(str, errors="ignore")
                     )
-                    merged_df[
-                        self.string_field_new_names["combined_score"]
-                    ] = merged_df[
-                        self.string_field_new_names["combined_score"]
-                    ].apply(
-                        float_to_int
+                    merged_df[self.string_field_new_names["combined_score"]] = (
+                        merged_df[
+                            self.string_field_new_names["combined_score"]
+                        ].apply(float_to_int)
                     )
 
                 # if physical_combined_score field exists in dataframe force its data data type become int
-                if self.string_field_new_names.get("physical_combined_score", None):
+                if self.string_field_new_names.get(
+                    "physical_combined_score", None
+                ):
                     merged_df[
                         self.string_field_new_names["physical_combined_score"]
                     ] = merged_df[
@@ -1189,32 +1244,37 @@ class PPI:
         logger.info(
             f"All data is merged and processed in {round((t2-t1) / 60, 2)} mins"
         )
-        logger.debug(f"Total number of interactions for PPI data is {merged_df.shape[0]}")
+        logger.debug(
+            f"Total number of interactions for PPI data is {merged_df.shape[0]}"
+        )
 
         if self.export_csv:
             if self.output_dir:
                 full_path = os.path.join(self.output_dir, "PPI.csv")
             else:
                 full_path = os.path.join(os.getcwd(), "PPI.csv")
-            
+
             merged_df.to_csv(full_path, index=False)
             logger.info(f"PPI data is written: {full_path}")
 
-        
         return merged_df
-    
+
     @validate_call
-    def add_prefix_to_id(self, prefix: str = "uniprot", identifier: str = None, sep: str = ":") -> str:
+    def add_prefix_to_id(
+        self, prefix: str = "uniprot", identifier: str = None, sep: str = ":"
+    ) -> str:
         """
         Adds prefix to uniprot id
         """
         if self.add_prefix and identifier:
-            return normalize_curie(prefix + sep + str(identifier))
-        
+            return normalize_curie(prefix + sep + identifier)
+
         return identifier
 
     @validate_call
-    def get_ppi_edges(self, label: str = "Protein_interacts_with_protein") -> list[tuple]:
+    def get_ppi_edges(
+        self, label: str = "Protein_interacts_with_protein"
+    ) -> list[tuple]:
         """
         Get PPI edges from merged data
         Args:
@@ -1227,12 +1287,12 @@ class PPI:
         for _, row in tqdm(merged_df.iterrows()):
             _dict = row.to_dict()
 
-            _source = self.add_prefix_to_id(identifier = str(row["uniprot_a"]))
-            _target = self.add_prefix_to_id(identifier = str(row["uniprot_b"]))
+            _source = self.add_prefix_to_id(identifier=str(row["uniprot_a"]))
+            _target = self.add_prefix_to_id(identifier=str(row["uniprot_b"]))
 
             del _dict["uniprot_a"], _dict["uniprot_b"]
 
-            _props = dict()
+            _props = {}
             for k, v in _dict.items():
                 if str(v) != "nan":
                     if isinstance(v, str) and "|" in v:
