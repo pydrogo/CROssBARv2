@@ -52,7 +52,7 @@ class OrganismField(IntEnum, metaclass=TFGenEnumMeta):
         return None
 
 
-class TFGenModel(BaseModel, metaclass=TFGenEnumMeta):
+class TFGenModel(BaseModel):
     edge_fields: Union[list[TFGenEdgeField], None] = None
     organism: Union[list[OrganismField], None] = None
     test_mode: bool = False
