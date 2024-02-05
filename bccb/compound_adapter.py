@@ -679,14 +679,12 @@ class Compound:
 
     def set_node_fields(self, node_fields):
         if node_fields:
-            self.node_fields = node_fields
+            self.node_fields = [field.value for field in node_fields]
         else:
             self.node_fields = [field.value for field in CompoundNodeField]
 
     def set_edge_fields(self, cti_edge_fields):
         if cti_edge_fields:
-            self.cti_edge_fields = cti_edge_fields
+            self.cti_edge_fields = [field.value for field in cti_edge_fields]
         else:
-            self.cti_edge_fields = [
-                field.value for field in CompoundCTIEdgeField
-            ]
+            self.cti_edge_fields = [field.value for field in CompoundCTIEdgeField]
