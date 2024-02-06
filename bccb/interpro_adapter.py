@@ -108,10 +108,7 @@ class InterProEdgeField(Enum, metaclass=InterProEnumMeta):
 
 
 class InterProModel(BaseModel):
-    cache: bool = False
-    debug: bool = False
     page_size: int = 150
-    retries: int = 6
     organism: int | Literal["*"] | None = None
     add_prefix: bool = True
     node_fields: Union[list[InterProNodeField], None] = None
@@ -127,10 +124,7 @@ class InterPro:
 
     def __init__(
         self,
-        cache: Optional[bool] = False,
-        debug: Optional[bool] = False,
         page_size: Optional[int] = 150,
-        retries: Optional[int] = 6,
         organism: Optional[int | Literal["*"] | None] = None,
         add_prefix: Optional[bool] = True,
         node_fields: Optional[Union[list[InterProNodeField], None]] = None,
@@ -139,9 +133,6 @@ class InterPro:
     ):
         """
         Args:
-            cache: if True, it uses the cached version of the data, otherwise
-            forces download.
-            debug: if True, turns on debug mode in pypath.
             retries: number of retries in case of download error.
             page_size: page size of downloaded annotation data
             organism: rganism code in NCBI taxid format, e.g. "9606" for human. If it is None or "*", downloads all organism data.
@@ -152,9 +143,6 @@ class InterPro:
         """
 
         model = InterProModel(
-            cache=cache,
-            debug=debug,
-            retries=retries,
             page_size=page_size,
             organism=organism,
             add_prefix=add_prefix,
@@ -163,9 +151,6 @@ class InterPro:
             test_mode=test_mode,
         ).model_dump()
 
-        self.cache = model["cache"]
-        self.debug = model["debug"]
-        self.retries = model["retries"]
         self.page_size = model["page_size"]
         self.organism = (
             None if model["organism"] in ("*", None) else model["organism"]
@@ -180,76 +165,82 @@ class InterPro:
         self.early_stopping = None
         if model["test_mode"]:
             self.early_stopping = 100
+            
+    @validate_call
+    def download_interpro_data(self, cache: bool = False,
+                               debug: bool = False,
+                               retries: int = 3) -> None:
+        """
+        Wrapper function to download InterPro data using pypath; used to access
+        settings.
+        Args:
+            cache: if True, it uses the cached version of the data, otherwise
+            forces download.
+            debug: if True, turns on debug mode in pypath.
+            retries: number of retries in case of download error.
+        """
+        # stack pypath context managers
+        with ExitStack() as stack:
+
+            stack.enter_context(settings.context(retries=retries))
+
+            if debug:
+                stack.enter_context(curl.debug_on())
+
+            if not cache:
+                stack.enter_context(curl.cache_off())
+
+            self.download_domain_node_data()
+            self.download_domain_edge_data()
 
     def download_domain_node_data(self) -> None:
         """
         Downloads domain node data from Interpro
         """
 
-        # stack pypath context managers
-        with ExitStack() as stack:
+        logger.debug("Started downloading InterPro domain data")
+        t0 = time()
 
-            stack.enter_context(settings.context(retries=self.retries))
+        # To do: Filter according to tax id??
+        self.interpro_entries = (
+            interpro.interpro_entries()
+        )  # returns a list of namedtuples
+        self.interpro_structural_xrefs = interpro.interpro_xrefs(
+            db_type="structural"
+        )
+        self.interpro_external_xrefs = interpro.interpro_xrefs(
+            db_type="external"
+        )
 
-            if self.debug:
-                stack.enter_context(curl.debug_on())
-
-            if not self.cache:
-                stack.enter_context(curl.cache_off())
-
-            logger.debug("Started downloading InterPro domain data")
-            t0 = time()
-
-            # To do: Filter according to tax id??
-            self.interpro_entries = (
-                interpro.interpro_entries()
-            )  # returns a list of namedtuples
-            self.interpro_structural_xrefs = interpro.interpro_xrefs(
-                db_type="structural"
-            )
-            self.interpro_external_xrefs = interpro.interpro_xrefs(
-                db_type="external"
-            )
-
-            t1 = time()
-            logger.info(
-                f"InterPro domain data is downloaded in {round((t1-t0) / 60, 2)} mins"
-            )
+        t1 = time()
+        logger.info(
+            f"InterPro domain data is downloaded in {round((t1-t0) / 60, 2)} mins"
+        )
 
     def download_domain_edge_data(self) -> None:
         """
         Downloads Uniprot annotation data from Interpro
         """
 
-        with ExitStack() as stack:
+        logger.debug("Started downloading InterPro annotation data")
+        t0 = time()
 
-            stack.enter_context(settings.context(retries=self.retries))
-
-            if self.debug:
-                stack.enter_context(curl.debug_on())
-
-            if not self.cache:
-                stack.enter_context(curl.cache_off())
-
-            logger.debug("Started downloading InterPro annotation data")
-            t0 = time()
-
-            if self.organism:
-                # WARNING: decrease page_size parameter if there is a curl error about timeout in the pypath_log
-                self.interpro_annotations = interpro.interpro_annotations(
-                    page_size=self.page_size,
-                    reviewed=True,
-                    tax_id=self.organism,
-                )
-            else:
-                self.interpro_annotations = interpro.interpro_annotations(
-                    page_size=self.page_size, reviewed=True, tax_id=""
-                )
-
-            t1 = time()
-            logger.info(
-                f"InterPro annotation data is downloaded in {round((t1-t0) / 60, 2)} mins"
+        if self.organism:
+            # WARNING: decrease page_size parameter if there is a curl error about timeout in the pypath_log
+            self.interpro_annotations = interpro.interpro_annotations(
+                page_size=self.page_size,
+                reviewed=True,
+                tax_id=self.organism,
             )
+        else:
+            self.interpro_annotations = interpro.interpro_annotations(
+                page_size=self.page_size, reviewed=True, tax_id=""
+            )
+
+        t1 = time()
+        logger.info(
+            f"InterPro annotation data is downloaded in {round((t1-t0) / 60, 2)} mins"
+        )
 
     @validate_call
     def get_interpro_nodes(self, node_label: str = "domain") -> list[tuple]:
