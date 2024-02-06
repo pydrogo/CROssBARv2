@@ -475,7 +475,7 @@ class GO:
                 ]
             ):
                 t0 = time()
-                self.swissprots = list(
+                self.swissprots = set(
                     uniprot._all_uniprots(organism="*", swissprot=True)
                 )
 
@@ -522,6 +522,7 @@ class GO:
                         "Annotation_Extension",
                         "Gene_Product_Form_ID",
                     ]
+                    
                     go_annots = pd.read_csv(
                         full_path,
                         skiprows=10,
