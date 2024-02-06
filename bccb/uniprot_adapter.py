@@ -462,8 +462,11 @@ class Uniprot:
 
     @validate_call
     def get_nodes(
-        self, ligand_or_receptor: bool = False
-    ) -> Generator[str, str, dict]:
+        self, ligand_or_receptor: bool = False,
+        protein_label: str = "protein",
+        gene_label: str = "gene",
+        organism_label: str = "organism"
+    ) -> Generator[tuple[str, str, dict]]:
         """
         Yield nodes (protein, gene, organism) from UniProt data.
         """
@@ -492,7 +495,7 @@ class Uniprot:
                 ligand_or_receptor = self._get_ligand_or_receptor(protein_id)
                 yield (protein_id, ligand_or_receptor, protein_props)
             else:
-                yield (protein_id, "protein", protein_props)
+                yield (protein_id, protein_label, protein_props)
 
             # append gene node to output if desired
             if UniprotNodeType.GENE in self.node_types:
@@ -502,7 +505,7 @@ class Uniprot:
                 for gene_id, gene_props in gene_list:
 
                     if gene_id:
-                        yield (gene_id, "gene", gene_props)
+                        yield (gene_id, gene_label, gene_props)
 
             # append organism node to output if desired
             if UniprotNodeType.ORGANISM in self.node_types:
@@ -512,11 +515,13 @@ class Uniprot:
                 if organism_id:
                     yield (
                         organism_id,
-                        "organism",
+                        organism_label,
                         organism_props,
                     )
 
-    def get_edges(self) -> Generator[None, str, str, str, dict]:
+    @validate_call
+    def get_edges(self, gene_to_protein_label: str = "Gene_encodes_protein",
+                  protein_to_organism_label: str = "Protein_belongs_to_organism") -> Generator[tuple[None, str, str, str, dict]]:
         """
         Get nodes and edges from UniProt data.
         """
@@ -573,7 +578,7 @@ class Uniprot:
                                 None,
                                 gene_id,
                                 protein_id,
-                                "Gene_encodes_protein",
+                                gene_to_protein_label,
                                 properties,
                             )
                         )
@@ -605,7 +610,7 @@ class Uniprot:
                             None,
                             protein_id,
                             organism_id,
-                            "Protein_belongs_to_organism",
+                            protein_to_organism_label,
                             properties,
                         )
                     )
@@ -1027,10 +1032,10 @@ class Uniprot:
     @validate_call
     def export_data_to_csv(
         self,
-        node_data: Generator[str, str, dict] = None,
-        edge_data: Generator[None, str, str, str, dict] = None,
+        node_data: Generator[tuple[str, str, dict]] = None,
+        edge_data: Generator[tuple[None, str, str, str, dict]] = None,
         path: DirectoryPath | None = None,
-    ):
+    ) -> None:
         """
         Save node and edge data to csv
             node_data: output of `get_nodes()` function
