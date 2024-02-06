@@ -2021,14 +2021,18 @@ class Drug:
 
         return node_list
 
-    def get_edges(self) -> list[tuple]:
+    @validate_call
+    def get_edges(self, 
+                  dti_label: str = "drug_targets_protein",
+                  ddi_label: str = "drug_interacts_with_drug") -> list[tuple]:
+        
         edge_list = []
 
         if DrugEdgeType.DRUG_TARGET_INTERACTION in self.edge_types:
-            edge_list.extend(self.get_dti_edges())
+            edge_list.extend(self.get_dti_edges(dti_label))
 
         if DrugEdgeType.DRUG_DRUG_INTERACTION in self.edge_types:
-            edge_list.extend(self.get_ddi_edges())
+            edge_list.extend(self.get_ddi_edges(ddi_label))
 
         if DrugEdgeType.DRUG_GENE_INTERACTION in self.edge_types:
             edge_list.extend(self.get_dgi_edges())
