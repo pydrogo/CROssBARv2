@@ -76,9 +76,6 @@ class StringEdgeField(Enum, metaclass=PPIEnumMeta):
 class PPIModel(BaseModel):
     output_dir: Optional[Union[DirectoryPath, None]] = None
     export_csv: Optional[bool] = False
-    cache: Optional[bool] = False
-    debug: Optional[bool] = False
-    retries: Optional[int] = 6
     organism: Optional[Union[int, Literal["*"], None]] = None
     intact_fields: Optional[Union[list[IntactEdgeField], None]] = None
     biogrid_fields: Optional[Union[list[BiogridEdgeField], None]] = None
@@ -92,9 +89,6 @@ class PPI:
         self,
         output_dir: Optional[Union[DirectoryPath, None]] = None,
         export_csv: Optional[bool] = False,
-        cache: Optional[bool] = False,
-        debug: Optional[bool] = False,
-        retries: Optional[int] = 6,
         organism: Optional[Union[int, Literal["*"], None]] = None,
         intact_fields: Optional[Union[list[IntactEdgeField], None]] = None,
         biogrid_fields: Optional[Union[list[BiogridEdgeField], None]] = None,
@@ -123,9 +117,6 @@ class PPI:
         model = PPIModel(
             output_dir=output_dir,
             export_csv=export_csv,
-            cache=cache,
-            debug=debug,
-            retries=retries,
             organism=organism,
             intact_fields=intact_fields,
             biogrid_fields=biogrid_fields,
@@ -135,9 +126,6 @@ class PPI:
         ).model_dump()
 
         self.export_csv = model["export_csv"]
-        self.cache = model["cache"]
-        self.debug = model["debug"]
-        self.retries = model["retries"]
         self.organism = (
             None if model["organism"] in ("*", None) else model["organism"]
         )
@@ -173,6 +161,36 @@ class PPI:
         if model["export_csv"]:
             self.output_dir = model["output_dir"]
 
+    @validate_call
+    def download_ppi_data(self, cache: bool = False, debug: bool = False,
+                          retries: int = 6) -> None:
+        """
+        Wrapper function to download PPI data using pypath; used to access
+        settings.
+        Args:
+            cache: if True, it uses the cached version of the data, otherwise
+            forces download.
+            debug: if True, turns on debug mode in pypath.
+            retries: number of retries in case of download error.
+        """
+        
+        with ExitStack() as stack:
+            stack.enter_context(settings.context(retries=retries))
+
+            if debug:
+                stack.enter_context(curl.debug_on())
+            if not cache:
+                stack.enter_context(curl.cache_off())
+
+            self.download_intact_data()
+            self.download_biogrid_data()
+            self.download_string_data()
+
+    def process_ppi_data(self) -> None:
+        self.intact_process()
+        self.biogrid_process()
+        self.string_process()
+        
     def download_intact_data(self) -> None:
         """
         Wrapper function to download IntAct data using pypath; used to access
@@ -187,20 +205,12 @@ class PPI:
         )
         t0 = time()
 
-        with ExitStack() as stack:
-            stack.enter_context(settings.context(retries=self.retries))
-
-            if self.debug:
-                stack.enter_context(curl.debug_on())
-            if not self.cache:
-                stack.enter_context(curl.cache_off())
-
-            self.intact_ints = intact.intact_interactions(
-                miscore=0,
-                organism=self.organism,
-                complex_expansion=True,
-                only_proteins=True,
-            )
+        self.intact_ints = intact.intact_interactions(
+            miscore=0,
+            organism=self.organism,
+            complex_expansion=True,
+            only_proteins=True,
+        )
 
         t1 = time()
         logger.info(
@@ -285,7 +295,7 @@ class PPI:
         intact_df = intact_df[list(self.intact_field_new_names.keys())]
 
         # rename columns
-        intact_df.rename(columns=self.intact_field_new_names, inplace=True)
+        intact_df.rename(columns = self.intact_field_new_names, inplace=True)
 
         # drop rows if uniprot_a or uniprot_b is not a swiss-prot protein
         intact_df = intact_df[
@@ -382,22 +392,14 @@ class PPI:
         logger.debug("Started downloading BioGRID data")
         t0 = time()
 
-        with ExitStack() as stack:
-            stack.enter_context(settings.context(retries=self.retries))
+        # download biogrid data
+        self.biogrid_ints = biogrid.biogrid_all_interactions(
+            self.organism, 9999999999, False
+        )
 
-            if self.debug:
-                stack.enter_context(curl.debug_on())
-            if not self.cache:
-                stack.enter_context(curl.cache_off())
-
-            # download biogrid data
-            self.biogrid_ints = biogrid.biogrid_all_interactions(
-                self.organism, 9999999999, False
-            )
-
-            # download these fields for mapping from gene symbol to uniprot id
-            self.uniprot_to_gene = uniprot.uniprot_data("gene_names", "*", True)
-            self.uniprot_to_tax = uniprot.uniprot_data("organism_id", "*", True)
+        # download these fields for mapping from gene symbol to uniprot id
+        self.uniprot_to_gene = uniprot.uniprot_data("gene_names", "*", True)
+        self.uniprot_to_tax = uniprot.uniprot_data("organism_id", "*", True)
 
         t1 = time()
         logger.info(
@@ -601,64 +603,56 @@ class PPI:
 
         t0 = time()
 
-        with ExitStack() as stack:
-            stack.enter_context(settings.context(retries=self.retries))
+        if self.organism is None:
+            string_species = string.string_species()
+            self.tax_ids = list(string_species.keys())
+        else:
+            self.tax_ids = [self.organism]
 
-            if self.debug:
-                stack.enter_context(curl.debug_on())
-            if not self.cache:
-                stack.enter_context(curl.cache_off())
+        # map string ids to swissprot ids
+        uniprot_to_string = uniprot.uniprot_data("xref_string", "*", True)
 
-            if self.organism is None:
-                string_species = string.string_species()
-                self.tax_ids = list(string_species.keys())
-            else:
-                self.tax_ids = [self.organism]
+        self.string_to_uniprot = collections.defaultdict(list)
+        for k, v in uniprot_to_string.items():
+            for string_id in list(filter(None, v.split(";"))):
+                self.string_to_uniprot[string_id.split(".")[1]].append(k)
 
-            # map string ids to swissprot ids
-            uniprot_to_string = uniprot.uniprot_data("xref_string", "*", True)
+        self.string_ints = []
 
-            self.string_to_uniprot = collections.defaultdict(list)
-            for k, v in uniprot_to_string.items():
-                for string_id in list(filter(None, v.split(";"))):
-                    self.string_to_uniprot[string_id.split(".")[1]].append(k)
+        logger.debug("Started downloading STRING data")
+        logger.info(
+            f"This is the link of STRING data we downloaded:{urls.urls['string']['links']}. Please check if it is up to date"
+        )
 
-            self.string_ints = []
+        # this tax id give an error
+        tax_ids_to_be_skipped = [
+            "4565",
+            "8032",
+        ]
 
-            logger.debug("Started downloading STRING data")
-            logger.info(
-                f"This is the link of STRING data we downloaded:{urls.urls['string']['links']}. Please check if it is up to date"
-            )
-
-            # this tax id give an error
-            tax_ids_to_be_skipped = [
-                "4565",
-                "8032",
-            ]
-
-            # it may take around 100 hours to download whole data
-            for tax in tqdm(self.tax_ids):
-                if tax not in tax_ids_to_be_skipped:
-                    # remove proteins that does not have swissprot ids
-                    organism_string_ints = [
-                        i
-                        for i in string.string_links_interactions(
-                            ncbi_tax_id=int(tax),
-                            score_threshold="high_confidence",
-                        )
-                        if i.protein_a in self.string_to_uniprot
-                        and i.protein_b in self.string_to_uniprot
-                    ]
-
-                    logger.debug(
-                        f"Downloaded STRING data with taxonomy id {str(tax)}, filtered interaction count for this tax id is {len(organism_string_ints)}"
+        # it may take around 100 hours to download whole data
+        for tax in tqdm(self.tax_ids):
+            if tax not in tax_ids_to_be_skipped:
+                # remove proteins that does not have swissprot ids
+                organism_string_ints = [
+                    i
+                    for i in string.string_links_interactions(
+                        ncbi_tax_id=int(tax),
+                        score_threshold="high_confidence",
                     )
+                    if i.protein_a in self.string_to_uniprot
+                    and i.protein_b in self.string_to_uniprot
+                ]
 
-                    if organism_string_ints:
-                        self.string_ints.extend(organism_string_ints)
-                        logger.debug(
-                            f"Total interaction count is {len(self.string_ints)}"
-                        )
+                logger.debug(
+                    f"Downloaded STRING data with taxonomy id {str(tax)}, filtered interaction count for this tax id is {len(organism_string_ints)}"
+                )
+
+                if organism_string_ints:
+                    self.string_ints.extend(organism_string_ints)
+                    logger.debug(
+                        f"Total interaction count is {len(self.string_ints)}"
+                    )
 
         t1 = time()
         logger.info(
