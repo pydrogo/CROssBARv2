@@ -7,16 +7,19 @@ from tqdm import tqdm
 from time import time
 
 import pandas as pd
+import numpy as np
+
+import h5py
 import os
 
 from enum import Enum, EnumMeta, auto
-from typing import Union
+from typing import Union, Literal
 
 from pypath.inputs import expasy, uniprot
 
 from biocypher._logger import logger
 
-from pydantic import BaseModel, DirectoryPath, validate_call
+from pydantic import BaseModel, DirectoryPath, FilePath, validate_call
 
 logger.debug(f"Loading module {__name__}.")
 
@@ -28,6 +31,7 @@ class ECEnumMeta(EnumMeta):
 
 class ECNodeField(Enum, metaclass=ECEnumMeta):
     NAME = "name"
+    RXFNP_EMBEDDING = "rxnfp_embedding"
 
     @classmethod
     def _missing_(cls, value: str):
@@ -50,6 +54,7 @@ class ECModel(BaseModel):
     export_csv: bool = False
     output_dir: DirectoryPath | None = None
     add_prefix: bool = True
+    organism: int | Literal["*"] | None = None
 
 
 class EC:
@@ -61,6 +66,7 @@ class EC:
         export_csv: bool = False,
         output_dir: DirectoryPath | None = None,
         add_prefix: bool = True,
+        organism: int | Literal["*"] | None = None,
     ):
 
         model = ECModel(
@@ -70,12 +76,17 @@ class EC:
             export_csv=export_csv,
             output_dir=output_dir,
             add_prefix=add_prefix,
+            organism=organism,
         ).model_dump()
 
         self.export_csv = model["export_csv"]
         self.output_dir = model["output_dir"]
         self.add_prefix = model["add_prefix"]
-        self.swissprots = set(uniprot._all_uniprots("*", True))
+
+        if model["organism"] in ("*", None):
+            self.swissprots = set(uniprot._all_uniprots("*", True))
+        else:
+            self.swissprots = set(uniprot._all_uniprots(model["organism"], True))
 
         # set node fields
         self.set_node_fields(ec_node_fields=model["ec_node_fields"])
@@ -94,6 +105,7 @@ class EC:
         cache: bool = False,
         debug: bool = False,
         retries: int = 3,
+        rxnfp_embedding_path: FilePath = "embeddings/rxnfp_ec_number_embedding.h5"
     ) -> None:
         """
         Wrapper function to download ec data from various databases using pypath.
@@ -122,10 +134,23 @@ class EC:
 
             self.prepare_ec_hierarchy_dict()
 
+            if ECNodeField.RXFNP_EMBEDDING.value in self.ec_node_fields:
+                self.retrieve_rxfnp_embeddings(rxnfp_embedding_path)
+
             t1 = time()
             logger.info(
                 f"Expasy EC number data is downloaded in {round((t1-t0) / 60, 2)} mins"
             )
+    
+    def retrieve_rxfnp_embeddings(self, 
+                                  rxnfp_embedding_path: FilePath = "embeddings/rxnfp_ec_number_embedding.h5"):
+        
+        logger.info("Retrieving RXNFP ec number embeddings")
+
+        self.ec_number_to_rxnfp_embedding = {}
+        with h5py.File(rxnfp_embedding_path, "r") as f:
+            for ec_number, embedding in tqdm(f.items(), total=len(f.keys())):
+                self.ec_number_to_rxnfp_embedding[ec_number] = np.array(embedding).astype(np.float32)
 
     @validate_call
     def get_nodes(self, label: str = "ec_number") -> list[tuple]:
@@ -199,6 +224,10 @@ class EC:
                                             .replace("|", ",")
                                             .replace("'", "^")
                                         )
+
+                                    if ECNodeField.RXFNP_EMBEDDING.value in self.ec_node_fields and self.ec_number_to_rxnfp_embedding.get(level_4_entry) is not None:
+                                        props[ECNodeField.RXFNP_EMBEDDING.value] = [str(emb) for emb in self.ec_number_to_rxnfp_embedding[level_4_entry]]
+
 
                                     node_list.append((level_4_id, label, props))
 
