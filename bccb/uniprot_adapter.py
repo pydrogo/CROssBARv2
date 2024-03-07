@@ -19,7 +19,7 @@ from biocypher._logger import logger
 from contextlib import ExitStack
 from bioregistry import normalize_curie
 
-from pydantic import BaseModel, DirectoryPath, HttpUrl, validate_call
+from pydantic import BaseModel, DirectoryPath, FilePath, HttpUrl, validate_call
 
 logger.debug(f"Loading module {__name__}.")
 
@@ -62,7 +62,6 @@ class UniprotNodeField(Enum, metaclass=UniprotEnumMeta):
     ENSEMBL_TRANSCRIPT_IDS = "xref_ensembl"
     PROTEOME = "xref_proteomes"
     ENTREZ_GENE_IDS = "xref_geneid"
-    VIRUS_HOSTS = "virus_hosts"
     KEGG_IDS = "xref_kegg"
 
     # not from uniprot REST
@@ -80,7 +79,43 @@ class UniprotNodeField(Enum, metaclass=UniprotEnumMeta):
             if member.value.lower() == value:
                 return member
         return None
-
+    @classmethod
+    def get_protein_properties(cls):
+        return [
+            cls.LENGTH.value,
+            cls.MASS.value,
+            cls.PROTEIN_NAMES.value,
+            cls.PROTEOME.value,
+            cls.EC.value,
+            cls.ORGANISM_ID.value,
+            cls.SEQUENCE.value,
+            cls.PROTT5_EMBEDDING.value,
+        ]
+    @classmethod
+    def get_gene_properties(cls) -> list:
+        return [
+            cls.PROTEIN_GENE_NAMES.value,
+            cls.ENTREZ_GENE_IDS.value,
+            cls.KEGG_IDS.value,
+            cls.ENSEMBL_TRANSCRIPT_IDS.value,
+            cls.ENSEMBL_GENE_IDS.value,
+            cls.PRIMARY_GENE_NAME.value,
+        ]
+    
+    @classmethod
+    def get_organism_properties(cls) -> list:
+        return [cls.ORGANISM.value]
+    
+    @classmethod
+    def get_split_fields(cls) -> list:
+        return [
+            cls.PROTEOME.value,
+            cls.PROTEIN_GENE_NAMES.value,
+            cls.EC.value,
+            cls.ENTREZ_GENE_IDS.value,
+            cls.ENSEMBL_TRANSCRIPT_IDS.value,
+            cls.KEGG_IDS.value,
+        ]
 
 class UniprotEdgeType(Enum, metaclass=UniprotEnumMeta):
     """
@@ -205,7 +240,7 @@ class Uniprot:
         cache: bool = False,
         debug: bool = False,
         retries: int = 3,
-        prott5_embedding_output_path: DirectoryPath | None = None,
+        prott5_embedding_output_path: FilePath | None = None,
     ):
         """
         Wrapper function to download uniprot data using pypath; used to access
@@ -238,7 +273,7 @@ class Uniprot:
 
     @validate_call
     def _download_uniprot_data(
-        self, prott5_embedding_output_path: DirectoryPath | None = None
+        self, prott5_embedding_output_path: FilePath | None = None
     ):
         """
         Download uniprot data from uniprot.org through pypath.
@@ -309,9 +344,7 @@ class Uniprot:
             "https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/embeddings/uniprot_sprot/per-protein.h5"
         )
         if prott5_embedding_output_path:
-            full_path = os.path.join(
-                prott5_embedding_output_path, "per-protein.h5"
-            )
+            full_path = prott5_embedding_output_path
         else:
             full_path = os.path.join(os.getcwd(), "per-protein.h5")
 
@@ -328,17 +361,20 @@ class Uniprot:
 
         with h5py.File(full_path, "r") as file:
             for uniprot_id, embedding in file.items():
+                embedding = np.array(embedding).astype(np.float32)
+                count = np.count_nonzero(~np.isnan(embedding))
                 if (
                     self.organism not in ("*", None)
                     and uniprot_id in self.uniprot_ids
+                    and count == 1024
                 ):
                     self.data[UniprotNodeField.PROTT5_EMBEDDING.value][
                         uniprot_id
-                    ] = np.array(embedding).tolist()
-                else:
+                    ] = embedding
+                elif count == 1024:
                     self.data[UniprotNodeField.PROTT5_EMBEDDING.value][
                         uniprot_id
-                    ] = np.array(embedding).tolist()
+                    ] = embedding
 
     def _preprocess_uniprot_data(self):
         """
@@ -424,14 +460,6 @@ class Uniprot:
                         attribute_value
                     )
 
-            elif arg == UniprotNodeField.VIRUS_HOSTS.value:
-
-                for protein, attribute_value in self.data.get(arg).items():
-
-                    self.data[arg][protein] = self._split_virus_hosts_field(
-                        attribute_value
-                    )
-
             elif arg == UniprotNodeField.SUBCELLULAR_LOCATION.value:
                 for protein, attribute_value in self.data.get(arg).items():
                     individual_protein_locations = []
@@ -462,7 +490,8 @@ class Uniprot:
 
     @validate_call
     def get_nodes(
-        self, ligand_or_receptor: bool = False,
+        self, 
+        ligand_or_receptor: bool = False,
         protein_label: str = "protein",
         gene_label: str = "gene",
         organism_label: str = "organism"
@@ -725,7 +754,6 @@ class Uniprot:
 
     @validate_call
     def _get_protein_properties(self, all_props: dict) -> dict:
-
         protein_props = {}
 
         for k in all_props.keys():
@@ -741,14 +769,18 @@ class Uniprot:
                     else None
                 )
 
-            # replace hyphens and spaces with underscore
-            protein_props[
-                (
-                    k.replace(" ", "_").replace("-", "_")
-                    if k != UniprotNodeField.PROTEIN_NAMES.value
-                    else "protein_names"
-                )
-            ] = all_props[k]
+            if k == UniprotNodeField.PROTT5_EMBEDDING.value and all_props.get(k) is not None:
+                protein_props[k.replace(" ", "_").replace("-", "_")] = [str(emb) for emb in all_props[k]]
+            
+            else:
+                # replace hyphens and spaces with underscore
+                protein_props[
+                    (
+                        k.replace(" ", "_").replace("-", "_")
+                        if k != UniprotNodeField.PROTEIN_NAMES.value
+                        else "protein_names"
+                    )
+                ] = all_props[k]
 
         # source, licence, and version fields
         protein_props["source"] = self.data_source
@@ -880,32 +912,6 @@ class Uniprot:
 
         return protein_names
 
-    def _split_virus_hosts_field(self, field_value):
-        """
-        Split virus hosts fields in uniprot
-
-        Args:
-            field_value: entry of the virus hosts field
-
-        Example:
-            "Pyrobaculum arsenaticum [TaxID: 121277]; Pyrobaculum oguniense [TaxID: 99007]" -> ['121277', '99007']
-        """
-        if not field_value:
-            return None
-        
-        if ";" not in field_value:
-            return (
-                field_value[field_value.index("[") + 1 : field_value.index("]")]
-                .split(":")[1]
-                .strip()
-            )
-
-        splitted = field_value.split(";")
-        return [
-            v[v.index("[") + 1 : v.index("]")].split(":")[1].strip()
-            for v in splitted
-        ]
-
     def _find_ensg_from_enst(self, enst_list):
         """
         take ensembl transcript ids, return ensembl gene ids by using pypath mapping tool
@@ -968,38 +974,14 @@ class Uniprot:
 
     def _configure_fields(self):
         # fields that need splitting
-        self.split_fields = [
-            UniprotNodeField.PROTEOME.value,
-            UniprotNodeField.PROTEIN_GENE_NAMES.value,
-            UniprotNodeField.EC.value,
-            UniprotNodeField.ENTREZ_GENE_IDS.value,
-            UniprotNodeField.ENSEMBL_TRANSCRIPT_IDS.value,
-            UniprotNodeField.KEGG_IDS.value,
-        ]
+        self.split_fields = UniprotNodeField.get_split_fields()
 
         # properties of nodes
-        self.protein_properties = [
-            UniprotNodeField.LENGTH.value,
-            UniprotNodeField.MASS.value,
-            UniprotNodeField.PROTEIN_NAMES.value,
-            UniprotNodeField.PROTEOME.value,
-            UniprotNodeField.EC.value,
-            UniprotNodeField.VIRUS_HOSTS.value,
-            UniprotNodeField.ORGANISM_ID.value,
-            UniprotNodeField.SEQUENCE.value,
-            UniprotNodeField.PROTT5_EMBEDDING.value,
-        ]
+        self.protein_properties = UniprotNodeField.get_protein_properties()
 
-        self.gene_properties = [
-            UniprotNodeField.PROTEIN_GENE_NAMES.value,
-            UniprotNodeField.ENTREZ_GENE_IDS.value,
-            UniprotNodeField.KEGG_IDS.value,
-            UniprotNodeField.ENSEMBL_TRANSCRIPT_IDS.value,
-            UniprotNodeField.ENSEMBL_GENE_IDS.value,
-            UniprotNodeField.PRIMARY_GENE_NAME.value,
-        ]
+        self.gene_properties = UniprotNodeField.get_gene_properties()
 
-        self.organism_properties = [UniprotNodeField.ORGANISM.value]
+        self.organism_properties = UniprotNodeField.get_organism_properties()
 
     def _set_node_and_edge_fields(
         self,
