@@ -18,7 +18,7 @@ import numpy as np
 
 from biocypher._logger import logger
 
-from pydantic import BaseModel, DirectoryPath, validate_call
+from pydantic import BaseModel, DirectoryPath, EmailStr, validate_call
 
 logger.debug(f"Loading module {__name__}.")
 
@@ -42,6 +42,7 @@ class SideEffectNodeField(Enum, metaclass=SideEffectEnumMeta):
 
 
 class DrugSideEffectEdgeField(Enum, metaclass=SideEffectEnumMeta):
+    SOURCE = "source"
     FREQUENCY = "frequency"
     PROPORTIONAL_REPORTING_RATIO = "proportional_reporting_ratio"
 
@@ -60,7 +61,7 @@ class SideEffectEdgeType(Enum, metaclass=SideEffectEnumMeta):
 
 
 class SideEffectModel(BaseModel):
-    drugbank_user: str
+    drugbank_user: EmailStr
     drugbank_passwd: str
     side_effect_node_fields: Union[list[SideEffectNodeField], None] = None
     drug_side_effect_edge_fields: Union[list[DrugSideEffectEdgeField], None] = None
@@ -74,8 +75,8 @@ class SideEffectModel(BaseModel):
 class SideEffect:
     def __init__(
         self,
-        drugbank_user,
-        drugbank_passwd,
+        drugbank_user: EmailStr,
+        drugbank_passwd: str,
         side_effect_node_fields: Union[list[SideEffectNodeField], None] = None,
         drug_side_effect_edge_fields: Union[list[DrugSideEffectEdgeField], None] = None,
         edge_types: Union[list[SideEffectEdgeType], None] = None,
@@ -516,7 +517,9 @@ class SideEffect:
 
         return node_list
 
-    def get_edges(self) -> list[tuple]:
+    def get_edges(self,
+                drug_side_effect_label: str = "drug_has_side_effect",
+                adrecs_side_effect_hierarchy_label: str = "side_effect_is_a_side_effect") -> list[tuple]:
 
         logger.info("Started writing ALL edge types")
 
@@ -526,10 +529,10 @@ class SideEffect:
             SideEffectEdgeType.SIDE_EFFECT_HIERARCHICAL_ASSOCIATION
             in self.edge_types
         ):
-            edge_list.extend(self.get_drug_side_effect_edges())
+            edge_list.extend(self.get_drug_side_effect_edges(drug_side_effect_label))
 
         if SideEffectEdgeType.DRUG_TO_SIDE_EFFECT in self.edge_types:
-            edge_list.extend(self.get_adrecs_side_effect_hierarchical_edges())
+            edge_list.extend(self.get_adrecs_side_effect_hierarchical_edges(adrecs_side_effect_hierarchy_label))
 
         return edge_list
 
