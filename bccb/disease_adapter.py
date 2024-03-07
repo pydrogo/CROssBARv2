@@ -25,7 +25,7 @@ from pypath.utils import mapping
 from pypath.share import cache
 
 from typing import Union
-from pydantic import BaseModel, DirectoryPath, validate_call
+from pydantic import BaseModel, DirectoryPath, EmailStr, validate_call
 from contextlib import ExitStack
 
 from bioregistry import normalize_curie
@@ -99,6 +99,8 @@ class DiseaseEdgeType(Enum, metaclass=DiseaseEnumMeta):
 
 
 class GENE_TO_DISEASE_INTERACTION_FIELD(Enum, metaclass=DiseaseEnumMeta):
+    SOURCE = "source"
+    VARIANT_SOURCE = "variant_source"
     OPENTARGETS_SCORE = "opentargets_score"
     DISEASES_CONFIDENCE_SCORE = "diseases_confidence_score"
     ALLELE_ID = "allele_id"
@@ -120,6 +122,7 @@ class GENE_TO_DISEASE_INTERACTION_FIELD(Enum, metaclass=DiseaseEnumMeta):
 
 
 class DISEASE_TO_DRUG_INTERACTION_FIELD(Enum, metaclass=DiseaseEnumMeta):
+    SOURCE = "source"
     MAX_PHASE = "max_phase"
     PUBMED_IDS = "pubmed_ids"
 
@@ -133,6 +136,7 @@ class DISEASE_TO_DRUG_INTERACTION_FIELD(Enum, metaclass=DiseaseEnumMeta):
 
 
 class DISEASE_TO_DISEASE_INTERACTION_FIELD(Enum, metaclass=DiseaseEnumMeta):
+    SOURCE = "source"
     DISGENET_JACCARD_GENES_SCORE = "disgenet_jaccard_genes_score"
     DISGENET_JACCARD_VARIANTS_SCORE = "disgenet_jaccard_variants_score"
 
@@ -146,7 +150,7 @@ class DISEASE_TO_DISEASE_INTERACTION_FIELD(Enum, metaclass=DiseaseEnumMeta):
 
 
 class DiseaseModel(BaseModel):
-    drugbank_user: str
+    drugbank_user: EmailStr
     drugbank_passwd: str
     disease_node_fields: Union[list[DiseaseNodeField], None] = None
     edge_types: Union[list[DiseaseEdgeType], None] = None
@@ -173,8 +177,8 @@ class Disease:
 
     def __init__(
         self,
-        drugbank_user,
-        drugbank_passwd,
+        drugbank_user: str,
+        drugbank_passwd: str,
         disease_node_fields: Union[list[DiseaseNodeField], None] = None,
         edge_types: Union[list[DiseaseEdgeType], None] = None,
         gene_disease_edge_fields: Union[
@@ -1939,26 +1943,34 @@ class Disease:
 
         return node_list
 
-    def get_edges(self) -> list[tuple]:
+    @validate_call
+    def get_edges(self, 
+                  disease_comorbidity_label: str = "disease_is_comorbid_with_disease",
+                  disease_to_disase_label: str = "disease_is_associated_with_disease",
+                  disease_to_drug_label: str = "disease_is_treated_by_drug",
+                  gene_disease_label: str = "gene_is_related_to_disease",
+                  mondo_hierarchy_label: str = "disease_is_a_disease",
+                  organism_to_disease_label: str = "organism_causes_disease"
+                  ) -> list[tuple]:
         edge_list = []
 
         if DiseaseEdgeType.DISEASE_COMOBORDITIY in self.edge_types:
-            edge_list.extend(self.get_disease_comorbidity_edges())
+            edge_list.extend(self.get_disease_comorbidity_edges(disease_comorbidity_label))
 
         if DiseaseEdgeType.DISEASE_TO_DISEASE in self.edge_types:
-            edge_list.extend(self.get_disease_disease_edges())
+            edge_list.extend(self.get_disease_disease_edges(disease_to_disase_label))
 
         if DiseaseEdgeType.DISEASE_TO_DRUG in self.edge_types:
-            edge_list.extend(self.get_disease_drug_edges())
+            edge_list.extend(self.get_disease_drug_edges(disease_to_drug_label))
 
         if DiseaseEdgeType.GENE_TO_DISEASE in self.edge_types:
-            edge_list.extend(self.get_gene_disease_edges())
+            edge_list.extend(self.get_gene_disease_edges(gene_disease_label))
 
         if DiseaseEdgeType.MONDO_HIERARCHICAL_RELATIONS in self.edge_types:
-            edge_list.extend(self.get_mondo_hiererchical_edges())
+            edge_list.extend(self.get_mondo_hiererchical_edges(mondo_hierarchy_label))
 
         if DiseaseEdgeType.ORGANISM_TO_DISEASE in self.edge_types:
-            edge_list.extend(self.get_organism_disease_edges())
+            edge_list.extend(self.get_organism_disease_edges(organism_to_disease_label))
 
         return edge_list
 
