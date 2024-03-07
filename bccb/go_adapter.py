@@ -7,11 +7,14 @@ from bioregistry import normalize_curie
 
 import collections
 import os
+import h5py
 import requests
+
 import pandas as pd
+import numpy as np
 
 from typing import Literal, Union, Optional
-from pydantic import BaseModel, DirectoryPath, HttpUrl, validate_call
+from pydantic import BaseModel, DirectoryPath, FilePath, HttpUrl, validate_call
 
 from time import time
 
@@ -31,6 +34,7 @@ class GOEnumMeta(EnumMeta):
 
 class GONodeField(Enum, metaclass=GOEnumMeta):
     NAME = "name"
+    ANC2VEC_EMBBEDDING = "anc2vec_embedding"
 
     @classmethod
     def _missing_(cls, value: str):
@@ -435,7 +439,8 @@ class GO:
         debug: bool = False,
         retries: int = 6,
         all_go_annotations_url: HttpUrl = "https://ftp.ebi.ac.uk/pub/databases/GO/goa/UNIPROT/goa_uniprot_gcrp.gaf.gz",
-        all_annotations_output_dir: str | DirectoryPath = None,
+        all_annotations_output_path: None | FilePath = None,
+        anc2vec_embedding_path: FilePath = "embeddings/anc2vec_go_term_embedding.h5"
     ):
         """
         Wrapper function to download Gene Ontology data using pypath; used to access
@@ -467,6 +472,9 @@ class GO:
             logger.info(
                 f"Gene Ontology entry data is downloaded in {round((t1-t0) / 60, 2)} mins"
             )
+            
+            if GONodeField.ANC2VEC_EMBBEDDING.value in self.go_node_fields:
+                self.retrieve_anc2vec_embedding(anc2vec_embedding_path)
 
             if any(
                 [
@@ -484,17 +492,14 @@ class GO:
                         "Started downloading Gene Ontology annotation data for all organisms"
                     )
 
-                    if all_annotations_output_dir:
-                        full_path = os.path.join(
-                            all_annotations_output_dir,
-                            "goa_uniprot_gcrp.gaf.gz",
-                        )
+                    if all_annotations_output_path:
+                        full_path = all_annotations_output_path
                     else:
                         full_path = os.path.join(
                             os.getcwd(), "goa_uniprot_gcrp.gaf.gz"
                         )
 
-                    if not os.path.exists(full_path):
+                    if not os.path.isfile(full_path):
                         with requests.get(
                             all_go_annotations_url, stream=True
                         ) as response:
@@ -553,6 +558,13 @@ class GO:
                         self.go_annots_df = pd.concat(
                             [self.go_annots_df, filtered], ignore_index=True
                         )
+
+                    if self.remove_selected_annotations:
+                        self.go_annots_df = self.go_annots_df[~self.go_annots_df["evidence_code"].isin(self.remove_selected_annotations)]
+                    
+                    self.go_annots_df.drop_duplicates(
+                        subset=["entry", "go_id"], ignore_index=True, inplace=True
+                        )
                 else:
                     logger.debug(
                         f"Started downloading Gene Ontology annotation data for tax id {self.organism}"
@@ -590,6 +602,13 @@ class GO:
                 logger.info(
                     f"Interpro2go data is downloaded in {round((t1-t0) / 60, 2)} mins"
                 )
+    def retrieve_anc2vec_embedding(self, anc2vec_embedding_path: FilePath = "embeddings/anc2vec_go_term_embedding.h5"):
+        logger.info("Retrieving Anc2vec go term embeddings")
+
+        self.go_term_to_anc2vec_embedding = {}
+        with h5py.File(anc2vec_embedding_path, "r") as f:
+            for go_term, embedding in tqdm(f.items(), total=len(f.keys())):
+                self.go_term_to_anc2vec_embedding[go_term] = np.array(embedding).astype(np.float32)
 
     def set_node_and_edge_types(
         self, node_types: list, edge_types: list
@@ -815,6 +834,10 @@ class GO:
                         .replace("'", "^")
                         .replace("|", "")
                     )
+                
+                if GONodeField.ANC2VEC_EMBBEDDING.value in self.go_node_fields and self.go_term_to_anc2vec_embedding.get(go_term) is not None:
+                    node_props[GONodeField.ANC2VEC_EMBBEDDING.value] = [str(emb) for emb in self.go_term_to_anc2vec_embedding[go_term]]
+                    
 
                 node_list.append((go_id, label, node_props))
 
@@ -856,8 +879,6 @@ class GO:
                 ):
                     if (
                         row["go_id"] in self.go_ontology.aspect.keys()
-                        and row["evidence_code"]
-                        not in self.remove_selected_annotations
                         and str(row["qualifier"])
                         in self.protein_to_go_edge_labels
                         and (
