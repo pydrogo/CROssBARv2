@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import os
 import collections
+import h5py
+import gzip
 
 from pypath.share import curl, settings, common
 from pypath.inputs import chembl, stitch, uniprot, unichem, string
@@ -17,7 +19,7 @@ from time import time
 
 from tqdm import tqdm
 from enum import Enum, EnumMeta
-from pydantic import BaseModel, DirectoryPath, validate_call
+from pydantic import BaseModel, DirectoryPath, FilePath, validate_call
 
 from biocypher._logger import logger
 
@@ -40,6 +42,8 @@ class CompoundNodeField(Enum, metaclass=CompoundEnumMeta):
     QED_SCORE = "qed_weighted"
     SMILES = "canonical_smiles"
 
+    SELFORMER_EMBEDDING = "selformer_embedding"
+
     @classmethod
     def _missing_(cls, value: str):
         value = value.lower()
@@ -50,6 +54,7 @@ class CompoundNodeField(Enum, metaclass=CompoundEnumMeta):
 
 
 class CompoundCTIEdgeField(Enum, metaclass=CompoundEnumMeta):
+    SOURCE = "source"
     PCHEMBL = "pchembl"
     ACTIVITY_VALUE = "activity_value"
     ACTIVITY_TYPE = "activity_type"
@@ -85,9 +90,7 @@ class Compound:
     def __init__(
         self,
         node_fields: Optional[Union[list[CompoundNodeField], None]] = None,
-        cti_edge_fields: Optional[
-            Union[list[CompoundCTIEdgeField], None]
-        ] = None,
+        cti_edge_fields: Optional[Union[list[CompoundCTIEdgeField], None]] = None,
         add_prefix: Optional[bool] = True,
         test_mode: Optional[bool] = False,
         export_csv: Optional[bool] = False,
@@ -135,6 +138,7 @@ class Compound:
         cache: bool = False,
         debug: bool = False,
         retries: int = 3,
+        selformer_embedding_path: FilePath = "embeddings/selformer_compound_embedding.h5",
     ):
         """
         Wrapper function to download compound data from Chembl database using pypath.
@@ -159,12 +163,36 @@ class Compound:
             t0 = time()
 
             self.download_chembl_data()
+
+            if CompoundNodeField.SELFORMER_EMBEDDING.value in self.node_fields:
+                self.retrieve_selformer_embeddings(
+                    selformer_embedding_path=selformer_embedding_path
+                )
             self.download_stitch_cti_data()
 
             t1 = time()
             logger.info(
                 f"All data is downloaded in {round((t1-t0) / 60, 2)} mins".upper()
             )
+
+    def retrieve_selformer_embeddings(self, 
+                                     selformer_embedding_path: FilePath = "embeddings/selformer_compound_embedding.h5") -> None:
+        """
+        Downloads the selformer compound embedding.
+
+        Args:
+            selformer_embedding_path: Path to the selformer compound embedding.
+        """
+        logger.info("Retrieving SELFormer compound embeddings")
+
+        activities_chembl = self.get_activite_compounds()
+
+        self.chembl_id_to_selformer_embedding = {}
+        with h5py.File(selformer_embedding_path, "r") as f:
+            for compound_id, embedding in tqdm(f.items(), total=len(f.keys())):
+                if compound_id in activities_chembl and compound_id not in self.chembl_to_drugbank:
+                    self.chembl_id_to_selformer_embedding[compound_id] = np.array(embedding).astype(np.float32)
+
 
     def process_compound_data(self):
         t0 = time()
@@ -390,10 +418,10 @@ class Compound:
                 if organism_stitch_ints:
                     self.stitch_ints.extend(organism_stitch_ints)
 
-            except TypeError:  #'NoneType' object is not an iterator
+            except (TypeError, gzip.BadGzipFile) as e:  #'NoneType' object is not an iterator
 
                 logger.debug(
-                    f"Skipped tax id {tax}. This is most likely due to the empty file in database. Check the database file."
+                    f"Error: {e}. Skipped tax id {tax}. This is most likely due to the empty file in database. Check the database file."
                 )
 
         t1 = time()
@@ -500,6 +528,25 @@ class Compound:
 
         return chembl_plus_stitch_cti_df
 
+    def get_activite_compounds(self) -> set[str]:
+        # filter out chembl ids whether they have activity or not
+        activities_chembl = set()
+        for act in self.chembl_acts:
+            if act.assay_chembl in self.assay_dict and all(
+                [
+                    True if item else False
+                    for item in [
+                        act.standard_value,
+                        act.standard_type,
+                        self.target_dict.get(act.target_chembl, None),
+                    ]
+                ]
+            ):
+
+                activities_chembl.add(act.chembl)
+
+        return activities_chembl
+
     @validate_call
     def get_compound_nodes(
         self,
@@ -519,21 +566,8 @@ class Compound:
 
         logger.debug("Creating compound nodes.")
 
-        # will filter out chembl ids whether they have edge or not
-        activities_chembl = set()
-        for act in self.chembl_acts:
-            if act.assay_chembl in self.assay_dict and all(
-                [
-                    True if item else False
-                    for item in [
-                        act.standard_value,
-                        act.standard_type,
-                        self.target_dict.get(act.target_chembl, None),
-                    ]
-                ]
-            ):
-
-                activities_chembl.add(act.chembl)
+        # get active compounds
+        activities_chembl = self.get_activite_compounds()
 
         compound_nodes = []
         counter = 0
@@ -563,6 +597,9 @@ class Compound:
                         ): v
                         for k, v in props.items()
                     }
+
+                if CompoundNodeField.SELFORMER_EMBEDDING.value in self.node_fields and self.chembl_id_to_selformer_embedding.get(compound.chembl) is not None:
+                    props[CompoundNodeField.SELFORMER_EMBEDDING.value] = [str(emb) for emb in self.chembl_id_to_selformer_embedding[compound.chembl]]
 
                 compound_nodes.append((compound_id, label, props))
 
@@ -628,6 +665,7 @@ class Compound:
         return cti_edge_list
 
     def get_median(self, element):
+        element = element.astype(np.float32)
         return round(float(element.dropna().median()), 3)
 
     def get_middle_row(self, element):
