@@ -14,7 +14,7 @@ gene:
     xref_kegg: str[]
     xref_ensembl: str[]
     ensembl_gene_ids: str[]
-    gene_primary: str
+    primary_gene_name: str
 
 protein:
   represented_as: node
@@ -28,8 +28,8 @@ protein:
     xref_proteomes: str[]
     organism_name: str
     organism_id: int
-    ec: str[]
-    virus_hosts: int[]
+    sequence: str
+    prott5_embedding: float[]
   
 organism taxon:
   represented_as: node
@@ -58,6 +58,7 @@ biological process:
   label_in_input: biological process
   properties:
     name: str
+    anc2vec_embedding: float[]
   
 cellular component:
   represented_as: node
@@ -65,6 +66,7 @@ cellular component:
   label_in_input: cellular component
   properties:
     name: str
+    anc2vec_embedding: float[]
 
 molecular function:
   synonym_for: molecular activity
@@ -73,8 +75,10 @@ molecular function:
   label_in_input: molecular function
   properties:
     name: str
+    anc2vec_embedding: float[]
   
 drug:
+  is_a: SmallMolecule
   represented_as: node
   preferred_id: drugbank
   label_in_input: drug
@@ -99,9 +103,10 @@ drug:
     pubchem: str
     inchi: str
     inchikey: str
+    selformer_embedding: float[]
 
 compound:
-  is_a: ChemicalEntity
+  is_a: SmallMolecule
   represented_as: node
   preferred_id: id
   label_in_input: compound
@@ -114,7 +119,8 @@ compound:
     alogp: float
     inchi: str
     inchikey: str
-    qed_score: float 
+    qed_score: float
+    selformer_embedding: float[]
 
 disease:
   represented_as: node
@@ -168,6 +174,7 @@ ec number:
   label_in_input: ec_number
   properties:
     name: str
+    rxnfp_embedding: float[]
 
 # Cell: # relevant?
   # represented_as: node
@@ -596,7 +603,7 @@ side effect hierarchical association:
   label_in_input: side_effect_is_a_side_effect
 
 protein to ec number association:
-  is_a: macromolecular machine to molecular activity association
+  is_a: ReactionToParticipantAssociation
   represented_as: edge
   label_as_edge: protein_catalyzes_ec_number
   preferred_id: id
