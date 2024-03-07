@@ -278,10 +278,12 @@ class InterPro:
             for element in primary_attributes:
 
                 if element in self.node_fields and interpro_props.get(element):
-                    if element == "protein_count":
+                    if element == InterProNodeField.PROTEIN_COUNT.value:
                         props[element.replace(" ", "_").lower()] = int(
                             interpro_props.get(element)
                         )
+                    elif element == InterProNodeField.NAME.value:
+                        props[element.replace(" ", "_").lower()] = interpro_props.get(element).replace("'","^").replace("|",",") if interpro_props.get(element) else None
                     else:
                         props[element.replace(" ", "_").lower()] = (
                             self.check_length(interpro_props.get(element))
@@ -398,7 +400,7 @@ class InterPro:
         return edge_list
 
     @validate_call
-    def check_length(self, element: str | list) -> str | list:
+    def check_length(self, element: str | list | int | float) -> str | list | int | float:
         """
         If the type of given entry is a list and has just one element returns this one element
         """
@@ -464,4 +466,4 @@ class InterPro:
 
         edges_df = pd.DataFrame.from_records(edges_df_list)
         edges_df.to_csv(edge_full_path, index=False)
-        logger.info(f"Domain edge data is written: {node_full_path}")
+        logger.info(f"Domain edge data is written: {edge_full_path}")
