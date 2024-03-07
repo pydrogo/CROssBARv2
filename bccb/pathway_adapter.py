@@ -16,7 +16,7 @@ import collections
 import os
 import gzip
 
-from pydantic import BaseModel, DirectoryPath, validate_call
+from pydantic import BaseModel, DirectoryPath, EmailStr, validate_call
 from typing import Union
 
 from enum import Enum, EnumMeta, auto
@@ -44,6 +44,7 @@ class PathwayNodeField(Enum, metaclass=PathwayEnumMeta):
 
 
 class ProteinPathwayEdgeField(Enum, metaclass=PathwayEnumMeta):
+    SOURCE = "source"
     EVIDENCE_CODE = "evidence_code"
 
     @classmethod
@@ -53,6 +54,29 @@ class ProteinPathwayEdgeField(Enum, metaclass=PathwayEnumMeta):
             if member.value.lower() == value:
                 return member
         return None
+    
+class DiseasePathwayEdgeField(Enum, metaclass=PathwayEnumMeta):
+    SOURCE = "source"
+
+    @classmethod
+    def _missing_(cls, value: str):
+        value = value.lower()
+        for member in cls.__members__.values():
+            if member.value.lower() == value:
+                return member
+        return None
+    
+class DrugPathwayEdgeField(Enum, metaclass=PathwayEnumMeta):
+    SOURCE = "source"
+
+    @classmethod
+    def _missing_(cls, value: str):
+        value = value.lower()
+        for member in cls.__members__.values():
+            if member.value.lower() == value:
+                return member
+        return None
+
 
 
 class PathwayEdgeType(Enum, metaclass=PathwayEnumMeta):
@@ -68,12 +92,12 @@ logger.debug(f"Loading module {__name__}.")
 
 
 class PathwayModel(BaseModel):
-    drugbank_user: str
+    drugbank_user: EmailStr
     drugbank_passwd: str
     pathway_node_fields: Union[list[PathwayNodeField], None] = None
-    protein_pathway_edge_fields: Union[list[ProteinPathwayEdgeField], None] = (
-        None
-    )
+    protein_pathway_edge_fields: Union[list[ProteinPathwayEdgeField], None] = None
+    disease_pathway_edge_fields: Union[list[DiseasePathwayEdgeField], None] = None
+    drug_pathway_edge_fields: Union[list[DrugPathwayEdgeField], None] = None
     edge_types: Union[list[PathwayEdgeType], None] = None
     remove_selected_annotations: list[str] = ["IEA"]
     test_mode: bool = False
@@ -87,12 +111,12 @@ class PathwayModel(BaseModel):
 class Pathway:
     def __init__(
         self,
-        drugbank_user,
-        drugbank_passwd,
+        drugbank_user: EmailStr,
+        drugbank_passwd: str,
         pathway_node_fields: Union[list[PathwayNodeField], None] = None,
-        protein_pathway_edge_fields: Union[
-            list[ProteinPathwayEdgeField], None
-        ] = None,
+        protein_pathway_edge_fields: Union[list[ProteinPathwayEdgeField], None] = None,
+        disease_pathway_edge_fields: Union[list[DiseasePathwayEdgeField], None] = None,
+        drug_pathway_edge_fields: Union[list[DrugPathwayEdgeField], None] = None,
         edge_types: Union[list[PathwayEdgeType], None] = None,
         remove_selected_annotations: list[str] = ["IEA"],
         test_mode: bool = False,
@@ -122,6 +146,8 @@ class Pathway:
             drugbank_passwd=drugbank_passwd,
             pathway_node_fields=pathway_node_fields,
             protein_pathway_edge_fields=protein_pathway_edge_fields,
+            disease_pathway_edge_fields=disease_pathway_edge_fields,
+            drug_pathway_edge_fields=drug_pathway_edge_fields,
             edge_types=edge_types,
             remove_selected_annotations=remove_selected_annotations,
             test_mode=test_mode,
@@ -149,7 +175,9 @@ class Pathway:
 
         # set edge fields
         self.set_edge_fields(
-            protein_pathway_edge_fields=model["protein_pathway_edge_fields"]
+            protein_pathway_edge_fields=model["protein_pathway_edge_fields"],
+            disease_pathway_edge_fields=model["disease_pathway_edge_fields"],
+            drug_pathway_edge_fields=model["drug_pathway_edge_fields"],
         )
 
         # set edge types
@@ -717,29 +745,35 @@ class Pathway:
 
         return node_list
 
-    def get_edges(self) -> list[tuple]:
+    @validate_call
+    def get_edges(self,
+                  protein_pathway_label: str = "protein_take_part_in_pathway",
+                  drug_pathway_label: str = "drug_has_target_in_pathway",
+                  disease_pathway_label: str = "disease_modulates_pathway",
+                  reactome_hierarchy_label: str = "pathway_participates_pathway",
+                  pathway_orthology_label: str = "pathway_is_ortholog_to_pathway") -> list[tuple]:
 
         logger.info("Started writing all pathway edges")
 
         edge_list = []
 
         if PathwayEdgeType.PROTEIN_TO_PATHWAY in self.edge_types:
-            edge_list.extend(self.get_protein_pathway_edges())
+            edge_list.extend(self.get_protein_pathway_edges(protein_pathway_label))
 
         if PathwayEdgeType.DRUG_TO_PATHWAY in self.edge_types:
-            edge_list.extend(self.get_drug_pathway_edges())
+            edge_list.extend(self.get_drug_pathway_edges(drug_pathway_label))
 
         if PathwayEdgeType.DISEASE_TO_PATHWAY in self.edge_types:
-            edge_list.extend(self.get_disease_pathway_edges())
+            edge_list.extend(self.get_disease_pathway_edges(disease_pathway_label))
 
         if PathwayEdgeType.PATHWAY_TO_PATHWAY in self.edge_types:
             edge_list.extend(self.get_pathway_pathway_edges())
 
         if PathwayEdgeType.REACTOME_HIERARCHICAL_RELATIONS in self.edge_types:
-            edge_list.extend(self.get_reactome_hierarchical_edges())
+            edge_list.extend(self.get_reactome_hierarchical_edges(reactome_hierarchy_label))
 
         if PathwayEdgeType.PATHWAT_ORTHOLOGY in self.edge_types:
-            edge_list.extend(self.get_pathway_pathway_orthology_edges())
+            edge_list.extend(self.get_pathway_pathway_orthology_edges(pathway_orthology_label))
 
         return edge_list
 
@@ -822,7 +856,7 @@ class Pathway:
 
             props = {}
             for k, v in _dict.items():
-                if str(v) != "nan":
+                if k in self.self.drug_pathway_edge_fields and str(v) != "nan":
                     if isinstance(v, str) and "|" in v:
                         props[k] = v.split("|")
                     else:
@@ -868,7 +902,7 @@ class Pathway:
 
             props = {}
             for k, v in _dict.items():
-                if str(v) != "nan":
+                if k in self.disease_pathway_edge_fields and str(v) != "nan":
                     if isinstance(v, str) and "|" in v:
                         props[k] = v.split("|")
                     else:
@@ -1150,7 +1184,10 @@ class Pathway:
                 field.value for field in PathwayNodeField
             ]
 
-    def set_edge_fields(self, protein_pathway_edge_fields):
+    def set_edge_fields(self, 
+                        protein_pathway_edge_fields, 
+                        disease_pathway_edge_fields,
+                        drug_pathway_edge_fields):
         if protein_pathway_edge_fields:
             self.protein_pathway_edge_fields = [
                 field.value for field in protein_pathway_edge_fields
@@ -1158,4 +1195,20 @@ class Pathway:
         else:
             self.protein_pathway_edge_fields = [
                 field.value for field in ProteinPathwayEdgeField
+            ]
+        if disease_pathway_edge_fields:
+            self.disease_pathway_edge_fields = [
+                field.value for field in disease_pathway_edge_fields
+            ]
+        else:
+            self.disease_pathway_edge_fields = [
+                field.value for field in DiseasePathwayEdgeField
+            ]
+        if drug_pathway_edge_fields:
+            self.drug_pathway_edge_fields = [
+                field.value for field in drug_pathway_edge_fields
+            ]
+        else:
+            self.drug_pathway_edge_fields = [
+                field.value for field in DrugPathwayEdgeField
             ]
