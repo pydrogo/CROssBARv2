@@ -26,6 +26,7 @@ class TFGenEnumMeta(EnumMeta):
 
 
 class TFGenEdgeField(Enum, metaclass=TFGenEnumMeta):
+    SOURCE = "source"
     PUBMED_ID = "pubmed_id"
     TF_EFFECT = "tf_effect"
     DOROTHEA_CONFIDENCE_LEVEL = "dorothea_confidence_level"
@@ -39,7 +40,7 @@ class TFGenEdgeField(Enum, metaclass=TFGenEnumMeta):
         return None
 
 
-class OrganismField(IntEnum, metaclass=TFGenEnumMeta):
+class TFGenOrganismField(IntEnum, metaclass=TFGenEnumMeta):
     TAX_9606 = 9606
     TAX_10090 = 10090
 
@@ -54,7 +55,7 @@ class OrganismField(IntEnum, metaclass=TFGenEnumMeta):
 
 class TFGenModel(BaseModel):
     edge_fields: Union[list[TFGenEdgeField], None] = None
-    organism: Union[list[OrganismField], None] = None
+    organism: Union[list[TFGenOrganismField], None] = None
     test_mode: bool = False
     export_csv: bool = False
     output_dir: DirectoryPath | None = None
@@ -65,7 +66,7 @@ class TFGen:
     def __init__(
         self,
         edge_fields: Union[list[TFGenEdgeField], None] = None,
-        organism: Union[list[OrganismField], None] = None,
+        organism: Union[list[TFGenOrganismField], None] = None,
         test_mode: bool = False,
         export_csv: bool = False,
         output_dir: DirectoryPath | None = None,
@@ -521,4 +522,4 @@ class TFGen:
         if organism:
             self.organism = [field.value for field in organism]
         else:
-            self.organism = [field.value for field in OrganismField]
+            self.organism = [field.value for field in TFGenOrganismField]
