@@ -28,6 +28,7 @@ class OrthologyEnumMeta(EnumMeta):
 
 
 class OrthologyEdgeField(Enum, metaclass=OrthologyEnumMeta):
+    SOURCE = "source"
     RELATION_TYPE = "relation_type"
     OMA_ORTHOLOGY_SCORE = "oma_orthology_score"
 
