@@ -20,8 +20,11 @@ from typing import Literal, Union, Optional
 from bioregistry import normalize_curie
 from tqdm import tqdm
 from time import time
+
 import os
 import collections
+import h5py
+import gzip
 
 import pandas as pd
 import numpy as np
@@ -29,7 +32,7 @@ import numpy as np
 from biocypher._logger import logger
 
 from enum import Enum, EnumMeta, auto
-from pydantic import BaseModel, DirectoryPath, EmailStr, validate_call
+from pydantic import BaseModel, DirectoryPath, EmailStr, FilePath, validate_call
 
 logger.debug(f"Loading module {__name__}.")
 
@@ -59,6 +62,9 @@ class DrugNodeField(Enum, metaclass=DrugEnumMeta):
     PHARMGKB = "PharmGKB"
     PDB = "PDB"
     DRUGCENTRAL = "Drugcentral"
+
+    # read from h5 file
+    SELFORMER_EMBEDDING = "selformer_embedding"
 
     @classmethod
     def _missing_(cls, value: str):
@@ -105,6 +111,7 @@ class DrugNodeField(Enum, metaclass=DrugEnumMeta):
 
 
 class DrugDTIEdgeField(Enum, metaclass=DrugEnumMeta):
+    SOURCE = "source"
     MECHANISM_OF_ACTION_TYPE = "mechanism_of_action_type"
     MECHANISM_OF_ACTION = "mechanism_of_action"
     REFERENCES = "references"
@@ -128,6 +135,7 @@ class DrugDTIEdgeField(Enum, metaclass=DrugEnumMeta):
 
 
 class DrugDDIEdgeField(Enum, metaclass=DrugEnumMeta):
+    SOURCE = "source"
     RECOMMENDATION = "recommendation"
     INTERACTION_LEVEL = "interaction_level"
     INTERACTION_TYPE = "interaction_type"
@@ -142,6 +150,7 @@ class DrugDDIEdgeField(Enum, metaclass=DrugEnumMeta):
 
 
 class DrugDGIEdgeField(Enum, metaclass=DrugEnumMeta):
+    SOURCE = "source"
     ACTIVITY_TYPE = "activity_type"
     REFERENCES = "references"
 
@@ -262,6 +271,7 @@ class Drug:
         cache: bool = False,
         debug: bool = False,
         retries: int = 6,
+        selformer_embedding_path: FilePath = "embeddings/selformer_drug_embedding.h5"
     ):
         """
         Wrapper function to download drug data from various databases using pypath.
@@ -286,6 +296,9 @@ class Drug:
             t0 = time()
 
             self.download_drugbank_node_data()
+
+            if DrugNodeField.SELFORMER_EMBEDDING.value in self.node_fields:
+                self.retrieve_selformer_embeddings(selformer_embedding_path)
 
             if DrugEdgeType.DRUG_TARGET_INTERACTION in self.edge_types:
                 self.download_chembl_dti_data()
@@ -365,10 +378,6 @@ class Drug:
                 self.unichem_external_fields.append(f)
             elif f in drugbank_external_fields_list:
                 self.drugbank_external_fields.append(f)
-            else:
-                raise ValueError(
-                    f"{f} is an inappropriate field name. Please provide a sutiable field name"
-                )
 
         logger.debug("Downloading Drugbank drug node data")
         t0 = time()
@@ -462,6 +471,17 @@ class Drug:
             logger.info(f"Drug node data is written: {full_path}")
 
         return drugbank_drugs
+    
+    @validate_call
+    def retrieve_selformer_embeddings(self,
+                                selformer_embedding_path: FilePath = "embeddings/selformer_drug_embedding.h5") -> None:
+        
+        logger.info("Retrieving SELFormer drug embeddings")
+
+        self.drugbank_id_to_selformer_embedding = {}
+        with h5py.File(selformer_embedding_path, "r") as f:
+            for drug_id, embedding in tqdm(f.items(), total=len(f.keys())):
+                self.drugbank_id_to_selformer_embedding[drug_id] = np.array(embedding).astype(np.float32)
 
     def download_drugbank_dti_data(self):
 
@@ -1174,7 +1194,7 @@ class Drug:
                                     act["value"],
                                     pubmeds,
                                     self.drugcentral_to_drugbank.get(
-                                        synonyms.get("DrugCentral", None), None
+                                        synonyms.get("DrugCentral"), None
                                     ),
                                 )
                             )
@@ -1347,7 +1367,7 @@ class Drug:
         chembl_dti_df = chembl_cti_df.dropna(
             subset=["drugbank_id"], axis=0
         ).reset_index(drop=True)
-
+        
         chembl_dti_df = (
             chembl_dti_df.groupby(
                 ["uniprot_id", "drugbank_id"], sort=False, as_index=False
@@ -1519,7 +1539,7 @@ class Drug:
     @validate_call
     def download_stitch_dti_data(
         self,
-        organism: str | list | None = None,
+        organism: str | list | None = "9606",
         score_threshold: (
             int
             | Literal[
@@ -1603,9 +1623,9 @@ class Drug:
                 if organism_stitch_ints:
                     self.stitch_ints.extend(organism_stitch_ints)
 
-            except TypeError:  #'NoneType' object is not an iterator
+            except (TypeError, gzip.BadGzipFile) as e:  #'NoneType' object is not an iterator
                 logger.debug(
-                    f"Skipped tax id {tax}. This is most likely due to the empty file in database."
+                    f"Error: {e}. Skipped tax id {tax}. This is most likely due to the empty file in database."
                 )
 
         t1 = time()
@@ -2013,6 +2033,10 @@ class Drug:
                     else:
                         props[prop_key.replace(" ", "_").lower()] = prop_value
 
+            if DrugNodeField.SELFORMER_EMBEDDING.value in self.node_fields and self.drugbank_id_to_selformer_embedding.get(k) is not None:
+                props[DrugNodeField.SELFORMER_EMBEDDING.value] = [str(emb) for emb in self.drugbank_id_to_selformer_embedding[k]]
+
+
             node_list.append((drug_id, label, props))
 
             counter += 1
@@ -2218,6 +2242,7 @@ class Drug:
         return joiner.join(_set) if _set else np.nan
 
     def get_median(self, element):
+        element = element.astype(np.float32)
         return round(float(element.dropna().median()), 3)
 
     def get_middle_row(self, element):
