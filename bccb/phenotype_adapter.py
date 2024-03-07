@@ -313,20 +313,24 @@ class HPO:
 
         return node_list
 
-    def get_edges(self) -> list[tuple]:
+    @validate_call
+    def get_edges(self,
+                  protein_phenotype_label: str = "protein_is_associated_with_phenotype",
+                  phenotype_hierarchical_label: str = "phenotype_is_a_phenotype",
+                  phenotype_disease_label: str = "phenotype_is_associated_with_disease") -> list[tuple]:
 
         logger.info("Preparing all edge types")
 
         edge_list = []
 
         if PhenotypeEdgeType.PROTEIN_TO_PHENOTYPE in self.edge_types:
-            edge_list.extend(self.get_protein_phenotype_edges())
+            edge_list.extend(self.get_protein_phenotype_edges(protein_phenotype_label))
 
         if PhenotypeEdgeType.PHENOTYPE_HIERARCHICAL_EDGES in self.edge_types:
-            edge_list.extend(self.get_phenotype_hierarchical_edges())
+            edge_list.extend(self.get_phenotype_hierarchical_edges(phenotype_hierarchical_label))
 
         if PhenotypeEdgeType.PHENOTYPE_TO_DISEASE in self.edge_types:
-            edge_list.extend(self.get_phenotype_disease_edges())
+            edge_list.extend(self.get_phenotype_disease_edges(phenotype_disease_label))
 
         return edge_list
 
