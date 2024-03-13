@@ -700,7 +700,7 @@ class Pathway:
                 )
 
             if PathwayNodeField.ORGANISM.value in self.pathway_node_fields:
-                props[PathwayNodeField.ORGANISM.value] = p.organism
+                props[PathwayNodeField.ORGANISM.value] = p.organism.replace("'","^") if p.organism else None
 
             node_list.append((pathway_id, label, props))
 
@@ -720,7 +720,7 @@ class Pathway:
 
             if PathwayNodeField.ORGANISM.value in self.pathway_node_fields:
                 props[PathwayNodeField.ORGANISM.value] = (
-                    self.kegg_pathway_abbv_organism_name_dict.get(p[0][:3])
+                    self.kegg_pathway_abbv_organism_name_dict.get(p[0][:3]).replace("'", "^") if self.kegg_pathway_abbv_organism_name_dict.get(p[0][:3]) else None
                 )
 
             node_list.append((pathway_id, label, props))
@@ -772,7 +772,7 @@ class Pathway:
         if PathwayEdgeType.REACTOME_HIERARCHICAL_RELATIONS in self.edge_types:
             edge_list.extend(self.get_reactome_hierarchical_edges(reactome_hierarchy_label))
 
-        if PathwayEdgeType.PATHWAT_ORTHOLOGY in self.edge_types:
+        if PathwayEdgeType.PATHWAY_ORTHOLOGY in self.edge_types:
             edge_list.extend(self.get_pathway_pathway_orthology_edges(pathway_orthology_label))
 
         return edge_list
@@ -856,7 +856,7 @@ class Pathway:
 
             props = {}
             for k, v in _dict.items():
-                if k in self.self.drug_pathway_edge_fields and str(v) != "nan":
+                if k in self.drug_pathway_edge_fields and str(v) != "nan":
                     if isinstance(v, str) and "|" in v:
                         props[k] = v.split("|")
                     else:
