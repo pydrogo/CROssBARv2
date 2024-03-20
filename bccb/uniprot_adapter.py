@@ -198,7 +198,7 @@ class Uniprot:
 
         # provenance
         self.data_source = "uniprot"
-        self.data_version = "2024_01"
+        self.data_version = "2024_03"
         self.data_licence = "CC BY 4.0"
 
         self._configure_fields()
@@ -217,6 +217,14 @@ class Uniprot:
 
         # loading of subcellular locations set
         self.locations = set()
+
+        # gene property name mappings that will be used gene node properties in KG
+        self.gene_property_name_mappings = {"gene_primary":"gene_symbol",
+                                            "xref_ensembl":"ensembl_transcript_ids",
+                                            "xref_kegg":"kegg_ids",
+                                            }
+        # protein property name mappings that will be used protein node properties in KG
+        self.protein_property_name_mappings = {"protein_name":"protein_names"}
 
     def _read_ligands_set(self) -> set:
         # check if ligands file exists
@@ -704,9 +712,9 @@ class Uniprot:
             # select parenthesis content in field names and make lowercase
             gene_props[
                 (
-                    k.replace(" ", "_").replace("-", "_").lower()
-                    if k != UniprotNodeField.PRIMARY_GENE_NAME.value
-                    else "primary_gene_name"
+                    self.gene_property_name_mappings[k]
+                    if self.gene_property_name_mappings.get(k)
+                    else k.replace(" ", "_").replace("-", "_").lower()
                 )
             ] = all_props[k]
 
@@ -776,9 +784,9 @@ class Uniprot:
                 # replace hyphens and spaces with underscore
                 protein_props[
                     (
-                        k.replace(" ", "_").replace("-", "_")
-                        if k != UniprotNodeField.PROTEIN_NAMES.value
-                        else "protein_names"
+                        self.protein_property_name_mappings[k]
+                        if self.protein_property_name_mappings.get(k)
+                        else k.replace(" ", "_").replace("-", "_")
                     )
                 ] = all_props[k]
 
