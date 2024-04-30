@@ -150,7 +150,7 @@ class EC:
         self.ec_number_to_rxnfp_embedding = {}
         with h5py.File(rxnfp_embedding_path, "r") as f:
             for ec_number, embedding in tqdm(f.items(), total=len(f.keys())):
-                self.ec_number_to_rxnfp_embedding[ec_number] = np.array(embedding).astype(np.float32)
+                self.ec_number_to_rxnfp_embedding[ec_number] = np.array(embedding).astype(np.float16)
 
     @validate_call
     def get_nodes(self, label: str = "ec_number") -> list[tuple]:
