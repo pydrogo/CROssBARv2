@@ -72,6 +72,10 @@ class UniprotNodeField(Enum, metaclass=UniprotEnumMeta):
     # we provide these by downloading the ProtT5 embeddings from uniprot
     PROTT5_EMBEDDING = "prott5_embedding"
 
+    # not from uniprot REST
+    # we provide these by getting embeddings from ESM2 650M model
+    ESM2_EMBEDDING = "esm2_embedding"
+
     @classmethod
     def _missing_(cls, value: str):
         value = value.lower()
@@ -90,6 +94,7 @@ class UniprotNodeField(Enum, metaclass=UniprotEnumMeta):
             cls.ORGANISM_ID.value,
             cls.SEQUENCE.value,
             cls.PROTT5_EMBEDDING.value,
+            cls.ESM2_EMBEDDING.value,
         ]
     @classmethod
     def get_gene_properties(cls) -> list:
@@ -249,6 +254,7 @@ class Uniprot:
         debug: bool = False,
         retries: int = 3,
         prott5_embedding_output_path: FilePath | None = None,
+        esm2_embedding_path: FilePath = "embeddings/esm2_t33_650M_UR50D_protein_embedding.h5",
     ):
         """
         Wrapper function to download uniprot data using pypath; used to access
@@ -273,7 +279,8 @@ class Uniprot:
                 stack.enter_context(curl.cache_off())
 
             self._download_uniprot_data(
-                prott5_embedding_output_path=prott5_embedding_output_path
+                prott5_embedding_output_path=prott5_embedding_output_path,
+                esm2_embedding_path=esm2_embedding_path
             )
 
             # preprocess data
@@ -281,7 +288,9 @@ class Uniprot:
 
     @validate_call
     def _download_uniprot_data(
-        self, prott5_embedding_output_path: FilePath | None = None
+        self, 
+        prott5_embedding_output_path: FilePath | None = None,
+        esm2_embedding_path: FilePath = "embeddings/esm2_t33_650M_UR50D_protein_embedding.h5",
     ):
         """
         Download uniprot data from uniprot.org through pypath.
@@ -309,6 +318,7 @@ class Uniprot:
             if query_key in [
                 UniprotNodeField.ENSEMBL_GENE_IDS.value,
                 UniprotNodeField.PROTT5_EMBEDDING.value,
+                UniprotNodeField.ESM2_EMBEDDING.value
             ]:
                 continue
 
@@ -331,6 +341,10 @@ class Uniprot:
             self.download_prott5_embeddings(
                 prott5_embedding_output_path=prott5_embedding_output_path
             )
+        
+        if UniprotNodeField.ESM2_EMBEDDING.value in self.node_fields:
+            self.data[UniprotNodeField.ESM2_EMBEDDING.value] = {}
+            self.retrieve_esm2_embeddings(esm2_embedding_path)
 
         t1 = time()
         msg = f"Acquired UniProt data in {round((t1-t0) / 60, 2)} mins."
@@ -338,15 +352,15 @@ class Uniprot:
 
     @validate_call
     def download_prott5_embeddings(
-        self, prott5_embedding_output_path: DirectoryPath | None = None
+        self, prott5_embedding_output_path: FilePath | None = None
     ):
         """
         Downloads ProtT5 embedding from uniprot website
-        If the files exists in a defined directory as `per-protein.h5` file, then
+        If the files exists in a defined file path, then
         directly read it.
 
         Args:
-            prott5_embedding_output_path (DirectoryPath, optional): Defaults to None.
+            prott5_embedding_output_path (FilePath, optional): Defaults to None.
         """
         url: HttpUrl = (
             "https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/embeddings/uniprot_sprot/per-protein.h5"
@@ -365,11 +379,11 @@ class Uniprot:
                         if chunk:
                             f.write(chunk)
         else:
-            logger.info("Embedding file is exists. Reading from the file..")
+            logger.info("ProtT5 Embedding file is exists. Reading from the file..")
 
         with h5py.File(full_path, "r") as file:
             for uniprot_id, embedding in file.items():
-                embedding = np.array(embedding).astype(np.float32)
+                embedding = np.array(embedding).astype(np.float16)
                 count = np.count_nonzero(~np.isnan(embedding))
                 if (
                     self.organism not in ("*", None)
@@ -383,7 +397,29 @@ class Uniprot:
                     self.data[UniprotNodeField.PROTT5_EMBEDDING.value][
                         uniprot_id
                     ] = embedding
+                    
+    @validate_call
+    def retrieve_esm2_embeddings(self, 
+                                 esm2_embedding_path: FilePath | None = "embeddings/esm2_t33_650M_UR50D_protein_embedding.h5") -> None:
+        
+        logger.info("Retrieving ESM2 embeddings...")
 
+        with h5py.File(esm2_embedding_path, "r") as file:
+            for uniprot_id, embedding in file.items():
+                embedding = np.array(embedding).astype(np.float16)
+                count = np.count_nonzero(~np.isnan(embedding))
+                if (
+                    self.organism not in ("*", None)
+                    and uniprot_id in self.uniprot_ids
+                    and count == 1280
+                ):
+                    self.data[UniprotNodeField.ESM2_EMBEDDING.value][
+                        uniprot_id
+                    ] = embedding
+                elif count == 1280:
+                    self.data[UniprotNodeField.ESM2_EMBEDDING.value][
+                        uniprot_id
+                    ] = embedding
     def _preprocess_uniprot_data(self):
         """
         Preprocess uniprot data to make it ready for import. First, three types
@@ -407,6 +443,7 @@ class Uniprot:
             if arg in [
                 UniprotNodeField.ENSEMBL_GENE_IDS.value,
                 UniprotNodeField.PROTT5_EMBEDDING.value,
+                UniprotNodeField.ESM2_EMBEDDING.value
             ]:
                 pass
 
@@ -770,14 +807,17 @@ class Uniprot:
             if k not in self.protein_properties:
                 continue
 
-            if k == UniprotNodeField.PROTEIN_NAMES.value:
+            elif k == UniprotNodeField.PROTEIN_NAMES.value:
                 protein_props["primary_protein_name"] = (
                     self._ensure_iterable(all_props[k])[0]
                     if all_props[k]
                     else None
                 )
 
-            if k == UniprotNodeField.PROTT5_EMBEDDING.value and all_props.get(k) is not None:
+            elif k == UniprotNodeField.PROTT5_EMBEDDING.value and all_props.get(k) is not None:
+                protein_props[k.replace(" ", "_").replace("-", "_")] = [str(emb) for emb in all_props[k]]
+
+            elif k == UniprotNodeField.ESM2_EMBEDDING.value and all_props.get(k) is not None:
                 protein_props[k.replace(" ", "_").replace("-", "_")] = [str(emb) for emb in all_props[k]]
             
             else:
