@@ -608,7 +608,7 @@ class GO:
         self.go_term_to_anc2vec_embedding = {}
         with h5py.File(anc2vec_embedding_path, "r") as f:
             for go_term, embedding in tqdm(f.items(), total=len(f.keys())):
-                self.go_term_to_anc2vec_embedding[go_term] = np.array(embedding).astype(np.float32)
+                self.go_term_to_anc2vec_embedding[go_term] = np.array(embedding).astype(np.float16)
 
     def set_node_and_edge_types(
         self, node_types: list, edge_types: list
