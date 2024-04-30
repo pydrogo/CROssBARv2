@@ -191,7 +191,7 @@ class Compound:
         with h5py.File(selformer_embedding_path, "r") as f:
             for compound_id, embedding in tqdm(f.items(), total=len(f.keys())):
                 if compound_id in activities_chembl and compound_id not in self.chembl_to_drugbank:
-                    self.chembl_id_to_selformer_embedding[compound_id] = np.array(embedding).astype(np.float32)
+                    self.chembl_id_to_selformer_embedding[compound_id] = np.array(embedding).astype(np.float16)
 
 
     def process_compound_data(self):
