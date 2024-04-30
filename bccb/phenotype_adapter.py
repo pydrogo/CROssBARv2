@@ -9,10 +9,13 @@ from contextlib import ExitStack
 from bioregistry import normalize_curie
 from tqdm import tqdm
 from time import time
+
 import os
+import h5py
+
 from biocypher._logger import logger
 from enum import Enum, EnumMeta, auto
-from pydantic import BaseModel, DirectoryPath, validate_call
+from pydantic import BaseModel, DirectoryPath, FilePath, validate_call
 
 from typing import Union
 
@@ -30,6 +33,9 @@ class PhenotypeEnumMeta(EnumMeta):
 class PhenotypeNodeField(Enum, metaclass=PhenotypeEnumMeta):
     NAME = "name"
     SYNONYMS = "synonyms"
+
+    # embedding
+    CADA_EMBEDDING = "cada_embedding"
 
     @classmethod
     def _missing_(cls, value: str):
@@ -136,6 +142,7 @@ class HPO:
         cache: bool = False,
         debug: bool = False,
         retries: int = 3,
+        cada_embedding_path: FilePath = "embeddings/cada_phenotype_embedding.h5"
     ) -> None:
         """
         Wrapper function to download hpo data from various databases using pypath.
@@ -168,10 +175,21 @@ class HPO:
             if PhenotypeEdgeType.PHENOTYPE_TO_DISEASE in self.edge_types:
                 self.hpo_phenotype_disease = hpo.hpo_diseases()
 
+            if PhenotypeNodeField.CADA_EMBEDDING.value in self.phenotype_node_fields:
+                self.retrieve_cada_embeddings(cada_embedding_path=cada_embedding_path)
+
             t1 = time()
             logger.info(
                 f"HPO data is downloaded in {round((t1-t0) / 60, 2)} mins"
             )
+    @validate_call
+    def retrieve_cada_embeddings(self, cada_embedding_path: FilePath = "embeddings/cada_phenotype_embedding.h5") -> None:
+        logger.info("Retrieving CADA phenotype embeddings.")
+
+        self.hpo_id_to_cada_embedding = {}
+        with h5py.File(cada_embedding_path, "r") as f:
+            for hpo_id, embedding in f.items():
+                self.hpo_id_to_cada_embedding[hpo_id] = np.array(embedding).astype(np.float16)
 
     def process_phenotype_disease(self) -> pd.DataFrame:
 
@@ -290,6 +308,10 @@ class HPO:
                         t.replace("|", ",").replace("'", "^")
                         for t in self.hpo_ontology["synonyms"].get(term)
                     ]
+
+            # get CADA phenotype embeddings
+            if PhenotypeNodeField.CADA_EMBEDDING.value in self.phenotype_node_fields and self.hpo_id_to_cada_embedding.get(term):
+                props[PhenotypeNodeField.CADA_EMBEDDING.value] = [str(emb) for emb in self.hpo_id_to_cada_embedding[term]]
 
             node_list.append((hpo_id, label, props))
 
