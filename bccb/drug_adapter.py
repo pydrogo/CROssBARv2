@@ -481,7 +481,7 @@ class Drug:
         self.drugbank_id_to_selformer_embedding = {}
         with h5py.File(selformer_embedding_path, "r") as f:
             for drug_id, embedding in tqdm(f.items(), total=len(f.keys())):
-                self.drugbank_id_to_selformer_embedding[drug_id] = np.array(embedding).astype(np.float32)
+                self.drugbank_id_to_selformer_embedding[drug_id] = np.array(embedding).astype(np.float16)
 
     def download_drugbank_dti_data(self):
 
