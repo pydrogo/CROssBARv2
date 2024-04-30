@@ -18,6 +18,7 @@ import kegg_local
 import disgenet_local as disgenet
 import json
 import os
+import h5py
 
 from pypath.inputs import ontology
 from pypath.formats import obo
@@ -25,7 +26,7 @@ from pypath.utils import mapping
 from pypath.share import cache
 
 from typing import Union
-from pydantic import BaseModel, DirectoryPath, EmailStr, validate_call
+from pydantic import BaseModel, DirectoryPath, FilePath, EmailStr, validate_call
 from contextlib import ExitStack
 
 from bioregistry import normalize_curie
@@ -63,6 +64,9 @@ class DiseaseNodeField(Enum, metaclass=DiseaseEnumMeta):
     NCIT = "NCIT"
     ICD9 = "ICD9"
     MEDDRA = "MedDRA"
+
+    # embedding
+    DOC2VEC_EMBEDDING = "doc2vec_embedding"
 
     @classmethod
     def _missing_(cls, value: str):
@@ -251,6 +255,7 @@ class Disease:
         cache: bool = False,
         debug: bool = False,
         retries: int = 3,
+        doc2vec_embedding_path: FilePath = "embeddings/doc2vec_disease_embedding.h5",
     ):
         """
         Wrapper function to download disease data from various databases using pypath.
@@ -284,6 +289,9 @@ class Disease:
             self.download_malacards_data()
             self.download_kegg_data()
             self.download_humsavar_data()
+
+            if DiseaseNodeField.DOC2VEC_EMBEDDING.value in self.disease_node_fields:
+                self.retrieve_doc2vec_embedding(doc2vec_embedding_path=doc2vec_embedding_path)
 
             t1 = time()
             logger.info(
@@ -681,6 +689,14 @@ class Disease:
             logger.info(
                 f"Malacards disease comorbidity data is downloaded in {round((t1-t0) / 60, 2)} mins"
             )
+
+    def retrieve_doc2vec_embedding(self, doc2vec_embedding_path: FilePath) -> None:
+        logger.info("Retrieving Doc2Vec disease embeddings.")
+
+        self.disease_id_to_doc2vec_embedding = {}
+        with h5py.File(doc2vec_embedding_path, "r") as f:
+            for mondo_id, embedding in f.items():
+                self.hpo_id_to_cada_embedding[mondo_id] = np.array(embedding).astype(np.float16)
 
     def prepare_mappings(self) -> None:
         """
@@ -1921,6 +1937,10 @@ class Disease:
                     for xref in term.obo_xref:
                         if xref["database"] in xref_dbs:
                             props[xref["database"].lower()] = xref["id"]
+
+                if DiseaseNodeField.DOC2VEC_EMBEDDING.value in self.disease_node_fields and self.disease_id_to_doc2vec_embedding.get(term.obo_id) is not None:
+                    props[DiseaseNodeField.DOC2VEC_EMBEDDING.value] = [str(emb) for emb in self.disease_id_to_doc2vec_embedding[term.obo_id]]
+
 
                 node_list.append((disease_id, label, props))
 
