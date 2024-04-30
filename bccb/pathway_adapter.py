@@ -14,9 +14,10 @@ from biocypher._logger import logger
 
 import collections
 import os
+import h5py
 import gzip
 
-from pydantic import BaseModel, DirectoryPath, EmailStr, validate_call
+from pydantic import BaseModel, DirectoryPath, FilePath, EmailStr, validate_call
 from typing import Union
 
 from enum import Enum, EnumMeta, auto
@@ -33,6 +34,7 @@ class PathwayEnumMeta(EnumMeta):
 class PathwayNodeField(Enum, metaclass=PathwayEnumMeta):
     NAME = "name"
     ORGANISM = "organism"
+    BIOKEEN_EMBEDDING = "biokeen_embedding"
 
     @classmethod
     def _missing_(cls, value: str):
@@ -87,6 +89,9 @@ class PathwayEdgeType(Enum, metaclass=PathwayEnumMeta):
     PATHWAY_TO_PATHWAY = auto()
     PATHWAY_ORTHOLOGY = auto()
 
+class PathwayNodeType(Enum, metaclass=PathwayEnumMeta):
+    PATHWAY = auto()
+
 
 logger.debug(f"Loading module {__name__}.")
 
@@ -98,6 +103,7 @@ class PathwayModel(BaseModel):
     protein_pathway_edge_fields: Union[list[ProteinPathwayEdgeField], None] = None
     disease_pathway_edge_fields: Union[list[DiseasePathwayEdgeField], None] = None
     drug_pathway_edge_fields: Union[list[DrugPathwayEdgeField], None] = None
+    node_types: Union[list[PathwayNodeType], None] = None
     edge_types: Union[list[PathwayEdgeType], None] = None
     remove_selected_annotations: list[str] = ["IEA"]
     test_mode: bool = False
@@ -117,6 +123,7 @@ class Pathway:
         protein_pathway_edge_fields: Union[list[ProteinPathwayEdgeField], None] = None,
         disease_pathway_edge_fields: Union[list[DiseasePathwayEdgeField], None] = None,
         drug_pathway_edge_fields: Union[list[DrugPathwayEdgeField], None] = None,
+        node_types: Union[list[PathwayNodeType], None] = None,
         edge_types: Union[list[PathwayEdgeType], None] = None,
         remove_selected_annotations: list[str] = ["IEA"],
         test_mode: bool = False,
@@ -148,6 +155,7 @@ class Pathway:
             protein_pathway_edge_fields=protein_pathway_edge_fields,
             disease_pathway_edge_fields=disease_pathway_edge_fields,
             drug_pathway_edge_fields=drug_pathway_edge_fields,
+            node_types=node_types,
             edge_types=edge_types,
             remove_selected_annotations=remove_selected_annotations,
             test_mode=test_mode,
@@ -181,7 +189,8 @@ class Pathway:
         )
 
         # set edge types
-        self.set_edge_types(edge_types=model["edge_types"])
+        self.set_node_and_edge_types(node_types=model["node_types"],
+                                     edge_types=model["edge_types"])
 
         # set early_stopping, if test_mode true
         self.early_stopping = None
@@ -194,6 +203,7 @@ class Pathway:
         cache: bool = False,
         debug: bool = False,
         retries: int = 3,
+        biokeen_embedding_path: FilePath = "embeddings/biokeen_pathway_embedding.h5"
     ) -> None:
         """
         Wrapper function to download pathway data from various databases using pypath.
@@ -221,12 +231,16 @@ class Pathway:
 
             self.download_compath_data()
 
+            if PathwayNodeField.BIOKEEN_EMBEDDING.value in self.pathway_node_fields:
+                self.retrieve_biokeen_embeddings(biokeen_embedding_path=biokeen_embedding_path)
+
     def download_reactome_data(self) -> None:
 
         logger.debug("Started downloading Reactome data")
         t0 = time()
 
-        self.reactome_pathways = list(reactome.reactome_pathways())
+        if PathwayNodeType.PATHWAY in self.node_types:
+            self.reactome_pathways = list(reactome.reactome_pathways())
 
         if PathwayEdgeType.REACTOME_HIERARCHICAL_RELATIONS in self.edge_types:
             self.reactome_hierarchial_relations = (
@@ -253,20 +267,22 @@ class Pathway:
         logger.debug("Started downloading KEGG data")
         t0 = time()
 
-        self.kegg_pathway_abbv_organism_name_dict = {
-            k: v[1] for k, v in kegg_local._Organism()._data.items()
-        }
+        if PathwayNodeType.PATHWAY in self.node_types:
 
-        self.kegg_pathways = []
-        for org in tqdm(self.kegg_organism):
-            try:
-                self.kegg_pathways.extend(
-                    kegg_local._kegg_list("pathway", org=org)
-                )
-            except (IndexError, UnicodeDecodeError, gzip.BadGzipFile) as e:
-                logger.debug(
-                    f"Error occured in {org} organism in pathway data downloading with an {e} error"
-                )
+            self.kegg_pathway_abbv_organism_name_dict = {
+                k: v[1] for k, v in kegg_local._Organism()._data.items()
+            }
+
+            self.kegg_pathways = []
+            for org in tqdm(self.kegg_organism):
+                try:
+                    self.kegg_pathways.extend(
+                        kegg_local._kegg_list("pathway", org=org)
+                    )
+                except (IndexError, UnicodeDecodeError, gzip.BadGzipFile) as e:
+                    logger.debug(
+                        f"Error occured in {org} organism in pathway data downloading with an {e} error"
+                    )
 
         if PathwayEdgeType.PROTEIN_TO_PATHWAY in self.edge_types:
             self.kegg_gene_to_pathway = {}
@@ -341,7 +357,14 @@ class Pathway:
         logger.info(
             f"Compath data is downloaded in {round((t1-t0) / 60, 2)} mins"
         )
+    @validate_call
+    def retrieve_biokeen_embeddings(self, biokeen_embedding_path: FilePath) -> None:
+        logger.info("Retrieving BioKenn pathway embeddings.")
 
+        self.pathway_id_to_biokeen_embedding = {}
+        with h5py.File(biokeen_embedding_path, "r") as f:
+            for patway_id, embedding in f.items():
+                self.pathway_id_to_biokeen_embedding[patway_id] = np.array(embedding).astype(np.float16)
     def process_reactome_protein_pathway(self) -> pd.DataFrame:
 
         if not hasattr(self, "reactome_uniprot_pathway"):
@@ -702,6 +725,9 @@ class Pathway:
             if PathwayNodeField.ORGANISM.value in self.pathway_node_fields:
                 props[PathwayNodeField.ORGANISM.value] = p.organism.replace("'","^") if p.organism else None
 
+            if PathwayNodeField.BIOKEEN_EMBEDDING.value in self.pathway_node_fields and self.pathway_id_to_biokeen_embedding.get(p.pathway_id) is not None:
+                props[PathwayNodeField.BIOKEEN_EMBEDDING.value] = [str(emb) for emb in self.pathway_id_to_biokeen_embedding[p.pathway_id]]
+
             node_list.append((pathway_id, label, props))
 
             if self.early_stopping and index >= self.early_stopping:
@@ -722,6 +748,9 @@ class Pathway:
                 props[PathwayNodeField.ORGANISM.value] = (
                     self.kegg_pathway_abbv_organism_name_dict.get(p[0][:3]).replace("'", "^") if self.kegg_pathway_abbv_organism_name_dict.get(p[0][:3]) else None
                 )
+            
+            if PathwayNodeField.BIOKEEN_EMBEDDING.value in self.pathway_node_fields and self.pathway_id_to_biokeen_embedding.get(p[0]) is not None:
+                props[PathwayNodeField.BIOKEEN_EMBEDDING.value] = [str(emb) for emb in self.pathway_id_to_biokeen_embedding[p[0]]]
 
             node_list.append((pathway_id, label, props))
 
@@ -1117,7 +1146,7 @@ class Pathway:
 
         return edge_list
 
-    def prepare_mondo_mappings(self):
+    def prepare_mondo_mappings(self) -> None:
 
         logger.debug(
             "Started preparing MONDO mappings to other disease databases"
@@ -1142,6 +1171,7 @@ class Pathway:
                         db = mapping_db_list[
                             mapping_db_list.index(xref.get("database"))
                         ]
+                        self.mondo_mappings[db][xref["id"]] = term.obo_id
 
     @validate_call
     def add_prefix_to_id(
@@ -1154,9 +1184,7 @@ class Pathway:
             return normalize_curie(prefix + sep + identifier)
 
         return identifier
-
-        return identifier
-
+    
     def merge_source_column(self, element, joiner="|"):
 
         _list = []
@@ -1171,8 +1199,9 @@ class Pathway:
     def ensure_iterable(self, element):
         return element if isinstance(element, (list, tuple, set)) else [element]
 
-    def set_edge_types(self, edge_types):
-        self.edge_types = edge_types or list(PathwayEdgeType)
+    def set_node_and_edge_types(self, node_types, edge_types):
+        self.edge_types = edge_types if edge_types is not None else list(PathwayEdgeType)
+        self.node_types = node_types if node_types is not None else list(PathwayNodeType)
 
     def set_node_fields(self, pathway_node_fields):
         if pathway_node_fields:
