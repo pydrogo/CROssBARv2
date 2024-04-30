@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import os
+import h5py
 import pandas as pd
+import numpy as np
 
 from pypath.share import curl, settings
 from pypath.inputs import interpro
@@ -14,7 +16,7 @@ from time import time
 from biocypher._logger import logger
 
 from typing import Literal, Union, Optional
-from pydantic import BaseModel, DirectoryPath, validate_call
+from pydantic import BaseModel, DirectoryPath, FilePath, validate_call
 
 from enum import Enum, EnumMeta
 
@@ -46,6 +48,9 @@ class InterProNodeField(Enum, metaclass=InterProEnumMeta):
 
     # structural attributes
     PDB = "PDB"
+
+    # embedding
+    DOM2VEC_EMBEDDING = "dom2vec_embedding"
 
     @classmethod
     def _missing_(cls, value: str):
@@ -169,7 +174,8 @@ class InterPro:
     @validate_call
     def download_interpro_data(self, cache: bool = False,
                                debug: bool = False,
-                               retries: int = 3) -> None:
+                               retries: int = 3,
+                               dom2vec_embedding_path: FilePath = "embeddings/dom2vec_domain_embedding.h5") -> None:
         """
         Wrapper function to download InterPro data using pypath; used to access
         settings.
@@ -190,10 +196,11 @@ class InterPro:
             if not cache:
                 stack.enter_context(curl.cache_off())
 
-            self.download_domain_node_data()
+            self.download_domain_node_data(dom2vec_embedding_path=dom2vec_embedding_path)
             self.download_domain_edge_data()
 
-    def download_domain_node_data(self) -> None:
+    @validate_call
+    def download_domain_node_data(self, dom2vec_embedding_path: FilePath = "embeddings/dom2vec_domain_embedding.h5") -> None:
         """
         Downloads domain node data from Interpro
         """
@@ -211,6 +218,9 @@ class InterPro:
         self.interpro_external_xrefs = interpro.interpro_xrefs(
             db_type="external"
         )
+
+        if InterProNodeField.DOM2VEC_EMBEDDING.value in self.node_fields:
+            self.retrieve_dom2vec_embeddings(dom2vec_embedding_path=dom2vec_embedding_path)
 
         t1 = time()
         logger.info(
@@ -241,6 +251,16 @@ class InterPro:
         logger.info(
             f"InterPro annotation data is downloaded in {round((t1-t0) / 60, 2)} mins"
         )
+
+    def retrieve_dom2vec_embeddings(self, 
+                                    dom2vec_embedding_path: FilePath = "embeddings/dom2vec_domain_embedding.h5") -> None:
+
+        logger.info("Retrieving dom2vec domain embeddings.")
+
+        self.interpro_id_to_dom2vec_embedding = {}
+        with h5py.File(dom2vec_embedding_path, "r") as f:
+            for interpro_id, embedding in f.items():
+                self.interpro_id_to_dom2vec_embedding[interpro_id] = np.array(embedding).astype(np.float16)
 
     @validate_call
     def get_interpro_nodes(self, node_label: str = "domain") -> list[tuple]:
@@ -332,6 +352,17 @@ class InterPro:
                         )
                     )
 
+            # get dom2vec embedding
+            if InterProNodeField.DOM2VEC_EMBEDDING.value in self.node_fields and self.interpro_id_to_dom2vec_embedding.get(entry.interpro_id) is not None:
+                props[InterProNodeField.DOM2VEC_EMBEDDING.value] = [str(emb) for emb in self.interpro_id_to_dom2vec_embedding[entry.interpro_id]]
+
+            # add node to list
+            node_list.append((domain_id, node_label, props))
+
+            counter += 1
+
+            if self.early_stopping and counter == self.early_stopping:
+                break
             node_list.append((domain_id, node_label, props))
 
             counter += 1
