@@ -1,6 +1,8 @@
 # CROssBAR-BioCypher-Migration
 This is a repo for migration of [CROssBAR](https://github.com/cansyl/CROssBAR) data to the Neo4j database via [BioCypher](https://github.com/saezlab/BioCypher)
 
+### This repo is currently under development. Therefore, you may encounter some problems while replicating this repo.
+
 ## Installation
 The project uses [Poetry](https://python-poetry.org). You can install like this:
 
