@@ -1,5 +1,5 @@
 # CROssBAR-BioCypher-Migration
-This is a repo for CROssBARv2 data to the Neo4j database via [BioCypher](https://github.com/saezlab/BioCypher) CROssBARv2 is, an extended and improved version of our previous work (for v1 please check [CROssBAR](https://github.com/cansyl/CROssBAR)), a heterogeneous general purpose biomedical knowledge graph (KG) based system.
+This is a repo for CROssBARv2 data to the Neo4j database via [BioCypher](https://github.com/saezlab/BioCypher). CROssBARv2 is, an extended and improved version of our previous work (for v1 please check [CROssBAR](https://github.com/cansyl/CROssBAR)), a heterogeneous general purpose biomedical knowledge graph (KG) based system.
 
 ### This repo is currently under development. Therefore, you may encounter some problems while replicating it. Feel free to open issue if you encounter any problems.
 
