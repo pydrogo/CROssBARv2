@@ -254,7 +254,7 @@ class Uniprot:
         debug: bool = False,
         retries: int = 3,
         prott5_embedding_output_path: FilePath | None = None,
-        esm2_embedding_path: FilePath | None = "embeddings/esm2_t33_650M_UR50D_protein_embedding.h5",
+        esm2_embedding_path: FilePath | None = None,
     ):
         """
         Wrapper function to download uniprot data using pypath; used to access
@@ -290,7 +290,7 @@ class Uniprot:
     def _download_uniprot_data(
         self, 
         prott5_embedding_output_path: FilePath | None = None,
-        esm2_embedding_path: FilePath | None = "embeddings/esm2_t33_650M_UR50D_protein_embedding.h5",
+        esm2_embedding_path: FilePath | None = None,
     ):
         """
         Download uniprot data from uniprot.org through pypath.
@@ -344,7 +344,7 @@ class Uniprot:
         
         if UniprotNodeField.ESM2_EMBEDDING.value in self.node_fields:
             self.data[UniprotNodeField.ESM2_EMBEDDING.value] = {}
-            self.retrieve_esm2_embeddings(esm2_embedding_path)
+            self.retrieve_esm2_embeddings("embeddings/esm2_t33_650M_UR50D_protein_embedding.h5" if not esm2_embedding_path else esm2_embedding_path)
 
         t1 = time()
         msg = f"Acquired UniProt data in {round((t1-t0) / 60, 2)} mins."
