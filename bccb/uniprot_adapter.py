@@ -290,7 +290,7 @@ class Uniprot:
     def _download_uniprot_data(
         self, 
         prott5_embedding_output_path: FilePath | None = None,
-        esm2_embedding_path: FilePath = "embeddings/esm2_t33_650M_UR50D_protein_embedding.h5",
+        esm2_embedding_path: FilePath | None = "embeddings/esm2_t33_650M_UR50D_protein_embedding.h5",
     ):
         """
         Download uniprot data from uniprot.org through pypath.
